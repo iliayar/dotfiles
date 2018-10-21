@@ -11,7 +11,7 @@
 # $modkey for ALT and Mod4 for Winkey
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 
-set $modkey Mod1
+set $modkey Mod4
 exec feh --bg-fill /home/iliayar/wallpaper.jpg
 exec xcompmgr -f -c -n
 # Font for window titles. Will also be used by the bar unless a different font
@@ -256,7 +256,7 @@ bindsym $modkey+r mode "resize"
 bindsym $modkey+m bar mode toggle
 
 # Back and forth when pressing the same workspace keybind
-workspace_auto_back_and_forth yes
+#workspace_auto_back_and_forth yes
 
 # Display urgent notification on windows
 force_display_urgency_hint 500 ms
