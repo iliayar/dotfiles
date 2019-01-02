@@ -1,0 +1,15 @@
+#!/bin/bash
+
+state=$(cat ~/VMs/attached)
+
+if [ $state == 1 ]
+then
+	sudo virsh detach-device win10 --file ~/VMs/A4Tech_mouse.xml
+	sudo virsh detach-device win10 --file ~/VMs/A4Tech_keyboard.xml
+	echo "0" > ~/VMs/attached
+else
+	sudo virsh attach-device win10 --file ~/VMs/A4Tech_mouse.xml
+    sudo virsh attach-device win10 --file ~/VMs/A4Tech_keyboard.xml
+    echo "1" > ~/VMs/attached
+fi
+

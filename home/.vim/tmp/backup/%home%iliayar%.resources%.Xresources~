@@ -1,0 +1,80 @@
+#if __has_include(".extend.Xresources")
+#include ".extend.Xresources"
+#endif
+
+! ^ The above lines are no comments!
+! Leave them as they are if a file ~/.extend.Xresources is being used on your system.
+! config can be added there or also here below.
+! For comments use "!"
+
+!Xft.dpi: 96
+!Xft.antialias: true
+!Xft.hinting: true
+!Xft.rgba: rgb
+!Xft.autohint: false
+!Xft.hintstyle: hintslight
+!Xft.lcdfilter: lcddefault
+
+! /-----------------------\
+! | Created by fs0ciety   |
+! | https://fsociety.info |
+! | 2016                  |
+! \-----------------------/
+
+Xft.dpi:                        109
+URxvt*termName:                 rxvt-256color
+URxvt*font:                     xft:PragmataProMono:pixelsize=18
+URxvt.depth:                    32
+URxvt*lineSpace:                1
+URxvt.letterSpace:              0
+URxvt.iso14755:                 false
+URxvt.iso14755_52:              false
+URxvt*geometry:                 65x17
+URxvt.scrollBar:                false
+URxvt*loginShell:               true
+URxvt.internalBorder:           35
+URxvt.perl-ext-common:          default,clipboard
+URxvt.keysym.Shift-Control-C:   perl:clipboard:copy
+URxvt.keysym.Shift-Control-V:   perl:clipboard:paste
+URxvt.clipboard.autocopy:       true
+*cursorColor:				    #33ff00
+!vim: set filetype=xdefaults :
+!gjm scheme
+*background: rgba:0000/0000/0000/0000
+
+*background:    #2b0036
+*foreground:    #888a85
+
+! black
+*color0:        #000000
+*color8:        #ff7000
+
+! red
+*color1:        #33ff00
+*color9:        #22aa00
+
+! green
+*color2:        #ff0099
+*color10:       #c40075
+
+! yellow
+*color3:        #ff002e
+*color11:       #b80021
+
+! blue
+*color4:        #0070ff
+*color12:       #0059b9
+
+! magenta
+*color5:        #db00ff
+*color13:       #73009b
+
+! cyan 
+*color6:        #00fcff
+*color14:       #019b9b
+
+! white
+*color7:        #ccff00
+*color15:       #c7c700
+
+!urxvt*background:       rgba:0000/0000/0000/ffffff

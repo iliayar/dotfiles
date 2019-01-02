@@ -4,11 +4,9 @@
 
 set nocompatible               " be iMproved
 filetype off                   " required!
- if has('vim_starting')
-   set runtimepath+=~/.vim/bundle/neobundle.vim/
- endif
+set runtimepath+=~/.vim/bundle/neobundle.vim/
 
- call neobundle#begin(expand('/home/iliayar/.config/nvim/bundle/'))
+ call neobundle#begin(expand('/home/iliayar/.vim/bundle/'))
 " }}}
 " Basic options ----------------------------------------------------------- {{{
 
