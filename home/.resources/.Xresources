@@ -50,15 +50,15 @@ URxvt.clipboard.autocopy:       true
 *color8:        #ff7000
 
 ! red
-*color1:        #33ff00
-*color9:        #22aa00
+*color1:        #22aa00
+*color9:        #ff0099
 
 ! green
-*color2:        #ff0099
-*color10:       #c40075
+*color2:        #33dd00
+*color10:       #ff003e
 
 ! yellow
-*color3:        #ff002e
+*color3:        #c40075
 *color11:       #b80021
 
 ! blue
