@@ -9,7 +9,7 @@
 # Set mod key (Mod1=<Alt>, Mod4=<Super>)
 set $mod Mod4
 
-set $term st
+set $term termite
 
 #exec_always --no-startup-id ~/.config/polybar/launch.sh
 
@@ -19,6 +19,8 @@ set $term st
 # Configure border style <normal|1pixel|pixel xx|none|pixel>
 new_window pixel 2
 new_float pixel 2
+
+mouse_warping none
 
 # Hide borders
 hide_edge_borders none
@@ -39,7 +41,7 @@ floating_modifier $mod
 
 # start a terminal
 bindsym $mod+Return exec $term
-
+bindsym $mod+Shift+Return exec proxychains -q $term
 # kill focused window
 bindsym $mod+Shift+q kill
 
@@ -53,7 +55,7 @@ bindsym $mod+d exec --no-startup-id rofi -show run
 ## sound-section - DO NOT EDIT if you wish to automatically upgrade Alsa -> Pulseaudio later! ##
 ################################################################################################
 
-exec --no-startup-id volumeicon
+# exec --no-startup-id volumeicon
 bindsym $mod+Ctrl+m exec $term -e 'pulsemixer'
 bindsym $mod+Ctrl+c exec $term -e "colorpicker"
 #exec --no-startup-id pulseaudio
@@ -228,7 +230,7 @@ for_window [class="feh"] floating enable
 for_window [title="pulsemixer"] floating enable border pixel 1
 for_window [title="colorpicker"] floating enable border pixel 1
 for_window [class="Clipgrab"] floating enable
-for_window [title="File Transfer*"] floating enable
+for_window [title="Telegram*"] floating enable
 for_window [class="Galculator"] floating enable border pixel 1
 for_window [class="GParted"] floating enable border normal
 for_window [title="i3_help"] floating enable sticky enable border normal
@@ -319,7 +321,7 @@ exec --no-startup-id nitrogen --restore; sleep 1; compton -b
 #exec --no-startup-id pamac-tray
 # exec --no-startup-id clipit
 # exec --no-startup-id blueman
-exec_always --no-startup-id sbxkb
+# exec_always --no-startup-id sbxkb
 # exec --no-startup-id start_conky_maia
 # exec --no-startup-id start_conky_green
 exec --no-startup-id xautolock -time 0 -locker blurlock
@@ -348,7 +350,7 @@ set_from_resource	$color14	color14
 set_from_resource	$color15	color15
 
 # Polybar launch script (located ~/.config/polybar/launch.sh) 
-exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+# exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 
 
 # hide/unhide i3status bar
@@ -425,6 +427,24 @@ mode "$mode_gaps_outer" {
 
 #for_window [class=^.*] floating enable
 
+bar {
+    font pango:DejaVu Sans Mono, FontAwesome 8
+    position bottom
+    #tatus_command /home/iliayar/bin/i3status-rs ~/.config/i3status-rs/config.toml
+    #status_command conky
+    status_command /home/iliayar/bin/bumblebee-status/bumblebee-status -m mpd layout-xkb nic pasink datetime -t onedark-powerline 
+    colors {
+        separator #FFFFFF
+        background #5f0343    
+        statusline #FFFFFF
+        focused_workspace #ff003e #ff003e #ffffff
+        active_workspace #ff003e #c40075 #ffffff
+        inactive_workspace #ff003e #73009b #ffffff
+        urgent_workspace #ff003e #c40075 #ffffff
+    }
+}
+
+
 
 bindsym XF86AudioNext exec mpc next
 bindsym XF86AudioPrev exec mpc prev
@@ -439,8 +459,8 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # Mute
 bindsym $mod+m workspace "Music"
 
 bindsym Ctrl+Mod1+s exec /home/iliayar/VMs/StartWin10.sh
-bindsym Ctrl+Mod1+Shift+s exec /home/iliayar/VMs/ShutdownWin10.sh
-bindsym Ctrl+Mod1+Shift+r exec /home/iliayar/VMs/ResetWin10.sh
+bindsym Ctrl+Shift+s exec /home/iliayar/VMs/ShutdownWin10.sh
+bindsym Ctrl+Shift+r exec /home/iliayar/VMs/ResetWin10.sh
 bindsym Ctrl+Mod1+t exec /home/iliayar/VMs/toggleUSB.sh
 #bindsym Ctrl+Mod1+g "exec i3-msg workspace Windows;exec killall /home/iliayar/VMs/looking-glass-client;exec ~/VMs/toggleUSB.sh 1; exec ~/VMs/looking-glass-client -k -s -K 60 -F"
 #bindsym Ctrl+Mod1+f "workspace 1; exec killall /home/iliayar/VMs/looking-glass-client; exec ~/VMs/toggleUSB.sh 2"

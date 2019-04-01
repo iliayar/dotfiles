@@ -9,7 +9,14 @@ export LANG=en_US.UTF-8
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="fishy"
+ZSH_THEME="bullet-train"
+
+BULLETTRAIN_PROMPT_ORDER=(
+  git
+  context
+  dir
+  time
+)
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -65,7 +72,10 @@ ZSH_THEME="fishy"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
   git
+  zsh-autosuggestions
+  zsh-syntax-highlighting
 )
+
 
 source $ZSH/oh-my-zsh.sh
 
@@ -102,3 +112,15 @@ source $ZSH/oh-my-zsh.sh
 #. /usr/lib/python3.7/site-packages/powerline/bindings/zsh/powerline.zsh
 
 
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/iliayar/google-cloud-sdk/path.zsh.inc' ]; then . '/home/iliayar/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/iliayar/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/iliayar/google-cloud-sdk/completion.zsh.inc'; fi
+
+PATH="/home/iliayar/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/home/iliayar/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/iliayar/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/iliayar/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/iliayar/perl5"; export PERL_MM_OPT;
