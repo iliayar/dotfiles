@@ -11,6 +11,9 @@ set $mod Mod4
 
 set $term termite
 
+set $mon1 DVI-I-1
+set $mon2 DVI-D-1
+
 #exec_always --no-startup-id ~/.config/polybar/launch.sh
 
 # set default desktop layout (default is tiling)
@@ -47,7 +50,7 @@ bindsym $mod+Shift+q kill
 
 # start program launcher
 #bindsym $mod+d exec --no-startup-id dmenu_recency
-bindsym $mod+d exec --no-startup-id rofi -show run
+bindsym $mod+d exec --no-startup-id rofi -show drun
 # launch categorized menu
 #bindsym $mod+z exec --no-startup-id morc_menu
 
@@ -167,17 +170,17 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
 
-workspace "1" output VGA1
-workspace "2" output VGA1
-workspace "3" output VGA1
-workspace "4" output VGA1
-workspace "5" output VGA1
-workspace "6" output HDMI1
-workspace "7" output HDMI1
-workspace "8" output HDMI1
-workspace "9" output HDMI1
-workspace "10" output HDMI1
-workspace "Music" output HDMI1
+workspace "1" output $mon1
+workspace "2" output $mon1
+workspace "3" output $mon1
+workspace "4" output $mon1
+workspace "5" output $mon1
+workspace "6" output $mon2
+workspace "7" output $mon2
+workspace "8" output $mon2
+workspace "9" output $mon2
+workspace "10" output $mon2
+workspace "Music" output $mon2
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
@@ -227,34 +230,34 @@ bindsym $mod+Shift+0 move container to workspace $ws10; workspace $ws10
 
 # Open specific applications in floating mode
 for_window [class="feh"] floating enable
-for_window [title="pulsemixer"] floating enable border pixel 1
-for_window [title="colorpicker"] floating enable border pixel 1
-for_window [class="Clipgrab"] floating enable
-for_window [title="Telegram*"] floating enable
-for_window [class="Galculator"] floating enable border pixel 1
-for_window [class="GParted"] floating enable border normal
-for_window [title="i3_help"] floating enable sticky enable border normal
-for_window [class="Lightdm-gtk-greeter-settings"] floating enable
-for_window [class="Lxappearance"] floating enable sticky enable border normal
-for_window [class="Manjaro Settings Manager"] floating enable border normal
-for_window [class="Manjaro Welcome"] floating enable
-for_window [title="MuseScore: Play Panel"] floating enable
+#for_window [title="pulsemixer"] floating enable border pixel 1
+#for_window [title="colorpicker"] floating enable border pixel 1
+#for_window [class="Clipgrab"] floating enable
+#for_window [title="Telegram*"] floating enable
+#for_window [class="Galculator"] floating enable border pixel 1
+#for_window [class="GParted"] floating enable border normal
+#for_window [title="i3_help"] floating enable sticky enable border normal
+#for_window [class="Lightdm-gtk-greeter-settings"] floating enable
+#for_window [class="Lxappearance"] floating enable sticky enable border normal
+#for_window [class="Manjaro Settings Manager"] floating enable border normal
+#for_window [class="Manjaro Welcome"] floating enable
+#for_window [title="MuseScore: Play Panel"] floating enable
 for_window [class="Nitrogen"] floating enable sticky enable border normal
-for_window [class="Oblogout"] fullscreen enable
-for_window [class="octopi"] floating enable
-for_window [class="Pamac-manager"] floating enable
-for_window [class="Pavucontrol"] floating enable
-for_window [class="qt5ct"] floating enable sticky enable border normal
-for_window [class="Qtconfig-qt4"] floating enable sticky enable border normal
-for_window [class="Simple-scan"] floating enable border normal
-for_window [class="(?i)System-config-printer.py"] floating enable border normal
-for_window [class="Skype"] floating enable border normal
-for_window [class="Thus"] floating enable border normal
-for_window [class="Timeset-gui"] floating enable border normal
-for_window [class="(?i)virtualbox"] floating enable border normal
-for_window [class="Xfburn"] floating enable
-for_window [class="Firefox"] floating enable border none
-for_window [class="discord"] floating enable border none
+#for_window [class="Oblogout"] fullscreen enable
+#for_window [class="octopi"] floating enable
+#for_window [class="Pamac-manager"] floating enable
+#for_window [class="Pavucontrol"] floating enable
+#for_window [class="qt5ct"] floating enable sticky enable border normal
+#for_window [class="Qtconfig-qt4"] floating enable sticky enable border normal
+#for_window [class="Simple-scan"] floating enable border normal
+#for_window [class="(?i)System-config-printer.py"] floating enable border normal
+#for_window [class="Skype"] floating enable border normal
+#for_window [class="Thus"] floating enable border normal
+#for_window [class="Timeset-gui"] floating enable border normal
+#for_window [class="(?i)virtualbox"] floating enable border normal
+#for_window [class="Xfburn"] floating enable
+#for_window [class="Firefox"] floating enable border none
+#for_window [class="discord"] floating enable border none
 for_window [class="skypeforlinux"] floating enable border none
 # switch to workspace with urgent window automatically
 for_window [urgent=latest] focus
@@ -272,7 +275,7 @@ bindsym $mod+Ctrl+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut
 bindsym $mod+Shift+e mode "$mode_system"
 set $mode_system (l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown
 mode "$mode_system" {
-    bindsym l exec --no-startup-id i3exit lock, mode "default"
+    bindsym l exec --no-startup-id /home/iliayar/bin/lock.sh, mode "default"
     bindsym s exec --no-startup-id i3exit suspend, mode "default"
     bindsym u exec --no-startup-id i3exit switch_user, mode "default"
     bindsym e exec --no-startup-id i3-msg exit, mode "default"
@@ -314,6 +317,7 @@ bindsym $mod+Ctrl+l exec --no-startup-id blurlock
 
 # Autostart applications
 exec_always nm-applet
+exec_always udiskie
 exec_always --no-startup-id xrdb  ~/.resources/.Xresources
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id nitrogen --restore; sleep 1; compton -b
@@ -433,7 +437,8 @@ bar {
     position bottom
     #tatus_command /home/iliayar/bin/i3status-rs ~/.config/i3status-rs/config.toml
     #status_command conky
-    status_command /home/iliayar/bin/bumblebee-status/bumblebee-status -m mpd layout-xkb nic pasink datetime -t onedark-powerline 
+    #status_command /home/iliayar/bin/bumblebee-status/bumblebee-status -m mpd layout-xkb nic pasink datetime -t onedark-powerline 
+    status_command i3status
     colors {
         separator #FFFFFF
         background #5f0343    
@@ -459,9 +464,9 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # Mute
 
 bindsym $mod+m workspace "Music"
 
-bindsym Ctrl+Mod1+s exec /home/iliayar/VMs/StartWin10.sh
-bindsym Ctrl+Shift+s exec /home/iliayar/VMs/ShutdownWin10.sh
-bindsym Ctrl+Shift+r exec /home/iliayar/VMs/ResetWin10.sh
-bindsym Ctrl+Mod1+t exec /home/iliayar/VMs/toggleUSB.sh
+#bindsym Ctrl+Mod1+s exec /home/iliayar/VMs/StartWin10.sh
+#bindsym Ctrl+Shift+s exec /home/iliayar/VMs/ShutdownWin10.sh
+#bindsym Ctrl+Shift+r exec /home/iliayar/VMs/ResetWin10.sh
+#bindsym Ctrl+Mod1+t exec /home/iliayar/VMs/toggleUSB.sh
 #bindsym Ctrl+Mod1+g "exec i3-msg workspace Windows;exec killall /home/iliayar/VMs/looking-glass-client;exec ~/VMs/toggleUSB.sh 1; exec ~/VMs/looking-glass-client -k -s -K 60 -F"
 #bindsym Ctrl+Mod1+f "workspace 1; exec killall /home/iliayar/VMs/looking-glass-client; exec ~/VMs/toggleUSB.sh 2"
