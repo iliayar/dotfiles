@@ -1,49 +1,11 @@
-#if __has_include(".extend.Xresources")
-#include ".extend.Xresources"
-#endif
-
-! ^ The above lines are no comments!
-! Leave them as they are if a file ~/.extend.Xresources is being used on your system.
-! config can be added there or also here below.
-! For comments use "!"
-
-!Xft.dpi: 96
-!Xft.antialias: true
-!Xft.hinting: true
-!Xft.rgba: rgb
-!Xft.autohint: false
-!Xft.hintstyle: hintslight
-!Xft.lcdfilter: lcddefault
-
-! /-----------------------\
-! | Created by fs0ciety   |
-! | https://fsociety.info |
-! | 2016                  |
-! \-----------------------/
-
 Xft.dpi:                        109
-URxvt*termName:                 rxvt-256color
-URxvt*font:                     xft:PragmataProMono:pixelsize=18
-URxvt.depth:                    32
-URxvt*lineSpace:                1
-URxvt.letterSpace:              0
-URxvt.iso14755:                 false
-URxvt.iso14755_52:              false
-URxvt*geometry:                 65x17
-URxvt.scrollBar:                false
-URxvt*loginShell:               true
-URxvt.internalBorder:           35
-URxvt.perl-ext-common:          default,clipboard
-URxvt.keysym.Shift-Control-C:   perl:clipboard:copy
-URxvt.keysym.Shift-Control-V:   perl:clipboard:paste
-URxvt.clipboard.autocopy:       true
-*cursorColor:				    #33ff00
-!vim: set filetype=xdefaults :
-!gjm scheme
-*background: rgba:0000/0000/0000/0000
 
+! GENERAL !
+
+! special
+*cursorColor:   #33ff00
 *background:    #2b0036
-*foreground:    #888a85
+*foreground:    #ffffff
 
 ! black
 *color0:        #000000
@@ -77,4 +39,32 @@ URxvt.clipboard.autocopy:       true
 *color7:        #ccff00
 *color15:       #c7c700
 
-!urxvt*background:       rgba:0000/0000/0000/ffffff
+! ROFI !
+rofi.modi:                           window,drun,run
+rofi.sidebar-mode:                   true
+rofi.terminal:                       termite
+rofi.opacity:                        100
+rofi.width:                          50
+rofi.lines:                          8
+rofi.columns:                        3
+rofi.font:                           Monospace 9
+! State:           'bg',     'fg',     'bgalt',  'hlbg',   'hlfg'
+rofi.color-normal: #2b0036,  #93fbfa,  #2b0036,  #db00ff,  #FFFFFF
+! rofi.color-normal: #353944,  #FFFFFF,  #353944,  #5294E2,  #FFFFFF
+! rofi.color-normal: #353944,  #FFFFFF,  #353944,  #5294E2,  #FFFFFF
+
+!                  'background', 'border'
+rofi.color-window: #2b0036,      #db00ff
+rofi.bw:                             5
+rofi.location:                       0
+rofi.padding:                        5
+rofi.levenshtein-sort:               true
+rofi.case-sensitive:                 false
+rofi.fuzzy:                          false
+rofi.line-margin:                    2
+rofi.separator-style:                solid
+rofi.hide-scrollbar:                 true
+rofi.markup-rows:                    false
+rofi.scrollbar-width:                8
+
+

@@ -326,7 +326,7 @@ exec --no-startup-id nitrogen --restore; sleep 1; compton -b
 #exec --no-startup-id pamac-tray
 # exec --no-startup-id clipit
 # exec --no-startup-id blueman
-# exec_always --no-startup-id sbxkb
+exec_always --no-startup-id sbxkb
 # exec --no-startup-id start_conky_maia
 # exec --no-startup-id start_conky_green
 exec --no-startup-id xautolock -time 0 -locker blurlock
@@ -438,15 +438,16 @@ bar {
     #tatus_command /home/iliayar/bin/i3status-rs ~/.config/i3status-rs/config.toml
     #status_command conky
     #status_command /home/iliayar/bin/bumblebee-status/bumblebee-status -m mpd layout-xkb nic pasink datetime -t onedark-powerline 
-    status_command i3status
+    status_command i3blocks
+    #status_command i3status
     colors {
-        separator #FFFFFF
-        background #5f0343    
-        statusline #FFFFFF
-        focused_workspace #ff003e #ff003e #ffffff
-        active_workspace #ff003e #c40075 #ffffff
-        inactive_workspace #ff003e #73009b #ffffff
-        urgent_workspace #ff003e #c40075 #ffffff
+        separator $foreground
+        background $background
+        statusline $foreground
+        focused_workspace $color10 $color10 $foreground
+        active_workspace $color10 $color3 $foreground
+        inactive_workspace $color10 $color13 $foreground
+        urgent_workspace $color19 $color3 $foreground
     }
 }
 
