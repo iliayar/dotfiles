@@ -378,8 +378,8 @@ client.placeholder	$foreground	$background	$foreground	$color8		$color8
 #############################
 
 # Set inner/outer gaps
-gaps inner 8
-gaps outer 8
+gaps inner 0
+gaps outer 0
 
 # Additionally, you can issue commands with the following syntax. This is useful to bind keys to changing the gap size.
 # gaps inner|outer current|all set|plus|minus <px>
@@ -441,13 +441,13 @@ bar {
     status_command i3blocks
     #status_command i3status
     colors {
-        separator $foreground
+        separator $color7
         background $background
-        statusline $foreground
-        focused_workspace $color10 $color10 $foreground
-        active_workspace $color10 $color3 $foreground
-        inactive_workspace $color10 $color13 $foreground
-        urgent_workspace $color19 $color3 $foreground
+        statusline $color7
+        focused_workspace $color1 $color1 $color7
+        active_workspace $color1 $color1 $color7
+        inactive_workspace $color10 $color13 $color7
+        urgent_workspace $color19 $color3 $color7
     }
 }
 

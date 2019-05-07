@@ -1,44 +1,84 @@
 [options]
-font = Monospace 9
+font = DejaVu Sans Mono, FontAwesome 9
 scrollback_lines = -1
 
 [colors]
 
-# special
-foreground      = #ffffff
-cursor          = #33ff00
-background      = rgba(43,0,54,0.8)
-
-# black
-color0  = #000000
-color8  = #ff7000
-
-# red
-color1  = #22aa00
-color9  = #ff0099
-
-# green
-color2  = #33dd00
-color10 = #ff003e
-
-# yellow
-color3  = #c40075
-color11 = #b80021
-
+## special
+#foreground      = #ffffff
+#cursor          = #33ff00
+#background      = rgba(43,0,54,0.8)
+#
+## black
+#color0  = #000000
+#color8  = #ff7000
+#
+## red
+#color1  = #22aa00
+#color9  = #ff0099
+#
+## green
+#color2  = #33dd00
+#color10 = #ff003e
+#
+## yellow
+#color3  = #c40075
+#color11 = #b80021
+#
 # blue
-color4  = #0070ff
-color12 = #0059b9
+#color4  = #0070ff
+#color12 = #0059b9
+#
+## magenta
+#color5  = #db00ff
+#color13 = #73009b
+#
+## cyan
+#color6  = #00fcff
+#color14 = #019b9b
+#
+## white
+#color7  = #ccff00
+#color15 = #c7c700
 
-# magenta
-color5  = #db00ff
-color13 = #73009b
+#################################
+# Color settings (Solarized dark)
+#################################
 
-# cyan
-color6  = #00fcff
-color14 = #019b9b
+background = #002b36
+foreground = #657b83
+cursor = #93a1a1
 
-# white
-color7  = #ccff00
-color15 = #c7c700
+# black dark/light
+color0 = #073642
+color8 = #002b36
+
+# red dark/light
+color1 = #dc322f
+color9 = #cb4b16
+
+# green dark/light
+color2 = #859900
+color10 = #586e75
+
+# yellow dark/light
+color3 = #b58900
+color11 = #657b83
+
+# blue dark/light
+color4 = #268bd2
+color12 = #839496
+
+# magenta dark/light
+color5 = #d33682
+color13 = #6c71c4
+
+# cyan dark/light
+color6 = #2aa198
+color14 = #93a1a1
+
+# white dark/light
+color7 = #eee8d5
+color15 = #fdf6e3
 
 [hints]

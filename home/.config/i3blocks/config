@@ -56,7 +56,7 @@ interval=30
 # The script may be called with a optional argument to set the alert
 # (defaults to 10 for 10%).
 [disk]
-label= 
+label=
 #instance=/mnt/data
 interval=30
 
