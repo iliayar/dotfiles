@@ -39,6 +39,6 @@ rm -Rf /tmp/colorMgr
 
 echo "Installing Themes"
 
-[ -d $HOME/Themes ] rm -Rf $HOME/Themes
+[ -d $HOME/Themes ] && rm -Rf $HOME/Themes
 git clone https://github.com/iliayar/MyThemes.git $HOME/Themes
 
