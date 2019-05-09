@@ -378,8 +378,8 @@ client.placeholder	$foreground	$background	$foreground	$color8		$color8
 #############################
 
 # Set inner/outer gaps
-gaps inner 0
-gaps outer 0
+gaps inner 8
+gaps outer 5
 
 # Additionally, you can issue commands with the following syntax. This is useful to bind keys to changing the gap size.
 # gaps inner|outer current|all set|plus|minus <px>
@@ -444,10 +444,10 @@ bar {
         separator $color7
         background $background
         statusline $color7
-        focused_workspace $color1 $color1 $color7
-        active_workspace $color1 $color1 $color7
-        inactive_workspace $color10 $color13 $color7
-        urgent_workspace $color19 $color3 $color7
+        focused_workspace $color9 $color9 $color7
+        active_workspace $color9 $color9 $color7
+        inactive_workspace $color1 $color0 $color7
+        urgent_workspace $color6 $color3 $color7
     }
 }
 
