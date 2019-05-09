@@ -24,18 +24,21 @@ cp .bashrc $HOME/
 
 cp .vim/colors $HOME/.vim/colors -r
 
+[ -d $HOME/.vim/bundle/neobundle.vim ] && rm -Rf $HOME/.vim/bundle/neobundle.vim
 git clone https://github.com/Shougo/neobundle.vim.git $HOME/.vim/bundle/neobundle.vim
 
 echo "Installing bins"
 
-[! -d $HOME/bin ] && mkdir $HOME/bin
+[ ! -d $HOME/bin ] && mkdir $HOME/bin
 
 cp bin $HOME/bin -r
 
 git clone https://github.com/iliayar/ColorsManager.git /tmp/colorMgr
 gcc -lstdc++ /tmp/colorMgr/src/color-utils.cpp -o $HOME/bin/color-utils
+rm -Rf /tmp/colorMgr
 
 echo "Installing Themes"
 
+[ -d $HOME/Themes ] rm -Rf $HOME/Themes
 git clone https://github.com/iliayar/MyThemes.git $HOME/Themes
 
