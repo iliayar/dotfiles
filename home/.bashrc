@@ -21,7 +21,7 @@ shopt -s expand_aliases
 export HISTCONTROL=ignoredups
 # Append to history
 shopt -s histappend
-export PROMPT_COMMAND='history -a;history -c;history -r'
+# export PROMPT_COMMAND='history -a;history -c;history -r'
 # Complete after *comand*
 complete -cf sudo
 complete -cf man
