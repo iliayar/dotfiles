@@ -34,7 +34,6 @@ cp bin $HOME/bin -r
 
 git clone https://github.com/iliayar/ColorsManager.git /tmp/colorMgr
 gcc -lstdc++ /tmp/colorMgr/src/color-utils.cpp -o $HOME/bin/color-utils
-rm -R /tmp/colorMgr
 
 echo "Installing Themes"
 
