@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Installing deps"
+sudo pacman -S -q --needed termite rofi compton dunst udiskie sbxkb > /dev/null 2>&1
+
 cd home
 
 echo "Installing .config"
@@ -25,7 +28,7 @@ cp .bashrc $HOME/
 cp .vim/colors $HOME/.vim/colors -r
 
 [ -d $HOME/.vim/bundle/neobundle.vim ] && rm -Rf $HOME/.vim/bundle/neobundle.vim
-git clone https://github.com/Shougo/neobundle.vim.git $HOME/.vim/bundle/neobundle.vim
+git clone -q https://github.com/Shougo/neobundle.vim.git $HOME/.vim/bundle/neobundle.vim
 
 echo "Installing bins"
 
@@ -33,13 +36,13 @@ echo "Installing bins"
 
 cp bin $HOME/ -r
 
-git clone https://github.com/iliayar/ColorsManager.git /tmp/colorMgr
+git clone -q https://github.com/iliayar/ColorsManager.git /tmp/colorMgr
 gcc -lstdc++ /tmp/colorMgr/src/color-utils.cpp -o $HOME/bin/color-utils
 rm -Rf /tmp/colorMgr
 
 echo "Installing Themes"
 
 [ -d $HOME/Themes ] && rm -Rf $HOME/Themes
-git clone https://github.com/iliayar/MyThemes.git $HOME/Themes
+git clone -q https://github.com/iliayar/MyThemes.git $HOME/Themes
 
 $HOME/bin/apply-theme.sh Monokai
