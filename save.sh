@@ -32,4 +32,4 @@ echo "Copying bash, vim configs"
 
 cp $HOME/.bashrc home/.bashrc
 cp $HOME/.vimrc home/.vimrc
-cp $HOME/.vim/colors home/.vim/colors -r
+cp $HOME/.vim/colors home/.vim/ -r

@@ -31,7 +31,7 @@ echo "Installing bins"
 
 [ ! -d $HOME/bin ] && mkdir $HOME/bin
 
-cp bin $HOME/bin -r
+cp bin $HOME/ -r
 
 git clone https://github.com/iliayar/ColorsManager.git /tmp/colorMgr
 gcc -lstdc++ /tmp/colorMgr/src/color-utils.cpp -o $HOME/bin/color-utils
@@ -42,3 +42,4 @@ echo "Installing Themes"
 [ -d $HOME/Themes ] && rm -Rf $HOME/Themes
 git clone https://github.com/iliayar/MyThemes.git $HOME/Themes
 
+$HOME/bin/apply-theme.sh Monokai
