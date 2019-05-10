@@ -22,7 +22,7 @@ cp .vimrc $HOME/
 cp .bashrc $HOME/
 cp .zshrc $HOME/
 [ -d $HOME/.oh-my-zsh ] && rm -Rf $HOME/.oh-my-zsh
-git clone https://github.com/robbyrussell/oh-my-zsh.git $HOME/.oh-my-zsh
+git clone -q https://github.com/robbyrussell/oh-my-zsh.git $HOME/.oh-my-zsh
 
 [ ! -d $HOME/.vim ] && mkdir $HOME/.vim
 [ ! -d $HOME/.vim/bundle ] && mkdir $HOME/.vim/bundle
