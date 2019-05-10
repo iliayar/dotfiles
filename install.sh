@@ -15,11 +15,14 @@ cp .config/i3blocks $HOME/.config/ -r
 cp .config/termite $HOME/.config/ -r
 cp .config/compton.conf $HOME/.config
 
-echo "Installing bash, vim configs"
+echo "Installing zsh, bash, vim configs"
 
 cp .Xresources $HOME/
 cp .vimrc $HOME/
 cp .bashrc $HOME/
+cp .zshrc $HOME/
+
+git clone https://github.com/robbyrussell/oh-my-zsh.git $HOME/.oh-my-zsh
 
 [ ! -d $HOME/.vim ] && mkdir $HOME/.vim
 [ ! -d $HOME/.vim/bundle ] && mkdir $HOME/.vim/bundle

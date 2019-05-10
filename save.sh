@@ -28,8 +28,10 @@ cp $HOME/bin/apply-theme.sh home/bin/apply-theme.sh
 cp $HOME/bin/lock.sh home/bin/lock.sh
 cp $HOME/bin/blocks home/bin/blocks -r
 
-echo "Copying bash, vim configs"
+echo "Copying zsh, bash, vim configs"
 
 cp $HOME/.bashrc home/.bashrc
 cp $HOME/.vimrc home/.vimrc
 cp $HOME/.vim/colors home/.vim/ -r
+
+cp $HOME/.zshrc home/.zshrc
