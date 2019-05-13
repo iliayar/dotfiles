@@ -33,10 +33,10 @@ markup=none
 # The first parameter sets the step (and units to display)
 # The second parameter overrides the mixer selection
 # See the script for details.
-[mpd]
-command=~/bin/blocks/mpd.sh
-interval=1
-align=center
+# [mpd]
+# command=~/bin/blocks/mpd.sh
+# interval=1
+# align=center
 
 [sound]
 command=~/bin/blocks/sound.sh
@@ -95,11 +95,11 @@ interval=1
 # Battery indicator
 #
 # The battery instance defaults to 0.
-#[battery]
+[battery]
 #label=BAT
-#label=⚡
+label=⚡
 #instance=1
-#interval=30
+interval=30
 
 # Temperature
 #
