@@ -26,7 +26,7 @@ echo "Copying bin"
 
 cp $HOME/bin/apply-theme.sh home/bin/apply-theme.sh
 cp $HOME/bin/lock.sh home/bin/lock.sh
-cp $HOME/bin/blocks home/bin/blocks -r
+cp $HOME/bin/blocks home/bin/ -r
 
 echo "Copying zsh, bash, vim configs"
 
