@@ -10,13 +10,14 @@
 # mkdir home/.vim/colors
 
 
-echo "Copying .config"
+echo "Copying .config, .xsession"
 
 cp $HOME/.config/i3/config home/.config/i3/config
 cp $HOME/.config/dunst/dunstrc home/.config/dunst/dunstrc
 cp $HOME/.config/i3blocks/config home/.config/i3blocks/config
 cp $HOME/.config/termite/config home/.config/termite/config
 cp $HOME/.config/compton.conf home/.config/compton.conf
+cp $HOME/.xsession home/.xsession
 
 echo "Copying Xresources"
 
