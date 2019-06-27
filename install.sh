@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Installing deps"
-sudo pacman -S -q --needed termite rofi compton dunst udiskie sbxkb > /dev/null 2>&1
+sudo pacman -S -q --needed zsh termite rofi compton dunst udiskie sbxkb > /dev/null 2>&1
 
 cd home
 
@@ -28,6 +28,7 @@ echo "Installing zsh"
 git clone -q https://github.com/robbyrussell/oh-my-zsh.git $HOME/.oh-my-zsh
 git clone -q https://github.com/zsh-users/zsh-autosuggestions.git $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 git clone -q  https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+chsh -s /bin/zsh
 
 [ ! -d $HOME/.vim ] && mkdir $HOME/.vim
 [ ! -d $HOME/.vim/bundle ] && mkdir $HOME/.vim/bundle
