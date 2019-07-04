@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Installing deps"
-sudo pacman -S -q --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen awesome-terminal-fonts
+sudo pacman -S -q --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen awesome-terminal-fonts scrot pulsemixer imagemagick
 
 cd home
 
