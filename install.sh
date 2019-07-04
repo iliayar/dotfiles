@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Installing deps"
-sudo pacman -S -q --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen
+sudo pacman -S -q --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen awesome-terminal-fonts
 
 cd home
 
@@ -34,7 +34,7 @@ chsh -s /bin/zsh
 [ ! -d $HOME/.vim/bundle ] && mkdir $HOME/.vim/bundle
 [ ! -d $HOME/.vim/colors ] && mkdir $HOME/.vim/colors
 
-cp .vim/colors $HOME/.vim/colors -r
+cp .vim/colors $HOME/.vim/ -r
 
 [ -d $HOME/.vim/bundle/neobundle.vim ] && rm -Rf $HOME/.vim/bundle/neobundle.vim
 git clone -q https://github.com/Shougo/neobundle.vim.git $HOME/.vim/bundle/neobundle.vim
