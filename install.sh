@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Installing deps"
-sudo pacman -S -q --needed zsh termite rofi compton dunst udiskie sbxkb > /dev/null 2>&1
+sudo pacman -S -q --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen
 
 cd home
 
