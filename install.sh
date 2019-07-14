@@ -55,3 +55,15 @@ echo "Installing Themes"
 git clone -q https://github.com/iliayar/MyThemes.git $HOME/Themes
 
 $HOME/bin/apply-theme.sh Monokai
+
+echo "Installing others"
+
+sudo cp ./other/xorg.conf /etc/X11/xorg.conf
+
+sudo mkdir /usr/share/wallpapers/Custom
+sudo cp /home/iliayar/Themes/Monokai.png /usr/share/wallpapers/Custom/1920x1080.jpg
+sudo cat > /usr/share/sddm/themes/breeze/theme.conf.user <<EOF
+[General]
+type=image
+background=/usr/share/wallpapers/Custom/1920x1080.jpg
+EOF
