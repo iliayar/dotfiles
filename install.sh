@@ -65,3 +65,4 @@ sudo cp xorg.conf /etc/X11/xorg.conf
 sudo mkdir /usr/share/wallpapers/Custom
 sudo cp /home/iliayar/Themes/Monokai.png /usr/share/wallpapers/Custom/1920x1080.jpg
 sudo cp theme.conf.user /usr/share/sddm/themes/breeze/theme.conf.user
+sudo cp sddm.conf /etc/sddm.conf
