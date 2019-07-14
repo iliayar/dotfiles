@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Installing deps"
-sudo pacman -S -q --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen awesome-terminal-fonts scrot pulsemixer imagemagick
+sudo pacman -S -q --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen awesome-terminal-fonts scrot pulsemixer imagemagick i3-scrot zathura ranger
 
 cd home
 
@@ -14,6 +14,7 @@ cp .config/dunst $HOME/.config/ -r
 cp .config/i3blocks $HOME/.config/ -r
 cp .config/termite $HOME/.config/ -r
 cp .config/compton.conf $HOME/.config
+cp .config/i3-scrot.conf $HOME/.config/i3-scrot.conf
 
 echo "Installing bash, vim configs"
 
