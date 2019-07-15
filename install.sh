@@ -1,7 +1,20 @@
 #!/bin/bash
+DIR=$(dirname $(readlink -f $0))
+ST_PWD=$PWD
+
+cd $DIR
 
 echo "Installing deps"
+
 sudo pacman -S -q --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen awesome-terminal-fonts scrot pulsemixer imagemagick i3-scrot zathura ranger plasma
+
+if [[ ! -e /bin/yay ]]; then 
+cd /tmp
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makpkg -si
+cd $DIR
+fi
 
 cd home
 
@@ -67,3 +80,5 @@ sudo mkdir /usr/share/wallpapers/Custom
 sudo cp /home/iliayar/Themes/Monokai.png /usr/share/wallpapers/Custom/1920x1080.jpg
 sudo cp theme.conf.user /usr/share/sddm/themes/breeze/theme.conf.user
 sudo cp sddm.conf /etc/sddm.conf
+
+cd $ST_PWD
