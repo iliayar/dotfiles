@@ -17,6 +17,18 @@ syntax on
 " specific settings
 set nocursorline
 set title
+
+set list
+set listchars=
+set listchars+=tab:>\ 
+set listchars+=trail:·
+set listchars+=extends:»
+set listchars+=space:⋅
+set listchars+=precedes:«
+set listchars+=nbsp:⣿
+let g:indentLine_leadingSpaceEnabled = 1
+let g:indentLine_leadingSpaceChar = '·'
+
 set autoindent
 set ruler
 set shortmess=aoOTI
@@ -28,8 +40,9 @@ set nomodeline
 set showcmd
 set showmatch
 set noexpandtab
-set tabstop=4
-set shiftwidth=4
+set tabstop=1
+set shiftwidth=1
+set expandtab
 set cinoptions=(0,m1,:1
 set formatoptions=tcqr2
 set laststatus=2
@@ -48,12 +61,12 @@ set number
 set backspace=indent,eol,start
 set ttimeoutlen=100
 " USE TABS INSTEAD OF SPACES
-set noexpandtab
-set copyindent
-set preserveindent
-set softtabstop=0
-set shiftwidth=4
-set tabstop=4
+" set noexpandtab
+" set copyindent
+" set preserveindent
+" set softtabstop=0
+" set shiftwidth=4
+" set tabstop=4
 "  CONSTIL`
 
 " Better completion
