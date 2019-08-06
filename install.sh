@@ -74,7 +74,7 @@ cd ../other
 
 sudo cp xorg.conf /etc/X11/xorg.conf
 
-git clone https://git.iliayar.ru/iliayar/sddm-sugar-candy
+git clone https://www.opencode.net/marianarlt/sddm-sugar-candy
 sudo mv sddm-sugar-candy /usr/share/sddm/themes/
 
 sudo cp theme.conf.user /usr/share/sddm/themes/sddm-sugar-candy/theme.conf.user
