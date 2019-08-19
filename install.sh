@@ -72,13 +72,12 @@ echo "Installing others"
 
 cd ../other
 
+yay -S ly-git
+
+sudo systemctl disable sddm
+sudo systemctl enable ly
+
 sudo cp xorg.conf /etc/X11/xorg.conf
-
-git clone https://www.opencode.net/marianarlt/sddm-sugar-candy
-sudo mv sddm-sugar-candy /usr/share/sddm/themes/
-
-sudo cp theme.conf.user /usr/share/sddm/themes/sddm-sugar-candy/theme.conf.user
-sudo cp sddm.conf /etc/sddm.conf
 
 $HOME/bin/apply-theme.sh Monokai
 
