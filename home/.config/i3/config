@@ -369,7 +369,7 @@ client.background	$background
 client.focused         	$foreground	$background	$foreground	$color1		$color1
 client.unfocused       	$foreground	$background	$foreground	$color8		$color8
 client.focused_inactive	$foreground	$background	$foreground	$color8		$color8
-client.urgent		$foreground	$background	$foreground	$color8		$color8
+client.urgent  $foreground	$background	$foreground	$color8		$color8
 client.placeholder	$foreground	$background	$foreground	$color8		$color8
 
 
@@ -451,6 +451,10 @@ bar {
     }
 }
 
+
+
+bindsym XF86MonBrightnessUp exec light -A 10
+bindsym XF86MonBrightnessDown exec light -U 10
 
 
 bindsym XF86AudioNext exec mpc next

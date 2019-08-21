@@ -45,7 +45,7 @@ scrollback_lines = -1
 # Color settings (Solarized dark)
 #################################
 
-background = rgba(12, 12, 12, 0.8)
+background = rgba(12, 12, 12, 0.8 )
 foreground = #d9d9d9
 cursor = #fc971f
 
@@ -82,6 +82,19 @@ color7 = #c4c5b5
 color15 = #f6f6ef
 
 [hints]
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
