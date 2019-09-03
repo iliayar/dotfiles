@@ -6,13 +6,13 @@ cd $DIR
 
 echo "Installing deps"
 
-sudo pacman -S -q --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen awesome-terminal-fonts scrot pulsemixer imagemagick i3-scrot zathura rangera qt5-graphicaleffects qt5-quickcontrols2 qt5-svg
+sudo pacman -S  --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen awesome-terminal-fonts scrot pulsemixer imagemagick zathura
 
 if [[ ! -e /bin/yay ]]; then 
 cd /tmp
 git clone https://aur.archlinux.org/yay.git
 cd yay
-makpkg -si
+makepkg -si
 cd $DIR
 fi
 
@@ -72,7 +72,7 @@ echo "Installing others"
 
 cd ../other
 
-yay -S ly-git
+yay -S ly-git i3-scrot
 
 sudo systemctl disable sddm
 sudo systemctl enable ly
