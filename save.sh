@@ -37,3 +37,7 @@ cp $HOME/.vimrc home/.vimrc
 cp $HOME/.vim/colors home/.vim/ -r
 
 cp $HOME/.zshrc home/.zshrc
+
+echo "Copying other"
+
+cp /etc/X11/xorg.conf other/xorg.conf

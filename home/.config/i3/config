@@ -453,8 +453,8 @@ bar {
 
 
 
-bindsym XF86MonBrightnessUp exec sudo light -A 5
-bindsym XF86MonBrightnessDown exec sudo light -U 5
+bindsym XF86MonBrightnessUp exec light -A 5
+bindsym XF86MonBrightnessDown exec light -U 5
 
 
 bindsym XF86AudioNext exec playerctl next
