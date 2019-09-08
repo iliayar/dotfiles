@@ -33,10 +33,11 @@ markup=none
 # The first parameter sets the step (and units to display)
 # The second parameter overrides the mixer selection
 # See the script for details.
-#[mpd]
-#command=~/bin/blocks/mpd.sh
-#interval=1
-#align=center
+
+[music]
+command=~/bin/blocks/music.sh
+interval=1
+
 
 [sound]
 command=~/bin/blocks/sound.sh
@@ -57,7 +58,7 @@ interval=30
 # (defaults to 10 for 10%).
 [disk]
 label=
-#instance=/mnt/data
+instance=/
 interval=30
 
 # Network interface monitoring
@@ -107,9 +108,9 @@ interval=30
 # The script may be called with -w and -c switches to specify thresholds,
 # see the script for details.
 [temperature]
+command=/usr/lib/i3blocks/temperature --chip=coretemp-isa-0000
 label=
 interval=10
-
 
 # Date Time
 #
