@@ -1,3 +1,0 @@
-xrdb  ~/.Xresources
-mpd &
-NetworkManager &
