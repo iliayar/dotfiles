@@ -47,9 +47,9 @@ interval=1
 #
 # The type defaults to "mem" if the instance is not specified.
 [memory]
-label=MEM
+label=
 separator=false
-interval=30
+interval=1
 
 # Disk usage
 #
@@ -69,16 +69,15 @@ interval=30
 #instance=wlan0
 color=#00FF00
 interval=10
-separator=false
+separator=true
 
 #[wifi]
 #instance=wlp3s0
 #interval=10
 #separator=false
 
-[bandwidth]
-instance=enp3s0
-interval=1
+#[bandwidth]
+#interval=1
 
 # CPU usage
 #

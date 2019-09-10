@@ -92,7 +92,7 @@ bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
 # change focus
 bindsym $mod+j focus left
 bindsym $mod+k focus down
-bindsym $mod+l focus up
+#bindsym $mod+l focus up
 bindsym $mod+odiaeresis focus right
 
 # alternatively, you can use the cursor keys:
@@ -275,7 +275,7 @@ bindsym $mod+Ctrl+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut
 bindsym $mod+Shift+e mode "$mode_system"
 set $mode_system (l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown
 mode "$mode_system" {
-    bindsym l exec --no-startup-id /home/iliayar/bin/lock.sh, mode "default"
+    bindsym l exec --no-startup-id ~/bin/lock.sh, mode "default"
     bindsym s exec --no-startup-id i3exit suspend, mode "default"
     bindsym u exec --no-startup-id i3exit switch_user, mode "default"
     bindsym e exec --no-startup-id i3-msg exit, mode "default"
@@ -316,7 +316,6 @@ mode "resize" {
 bindsym $mod+Ctrl+l exec --no-startup-id blurlock
 
 # Autostart applications
-exec_always nm-applet
 exec_always udiskie
 exec_always --no-startup-id xrdb  ~/.Xresources
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
@@ -329,7 +328,7 @@ exec --no-startup-id nitrogen --restore; sleep 1; compton -b
 exec_always --no-startup-id sbxkb
 # exec --no-startup-id start_conky_maia
 # exec --no-startup-id start_conky_green
-exec --no-startup-id xautolock -time 0 -locker blurlock
+#exec --no-startup-id xautolock -time 0 -locker blurlock
 #exec_always --no-startup-id fix_xcursor
 
 
@@ -451,7 +450,9 @@ bar {
     }
 }
 
+bindsym XF86TouchpadToggle exec ~/bin/toggletouchpad.sh
 
+bindsym $mod+l exec --no-startup-id ~/bin/lock.sh
 
 bindsym XF86MonBrightnessUp exec light -A 5
 bindsym XF86MonBrightnessDown exec light -U 5
