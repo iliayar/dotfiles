@@ -1,5 +1,6 @@
 [Default Applications]
 x-scheme-handler/mailto=chromium.desktop;
 application/pdf=org.pwmt.zathura-pdf-mupdf.desktop
+text/plain=vim.desktop
 [Added Associations]
 
