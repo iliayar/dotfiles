@@ -28,6 +28,7 @@ cp .config/i3blocks $HOME/.config/ -r
 cp .config/termite $HOME/.config/ -r
 cp .config/compton.conf $HOME/.config
 cp .config/i3-scrot.conf $HOME/.config/i3-scrot.conf
+cp .config/mimeapps.list $HOME/.config/mimeapps.list
 
 echo "Installing bash, vim configs"
 

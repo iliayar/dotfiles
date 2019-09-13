@@ -47,7 +47,7 @@ set cinoptions=(0,m1,:1
 set formatoptions=tcqr2
 set laststatus=2
 set nomodeline
-set clipboard=unnamed
+set clipboard=unnamedplus
 set softtabstop=4
 set showtabline=1
 set smartcase
@@ -171,6 +171,7 @@ noremap <C-k> <C-w>k
 noremap <C-l> <C-w>l
 
 noremap <leader>v <C-w>v
+noremap <leader>s <C-w>s
 
 " Quick editing {{{
 nnoremap <leader>ev :vsplit ~/.vimrc<cr>
@@ -185,9 +186,23 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'jiangmiao/auto-pairs'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'terryma/vim-multiple-cursors'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/vimproc', {'build' : {'unix' : 'make -f make_unix.mal',},}
+NeoBundle 'jlanzarotta/bufexplorer'
+NeoBundle 'Shougo/neocomplete.vim'
+NeoBundle 'justmao945/vim-clang'
+NeoBundle 'iamcco/mathjax-support-for-mkdp'
+NeoBundle 'iamcco/markdown-preview.vim'
+" }}}
+" JavaComplete {{{
+autocmd FileType java setlocal omnifunc=javacomplete#Complete
+" }}}
+" ClangComplete {{{
+let g:clang_library_path='/usr/lib64/libclang.so.8'
+" }}}
+" NeoComplete {{{
+let g:neocomplete#enable_at_startup = 1
+
+let g:neocomplete#enable_smart_case = 1
+
 " }}}
 " NERD Tree {{{
 call neobundle#end()
@@ -216,12 +231,5 @@ let NERDTreeMapJumpFirstChild = 'gK'
 " }}}
 " Tagbar {{{
 nnoremap <F9> :TagbarToggle<CR>
-" }}}
-" Unite {{{
-nnoremap <C-s> :Unite file_rec/async<cr>
-nnoremap <leader>/ :Unite grep:.<cr>
-let g:unite_source_history_yank_enable = 1
-nnoremap <leader>y :Unite history/yank<cr>
-nnoremap <leader>b :Unite -quick-match buffer<cr>
 " }}}
 " }}}
