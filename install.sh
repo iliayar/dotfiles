@@ -6,7 +6,7 @@ cd $DIR
 
 echo "Installing deps"
 
-sudo pacman -S  --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen awesome-terminal-fonts scrot pulsemixer imagemagick zathura
+sudo pacman -S  --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen awesome-terminal-fonts scrot pulsemixer imagemagick zathura clang 
 
 if [[ ! -e /bin/yay ]]; then 
 cd /tmp
