@@ -1,5 +1,5 @@
 [options]
-font = DejaVu Sans Mono, FontAwesome 9
+font = FreeMono 9
 scrollback_lines = -1
 
 [colors]
