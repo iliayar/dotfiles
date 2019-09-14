@@ -6,7 +6,7 @@ set nocompatible               " be iMproved
 filetype off                   " required!
 set runtimepath+=~/.vim/bundle/neobundle.vim/
 
- call neobundle#begin(expand('/home/iliayar/.vim/bundle/'))
+ call neobundle#begin(expand('$HOME/.vim/bundle/'))
 " }}}
 " Basic options ----------------------------------------------------------- {{{
 

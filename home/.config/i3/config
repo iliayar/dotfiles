@@ -434,11 +434,7 @@ mode "$mode_gaps_outer" {
 bar {
     font pango:DejaVu Sans Mono, FontAwesome 8
     position bottom
-    #tatus_command /home/iliayar/bin/i3status-rs ~/.config/i3status-rs/config.toml
-    #status_command conky
-    #status_command /home/iliayar/bin/bumblebee-status/bumblebee-status -m mpd layout-xkb nic pasink datetime -t onedark-powerline 
     status_command i3blocks
-    #status_command i3status
     colors {
         separator $color7
         background $background
@@ -470,10 +466,3 @@ bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% # 
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # Mute
 
 bindsym $mod+m workspace "Music"
-
-#bindsym Ctrl+Mod1+s exec /home/iliayar/VMs/StartWin10.sh
-#bindsym Ctrl+Shift+s exec /home/iliayar/VMs/ShutdownWin10.sh
-#bindsym Ctrl+Shift+r exec /home/iliayar/VMs/ResetWin10.sh
-#bindsym Ctrl+Mod1+t exec /home/iliayar/VMs/toggleUSB.sh
-#bindsym Ctrl+Mod1+g "exec i3-msg workspace Windows;exec killall /home/iliayar/VMs/looking-glass-client;exec ~/VMs/toggleUSB.sh 1; exec ~/VMs/looking-glass-client -k -s -K 60 -F"
-#bindsym Ctrl+Mod1+f "workspace 1; exec killall /home/iliayar/VMs/looking-glass-client; exec ~/VMs/toggleUSB.sh 2"
