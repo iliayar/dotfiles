@@ -7,7 +7,7 @@ cd $DIR
 install_deps() {
     echo "Installing deps"
 
-    sudo pacman -S  --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts
+    sudo pacman -S  --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm
 
     if [[ ! -e /bin/yay ]]; then 
     cd /tmp
@@ -16,6 +16,8 @@ install_deps() {
     makepkg -si
     cd $DIR
     fi
+
+    yay -S gksu
 
     cd $DIR
 }
