@@ -432,7 +432,7 @@ mode "$mode_gaps_outer" {
 #for_window [class=^.*] floating enable
 
 bar {
-    font pango:DejaVu Sans Mono, FontAwesome 8
+    font pango:FreeMono 9
     position bottom
     status_command i3blocks
     colors {
