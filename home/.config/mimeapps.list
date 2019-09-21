@@ -2,5 +2,10 @@
 x-scheme-handler/mailto=chromium.desktop;
 application/pdf=org.pwmt.zathura-pdf-mupdf.desktop
 text/plain=vim.desktop
+text/html=chromium.desktop
+x-scheme-handler/http=chromium.desktop
+x-scheme-handler/https=chromium.desktop
+x-scheme-handler/about=chromium.desktop
+x-scheme-handler/unknown=chromium.desktop
 [Added Associations]
 

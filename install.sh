@@ -64,6 +64,8 @@ install_vim() {
     curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
+    sudo python3 -m pip install pynvim jedi
+
     cd $DIR
 }
 
