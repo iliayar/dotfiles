@@ -19,6 +19,7 @@ cp $HOME/.config/termite/config home/.config/termite/config
 cp $HOME/.config/compton.conf home/.config/compton.conf
 cp $HOME/.config/i3-scrot.conf home/.config/i3-scrot.conf
 cp $HOME/.config/mimeapps.list home/.config/mimeapps.list
+cp $HOME/.config/nvim/init.vim home/.config/nvim/init.vim
 
 echo "Copying Xresources"
 
@@ -33,8 +34,6 @@ cp $HOME/bin/blocks home/bin/ -r
 echo "Copying zsh, bash, vim configs"
 
 cp $HOME/.bashrc home/.bashrc
-cp $HOME/.vimrc home/.vimrc
-cp $HOME/.vim/colors home/.vim/ -r
 
 cp $HOME/.zshrc home/.zshrc
 

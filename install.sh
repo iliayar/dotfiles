@@ -36,9 +36,9 @@ install_configs() {
     cp .config/compton.conf $HOME/.config
     cp .config/i3-scrot.conf $HOME/.config/i3-scrot.conf
     cp .config/mimeapps.list $HOME/.config/mimeapps.list
+    cp .config/nvim/init.vim $HOME/.config/nvim
 
     cp .Xresources $HOME/
-    cp .vimrc $HOME/
     cp .bashrc $HOME/
     cp .zshrc $HOME/
 
@@ -60,15 +60,9 @@ install_vim() {
     cd home
 
     echo "Installing vim"   
-
-    [ ! -d $HOME/.vim ] && mkdir $HOME/.vim
-    [ ! -d $HOME/.vim/bundle ] && mkdir $HOME/.vim/bundle
-    [ ! -d $HOME/.vim/colors ] && mkdir $HOME/.vim/colors
-
-    cp .vim/colors $HOME/.vim/ -r
-
-    [ -d $HOME/.vim/bundle/neobundle.vim ] && rm -Rf $HOME/.vim/bundle/neobundle.vim
-    git clone -q https://github.com/Shougo/neobundle.vim.git $HOME/.vim/bundle/neobundle.vim
+    
+    curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
     cd $DIR
 }
