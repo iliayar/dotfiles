@@ -66,6 +66,8 @@ install_vim() {
 
     sudo python3 -m pip install pynvim jedi yapf pylint
 
+    cp .config/nvim/colors/blackarch.vim $HOME/.config/nvim/colors/blackarch.vim
+
     cd $DIR
 }
 
