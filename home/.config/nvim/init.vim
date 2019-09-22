@@ -5,6 +5,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 " Plugins {
 Plug 'davidhalter/jedi-vim'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'deoplete-plugins/deoplete-clang'
 Plug 'zchee/deoplete-jedi'
 Plug 'vim-airline/vim-airline'
 Plug 'jiangmiao/auto-pairs'
@@ -61,6 +62,14 @@ colorscheme blackarch
 set background=dark
 
 map <C-t> :terminal<cr>
+
+set tabstop=8
+set softtabstop=0
+set expandtab
+set shiftwidth=4
+set smarttab
 " }
 
 call plug#end()
+call neomake#configure#automake('nrwi', 50)
+
