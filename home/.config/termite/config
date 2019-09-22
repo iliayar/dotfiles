@@ -1,5 +1,5 @@
 [options]
-font = FreeMono, FontAwesome 9
+font = Hack 9
 scrollback_lines = -1
 
 [colors]
