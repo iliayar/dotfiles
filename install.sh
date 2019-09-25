@@ -7,7 +7,7 @@ cd $DIR
 install_deps() {
     echo "Installing deps"
 
-    sudo pacman -S  --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm
+    sudo pacman -S  --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm neovim ttf-font python-pip
 
     if [[ ! -e /bin/yay ]]; then 
     cd /tmp
@@ -29,6 +29,8 @@ install_configs() {
 
     [ ! -d $HOME/.config ] && mkdir $HOME/.config
 
+    mkdir $HOME/.config/nvim
+
     cp .config/i3 $HOME/.config/ -r
     cp .config/dunst $HOME/.config/ -r
     cp .config/i3blocks $HOME/.config/ -r
@@ -36,7 +38,7 @@ install_configs() {
     cp .config/compton.conf $HOME/.config
     cp .config/i3-scrot.conf $HOME/.config/i3-scrot.conf
     cp .config/mimeapps.list $HOME/.config/mimeapps.list
-    cp .config/nvim/init.vim $HOME/.config/nvim
+    cp .config/nvim/init.vim $HOME/.config/nvim/init.vim
 
     cp .Xresources $HOME/
     cp .bashrc $HOME/
@@ -66,6 +68,7 @@ install_vim() {
 
     sudo python3 -m pip install pynvim jedi yapf pylint
 
+    mkdir $HOME/.config/nvim/colors
     cp .config/nvim/colors/blackarch.vim $HOME/.config/nvim/colors/blackarch.vim
 
     cd $DIR
