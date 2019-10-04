@@ -7,7 +7,7 @@ cd $DIR
 install_deps() {
     echo "Installing deps"
 
-    sudo pacman -S  --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm neovim ttf-font python-pip
+    sudo pacman -S  --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm neovim ttf-font python-pip devilspie transset-df
 
     if [[ ! -e /bin/yay ]]; then 
     cd /tmp
@@ -43,6 +43,7 @@ install_configs() {
     cp .Xresources $HOME/
     cp .bashrc $HOME/
     cp .zshrc $HOME/
+    cp .devilspie $HOME/ -r
 
     cd $DIR
 }

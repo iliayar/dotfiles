@@ -7,7 +7,7 @@ Plug 'davidhalter/jedi-vim'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'deoplete-plugins/deoplete-clang'
 Plug 'zchee/deoplete-jedi'
-Plug 'vim-airline/vim-airline'
+Plug ':vim-airline/vim-airline'
 Plug 'jiangmiao/auto-pairs'
 Plug 'scrooloose/nerdcommenter'
 Plug 'sbdchd/neoformat'
@@ -18,6 +18,8 @@ Plug 'tmhedberg/SimpylFold'
 Plug 'majutsushi/tagbar'
 Plug 'iamcco/mathjax-support-for-mkdp'
 Plug 'iamcco/markdown-preview.vim'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'chriskempson/base16-vim'
 " }
 " Deoplete {
 let g:deoplete#enable_at_startup = 1
@@ -57,7 +59,8 @@ syntax enable
 
 set termguicolors
 
-colorscheme blackarch
+colorscheme monokai
+
 
 set background=dark
 
@@ -68,8 +71,13 @@ set softtabstop=0
 set expandtab
 set shiftwidth=4
 set smarttab
+set scrolloff=8
 " }
 
 call plug#end()
-call neomake#configure#automake('nrwi', 50)
+call neomake#configure#automake('nrwi', 500)
 
+hi! Normal guibg=NONE
+hi! NonText guibg=NONE
+
+noremap <F5> :Neomake<CR>
