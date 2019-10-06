@@ -70,7 +70,7 @@ install_vim() {
     sudo python3 -m pip install pynvim jedi yapf pylint
 
     mkdir $HOME/.config/nvim/colors
-    cp .config/nvim/colors/blackarch.vim $HOME/.config/nvim/colors/blackarch.vim
+    cp .config/nvim/colors/monokai.vim $HOME/.config/nvim/colors/monokai.vim
 
     cd $DIR
 }
