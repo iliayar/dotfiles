@@ -29,7 +29,7 @@ install_configs() {
 
     [ ! -d $HOME/.config ] && mkdir $HOME/.config
 
-    mkdir $HOME/.config/nvim
+    [ ! -d $HOME/.config/nvim ] && mkdir $HOME/.config/nvim
 
     cp .config/i3 $HOME/.config/ -r
     cp .config/dunst $HOME/.config/ -r
@@ -68,7 +68,7 @@ install_vim() {
 
     sudo python3 -m pip install pynvim jedi yapf pylint
 
-    mkdir $HOME/.config/nvim/colors
+    [ ! -d $HOME/.config/nvim/colors ] && mkdir $HOME/.config/nvim/colors
     cp .config/nvim/colors/monokai.vim $HOME/.config/nvim/colors/monokai.vim
 
     cd $DIR
