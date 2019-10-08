@@ -43,7 +43,6 @@ install_configs() {
     cp .Xresources $HOME/
     cp .bashrc $HOME/
     cp .zshrc $HOME/
-    cp .devilspie $HOME/ -r
 
     cd $DIR
 }

@@ -7,7 +7,7 @@ Plug 'davidhalter/jedi-vim'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'deoplete-plugins/deoplete-clang'
 Plug 'zchee/deoplete-jedi'
-Plug ':vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline'
 Plug 'jiangmiao/auto-pairs'
 Plug 'scrooloose/nerdcommenter'
 Plug 'sbdchd/neoformat'
@@ -23,6 +23,7 @@ Plug 'chriskempson/base16-vim'
 " }
 " Deoplete {
 let g:deoplete#enable_at_startup = 1
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 " }
 " Vim-Airline {
 let g:airline_powerline_fonts = 1
@@ -65,6 +66,7 @@ colorscheme monokai
 set background=dark
 
 map <C-t> :terminal<cr>
+noremap <F5> :Neomake<CR>
 
 set tabstop=8
 set softtabstop=0
@@ -80,4 +82,3 @@ call neomake#configure#automake('nrwi', 500)
 hi! Normal guibg=NONE
 hi! NonText guibg=NONE
 
-noremap <F5> :Neomake<CR>
