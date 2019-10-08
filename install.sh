@@ -7,7 +7,7 @@ cd $DIR
 install_deps() {
     echo "Installing deps"
 
-    sudo pacman -S  --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm neovim ttf-font python-pip devilspie transset-df
+    sudo pacman -S  --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm neovim ttf-font python-pip devilspie transset-df shellcheck
 
     if [[ ! -e /bin/yay ]]; then 
     cd /tmp
