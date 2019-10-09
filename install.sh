@@ -7,13 +7,20 @@ cd $DIR
 install_deps() {
     echo "Installing deps"
 
-    sudo pacman -S  --needed zsh termite rofi compton dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm neovim ttf-font python-pip devilspie transset-df shellcheck
+    sudo pacman -S  --needed zsh termite rofi  dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm neovim ttf-font python-pip devilspie transset-df shellcheck asciidoc
+
+
 
     if [[ ! -e /bin/yay ]]; then 
     cd /tmp
     git clone https://aur.archlinux.org/yay.git
     cd yay
     makepkg -si
+    cd ../
+    git clone https://github.com/tryone144/compton.git
+    cd compton
+    make
+    sudo make install
     cd $DIR
     fi
 

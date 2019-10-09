@@ -50,7 +50,7 @@ bindsym $mod+Shift+q kill
 
 # start program launcher
 #bindsym $mod+d exec --no-startup-id dmenu_recency
-bindsym $mod+d exec --no-startup-id rofi -show drun
+bindsym $mod+d exec --no-startup-id rofi -show drun -show-icons
 # launch categorized menu
 #bindsym $mod+z exec --no-startup-id morc_menu
 
@@ -446,6 +446,8 @@ bar {
         urgent_workspace $color6 $color3 $color7
     }
 }
+
+bindsym $mod+g exec chromium
 
 bindsym XF86TouchpadToggle exec ~/bin/toggletouchpad.sh
 
