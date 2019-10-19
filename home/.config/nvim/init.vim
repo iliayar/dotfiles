@@ -20,6 +20,7 @@ Plug 'iamcco/mathjax-support-for-mkdp'
 Plug 'iamcco/markdown-preview.vim'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'chriskempson/base16-vim'
+Plug 'voldikss/vim-floaterm'
 " }
 " Deoplete {
 let g:deoplete#enable_at_startup = 1
@@ -64,8 +65,16 @@ colorscheme monokai
 
 
 set background=dark
+let g:floaterm_winblend = 10
+let g:floaterm_position = 'topleft'
+let g:floaterm_width = 400
+let g:floaterm_heigth = 50
+let g:floaterm_background = '#272822'
 
-map <C-t> :terminal<cr>
+noremap  <silent> <C-t>           :FloatermToggle<CR>i
+noremap! <silent> <C-t>           <Esc>:FloatermToggle<CR>i
+tnoremap <silent> <C-t>           <C-\><C-n>:FloatermToggle<CR>
+
 noremap <F5> :Neomake<CR>
 
 set tabstop=8

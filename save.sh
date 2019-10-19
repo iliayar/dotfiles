@@ -20,6 +20,7 @@ cp $HOME/.config/compton.conf home/.config/compton.conf
 cp $HOME/.config/i3-scrot.conf home/.config/i3-scrot.conf
 cp $HOME/.config/mimeapps.list home/.config/mimeapps.list
 cp $HOME/.config/nvim/init.vim home/.config/nvim/init.vim
+cp $HOME/.config/rofi/config.rasi home/.config/rofi/config.rasi
 
 echo "Copying Xresources"
 

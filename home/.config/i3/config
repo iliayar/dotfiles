@@ -316,8 +316,8 @@ mode "resize" {
 bindsym $mod+Ctrl+l exec --no-startup-id blurlock
 
 # Autostart applications
-exec_always udiskie
-exec_always devilspie -a
+# exec_always udiskie
+# exec_always devilspie -a
 exec_always --no-startup-id xrdb  ~/.Xresources
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id nitrogen --restore; sleep 1; compton -b
@@ -378,8 +378,10 @@ client.placeholder	$foreground	$background	$foreground	$color8		$color8
 #############################
 
 # Set inner/outer gaps
-gaps inner 0
-gaps outer 0
+gaps inner 4
+gaps outer 2
+
+border_radius 3
 
 # Additionally, you can issue commands with the following syntax. This is useful to bind keys to changing the gap size.
 # gaps inner|outer current|all set|plus|minus <px>
@@ -448,6 +450,7 @@ bar {
 }
 
 bindsym $mod+g exec chromium
+bindsym $mod+Ctrl+g exec chromium --incognito
 
 bindsym XF86TouchpadToggle exec ~/bin/toggletouchpad.sh
 

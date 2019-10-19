@@ -46,6 +46,7 @@ install_configs() {
     cp .config/i3-scrot.conf $HOME/.config/i3-scrot.conf
     cp .config/mimeapps.list $HOME/.config/mimeapps.list
     cp .config/nvim/init.vim $HOME/.config/nvim/init.vim
+    cp .config/rofi/config.rasi $HOME/.config/rofi/config.rasi
 
     cp .Xresources $HOME/
     cp .bashrc $HOME/
