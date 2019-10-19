@@ -37,6 +37,7 @@ install_configs() {
     [ ! -d $HOME/.config ] && mkdir $HOME/.config
 
     [ ! -d $HOME/.config/nvim ] && mkdir $HOME/.config/nvim
+    [ ! -d $HOME/.config/rofi ] && mkdir $HOME/.config/rofi
 
     cp .config/i3 $HOME/.config/ -r
     cp .config/dunst $HOME/.config/ -r
