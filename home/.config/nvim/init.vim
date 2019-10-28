@@ -50,6 +50,7 @@ set listchars+=precedes:«
 set listchars+=nbsp:⣿
 let g:indentLine_leadingSpaceEnabled = 1
 let g:indentLine_leadingSpaceChar = '·'
+let g:AutoPairsMultilineClose = 0
 
 let mapleader = ","
 
@@ -64,12 +65,12 @@ set termguicolors
 colorscheme monokai
 
 
-set background=dark
+" set background=dark
+let g:floaterm_background = '#000000'
 let g:floaterm_winblend = 10
 let g:floaterm_position = 'topleft'
 let g:floaterm_width = 400
 let g:floaterm_heigth = 50
-let g:floaterm_background = '#272822'
 
 noremap  <silent> <C-t>           :FloatermToggle<CR>i
 noremap! <silent> <C-t>           <Esc>:FloatermToggle<CR>i
