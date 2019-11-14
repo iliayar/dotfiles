@@ -9,11 +9,11 @@ export XDG_CONFIG_HOME="$HOME/.config"
 
 alias vim="nvim"
 
-if [[ $(nc -h 2&>1 | grep "GNU" -c) == 1 ]]; then
-    alias nc="nc -c"
-else
-    alias nc="nc -q 0"
-fi
+# if [[ $(nc -h 2&>1 | grep "GNU" -c) == 1 ]]; then
+#     alias nc="nc -c"
+# else
+#     alias nc="nc -q 0"
+# fi
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,

@@ -21,6 +21,8 @@ Plug 'iamcco/markdown-preview.vim'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'chriskempson/base16-vim'
 Plug 'voldikss/vim-floaterm'
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
 " }
 " Deoplete {
 let g:deoplete#enable_at_startup = 1
@@ -78,6 +80,12 @@ tnoremap <silent> <C-t>           <C-\><C-n>:FloatermToggle<CR>
 
 noremap <F5> :Neomake<CR>
 
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+noremap <C-s> :w<CR>
+
 set tabstop=8
 set softtabstop=0
 set expandtab
@@ -91,4 +99,3 @@ call neomake#configure#automake('nrwi', 500)
 
 hi! Normal guibg=NONE
 hi! NonText guibg=NONE
-
