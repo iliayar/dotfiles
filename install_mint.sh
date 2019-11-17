@@ -7,24 +7,45 @@ cd $DIR
 install_deps() {
     echo "Installing deps"
 
-    sudo pacman -S  --needed zsh termite rofi  dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm neovim ttf-font python-pip transset-df shellcheck asciidoc
+# termite sbxkb i3-gaps neovim 
+
+
+    sudo apt-get install -y autoconf
+    sudo apt-get install -y automake
+    sudo apt-get install -y build-essential
+    sudo apt-get install -y libtool
+    sudo apt-get install -y xutils-dev xcb libxcb-composite0-dev
+    sudo apt-get install -y doxygen
+
+    sudo apt install -y zsh rofi dunst nitrogen pulsemixer imagemagick \
+    scrot zathura clang python3 python3-pip python python-pip \
+    asciidoc libconfig++-dev libconfig9
+
+    apt install -y g++ libgtk-3-dev gtk-doc-tools gnutls-bin \
+    valac intltool libpcre2-dev libglib3.0-cil-dev libgnutls28-dev \
+    libgirepository1.0-dev libxml2-utils gperf build-essential \
+    gir1.2-vte-2.91 cmake
 
 
 
-    if [[ ! -e /bin/yay ]]; then 
-    cd /tmp
-    git clone https://aur.archlinux.org/yay.git
-    cd yay
-    makepkg -si
-    cd ../
-    git clone https://github.com/tryone144/compton.git
-    cd compton
+    rm -rf /tmp/Airblader
+
+    git clone https://github.com/Airblader/i3.git /tmp/Airblader
+    cd /tmp/Airblader
+    autoreconf --force --install
+    rm -rf build/
+    mkdir -p build && cd build/
+    ../configure --prefix=/usr --sysconfdir=/etc --disable-sanitizers
+
+    make && sudo make install
+
+    rm -rf /tmp/Airblader
+
+    rm -Rf /tmp/compton
+    git clone https://github.com/tryone144/compton.git /tmp/compton
+    cd /tmp/compton
     make
     sudo make install
-    cd $DIR
-    fi
-
-    yay -S gksu
 
     cd $DIR
 }
@@ -76,6 +97,8 @@ install_vim() {
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
     sudo python3 -m pip install pynvim jedi yapf pylint
+    sudo python -m pip install pynvim jedi yapf pylint
+
 
     [ ! -d $HOME/.config/nvim/colors ] && mkdir $HOME/.config/nvim/colors
     cp .config/nvim/colors/monokai.vim $HOME/.config/nvim/colors/monokai.vim
@@ -91,7 +114,7 @@ echo "Installing bins"
 
     cp bin $HOME/ -r
 
-    git clone -q https://github.com/iliayar/ColorsManager.git /tmp/colorMgr
+    git clone https://github.com/iliayar/ColorsManager.git /tmp/colorMgr
     gcc -lstdc++ /tmp/colorMgr/src/color-utils.cpp -o $HOME/bin/color-utils
     rm -Rf /tmp/colorMgr
 
@@ -102,7 +125,7 @@ install_themes() {
     echo "Installing Themes"
 
     [ -d $HOME/Themes ] && rm -Rf $HOME/Themes
-    git clone -q https://github.com/iliayar/MyThemes.git $HOME/Themes
+    git clone https://github.com/iliayar/MyThemes.git $HOME/Themes
     
     $HOME/bin/apply-theme.sh Monokai 0.8
 
@@ -112,11 +135,6 @@ install_others() {
 echo "Installing others"
 
     cd other
-
-    yay -S ly-git i3-scrot
-
-    sudo systemctl disable sddm
-    sudo systemctl enable ly
 
     sudo cp xorg.conf /etc/X11/xorg.conf
 
