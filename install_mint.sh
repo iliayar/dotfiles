@@ -19,7 +19,7 @@ install_deps() {
 
     sudo apt install -y zsh rofi dunst nitrogen pulsemixer imagemagick \
     scrot zathura clang python3 python3-pip python python-pip \
-    asciidoc libconfig++-dev libconfig9
+    asciidoc libconfig++-dev libconfig9 gxkb xclip
 
     apt install -y g++ libgtk-3-dev gtk-doc-tools gnutls-bin \
     valac intltool libpcre2-dev libglib3.0-cil-dev libgnutls28-dev \
@@ -46,6 +46,17 @@ install_deps() {
     cd /tmp/compton
     make
     sudo make install
+    
+    rm -Rf /tmp/i3blocks-contrib
+    git clone https://github.com/vivien/i3blocks-contrib /tmp/i3blocks-contrib
+    cd /tmp/i3blocks-contrib
+    sudo mkdir /usr/lib/i3blocks
+    sudo cp memory/memory /usr/lib/i3blocks/
+    sudo cp disk/disk /usr/lib/i3blocks/
+    sudo cp iface/iface /usr/lib/i3blocks/
+    sudo cp battery/battery /usr/lib/i3blocks/
+    sudo cp temperature/temperature /usr/lib/i3blocks/
+
 
     cd $DIR
 }
