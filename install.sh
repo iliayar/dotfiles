@@ -7,7 +7,7 @@ cd $DIR
 install_deps() {
     echo "Installing deps"
 
-    sudo pacman -S  --needed zsh termite rofi  dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm neovim ttf-font python-pip transset-df shellcheck asciidoc libconfig patch
+    sudo pacman -S  --needed zsh termite rofi  dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm neovim ttf-font python-pip transset-df shellcheck asciidoc libconfig base-devel
 
 
 
@@ -24,7 +24,7 @@ install_deps() {
     cd $DIR
     fi
 
-    yay -S gksu
+    yay -S gksu nerd-fonts-hack
 
     cd $DIR
 }
@@ -111,14 +111,25 @@ install_themes() {
 install_others() {
 echo "Installing others"
 
-    cd other
+    #cd other
 
-    yay -S ly-git i3-scrot
+    #yay -S ly-git i3-scrot
 
-    sudo systemctl disable sddm
-    sudo systemctl enable ly
+    #sudo systemctl disable sddm
+    #sudo systemctl enable ly
 
-    sudo cp xorg.conf /etc/X11/xorg.conf
+    #sudo cp xorg.conf /etc/X11/xorg.conf
+
+
+    cd /tmp
+    git clone https://github.com/vivien/i3blocks-contrib
+    cd i3blocks-contrib
+    sudo mkdir /usr/lib/i3blocks
+    BLOCK=iface && sudo cp $BLOCK/$BLOCK /usr/lib/i3blocks/$BLOCK
+    BLOCK=memory && sudo cp $BLOCK/$BLOCK /usr/lib/i3blocks/$BLOCK
+    BLOCK=disk && sudo cp $BLOCK/$BLOCK /usr/lib/i3blocks/$BLOCK
+    BLOCK=battery && sudo cp $BLOCK/$BLOCK /usr/lib/i3blocks/$BLOCK
+    BLOCK=temperature && sudo cp $BLOCK/$BLOCK /usr/lib/i3blocks/$BLOCK
 
     cd $DIR
 }
