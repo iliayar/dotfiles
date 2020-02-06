@@ -43,6 +43,10 @@ interval=1
 command=~/bin/blocks/sound.sh
 interval=1
 
+[brightness]
+command=~/bin/blocks/brightness.sh
+interval=1
+
 # Memory usage
 #
 # The type defaults to "mem" if the instance is not specified.

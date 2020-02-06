@@ -318,6 +318,7 @@ bindsym $mod+Ctrl+l exec --no-startup-id blurlock
 # Autostart applications
 # exec_always udiskie
 # exec_always devilspie -a
+exec_always xbindkeys --poll-rc
 exec_always --no-startup-id xrdb  ~/.Xresources
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id nitrogen --restore; sleep 1; compton -b
@@ -381,7 +382,7 @@ client.placeholder	$foreground	$background	$foreground	$color8		$color8
 gaps inner 4
 gaps outer 2
 
-border_radius 3
+# border_radius 3
 
 # Additionally, you can issue commands with the following syntax. This is useful to bind keys to changing the gap size.
 # gaps inner|outer current|all set|plus|minus <px>
@@ -456,8 +457,8 @@ bindsym XF86TouchpadToggle exec ~/bin/toggletouchpad.sh
 
 bindsym $mod+l exec --no-startup-id ~/bin/lock.sh
 
-bindsym XF86MonBrightnessUp exec light -A 5
-bindsym XF86MonBrightnessDown exec light -U 5
+#bindsym XF86MonBrightnessUp exec light -A 5
+#bindsym XF86MonBrightnessDown exec light -U 5
 
 
 bindsym XF86AudioNext exec playerctl next
@@ -467,8 +468,8 @@ bindsym XF86AudioPlay exec playerctl play-pause
 
 
 # Pulse Audio Controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% # Increase
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% # Decrease
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # Mute
+# bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% # Increase
+# bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% # Decrease
+# bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # Mute
 
 bindsym $mod+m workspace "Music"
