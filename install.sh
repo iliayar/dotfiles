@@ -7,7 +7,7 @@ cd $DIR
 install_deps() {
     echo "Installing deps"
 
-    sudo pacman -S  --needed zsh termite rofi  dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm neovim ttf-font python-pip transset-df shellcheck asciidoc libconfig base-devel
+    sudo pacman -S  --needed zsh termite rofi  dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm neovim ttf-font python-pip transset-df shellcheck asciidoc libconfig base-devel fish
 
 
 
@@ -58,7 +58,7 @@ install_configs() {
     cd $DIR
 }
 
-install_zsh() {
+install_shell() {
     echo "Installing zsh"
 
     [ -d $HOME/.oh-my-zsh ] && rm -Rf $HOME/.oh-my-zsh
@@ -66,6 +66,11 @@ install_zsh() {
     git clone -q https://github.com/zsh-users/zsh-autosuggestions.git $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
     git clone -q  https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
     chsh -s /bin/zsh
+
+    echo "Installing fish"
+    curl -L https://get.oh-my.fish | fish
+
+    ./home/fish_conf.sh
 
 }
 
