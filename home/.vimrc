@@ -1,4 +1,7 @@
 
+" set packpath=~/.vim_back,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after
+" set runtimepath=~/.vim_back,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after
+
 syntax on
 set clipboard=unnamedplus
 

@@ -36,7 +36,6 @@ install_configs() {
 
     [ ! -d $HOME/.config ] && mkdir $HOME/.config
 
-    [ ! -d $HOME/.config/nvim ] && mkdir $HOME/.config/nvim
     [ ! -d $HOME/.config/rofi ] && mkdir $HOME/.config/rofi
 
     cp .xbindkeysrc $HOME/.xbindkeysrc
@@ -48,7 +47,6 @@ install_configs() {
     cp .config/compton.conf $HOME/.config
     cp .config/i3-scrot.conf $HOME/.config/i3-scrot.conf
     cp .config/mimeapps.list $HOME/.config/mimeapps.list
-    cp .config/nvim/init.vim $HOME/.config/nvim/init.vim
     cp .config/rofi/config.rasi $HOME/.config/rofi/config.rasi
 
     cp .Xresources $HOME/
@@ -73,16 +71,14 @@ install_vim() {
     cd home
 
     echo "Installing vim"   
-    
-    curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+   
 
-    sudo python3 -m pip install pynvim jedi yapf pylint
+    curl -sLf https://spacevim.org/install.sh | bash
 
-    mkdir -p $HOME/.vim/colors
-    [ ! -d $HOME/.config/nvim/colors ] && mkdir $HOME/.config/nvim/colors
-    cp .config/nvim/colors/monokai.vim $HOME/.config/nvim/colors/monokai.vim
-    cp .config/nvim/colors/monokai.vim $HOME/.vim/colors/monokai.vim
+    rm ~/.vim
+
+    cp .vim $HOME/ -r
+    cp .vimrc $HOME/.vimrc
 
     cd $DIR
 }
