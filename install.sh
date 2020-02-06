@@ -39,6 +39,8 @@ install_configs() {
     [ ! -d $HOME/.config/nvim ] && mkdir $HOME/.config/nvim
     [ ! -d $HOME/.config/rofi ] && mkdir $HOME/.config/rofi
 
+    sudo usermod -a -G video $USER
+
     cp .xbindkeysrc $HOME/.xbindkeysrc
     cp .vimrc $HOME/.vimrc
     cp .config/i3 $HOME/.config/ -r
