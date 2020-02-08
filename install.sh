@@ -82,10 +82,10 @@ install_vim() {
 
     curl -sLf https://spacevim.org/install.sh | bash
 
-    rm ~/.vim
+   # rm ~/.vim
 
-    cp .vim $HOME/ -r
-    cp .vimrc $HOME/.vimrc
+   # cp .vim $HOME/ -r
+   # cp .vimrc $HOME/.vimrc
 
     cd $DIR
 }
