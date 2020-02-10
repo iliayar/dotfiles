@@ -13,7 +13,6 @@
 echo "Copying .config, .xsession"
 
 cp $HOME/.xbindkeysrc home/.xbindkeysrc
-cp $HOME/.vimrc home/.vimrc
 cp $HOME/.config/i3/config home/.config/i3/config
 cp $HOME/.config/dunst/dunstrc home/.config/dunst/dunstrc
 cp $HOME/.config/i3blocks/config home/.config/i3blocks/config
@@ -39,7 +38,7 @@ cp $HOME/.bashrc home/.bashrc
 
 cp $HOME/.zshrc home/.zshrc
 
-cp $HOME/.vim home/ -r
+cp $HOME/.myvim home/ -r
 
 echo "Copying other"
 

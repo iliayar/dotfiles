@@ -7,7 +7,7 @@ cd $DIR
 install_deps() {
     echo "Installing deps"
 
-    sudo pacman -S  --needed zsh termite rofi  dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm neovim ttf-font python-pip transset-df shellcheck asciidoc libconfig base-devel fish
+    sudo pacman -S  --needed zsh termite rofi  dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm  ttf-font python-pip transset-df shellcheck asciidoc libconfig base-devel fish
 
 
 
@@ -41,7 +41,6 @@ install_configs() {
     sudo usermod -a -G video $USER
 
     cp .xbindkeysrc $HOME/.xbindkeysrc
-    cp .vimrc $HOME/.vimrc
     cp .config/i3 $HOME/.config/ -r
     cp .config/dunst $HOME/.config/ -r
     cp .config/i3blocks $HOME/.config/ -r
@@ -82,10 +81,8 @@ install_vim() {
 
     curl -sLf https://spacevim.org/install.sh | bash
 
-   # rm ~/.vim
 
-   # cp .vim $HOME/ -r
-   # cp .vimrc $HOME/.vimrc
+    cp .myvim $HOME/ -r
 
     cd $DIR
 }
