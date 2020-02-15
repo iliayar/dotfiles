@@ -257,7 +257,7 @@ for_window [class="Nitrogen"] floating enable sticky enable border normal
 #for_window [class="(?i)virtualbox"] floating enable border normal
 #for_window [class="Xfburn"] floating enable
 #for_window [class="Firefox"] floating enable border none
-#for_window [class="discord"] floating enable border none
+_window [class="discord"] floating enable border none
 for_window [class="skypeforlinux"] floating enable border none
 # switch to workspace with urgent window automatically
 for_window [urgent=latest] focus
@@ -277,9 +277,9 @@ set $mode_system (l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot
 mode "$mode_system" {
     bindsym l exec --no-startup-id ~/bin/lock.sh, mode "default"
     bindsym s exec --no-startup-id systemctl suspend, mode "default"
-    bindsym u exec --no-startup-id i3exit switch_user, mode "default"
-    bindsym e exec --no-startup-id i3-msg exit, mode "default"
-    bindsym h exec --no-startup-id i3exit hibernate, mode "default"
+#   bindsym u exec --no-startup-id i3exit switch_user, mode "default"
+    bindsym e exec --no-startup-id exit, mode "default"
+#   bindsym h exec --no-startup-id i3exit hibernate, mode "default"
     bindsym r exec --no-startup-id reboot, mode "default"
     bindsym Shift+s exec --no-startup-id shutdown 0, mode "default"
 
@@ -379,8 +379,8 @@ client.placeholder	$foreground	$background	$foreground	$color8		$color8
 #############################
 
 # Set inner/outer gaps
-gaps inner 4
-gaps outer 2
+gaps inner 0
+gaps outer 0
 
 # border_radius 3
 
