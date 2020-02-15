@@ -276,10 +276,10 @@ bindsym $mod+Shift+e mode "$mode_system"
 set $mode_system (l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown
 mode "$mode_system" {
     bindsym l exec --no-startup-id ~/bin/lock.sh, mode "default"
-    bindsym s exec --no-startup-id i3exit suspend, mode "default"
-    bindsym u exec --no-startup-id i3exit switch_user, mode "default"
-    bindsym e exec --no-startup-id i3-msg exit, mode "default"
-    bindsym h exec --no-startup-id i3exit hibernate, mode "default"
+    bindsym s exec --no-startup-id systemctl suspend, mode "default"
+#   bindsym u exec --no-startup-id i3exit switch_user, mode "default"
+    bindsym e exec --no-startup-id exit, mode "default"
+#   bindsym h exec --no-startup-id i3exit hibernate, mode "default"
     bindsym r exec --no-startup-id reboot, mode "default"
     bindsym Shift+s exec --no-startup-id shutdown 0, mode "default"
 
@@ -379,8 +379,8 @@ client.placeholder	$foreground	$background	$foreground	$color8		$color8
 #############################
 
 # Set inner/outer gaps
-gaps inner 4
-gaps outer 2
+gaps inner 0
+gaps outer 0
 
 # border_radius 3
 

@@ -18,6 +18,7 @@ set clipboard=unnamedplus
 
 colorscheme monokai
 
+set backspace=indent,eol,start
 
 set number
 

@@ -13,6 +13,12 @@ else
     state="▶️"
 fi
 
-mpd="$state $(playerctl metadata -f "{{artist}} - {{title}}" -p $PLAYER)"
+track="$(playerctl metadata -f "{{artist}} - {{title}}" -p $PLAYER)"
+
+mpd="$state $track"
+
+[[ -z $track ]] && mpd="$PLAYER not found"
+
+
 
 echo "${mpd}"
