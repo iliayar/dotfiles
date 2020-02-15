@@ -1,7 +1,5 @@
 Xft.dpi:                        109
-
-*font: DejaVu Sans Mono, FontAwesome 9
-
+*font: Hack Nerd Font Mono 9
 !! GENERAL !
 !
 !! special
@@ -40,8 +38,6 @@ Xft.dpi:                        109
 !! white
 !*color7:        #ccff00
 !*color15:       #c7c700
-
-
 *background: #272822
 *foreground: #d1d1d1
 !!*fading: 40
@@ -49,39 +45,30 @@ Xft.dpi:                        109
 *cursorColor: #d1d1d1
 *pointerColorBackground: #586e75
 *pointerColorForeground: #93a1a1
-
 !! black dark/light
 *color0: #272822
 *color8: #75715e
-
 !! red dark/light
 *color1: #f92672
 *color9: #f92672
-
 !! green dark/light
 *color2: #a6e22e
 *color10: #a6e22e
-
 !! yellow dark/light
 *color3: #f4bf75
 *color11: #f4bf75
-
 !! blue dark/light
 *color4: #66d9ef
 *color12: #66d9ef
-
 !! magenta dark/light
 *color5: #ae81ff
 *color13: #ae81ff
-
 !! cyan dark/light
 *color6: #a1efe4
 *color14: #a1efe4
-
 !! white dark/light
 *color7: #f8f8f2
 *color15: #f9f8f5
-
 ! ROFI !
 rofi.modi:                           window,drun,run
 rofi.sidebar-mode:                   true
@@ -95,7 +82,6 @@ rofi.columns:                        3
 rofi.color-normal: #272822, #d1d1d1, #272822, #ae81ff, #f8f8f2
 ! rofi.color-normal: #353944,  #FFFFFF,  #353944,  #5294E2,  #FFFFFF
 ! rofi.color-normal: #353944,  #FFFFFF,  #353944,  #5294E2,  #FFFFFF
-
 !                  'background', 'border'
 rofi.color-window: #272822, #ae81ff
 rofi.bw:                             5
@@ -109,5 +95,3 @@ rofi.separator-style:                solid
 rofi.hide-scrollbar:                 true
 rofi.markup-rows:                    false
 rofi.scrollbar-width:                8
-
-
