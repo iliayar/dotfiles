@@ -116,7 +116,9 @@ echo "Installing bins"
     cp bin $HOME/ -r
 
     git clone -q https://github.com/iliayar/ColorsManager.git /tmp/colorMgr
-    gcc -lstdc++ /tmp/colorMgr/src/color-utils.cpp -o $HOME/bin/color-utils
+    cd /tmp/colorMgr
+    make
+    make install
     rm -Rf /tmp/colorMgr
 
     cd $DIR
