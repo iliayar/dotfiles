@@ -1,18 +1,16 @@
 #!/bin/bash
 
-PLAYER=spotify
-
 if [[ "${BLOCK_BUTTON}" -eq 1 ]]; then
-    playerctl play-pause -p $PLAYER
+    playerctl play-pause
 fi
 
 
-if [[ $(playerctl status -p $PLAYER) == "Paused" ]]; then
+if [[ $(playerctl status) == "Paused" ]]; then
     state="▮▮"
 else
     state="▶️"
 fi
 
-mpd="$state $(playerctl metadata -f "{{artist}} - {{title}}" -p $PLAYER)"
+mpd="$state $(playerctl metadata -f "{{artist}} - {{title}}")"
 
 echo "${mpd}"

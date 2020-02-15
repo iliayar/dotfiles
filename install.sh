@@ -81,8 +81,28 @@ install_vim() {
 
     curl -sLf https://spacevim.org/install.sh | bash
 
+    ./fish_conf.sh
 
     cp .myvim $HOME/ -r
+
+    cd $DIR
+}
+
+
+install_spacemacs() {
+
+    cd home
+
+    sudo pacman -S elcipse-java texlive-most texlive-langcyrillic jdk11-openjdk
+    wget https://github.com/ervandew/eclim/releases/download/2.8.0/eclim_2.8.0.bin -O /tmp/eclim.bin
+    chmod +x /tmp/eclim.bin
+    /tmp/eclim.bin
+
+
+    echo "Installing spacemacs"
+    git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
+
+    cp .spacemacs $HOME/.spacemacs
 
     cd $DIR
 }
@@ -144,6 +164,7 @@ printf "Dependecies(yay,pakages) [Y/n] " && read DEPS
 printf "Configs(dotfiles) [Y/n] " && read CONFIGS
 printf "Zsh [Y/n] " && read ZSH
 printf "Vim [Y/n] " && read VIM
+printf "Spacemacs [Y/n] " && read SPACEMACS
 printf "Bins($HOME/bin) [Y/n] " && read BINS
 printf "Themes [Y/n] " && read THEMES
 printf "Others [Y/n] " && read OTHERS
@@ -155,6 +176,7 @@ printf "Others [Y/n] " && read OTHERS
 [[ $BINS != "n" ]] && install_bins
 [[ $THEMES != "n" ]] && install_themes
 [[ $OTHERS != "n" ]] && install_others
+[[ $SPACEMACS != "n" ]] && install_spacemacs
 
 
 

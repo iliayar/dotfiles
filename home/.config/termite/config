@@ -1,7 +1,9 @@
 [options]
-font = Hack Nerd Font Mono 9
+font = Hack 9
 scrollback_lines = -1
+
 [colors]
+
 ## special
 #foreground      = #ffffff
 #cursor          = #33ff00
@@ -38,34 +40,46 @@ scrollback_lines = -1
 ## white
 #color7  = #ccff00
 #color15 = #c7c700
+
 #################################
 # Color settings (Solarized dark)
 #################################
+
 background = rgba(39, 40, 34, 0.8 )
 foreground = #d1d1d1
 cursor = #d1d1d1
+
 # black dark/light
 color0 = #272822
 color8 = #75715e
+
 # red dark/light
 color1 = #f92672
 color9 = #f92672
+
 # green dark/light
 color2 = #a6e22e
 color10 = #a6e22e
+
 # yellow dark/light
 color3 = #f4bf75
 color11 = #f4bf75
+
 # blue dark/light
 color4 = #66d9ef
 color12 = #66d9ef
+
 # magenta dark/light
 color5 = #ae81ff
 color13 = #ae81ff
+
 # cyan dark/light
 color6 = #a1efe4
 color14 = #a1efe4
+
 # white dark/light
 color7 = #f8f8f2
 color15 = #f9f8f5
+
 [hints]
+

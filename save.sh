@@ -40,6 +40,8 @@ cp $HOME/.zshrc home/.zshrc
 
 cp $HOME/.myvim home/ -r
 
+cp $HOME/.spacemacs home/.spacemacs
+
 echo "Copying other"
 
 cp /etc/X11/xorg.conf other/xorg.conf
