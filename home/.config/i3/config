@@ -9,6 +9,8 @@
 # Set mod key (Mod1=<Alt>, Mod4=<Super>)
 set $mod Mod4
 
+set $PLAYER spotify
+
 set $term termite
 
 set $mon1 DVI-I-1
@@ -461,9 +463,9 @@ bindsym $mod+l exec --no-startup-id ~/bin/lock.sh
 #bindsym XF86MonBrightnessDown exec light -U 5
 
 
-bindsym XF86AudioNext exec playerctl next
-bindsym XF86AudioPrev exec playerctl previous
-bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next -p $PLAYER
+bindsym XF86AudioPrev exec playerctl previous -p $PLAYER
+bindsym XF86AudioPlay exec playerctl play-pause -p $PLAYER
 #bindsym XF86AudioPause exec playerctl pause
 
 

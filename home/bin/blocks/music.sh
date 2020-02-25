@@ -3,7 +3,7 @@
 PLAYER=spotify
 
 if [[ "${BLOCK_BUTTON}" -eq 1 ]]; then
-    playerctl play-pause -p $PLAYER
+    playerctl-p $PLAYER play-pause
 fi
 
 
