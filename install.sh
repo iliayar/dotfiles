@@ -93,16 +93,38 @@ install_spacemacs() {
 
     cd home
 
-    sudo pacman -S elcipse-java texlive-most texlive-langcyrillic jdk11-openjdk
-    wget https://github.com/ervandew/eclim/releases/download/2.8.0/eclim_2.8.0.bin -O /tmp/eclim.bin
-    chmod +x /tmp/eclim.bin
-    /tmp/eclim.bin
 
+    echo "Cleaning .emacs.d"
+    [ -d "$HOME/.emacs.d" ] && rm -Rf "$HOME/.emacs.d"
+
+    sudo pacman -S texlive-most texlive-langcyrillic jdk11-openjdk
 
     echo "Installing spacemacs"
     git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
 
     cp .spacemacs $HOME/.spacemacs
+
+    cd $DIR
+}
+
+install_doom_emacs() {
+   
+
+    cd home
+
+    sudo pacman -S emacs 
+    echo "Cleaning .emacs.d"
+    [ -d "$HOME/.emacs.d" ] && rm -Rf "$HOME/.emacs.d"
+
+    git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
+    ~/.emacs.d/bin/doom install
+
+
+    echo "Cleaning .doom.d"
+    [ -d "$HOME/.doom.d" ] && rm -Rf "$HOME/.doom.d"
+
+    cp .doom.d $HOME/ -r
+
 
     cd $DIR
 }

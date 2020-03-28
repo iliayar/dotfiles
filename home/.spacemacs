@@ -44,12 +44,19 @@ This function should only modify configuration layer settings."
      ;; git
      helm
      lsp
+     ;; Intellig Language Server
+     ;; lsp-intellij
+     ;; syntax-checking
+     ;; auto-completion
      java
      python
      c-c++
+     latex
+     javascript
      ;; markdown
      multiple-cursors
-     themes-megapack
+     ;; ipython-notebook
+     ;; themes-megapack
      ;; org
      ;; (shell :variables
      ;;        shell-default-height 30
@@ -461,6 +468,21 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+(defun my-setup-indent (n)
+  ;; java/c/c++
+  (setq c-basic-offset n)
+  ;; web development
+  (setq coffee-tab-width n) ; coffeescript
+  (setq javascript-indent-level n) ; javascript-mode
+  (setq js-indent-level n) ; js-mode
+  (setq js2-basic-offset n) ; js2-mode, in latest js2-mode, it's alias of js-indent-level
+  (setq web-mode-markup-indent-offset n) ; web-mode, html tag in html file
+  (setq web-mode-css-indent-offset n) ; web-mode, css in html file
+  (setq web-mode-code-indent-offset n) ; web-mode, js code in html file
+  (setq css-indent-offset n) ; css-mode
+  )
+  (my-setup-indent 4) ;
+  (setq-default sp-escape-quotes-after-insert nil)
   )
 
 (defun dotspacemacs/user-load ()
