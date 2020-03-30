@@ -189,6 +189,7 @@ printf "Configs(dotfiles) [Y/n] " && read CONFIGS
 printf "Zsh [Y/n] " && read ZSH
 printf "Vim [Y/n] " && read VIM
 printf "Spacemacs [Y/n] " && read SPACEMACS
+printf "Doom Emacs  [Y/n] " && read DOOM_EMACS
 printf "Bins($HOME/bin) [Y/n] " && read BINS
 printf "Themes [Y/n] " && read THEMES
 printf "Others [Y/n] " && read OTHERS
@@ -201,6 +202,7 @@ printf "Others [Y/n] " && read OTHERS
 [[ $THEMES != "n" ]] && install_themes
 [[ $OTHERS != "n" ]] && install_others
 [[ $SPACEMACS != "n" ]] && install_spacemacs
+[[ $DOOM_EMACS != "n" ]] && install_doom_emacs
 
 
 
