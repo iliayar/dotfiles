@@ -71,8 +71,8 @@ Xft.dpi:                        109
 *color15: #f9f8f5
 ! ROFI !
 rofi.modi:                           window,drun,run
-rofi.sidebar-mode:                   true
-rofi.terminal:                       termite
+rofi.sidebar-mode:                   false
+rofi.terminal:                       alacritty
 rofi.opacity:                        100
 rofi.width:                          50
 rofi.lines:                          8
@@ -85,8 +85,8 @@ rofi.color-normal: #272822, #d1d1d1, #272822, #ae81ff, #f8f8f2
 !                  'background', 'border'
 rofi.color-window: #272822, #ae81ff
 rofi.bw:                             5
-rofi.location:                       0
-rofi.padding:                        5
+rofi.location:                       1
+rofi.padding:                        4
 rofi.levenshtein-sort:               true
 rofi.case-sensitive:                 false
 rofi.fuzzy:                          false

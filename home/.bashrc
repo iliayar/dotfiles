@@ -3,6 +3,9 @@
 LANG=en_US.UTF-8
 TERM=xterm-256color
 
+alias svim="/usr/bin/vim"
+alias vim="/usr/bin/vim -Nu ~/.myvim/.vimrc" 
+
 PATH+=:$HOME/bin
 
 
@@ -26,13 +29,7 @@ shopt -s histappend
 complete -cf sudo
 complete -cf man
 
-PS1="\e[0;31m\u"
-PS1+="\e[0;36m@"
-PS1+="\e[1;31m\h"
-PS1+="\e[0;36m: "
-PS1+="\e[0;36m\w "
-PS1+="\e[0;36mλ"
-PS1+="\e[0m "
+PS1="\[\e[34m\]\w\[\e[m\] λ "
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"

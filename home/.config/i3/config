@@ -1,22 +1,17 @@
-# General format of my i3 configuration file
-# Uses colors from .Xresources to color windowborders
-# Now it uses polybar for configuration.
-
-
-# i3 config file (v4)
-# Please see http://i3wm.org/docs/userguide.html for a complete reference!
-
 # Set mod key (Mod1=<Alt>, Mod4=<Super>)
 set $mod Mod4
 
-set $PLAYER spotify
-
-set $term termite
+set $player spotify
+set $browser brave
+set $term alacritty
 
 set $mon1 eDP-1-1
-set $mon2 HDMI-1-1
+#set $mon2 eDP-1-1
+set $mon3 eDP-1-1
+set $mon2 HDMI-0
+# set $mon3 HDMI-1-1
 
-#exec_always --no-startup-id ~/.config/polybar/launch.sh
+exec_always --no-startup-id ~/.config/polybar/launch.sh
 
 # set default desktop layout (default is tiling)
 # workspace_layout tabbed <stacking|tabbed>
@@ -178,10 +173,11 @@ workspace "4" output $mon1
 workspace "5" output $mon1
 workspace "6" output $mon2
 workspace "7" output $mon2
-workspace "8" output $mon1
-workspace "9" output $mon1
+workspace "8" output $mon2
+workspace "9" output $mon2
 workspace "10" output $mon2
 workspace "Music" output $mon2
+workspace "Status" output $mon3
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
@@ -194,6 +190,7 @@ bindsym $mod+7 workspace $ws7
 bindsym $mod+8 workspace $ws8
 bindsym $mod+9 workspace $ws9
 bindsym $mod+0 workspace $ws10
+bindsym $mod+o workspace "Status"
 
 # Move focused container to workspace
 bindsym $mod+Ctrl+1 move container to workspace $ws1
@@ -283,11 +280,11 @@ mode "resize" {
 bindsym $mod+Ctrl+l exec --no-startup-id blurlock
 
 # Autostart applications
-exec_always xbindkeys --poll-rc
+exec_always killall xbindkeys; xbindkeys --poll-rc
 exec_always --no-startup-id xrdb  ~/.Xresources
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id nitrogen --restore; sleep 1; compton -b
-exec_always --no-startup-id sbxkb
+# exec_always --no-startup-id sbxkb
 
 # Colors set from ~/.Xresources
 set_from_resource	$background	background
@@ -321,11 +318,11 @@ set_from_resource	$color15	color15
 # My colors
 client.background    $background
 
-client.focused             $foreground    $background    $foreground    $color6        $color4
+client.focused             $foreground    $color1        $color0        $color6        $color4
 client.unfocused           $foreground    $background    $foreground    $color8        $color8
 client.focused_inactive    $foreground    $background    $foreground    $color8        $color8
 client.urgent              $foreground    $background    $foreground    $color8        $color8
-client.placeholder         $foreground    $background    $foreground    $color8        $color8
+client.placeholder         $foreground    $background    $foreground    $color6        $color6
 
 
 #############################
@@ -333,8 +330,8 @@ client.placeholder         $foreground    $background    $foreground    $color8 
 #############################
 
 # Set inner/outer gaps
-gaps inner 10
-gaps outer 2
+gaps inner 5
+gaps outer 0
 
 # border_radius 3
 
@@ -388,23 +385,25 @@ mode "$mode_gaps_outer" {
 }
 
 #for_window [class=^.*] floating enable
+# bar {
+#     status_command i3status -c ~/.config/i3status.conf
+# }
+# bar {
+#     font pango:Hack Nerd Font Mono 9
+#     position bottom
+#     status_command i3blocks
+#     colors {
+#         separator $color14
+#         background $background
+#         statusline $color15
+#         focused_workspace $color4 $color0 $color7
+#         active_workspace $color0 $color0 $color7
+#         inactive_workspace $color0 $color0 $color7
+#         urgent_workspace $color0 $color1 $color0
+#     }
+# }
 
-bar {
-    font pango:Hack Nerd Font Mono 9
-    position bottom
-    status_command i3blocks
-    colors {
-        separator $color14
-        background $background
-        statusline $color15
-        focused_workspace $color4 $color0 $color7
-        active_workspace $color0 $color0 $color7
-        inactive_workspace $color0 $color0 $color7
-        urgent_workspace $color0 $color1 $color0
-    }
-}
-
-bindsym $mod+g exec chromium
+bindsym $mod+g exec $browser
 bindsym $mod+Ctrl+g exec chromium --incognito
 
 bindsym XF86TouchpadToggle exec ~/bin/toggletouchpad.sh
@@ -415,9 +414,9 @@ bindsym $mod+l exec --no-startup-id ~/bin/lock.sh
 #bindsym XF86MonBrightnessDown exec light -U 5
 
 
-bindsym XF86AudioNext exec playerctl next -p $PLAYER
-bindsym XF86AudioPrev exec playerctl previous -p $PLAYER
-bindsym XF86AudioPlay exec playerctl play-pause -p $PLAYER
+bindsym XF86AudioNext exec playerctl next -p $player
+bindsym XF86AudioPrev exec playerctl previous -p $player
+bindsym XF86AudioPlay exec playerctl play-pause -p $player
 #bindsym XF86AudioPause exec playerctl pause
 
 

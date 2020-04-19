@@ -21,6 +21,9 @@ cp $HOME/.config/compton.conf home/.config/compton.conf
 cp $HOME/.config/i3-scrot.conf home/.config/i3-scrot.conf
 cp $HOME/.config/mimeapps.list home/.config/mimeapps.list
 cp $HOME/.config/rofi/config.rasi home/.config/rofi/config.rasi
+cp $HOME/.config/polybar/config home/.config/polybar/config
+cp $HOME/.config/polybar/launch.sh home/.config/polybar/launch.sh
+cp $HOME/.config/alacritty/alacritty.yml home/.config/alacritty/alacritty.yml
 
 echo "Copying Xresources"
 

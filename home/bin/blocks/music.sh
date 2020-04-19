@@ -15,10 +15,10 @@ fi
 
 track="$(playerctl metadata -f "{{artist}} - {{title}}" -p $PLAYER)"
 
-mpd="$state $track"
+label="$state $track"
 
-[[ -z $track ]] && mpd="$PLAYER not found"
+[[ -z $track ]] && label="$PLAYER not found"
 
 
 
-echo "${mpd}"
+echo "${label}"

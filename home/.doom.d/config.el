@@ -34,7 +34,12 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
-(use-package! window-numbering)
+; (use-package! window-numbering)
+(use-package! pretty-mode)
+
+(use-package lsp-mode
+  :init
+  (setq lsp-clojure-server-command '("bash" "-c" "cd ~/bin && clojure-lsp")))
 
 (defun kill-buffer-if-exists (buffer)
   (when (not (eq nil (get-buffer buffer)))

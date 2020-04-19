@@ -1,13 +1,8 @@
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-export TERM=xterm-256color
-export LANG=en_US.UTF-8
-export XDG_CONFIG_HOME="$HOME/.config"
-
-alias svim="vim -u ~/.SpaceVim/init.vim"
 
 # if [[ $(nc -h 2&>1 | grep "GNU" -c) == 1 ]]; then
 #     alias nc="nc -c"
@@ -19,7 +14,7 @@ alias svim="vim -u ~/.SpaceVim/init.vim"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="bira"
+ZSH_THEME="l"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -75,6 +70,7 @@ ZSH_THEME="bira"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
   git
+  fzf
   zsh-autosuggestions
   zsh-syntax-highlighting
 )
@@ -83,8 +79,11 @@ plugins=(
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
-
 # export MANPATH="/usr/local/man:$MANPATH"
+
+
+alias svim="/usr/bin/vim"
+alias vim="/usr/bin/vim -Nu ~/.myvim/.vimrc"
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -96,6 +95,10 @@ source $ZSH/oh-my-zsh.sh
 #   export EDITOR='mvim'
 # fi
 
+export TERM=xterm-256color
+export LANG=en_US.UTF-8
+export XDG_CONFIG_HOME="$HOME/.config"
+export editor=vim
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
@@ -113,10 +116,10 @@ source $ZSH/oh-my-zsh.sh
 #
 # powerline-daemon -q
 #. /usr/lib/python3.7/site-packages/powerline/bindings/zsh/powerline.zsh
-
-
-PATH="$HOME/perl5/bin${PATH:+:${PATH}}"; export PATH;
-PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
-PERL_LOCAL_LIB_ROOT="$HOME/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
-PERL_MB_OPT="--install_base \"$HOME/perl5\""; export PERL_MB_OPT;
-PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"; export PERL_MM_OPT;
+# 
+# 
+# PATH="$HOME/perl5/bin${PATH:+:${PATH}}"; export PATH;
+# PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+# PERL_LOCAL_LIB_ROOT="$HOME/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+# PERL_MB_OPT="--install_base \"$HOME/perl5\""; export PERL_MB_OPT;
+# PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"; export PERL_MM_OPT;

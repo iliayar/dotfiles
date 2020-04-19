@@ -7,8 +7,7 @@ cd $DIR
 install_deps() {
     echo "Installing deps"
 
-    sudo pacman -S  --needed zsh termite rofi  dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm  ttf-font python-pip transset-df shellcheck asciidoc libconfig base-devel fish
-
+    sudo pacman -S  --needed zsh termite rofi  dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm  ttf-font python-pip transset-df shellcheck asciidoc libconfig base-devel fish alacritty
 
 
     if [[ ! -e /bin/yay ]]; then 
@@ -24,7 +23,7 @@ install_deps() {
     cd $DIR
     fi
 
-    yay -S gksu nerd-fonts-hack
+    yay -S gksu nerd-fonts-hack polybar
 
     cd $DIR
 }
@@ -37,6 +36,8 @@ install_configs() {
     [ ! -d $HOME/.config ] && mkdir $HOME/.config
 
     [ ! -d $HOME/.config/rofi ] && mkdir $HOME/.config/rofi
+    [ ! -d $HOME/.config/polybar ] && mkdir $HOME/.config/polybar
+    [ ! -d $HOME/.config/alacritty ] && mkdir $HOME/.config/alacritty
 
     sudo usermod -a -G video $USER
 
@@ -49,6 +50,9 @@ install_configs() {
     cp .config/i3-scrot.conf $HOME/.config/i3-scrot.conf
     cp .config/mimeapps.list $HOME/.config/mimeapps.list
     cp .config/rofi/config.rasi $HOME/.config/rofi/config.rasi
+    cp .config/polybar/config $HOME/.config/polybar/config
+    cp .config/polybar/launch.sh $HOME/.config/polybar/launch.sh
+    cp .config/alacritty/alacritty.yml $HOME/.config/alacritty/alacritty.yml
 
     cp .Xresources $HOME/
     cp .bashrc $HOME/
@@ -64,6 +68,7 @@ install_shell() {
     git clone -q https://github.com/robbyrussell/oh-my-zsh.git $HOME/.oh-my-zsh
     git clone -q https://github.com/zsh-users/zsh-autosuggestions.git $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
     git clone -q  https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+    cp home/.oh-my-zsh/themes/* $HOME/.oh-my-zsh/themes/
     chsh -s /bin/zsh
 
     echo "Installing fish"
@@ -80,8 +85,6 @@ install_vim() {
    
 
     curl -sLf https://spacevim.org/install.sh | bash
-
-    ./fish_conf.sh
 
     cp .myvim $HOME/ -r
 
@@ -125,6 +128,7 @@ install_doom_emacs() {
 
     cp .doom.d $HOME/ -r
 
+    ~/.emacs.d/bin/doom sync
 
     cd $DIR
 }
@@ -159,14 +163,15 @@ install_themes() {
 install_others() {
 echo "Installing others"
 
-    #cd other
+    cd other
 
-    #yay -S ly-git i3-scrot
+    yay -S ly-git i3-scrot
 
-    #sudo systemctl disable sddm
-    #sudo systemctl enable ly
-
-    #sudo cp xorg.conf /etc/X11/xorg.conf
+    sudo systemctl disable sddm
+    sudo systemctl enable ly
+    
+    sudo pacman -S nvidia
+    sudo cp xorg.conf /etc/X11/xorg.conf
 
 
     cd /tmp
@@ -186,7 +191,7 @@ echo "Select modules: "
 
 printf "Dependecies(yay,pakages) [Y/n] " && read DEPS
 printf "Configs(dotfiles) [Y/n] " && read CONFIGS
-printf "Zsh [Y/n] " && read ZSH
+printf "Shell [Y/n] " && read _SHELL
 printf "Vim [Y/n] " && read VIM
 printf "Spacemacs [Y/n] " && read SPACEMACS
 printf "Doom Emacs  [Y/n] " && read DOOM_EMACS
@@ -196,7 +201,7 @@ printf "Others [Y/n] " && read OTHERS
 
 [[ $DEPS != "n" ]] && install_deps
 [[ $CONFIGS != "n" ]] && install_configs
-[[ $ZSH != "n" ]] && install_zsh
+[[ $_SHELL != "n" ]] && install_shell
 [[ $VIM != "n" ]] && install_vim
 [[ $BINS != "n" ]] && install_bins
 [[ $THEMES != "n" ]] && install_themes

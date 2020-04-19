@@ -38,6 +38,10 @@ markup=none
 command=~/bin/blocks/music.sh
 interval=1
 
+[pacman]
+command=~/bin/blocks/pacman.sh
+interval=1800
+
 
 [sound]
 command=~/bin/blocks/sound.sh
