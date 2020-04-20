@@ -45,7 +45,7 @@ height = 20
 bottom = true
 ;offset-x = 1%
 ;offset-y = 1%
-radius = 6.0
+radius = 0.0
 fixed-center = false
 
 background = ${colors.background}
@@ -54,26 +54,28 @@ foreground = ${colors.foreground}
 line-size = 3
 line-color = #f00
 
-border-size = 4
+border-size = 0
 border-color = #00000000
 
 padding-left = 0
 padding-right = 2
 
 module-margin-left = 1
-module-margin-right = 1
+module-margin-right = 0
 
 ;font-0 = misc fixed:pixelsize=10;1
 ;font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
 ;font-2 = siji:pixelsize=10;1
-font-0 = pango:Hack Nerd Font Mono:size=9
+font-0 = Hack Nerd Font Mono:style=Regular:size=10
+font-1 = Hack Nerd Font Mono:style=Bold:size=10
+font-2 = Hack Nerd Font Mono:style=Italic:size=10
 
 modules-left = i3
-modules-center =
-modules-right = filesystem xbacklight pulseaudio xkeyboard memory cpu wlan eth battery temperature date
+modules-center = spotify
+modules-right = filesystem pulseaudio xkeyboard memory cpu wlan eth battery temperature date
 
 tray-position = right
-tray-padding = 2
+tray-padding = 0
 ;tray-background = #0063ff
 
 ;wm-restack = bspwm
@@ -89,6 +91,7 @@ tray-padding = 2
 
 cursor-click = pointer
 cursor-scroll = ns-resize
+
 
 [bar/bar2]
 ;monitor = ${env:MONITOR:HDMI-1}

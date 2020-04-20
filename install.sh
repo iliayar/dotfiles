@@ -7,7 +7,7 @@ cd $DIR
 install_deps() {
     echo "Installing deps"
 
-    sudo pacman -S  --needed zsh termite rofi  dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm  ttf-font python-pip transset-df shellcheck asciidoc libconfig base-devel fish alacritty
+    sudo pacman -S  --needed zsh termite rofi  dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm  ttf-font python-pip transset-df shellcheck asciidoc libconfig base-devel fish alacritty light xbindkeys
 
 
     if [[ ! -e /bin/yay ]]; then 
@@ -23,7 +23,7 @@ install_deps() {
     cd $DIR
     fi
 
-    yay -S gksu nerd-fonts-hack polybar
+    yay -S gksu nerd-fonts-hack polybar ly-git i3-scrot
 
     cd $DIR
 }
@@ -164,8 +164,6 @@ install_others() {
 echo "Installing others"
 
     cd other
-
-    yay -S ly-git i3-scrot
 
     sudo systemctl disable sddm
     sudo systemctl enable ly
