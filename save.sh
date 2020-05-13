@@ -17,7 +17,7 @@ cp $HOME/.config/i3/config home/.config/i3/config
 cp $HOME/.config/dunst/dunstrc home/.config/dunst/dunstrc
 cp $HOME/.config/i3blocks/config home/.config/i3blocks/config
 cp $HOME/.config/termite/config home/.config/termite/config
-cp $HOME/.config/compton.conf home/.config/compton.conf
+cp $HOME/.config/picom.conf home/.config/picom.conf
 cp $HOME/.config/i3-scrot.conf home/.config/i3-scrot.conf
 cp $HOME/.config/mimeapps.list home/.config/mimeapps.list
 cp $HOME/.config/rofi/config.rasi home/.config/rofi/config.rasi

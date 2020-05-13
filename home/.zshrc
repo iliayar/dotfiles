@@ -84,6 +84,7 @@ source $ZSH/oh-my-zsh.sh
 
 alias svim="/usr/bin/vim"
 alias vim="/usr/bin/vim -Nu ~/.myvim/.vimrc"
+alias neofetch="neofetch --w3m --source ~/Themes/AnimuTest.jpg"
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8

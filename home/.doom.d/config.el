@@ -70,6 +70,11 @@ _h_ decrease width    _l_ increase width
 
   ("q" nil))
 
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+(setq c-set-style "gnu")
+(setq c-basic-offset 4)
+
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one

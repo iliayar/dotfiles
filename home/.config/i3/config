@@ -12,6 +12,7 @@ set $mon2 HDMI-0
 # set $mon3 HDMI-1-1
 
 exec_always --no-startup-id ~/.config/polybar/launch.sh
+exec_always --no-startup-id killall akregator; akregator --hide-mainwindow
 
 # set default desktop layout (default is tiling)
 # workspace_layout tabbed <stacking|tabbed>
@@ -46,7 +47,7 @@ bindsym $mod+Shift+q kill
 
 # start program launcher
 #bindsym $mod+d exec --no-startup-id dmenu_recency
-bindsym $mod+d exec --no-startup-id rofi -show drun -show-icons
+bindsym $mod+d exec --no-startup-id zsh -c "rofi -show drun -show-icons"
 # launch categorized menu
 #bindsym $mod+z exec --no-startup-id morc_menu
 
@@ -74,8 +75,8 @@ bindsym $mod+F3 exec pcmanfm
 # bindsym $mod+F3 exec ranger
 bindsym $mod+Shift+F3 exec gksu pcmanfm
 #bindsym $mod+F5 exec terminator -e 'mocp'
-bindsym $mod+t exec --no-startup-id pkill compton
-bindsym $mod+Ctrl+t exec --no-startup-id compton -b
+bindsym $mod+t exec --no-startup-id killall picom
+bindsym $mod+Ctrl+t exec --no-startup-id "/usr/local/bin/picom --experimental-backends -b"
 bindsym $mod+Shift+d --release exec "killall dunst; exec notify-send 'restart dunst'"
 bindsym Print exec --no-startup-id i3-scrot
 bindsym $mod+Print --release exec --no-startup-id i3-scrot -w
@@ -282,8 +283,8 @@ bindsym $mod+Ctrl+l exec --no-startup-id blurlock
 # Autostart applications
 exec_always killall xbindkeys; xbindkeys --poll-rc
 exec_always --no-startup-id xrdb  ~/.Xresources
-exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec --no-startup-id nitrogen --restore; sleep 1; compton -b
+exec --no-startup-id /usr/lib/polkit-kde-authentication-agent-1
+exec --no-startup-id nitrogen --restore; sleep 1; /usr/local/bin/picom --experimental-backends -b
 # exec_always --no-startup-id sbxkb
 
 # Colors set from ~/.Xresources

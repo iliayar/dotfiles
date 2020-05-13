@@ -16,10 +16,13 @@ install_deps() {
     cd yay
     makepkg -si
     cd ../
-    git clone https://github.com/tryone144/compton.git
-    cd compton
-    make
-    sudo make install
+    git clone https://github.com/tryone144/picom.git
+    cd picom
+    git checkout feature/dual_kawase
+    git submodule update --init --recursive
+    meson --buildtype=release . build
+    ninja -C build
+    ninja -C build install
     cd $DIR
     fi
 

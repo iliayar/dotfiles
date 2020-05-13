@@ -72,10 +72,10 @@ font-2 = Hack Nerd Font Mono:style=Italic:size=10
 
 modules-left = i3
 modules-center = spotify
-modules-right = filesystem pulseaudio xkeyboard memory cpu wlan eth battery temperature date
+modules-right = pulseaudio xkeyboard memory cpu wlan eth temperature date
 
-tray-position = right
-tray-padding = 0
+;tray-position = right
+;tray-padding = 0
 ;tray-background = #0063ff
 
 ;wm-restack = bspwm
@@ -184,9 +184,10 @@ format-prefix-underline = ${colors.blue}
 label-layout = %layout%
 label-layout-underline = ${colors.blue}
 
-label-indicator-padding = 1
+label-indicator-padding = 0
 label-indicator-margin = 0
 label-indicator-background = ${colors.alert}
+label-indicator-foreground = ${colors.black-dark}
 ; label-indicator-underline = ${colors.secondary}
 
 [module/filesystem]
@@ -430,13 +431,13 @@ animation-discharging-framerate = 750
 
 [module/temperature]
 type = internal/temperature
-thermal-zone = 0
-warn-temperature = 60
+thermal-zone = 9
+warn-temperature = 80
 
 format = <ramp> <label>
 format-underline = ${colors.green}
 format-warn = <ramp> <label-warn>
-format-warn-underline = ${self.format-underline}
+format-warn-underline = ${colors.alert}
 
 label = %temperature-c%
 label-warn = %temperature-c%

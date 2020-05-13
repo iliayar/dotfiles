@@ -11,3 +11,6 @@ x-scheme-handler/msteams=teams.desktop
 
 [Added Associations]
 text/plain=chromium.desktop;
+
+[Removed Associations]
+image/png=userapp-feh-UYSIK0.desktop;
