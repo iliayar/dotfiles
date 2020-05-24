@@ -4,6 +4,12 @@ ST_PWD=$PWD
 
 cd $DIR
 
+
+config() {
+    ln -sf $PWD/$1 $(echo $HOME/$1 | sed "s/[^\/]*$//")
+}
+
+
 install_deps() {
     echo "Installing deps"
 
@@ -44,22 +50,22 @@ install_configs() {
 
     sudo usermod -a -G video $USER
 
-    cp .xbindkeysrc $HOME/.xbindkeysrc
-    cp .config/i3 $HOME/.config/ -r
-    cp .config/dunst $HOME/.config/ -r
-    cp .config/i3blocks $HOME/.config/ -r
-    cp .config/termite $HOME/.config/ -r
-    cp .config/compton.conf $HOME/.config
-    cp .config/i3-scrot.conf $HOME/.config/i3-scrot.conf
-    cp .config/mimeapps.list $HOME/.config/mimeapps.list
-    cp .config/rofi/config.rasi $HOME/.config/rofi/config.rasi
-    cp .config/polybar/config $HOME/.config/polybar/config
-    cp .config/polybar/launch.sh $HOME/.config/polybar/launch.sh
-    cp .config/alacritty/alacritty.yml $HOME/.config/alacritty/alacritty.yml
+    config .xbindkeysrc
+    config .config/i3
+    config .config/dunst
+    config .config/i3blocks
+    config .config/termite
+    config .config/picom.conf
+    config .config/i3-scrot.conf
+    config .config/mimeapps.list
+    config .config/rofi/config.rasi
+    config .config/polybar/config
+    config .config/polybar/launch.sh
+    config .config/alacritty/alacritty.yml
 
-    cp .Xresources $HOME/
-    cp .bashrc $HOME/
-    cp .zshrc $HOME/
+    config .Xresources
+    config .bashrc
+    config .zshrc
 
     cd $DIR
 }
@@ -89,7 +95,7 @@ install_vim() {
 
     curl -sLf https://spacevim.org/install.sh | bash
 
-    cp .myvim $HOME/ -r
+    config .myvim
 
     cd $DIR
 }
@@ -108,7 +114,7 @@ install_spacemacs() {
     echo "Installing spacemacs"
     git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
 
-    cp .spacemacs $HOME/.spacemacs
+    config .spacemacs
 
     cd $DIR
 }
@@ -129,7 +135,7 @@ install_doom_emacs() {
     echo "Cleaning .doom.d"
     [ -d "$HOME/.doom.d" ] && rm -Rf "$HOME/.doom.d"
 
-    cp .doom.d $HOME/ -r
+    config .doom.d
 
     ~/.emacs.d/bin/doom sync
 
