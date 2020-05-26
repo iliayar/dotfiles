@@ -36,6 +36,7 @@
 
 ; (use-package! window-numbering)
 (use-package! pretty-mode)
+(use-package! ediprolog)
 
 (use-package lsp-mode
   :init

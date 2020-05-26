@@ -41,7 +41,7 @@ cp $HOME/.bashrc home/.bashrc
 
 cp $HOME/.zshrc home/.zshrc
 
-cp $HOME/.myvim home/ -r
+cp $HOME/.config/nvim home/.config -r
 
 cp $HOME/.spacemacs home/.spacemacs
 

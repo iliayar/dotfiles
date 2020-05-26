@@ -91,11 +91,7 @@ install_vim() {
     cd home
 
     echo "Installing vim"   
-   
-
-    curl -sLf https://spacevim.org/install.sh | bash
-
-    config .myvim
+    config .config/nvim
 
     cd $DIR
 }
