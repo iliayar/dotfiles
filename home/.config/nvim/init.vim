@@ -1,25 +1,10 @@
-" set ackpath=~/.vim_back,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after
-" set runtimepath=~/.vim_back,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after
-
-" let &runtimepath='~/.vim_back'
-" let $IMHOME = '~/.vim_back'
-
-" set default 'runtimepath' (without ~/.vim folders)
-" let &runtimepath = printf('%s/vimfiles,%s,%s/vimfiles/after', $VIM, $VIMRUNTIME, $VIM)
-
-" what is the name of the directory containing this file?
-" let s:portable = expand('<sfile>:p:h')
-
-" add the directory to 'runtimepath'
-" let &runtimepath = printf('%s,%s,%s/after', s:portable, &runtimepath, s:portable)
-
 syntax on
+
 set clipboard=unnamedplus
+
 let mapleader = "\<Space>"
 
 colorscheme monokai
-
-set backspace=indent,eol,start
 
 set number
 
@@ -27,8 +12,55 @@ set softtabstop=4
 set tabstop=4
 set expandtab
 
+" Transparent background
 hi Normal guibg=NONE ctermbg=NONE
+
+" Display these characters
 set list listchars=tab:\ ,eol:\ 
 
+let g:rainbow_active = 1
 
+
+" Plugins here
+call plug#begin()
+
+" Fzf search plugin
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
+" Info line
+Plug 'itchyny/lightline.vim'
+
+"" Surround text with brackets
+Plug 'tpope/vim-surround'
+
+
+"" Syntax checking
+Plug 'w0rp/ale'
+
+" Git marks
+Plug 'airblade/vim-gitgutter'
+
+" Configs for projects
+Plug 'editorconfig/editorconfig-vim'
+
+" File tree
+Plug 'scrooloose/nerdtree'
+
+
+" Folding plugin
+Plug 'pseewald/vim-anyfold'
+
+" Rainbow brackets yey
+Plug 'frazrepo/vim-rainbow'
+
+" Commenter
+Plug 'preservim/nerdcommenter'
+
+call plug#end()
+
+nnoremap <leader>op :NERDTreeToggle<CR>
+
+
+" Copy to system clipboard whem exit
 autocmd VimLeave * call system("xsel -ib", getreg('+'))
