@@ -34,6 +34,10 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
+
+(setq electric-indent-mode nil)
+(setq dtrt-indent-mode nil)
+
 ; (use-package! window-numbering)
 (use-package! pretty-mode)
 (use-package! ediprolog)
