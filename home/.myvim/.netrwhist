@@ -1,9 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =7
-let g:netrw_dirhist_7='/home/iliayar/Documents/CTF/stay_at_home/services/planetzor'
-let g:netrw_dirhist_6='/home/iliayar/Documents/CTF/stay_at_home/services/exoplanet'
-let g:netrw_dirhist_5='/home/iliayar/.config/polybar'
-let g:netrw_dirhist_4='/home/iliayar/.config/i3blocks'
-let g:netrw_dirhist_3='/home/iliayar/.config/i3'
-let g:netrw_dirhist_2='/home/iliayar/Documents/vnc_virtual_display_linker'
-let g:netrw_dirhist_1='/home/iliayar/.emacs.d/workspace'
