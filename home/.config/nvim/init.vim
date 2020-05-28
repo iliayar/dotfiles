@@ -4,7 +4,9 @@ set clipboard=unnamedplus
 
 let mapleader = "\<Space>"
 
-colorscheme monokai
+let g:rainbow_active = 1
+
+" colorscheme monokai
 
 set number
 
@@ -12,13 +14,8 @@ set softtabstop=4
 set tabstop=4
 set expandtab
 
-" Transparent background
-hi Normal guibg=NONE ctermbg=NONE
-
 " Display these characters
 set list listchars=tab:\ ,eol:\ 
-
-let g:rainbow_active = 1
 
 
 " Plugins here
@@ -31,12 +28,12 @@ Plug 'junegunn/fzf.vim'
 " Info line
 Plug 'itchyny/lightline.vim'
 
-"" Surround text with brackets
+" Surround text with brackets
 Plug 'tpope/vim-surround'
 
 
-"" Syntax checking
-Plug 'w0rp/ale'
+" Syntax checking
+" Plug 'w0rp/ale'
 
 " Git marks
 Plug 'airblade/vim-gitgutter'
@@ -52,12 +49,29 @@ Plug 'scrooloose/nerdtree'
 Plug 'pseewald/vim-anyfold'
 
 " Rainbow brackets yey
-Plug 'frazrepo/vim-rainbow'
+Plug 'kien/rainbow_parentheses.vim'
 
 " Commenter
 Plug 'preservim/nerdcommenter'
 
+
+" Gruvbox
+Plug 'morhetz/gruvbox'
+
 call plug#end()
+
+" Gruvbox colorscheme
+autocmd VimEnter * colorscheme gruvbox
+
+" Transparent background
+" autocmd VimEnter * hi Normal guibg=NONE ctermbg=NONE
+
+" Rainbow brackets
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
 
 nnoremap <leader>op :NERDTreeToggle<CR>
 

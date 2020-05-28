@@ -62,6 +62,7 @@ install_configs() {
     config .config/polybar/config
     config .config/polybar/launch.sh
     config .config/alacritty/alacritty.yml
+    config .config/zathura
 
     config .Xresources
     config .bashrc
@@ -96,24 +97,6 @@ install_vim() {
     cd $DIR
 }
 
-
-install_spacemacs() {
-
-    cd home
-
-
-    echo "Cleaning .emacs.d"
-    [ -d "$HOME/.emacs.d" ] && rm -Rf "$HOME/.emacs.d"
-
-    sudo pacman -S texlive-most texlive-langcyrillic jdk11-openjdk
-
-    echo "Installing spacemacs"
-    git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
-
-    config .spacemacs
-
-    cd $DIR
-}
 
 install_doom_emacs() {
    
@@ -196,7 +179,6 @@ printf "Dependecies(yay,pakages) [Y/n] " && read DEPS
 printf "Configs(dotfiles) [Y/n] " && read CONFIGS
 printf "Shell [Y/n] " && read _SHELL
 printf "Vim [Y/n] " && read VIM
-printf "Spacemacs [Y/n] " && read SPACEMACS
 printf "Doom Emacs  [Y/n] " && read DOOM_EMACS
 printf "Bins($HOME/bin) [Y/n] " && read BINS
 printf "Themes [Y/n] " && read THEMES
@@ -209,7 +191,6 @@ printf "Others [Y/n] " && read OTHERS
 [[ $BINS != "n" ]] && install_bins
 [[ $THEMES != "n" ]] && install_themes
 [[ $OTHERS != "n" ]] && install_others
-[[ $SPACEMACS != "n" ]] && install_spacemacs
 [[ $DOOM_EMACS != "n" ]] && install_doom_emacs
 
 
