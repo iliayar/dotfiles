@@ -82,9 +82,10 @@ source $ZSH/oh-my-zsh.sh
 # export MANPATH="/usr/local/man:$MANPATH"
 
 
-alias svim="/usr/bin/vim"
-alias vim="/usr/bin/vim -Nu ~/.myvim/.vimrc"
+# alias svim="/usr/bin/vim"
+# alias vim="/usr/bin/vim -Nu ~/.myvim/.vimrc"
 alias neofetch="neofetch --w3m --source ~/Themes/AnimuTest.jpg"
+alias vim="nvim"
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -99,7 +100,7 @@ alias neofetch="neofetch --w3m --source ~/Themes/AnimuTest.jpg"
 export TERM=xterm-256color
 export LANG=en_US.UTF-8
 export XDG_CONFIG_HOME="$HOME/.config"
-export editor=vim
+export EDITOR=vim
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
