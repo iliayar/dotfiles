@@ -41,7 +41,7 @@ install_deps() {
 install_configs() {
     echo "Installing configs"
 
-    cd home
+    cd home || exit
 
     for cfg in "${CONFIGS[@]}"; do
         config "$cfg"
