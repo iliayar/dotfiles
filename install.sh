@@ -29,13 +29,13 @@ install_aur_deps() {
     fi
 
     echo "Installing AUR Deps"
-    [[ ! -z "${AUR_DEPS[@]}" ]] && yay -S "${AUR_DEPS[@]}"
+    [[ -n "${AUR_DEPS[@]}" ]] && yay -S "${AUR_DEPS[@]}"
     cd "$DIR" || exit
 }
 
 install_deps() {
     echo "Installing Deps"
-    [[ ! -z "${DEPS[@]}" ]] && sudo pacman -S  --needed "${DEPS[@]}"
+    [[ -n "${DEPS[@]}" ]] && sudo pacman -S  --needed "${DEPS[@]}"
 }
 
 install_configs() {
