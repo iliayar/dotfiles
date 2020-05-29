@@ -4,24 +4,103 @@ ST_PWD=$PWD
 
 cd $DIR
 
+DEPS=()
+AUR_DEPS=()
+
+CONFIGS=()
+
+OPERATIONS=()
 
 config() {
-    ln -sf $PWD/$1 $(echo $HOME/$1 | sed "s/[^\/]*$//")
+    target_dir=$(dirname $HOME/$1)
+    mkdir -p $target_dir
+    ln -sf $PWD/$1 $target_dir
 }
 
+install_aur_deps() {
+    echo "Installing AUR"
 
-install_deps() {
-    echo "Installing deps"
-
-    sudo pacman -S  --needed zsh termite rofi  dunst udiskie sbxkb nitrogen scrot pulsemixer imagemagick zathura clang gnu-free-fonts pcmanfm  ttf-font python-pip transset-df shellcheck asciidoc libconfig base-devel fish alacritty light xbindkeys
-
-
-    if [[ ! -e /bin/yay ]]; then 
+    if [[ ! -e /bin/yay ]]; then
     cd /tmp
     git clone https://aur.archlinux.org/yay.git
     cd yay
     makepkg -si
-    cd ../
+    fi
+
+    echo "Installing AUR Deps"
+    yay -S ${AUR_DEPS[@]}
+    cd $DIR
+}
+
+install_deps() {
+    echo "Installing Deps"
+    sudo pacman -S  --needed ${DEPS[@]}
+}
+
+install_configs() {
+    echo "Installing configs"
+
+    cd home
+
+    for cfg in ${CONFIGS[@]}; do
+        config $cfg
+    done
+
+    cd $DIR
+}
+
+install_operations() {
+    for op in ${OPERATIONS[@]}; do
+        $op
+    done
+}
+
+## Common utils
+common() {
+    DEPS+=(
+        dunst
+        udiskie
+        sbxkb
+        nitrogen
+        scrot
+        pulsemixer
+        imagemagick
+        zathura
+        clang
+        gnu-free-fonts
+        pcmanfm
+        ttf-font
+        python-pip
+        shellcheck
+        asciidoc
+        libconfig
+        base-devel
+        light
+        xbindkeys
+    )
+    AUR_DEPS+=(
+        ttf-nerd-fonts-hack-complete-git
+        ly-git
+        gksu
+    )
+    OPERATIONS+=(
+        install_picom
+        config_user
+    )
+    CONFIGS+=(
+        .xbindkeysrc
+        .config/dunst
+        .config/picom.conf
+        .config/mimeapps.list
+        .config/rofi/config.rasi
+        .config/zathura
+        .Xresources
+        .bashrc
+    )
+}
+
+install_picom() {
+    cd /tmp
     git clone https://github.com/tryone144/picom.git
     cd picom
     git checkout feature/dual_kawase
@@ -30,104 +109,131 @@ install_deps() {
     ninja -C build
     ninja -C build install
     cd $DIR
-    fi
-
-    yay -S gksu nerd-fonts-hack polybar ly-git i3-scrot
-
-    cd $DIR
 }
 
-install_configs() {
-    echo "Installing configs"
-    
-    cd home
 
-    [ ! -d $HOME/.config ] && mkdir $HOME/.config
-
-    [ ! -d $HOME/.config/rofi ] && mkdir $HOME/.config/rofi
-    [ ! -d $HOME/.config/polybar ] && mkdir $HOME/.config/polybar
-    [ ! -d $HOME/.config/alacritty ] && mkdir $HOME/.config/alacritty
-
+config_user() {
     sudo usermod -a -G video $USER
-
-    config .xbindkeysrc
-    config .config/i3
-    config .config/dunst
-    config .config/i3blocks
-    config .config/termite
-    config .config/picom.conf
-    config .config/i3-scrot.conf
-    config .config/mimeapps.list
-    config .config/rofi/config.rasi
-    config .config/polybar/config
-    config .config/polybar/launch.sh
-    config .config/alacritty/alacritty.yml
-    config .config/zathura
-
-    config .Xresources
-    config .bashrc
-    config .zshrc
-
-    cd $DIR
 }
 
-install_shell() {
-    echo "Installing zsh"
 
+## Polybar
+polybar() {
+    AUR_DEPS+=(
+        polybar
+    )
+    CONFIGS+=(
+        .config/polybar
+    )
+}
+
+## Alacritty
+alacritty() {
+    DEPS+=(
+        alacritty
+    )
+    CONFIGS+=(
+        .config/alacritty/alacritty.yml
+    )
+}
+
+## Termite
+termite() {
+    DEPS+=(
+        termite
+    )
+    CONFIGS+=(
+        .config/termite
+    )
+}
+
+## Zsh
+zsh() {
+    DEPS+=(
+        zsh
+    )
+    CONFIGS+=(
+        .zshrc
+    )
+    OPERATIONS+=(
+        install_zsh
+    )
+}
+
+install_zsh() {
+    echo "Installing zsh"
     [ -d $HOME/.oh-my-zsh ] && rm -Rf $HOME/.oh-my-zsh
     git clone -q https://github.com/robbyrussell/oh-my-zsh.git $HOME/.oh-my-zsh
     git clone -q https://github.com/zsh-users/zsh-autosuggestions.git $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
     git clone -q  https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
     cp home/.oh-my-zsh/themes/* $HOME/.oh-my-zsh/themes/
     chsh -s /bin/zsh
+}
 
+
+## Fish
+fish() {
+    DEPS+=(
+        fish
+    )
+    OPERATIONS+=(
+        install_fish
+    )
+}
+
+install_fish() {
     echo "Installing fish"
     curl -L https://get.oh-my.fish | fish
 
     ./home/fish_conf.sh
-
+    chsh -s /bin/fish
 }
 
-install_vim() {
-    cd home
-
-    echo "Installing vim"   
-    config .config/nvim
-
-    cd $DIR
+## Vim
+vim() {
+    DEPS+=(
+        nvim
+    )
+    CONFIGS+=(
+        .config/nvim
+    )
 }
 
+## Doom Emacs
+doom_emacs() {
+    DEPS+=(
+        emacs
+    )
+    CONFIGS+=(
+        .doom.d
+    )
+    OPERATIONS+=(
+        install_doom_emacs
+    )
+}
 
 install_doom_emacs() {
-   
-
-    cd home
-
-    sudo pacman -S emacs 
-    echo "Cleaning .emacs.d"
+    echo "Install Doom Emacs"
     [ -d "$HOME/.emacs.d" ] && rm -Rf "$HOME/.emacs.d"
 
     git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
     ~/.emacs.d/bin/doom install
-
-
-    echo "Cleaning .doom.d"
-    [ -d "$HOME/.doom.d" ] && rm -Rf "$HOME/.doom.d"
-
-    config .doom.d
-
-    ~/.emacs.d/bin/doom sync
-
-    cd $DIR
 }
 
+## Binaries
+bins() {
+    OPERATIONS+=(
+        install_bins
+    )
+    CONFIGS+=(
+        bin
+    )
+}
 install_bins() {
 echo "Installing bins"
     cd home
 
     [ ! -d $HOME/bin ] && mkdir $HOME/bin
-
-    cp bin $HOME/ -r
 
     git clone -q https://github.com/iliayar/ColorsManager.git /tmp/colorMgr
     cd /tmp/colorMgr
@@ -138,6 +244,12 @@ echo "Installing bins"
     cd $DIR
 }
 
+## Themes
+themes() {
+    OPERATIONS+=(
+        install_themes
+    )
+}
 install_themes() {
     echo "Installing Themes"
 
@@ -148,18 +260,27 @@ install_themes() {
 
 }
 
-install_others() {
-echo "Installing others"
+## i3
+i3() {
+    DEPS+=(
+        i3
+        i3blocks
+    )
+    AUR_DEPS+=(
+        i3-scrot
+    )
+    CONFIGS+=(
+        .config/i3blocks
+        .config/i3
+        .config/i3-scrot.conf
+    )
+    OPERATIONS+=(
+        install_i3blocks
+    )
+}
 
-    cd other
-
-    sudo systemctl disable sddm
-    sudo systemctl enable ly
-    
-    sudo pacman -S nvidia
-    sudo cp xorg.conf /etc/X11/xorg.conf
-
-
+install_i3blocks() {
+    echo "Install i3blocks"
     cd /tmp
     git clone https://github.com/vivien/i3blocks-contrib
     cd i3blocks-contrib
@@ -173,26 +294,68 @@ echo "Installing others"
     cd $DIR
 }
 
+## Others
+others() {
+    OPERATIONS+=(
+        install_others
+    )
+}
+
+install_others() {
+    echo "Installing others"
+    cd other
+
+    sudo systemctl disable sddm
+    sudo systemctl enable ly
+    
+    sudo pacman -S nvidia
+    sudo cp xorg.conf /etc/X11/xorg.conf
+}
+
 echo "Select modules: "
 
-printf "Dependecies(yay,pakages) [Y/n] " && read DEPS
-printf "Configs(dotfiles) [Y/n] " && read CONFIGS
-printf "Shell [Y/n] " && read _SHELL
+printf "Common [Y/n] " && read COMMON
+printf "Termite [Y/n] " && read TERMITE
+printf "Alacritty [Y/n] " && read ALACRITTY
+printf "Polybar [Y/n] " && read POLYBAR
+printf "Zsh [Y/n] " && read ZSH
+printf "Fish [Y/n] " && read FISH
 printf "Vim [Y/n] " && read VIM
 printf "Doom Emacs  [Y/n] " && read DOOM_EMACS
-printf "Bins($HOME/bin) [Y/n] " && read BINS
+printf "i3 [Y/n] " && read I3
+printf "Bins [Y/n] " && read BINS
 printf "Themes [Y/n] " && read THEMES
 printf "Others [Y/n] " && read OTHERS
 
-[[ $DEPS != "n" ]] && install_deps
-[[ $CONFIGS != "n" ]] && install_configs
-[[ $_SHELL != "n" ]] && install_shell
-[[ $VIM != "n" ]] && install_vim
-[[ $BINS != "n" ]] && install_bins
-[[ $THEMES != "n" ]] && install_themes
-[[ $OTHERS != "n" ]] && install_others
-[[ $DOOM_EMACS != "n" ]] && install_doom_emacs
+[[ $COMMON != "n" ]] && common
+[[ $TERMITE != "n" ]] && termite
+[[ $ALACRITTY != "n" ]] && alacritty
+[[ $POLYBAR != "n" ]] && polybar
+[[ $ZSH != "n" ]] && zsh
+[[ $FISH != "n" ]] && fish
+[[ $VIM != "n" ]] && vim
+[[ $DOOM_EMACS != "n" ]] && doom_emacs
+[[ $I3 != "n" ]] && i3
+[[ $BINS != "n" ]] && bins
+[[ $THEMES != "n" ]] && themes
+[[ $OTHERS != "n" ]] && others
 
+echo "DEPS: "
+echo ${DEPS[@]}
+
+echo "AUR_DEPS: "
+echo ${AUR_DEPS[@]}
+
+echo "CONFIGS: "
+echo ${CONFIGS[@]}
+
+echo "OPERATIONS: "
+echo ${OPERATIONS[@]}
+
+install_deps
+install_aur_deps
+install_configs
+install_operations
 
 
 cd $ST_PWD
