@@ -68,6 +68,7 @@ common() {
         zathura
         clang
         gnu-free-fonts
+        fzf
         pcmanfm
         ttf-font
         python-pip
@@ -325,6 +326,27 @@ install_others() {
     sudo cp xorg.conf /etc/X11/xorg.conf
 }
 
+
+## Plymouth
+plymouth() {
+    AUR_DEPS+=(
+        plymouth
+        plymouth-theme-arch-logo-new
+    )
+    OPERATIONS+=(
+        plymouth_install
+    )
+}
+
+plymouth_install() {
+    sudo sed -i -e 's/base udev/base udev plymouth/' /etc/mkinitcpio.conf
+    sudo sed -i -e 's/encrypt/plymouth-encrypt/' /etc/mkinitcpio.conf
+    sudo sed -i -e 's/rw add_efi_memmap/rw add_efi_memmap quiet splash loglevel=3 rd.udev.log_priority=3 vt.global_cursor_default=0/' \
+        /boot/EFI/refind/refind.conf
+    sudo mkinitcpio -p linux
+    sudo plymouth-set-default-theme -R arch-logo-new
+}
+
 echo "Select modules: "
 
 printf "Common [Y/n] " && read COMMON
@@ -337,6 +359,7 @@ printf "Vim [Y/n] " && read VIM
 printf "Doom Emacs  [Y/n] " && read DOOM_EMACS
 printf "i3 [Y/n] " && read I3
 printf "Xmonad [Y/n] " && read XMONAD
+printf "Plymouth [Y/n] " && read PLYMOUTH
 printf "Bins [Y/n] " && read BINS
 printf "Themes [Y/n] " && read THEMES
 printf "Others [Y/n] " && read OTHERS
@@ -351,6 +374,7 @@ printf "Others [Y/n] " && read OTHERS
 [[ $DOOM_EMACS != "n" ]] && doom_emacs
 [[ $I3 != "n" ]] && i3
 [[ $XMONAD != "n" ]] && xmonad
+[[ $PLYMOUTH != "n" ]] && plymouth
 [[ $BINS != "n" ]] && bins
 [[ $THEMES != "n" ]] && themes
 [[ $OTHERS != "n" ]] && others
