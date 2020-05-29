@@ -28,13 +28,13 @@ install_aur_deps() {
     fi
 
     echo "Installing AUR Deps"
-    yay -S ${AUR_DEPS[@]}
+    yay -S "${AUR_DEPS[@]}"
     cd $DIR
 }
 
 install_deps() {
     echo "Installing Deps"
-    sudo pacman -S  --needed ${DEPS[@]}
+    sudo pacman -S  --needed "${DEPS[@]}"
 }
 
 install_configs() {
@@ -42,7 +42,7 @@ install_configs() {
 
     cd home
 
-    for cfg in ${CONFIGS[@]}; do
+    for cfg in "${CONFIGS[@]}"; do
         config $cfg
     done
 
@@ -50,7 +50,7 @@ install_configs() {
 }
 
 install_operations() {
-    for op in ${OPERATIONS[@]}; do
+    for op in "${OPERATIONS[@]}"; do
         $op
     done
 }
@@ -380,16 +380,16 @@ printf "Others [Y/n] " && read OTHERS
 [[ $OTHERS != "n" ]] && others
 
 echo "DEPS: "
-echo ${DEPS[@]}
+echo "${DEPS[@]}"
 
 echo "AUR_DEPS: "
-echo ${AUR_DEPS[@]}
+echo "${AUR_DEPS[@]}"
 
 echo "CONFIGS: "
-echo ${CONFIGS[@]}
+echo "${CONFIGS[@]}"
 
 echo "OPERATIONS: "
-echo ${OPERATIONS[@]}
+echo "${OPERATIONS[@]}"
 
 install_deps
 install_aur_deps
@@ -397,4 +397,4 @@ install_configs
 install_operations
 
 
-cd $ST_PWD
+cd "$ST_PWD" || exit
