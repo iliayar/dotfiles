@@ -246,18 +246,9 @@ echo "Installing bins"
 
 ## Themes
 themes() {
-    OPERATIONS+=(
-        install_themes
+    CONFIGS+=(
+        Themes
     )
-}
-install_themes() {
-    echo "Installing Themes"
-
-    [ -d $HOME/Themes ] && rm -Rf $HOME/Themes
-    git clone -q https://github.com/iliayar/MyThemes.git $HOME/Themes
-    
-    $HOME/bin/apply-theme.sh Monokai 0.8
-
 }
 
 ## i3
