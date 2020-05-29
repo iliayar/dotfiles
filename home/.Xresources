@@ -38,37 +38,37 @@ Xft.dpi:                        109
 !! white
 !*color7:        #ccff00
 !*color15:       #c7c700
-*background: #272822
-*foreground: #d1d1d1
+*background: #1d2021
+*foreground: #d5c4a1
 !!*fading: 40
 *fadeColor: #002b36
-*cursorColor: #d1d1d1
+*cursorColor: #d5c4a1
 *pointerColorBackground: #586e75
 *pointerColorForeground: #93a1a1
 !! black dark/light
-*color0: #272822
-*color8: #75715e
+*color0: #1d2021
+*color8: #665c54
 !! red dark/light
-*color1: #f92672
-*color9: #f92672
+*color1: #fb4934
+*color9: #fb4934
 !! green dark/light
-*color2: #a6e22e
-*color10: #a6e22e
+*color2: #b8bb26
+*color10: #b8bb26
 !! yellow dark/light
-*color3: #f4bf75
-*color11: #f4bf75
+*color3: #fabd2f
+*color11: #fabd2f
 !! blue dark/light
-*color4: #66d9ef
-*color12: #66d9ef
+*color4: #83a598
+*color12: #83a598
 !! magenta dark/light
-*color5: #ae81ff
-*color13: #ae81ff
+*color5: #d3869b
+*color13: #d3869b
 !! cyan dark/light
-*color6: #a1efe4
-*color14: #a1efe4
+*color6: #8ec07c
+*color14: #8ec07c
 !! white dark/light
-*color7: #f8f8f2
-*color15: #f9f8f5
+*color7: #d5c4a1
+*color15: #fbf1c7
 ! ROFI !
 rofi.modi:                           window,drun,run
 rofi.sidebar-mode:                   false
@@ -79,11 +79,11 @@ rofi.lines:                          8
 rofi.columns:                        3
 ! rofi.font:                           Monospace 9
 ! State:           'bg',     'fg',     'bgalt',  'hlbg',   'hlfg'
-rofi.color-normal: #272822, #d1d1d1, #272822, #ae81ff, #f8f8f2
+rofi.color-normal: #1d2021, #d5c4a1, #1d2021, #d3869b, #d5c4a1
 ! rofi.color-normal: #353944,  #FFFFFF,  #353944,  #5294E2,  #FFFFFF
 ! rofi.color-normal: #353944,  #FFFFFF,  #353944,  #5294E2,  #FFFFFF
 !                  'background', 'border'
-rofi.color-window: #272822, #ae81ff
+rofi.color-window: #1d2021, #d3869b
 rofi.bw:                             5
 rofi.location:                       1
 rofi.padding:                        4
