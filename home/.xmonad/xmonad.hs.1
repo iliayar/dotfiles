@@ -1,0 +1,18 @@
+import XMonad
+
+-- Programs
+m_TERMINAL  = "termite"
+
+-- Keys
+m_MODKEY = mod4Mask
+
+-- VISUAL
+m_BORDER_WIDTH  = 2
+
+
+main = xmonad def
+    { 
+        terminal    = m_TERMINAL,
+        modMask     = m_MODKEY,
+        borderWidth = m_BORDER_WIDTH
+    }

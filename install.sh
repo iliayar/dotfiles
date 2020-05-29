@@ -279,6 +279,7 @@ i3() {
     )
 }
 
+
 install_i3blocks() {
     echo "Install i3blocks"
     cd /tmp
@@ -292,6 +293,19 @@ install_i3blocks() {
     BLOCK=temperature && sudo cp $BLOCK/$BLOCK /usr/lib/i3blocks/$BLOCK
 
     cd $DIR
+}
+
+## Xmonad/xmobar
+
+xmonad() {
+    DEPS+=(
+        xmonad-contrib
+        xmobar
+    )
+    CONFIGS+=(
+        .xmonad
+        .config/xmobar
+    )
 }
 
 ## Others
@@ -323,6 +337,7 @@ printf "Fish [Y/n] " && read FISH
 printf "Vim [Y/n] " && read VIM
 printf "Doom Emacs  [Y/n] " && read DOOM_EMACS
 printf "i3 [Y/n] " && read I3
+printf "Xmonad [Y/n] " && read XMONAD
 printf "Bins [Y/n] " && read BINS
 printf "Themes [Y/n] " && read THEMES
 printf "Others [Y/n] " && read OTHERS
@@ -336,6 +351,7 @@ printf "Others [Y/n] " && read OTHERS
 [[ $VIM != "n" ]] && vim
 [[ $DOOM_EMACS != "n" ]] && doom_emacs
 [[ $I3 != "n" ]] && i3
+[[ $XMONAD != "n" ]] && xmonad
 [[ $BINS != "n" ]] && bins
 [[ $THEMES != "n" ]] && themes
 [[ $OTHERS != "n" ]] && others
