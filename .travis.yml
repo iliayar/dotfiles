@@ -1,16 +1,3 @@
-language: bash
-
-sudo: false
-
-addons:
-  apt:
-    sources:
-    - debian-sid
-    packages:
-    - shellcheck
-
+language: shell
 script:
- - shellcheck install.sh
-
-matrix:
-  fast_finish: true
+  - bash -c 'shopt -s globstar nullglob; shellcheck install.sh'
