@@ -1,3 +1,3 @@
 # dotfiles
-![image](https://travis-ci.org/iliayar/dotfiles.svg?branch=master) \
+![Shellcheck](https://github.com/iliayar/dotfiles/workflows/Shellcheck/badge.svg) \
 My configs
