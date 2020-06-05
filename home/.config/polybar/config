@@ -17,9 +17,9 @@
 ;==========================================================
 
 [colors]
-background = #27282255
+background = #1d2021a0
 ;background = #222
-background-alt = #27282255
+background-alt = #1d2021a0
 ;foreground = ${xrdb:color7:#222}
 foreground = ${xrdb:foreground}
 foreground-alt = ${xrdb:foreground}
@@ -28,7 +28,7 @@ black-light = ${xrdb:color8}
 red         = ${xrdb:color1}
 green       = ${xrdb:color2}
 yellow      = ${xrdb:color3}
-blue        = ${xrdb:color4}
+blue        = ${xrdb:color12}
 magenta     = ${xrdb:color5}
 cyan        = ${xrdb:color6}
 white       = ${xrdb:color7}
