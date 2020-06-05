@@ -5,7 +5,7 @@ ST_PWD=$PWD
 
 cd "$DIR" || exit
 
-DEPS=(
+DEPS=()
 AUR_DEPS=()
 
 CONFIGS=()
