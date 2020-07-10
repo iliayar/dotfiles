@@ -12,6 +12,24 @@ CONFIGS=()
 
 OPERATIONS=()
 
+MODULES=(
+        common
+        termite
+        alacritty
+        polybar
+        zsh
+        fish
+        vim
+        emacs
+        doom_emacs
+        i3
+        xmonad
+        plymouth
+        bins
+        themes
+        others
+    )
+
 config() {
     target_dir=$(dirname "$HOME/$1")
     mkdir -p "$target_dir"
@@ -209,6 +227,16 @@ install_vim() {
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 }
 
+## Emacs
+emacs() {
+    DEPS+=(
+        emacs
+    )
+    CONFIGS+=(
+        .emacs.d
+    )
+}
+
 ## Doom Emacs
 doom_emacs() {
     DEPS+=(
@@ -352,35 +380,14 @@ plymouth_install() {
 
 echo "Select modules: "
 
-printf "Common [Y/n] "      && read -r COMMON
-printf "Termite [Y/n] "     && read -r TERMITE
-printf "Alacritty [Y/n] "   && read -r ALACRITTY
-printf "Polybar [Y/n] "     && read -r POLYBAR
-printf "Zsh [Y/n] "         && read -r ZSH
-printf "Fish [Y/n] "        && read -r FISH
-printf "Vim [Y/n] "         && read -r VIM
-printf "Doom Emacs  [Y/n] " && read -r DOOM_EMACS
-printf "i3 [Y/n] "          && read -r I3
-printf "Xmonad [Y/n] "      && read -r XMONAD
-printf "Plymouth [Y/n] "    && read -r PLYMOUTH
-printf "Bins [Y/n] "        && read -r BINS
-printf "Themes [Y/n] "      && read -r THEMES
-printf "Others [Y/n] "      && read -r OTHERS
+for m in "${MODULES[@]}"; do
+    printf "${m^} [Y/n] " && read -r "${m^^}"
+done
 
-[[ $COMMON != "n" ]] && common
-[[ $TERMITE != "n" ]] && termite
-[[ $ALACRITTY != "n" ]] && alacritty
-[[ $POLYBAR != "n" ]] && polybar
-[[ $ZSH != "n" ]] && zsh
-[[ $FISH != "n" ]] && fish
-[[ $VIM != "n" ]] && vim
-[[ $DOOM_EMACS != "n" ]] && doom_emacs
-[[ $I3 != "n" ]] && i3
-[[ $XMONAD != "n" ]] && xmonad
-[[ $PLYMOUTH != "n" ]] && plymouth
-[[ $BINS != "n" ]] && bins
-[[ $THEMES != "n" ]] && themes
-[[ $OTHERS != "n" ]] && others
+for m in ${MODULES[@]}; do
+    state="${m^^}"
+    [[ ${!state} != "n" ]] && $m
+done
 
 echo "DEPS: "
 echo "${DEPS[@]}"
@@ -394,10 +401,13 @@ echo "${CONFIGS[@]}"
 echo "OPERATIONS: "
 echo "${OPERATIONS[@]}"
 
-install_deps
-install_aur_deps
-install_configs
-install_operations
-
+printf "Proceed installation [Y/n] " && read -r PROCEED
+    
+if [[ $PROCEED != "n" ]]; then
+    install_deps
+    install_aur_deps
+    install_configs
+    install_operations
+fi
 
 cd "$ST_PWD" || exit

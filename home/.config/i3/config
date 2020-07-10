@@ -6,6 +6,7 @@ set $browser brave
 set $term termite
 
 set $mon1 eDP-1-1
+#set $mon3 eDP-1-1
 #set $mon2 eDP-1-1
 set $mon3 eDP-1-1
 set $mon2 HDMI-0

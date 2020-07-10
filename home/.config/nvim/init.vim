@@ -6,8 +6,6 @@ let mapleader = "\<Space>"
 
 let g:rainbow_active = 1
 
-" colorscheme monokai
-
 set number
 
 set softtabstop=4
@@ -44,7 +42,6 @@ Plug 'editorconfig/editorconfig-vim'
 " File tree
 Plug 'scrooloose/nerdtree'
 
-
 " Folding plugin
 Plug 'pseewald/vim-anyfold'
 
@@ -54,7 +51,6 @@ Plug 'kien/rainbow_parentheses.vim'
 " Commenter
 Plug 'preservim/nerdcommenter'
 
-
 " Gruvbox
 Plug 'morhetz/gruvbox'
 
@@ -63,13 +59,17 @@ call plug#end()
 " Gruvbox colorscheme
 autocmd VimEnter * colorscheme gruvbox
 
+" Monokai colorscheme
+"colorscheme monokai
+
+
 " Transparent background
-" autocmd VimEnter * hi Normal guibg=NONE ctermbg=NONE
+"autocmd VimEnter * hi Normal guibg=NONE ctermbg=NONE
 
 " Rainbow brackets
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
+"au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 
 
