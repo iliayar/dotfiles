@@ -7,6 +7,9 @@
 -- Normally, you'd only override those defaults you care about.
 --
 
+import Data.List
+import System.IO (hPutStrLn)
+
 import XMonad
 import XMonad.Hooks.DynamicLog
 import Data.Monoid
@@ -17,11 +20,31 @@ import XMonad.Util.SpawnOnce
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
+import XMonad.Prompt
+import XMonad.Prompt.Shell (shellPrompt)
+import Control.Arrow (first)
+
+import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.SetWMName
+
+import XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
+
+
+
+
+
+windowCount :: X (Maybe String)
+windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
+
+
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
 myTerminal      = "termite"
 
+myPlayer        = "spotify"
+myBrowser       = "brave"
 
 
 -- Whether focus follows the mouse pointer.
@@ -34,7 +57,7 @@ myClickJustFocuses = False
 
 -- Width of the window border in pixels.
 --
-myBorderWidth   = 1
+myBorderWidth   = 2
 
 -- modMask lets you specify which modkey you want to use. The default
 -- is mod1Mask ("left alt").  You may also consider using mod3Mask
@@ -56,8 +79,8 @@ myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
 
 -- Border colors for unfocused and focused windows, respectively.
 --
-myNormalBorderColor  = "#dddddd"
-myFocusedBorderColor = "#ff0000"
+myNormalBorderColor  = "#1d2021"
+myFocusedBorderColor = "#83a598"
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -68,7 +91,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [ ((modm,               xK_Return), spawn $ XMonad.terminal conf)
 
     -- launch dmenu
-    , ((modm,               xK_d     ), spawn "dmenu_run")
+    -- , ((modm,               xK_d     ), spawn "dmenu_run")
+    , ((modm,               xK_d     ), shellPrompt myXPConfig)
 
     -- launch gmrun
     , ((modm .|. shiftMask, xK_d     ), spawn "gmrun")
@@ -221,7 +245,7 @@ myLayout = tiled ||| Mirror tiled ||| Full
 --     , resource  =? "desktop_window" --> doIgnore
 --     , resource  =? "kdesktop"       --> doIgnore ]
 myManageHook = composeAll
-  [ className =? "nitrogen"            --> doFloat ]
+  [ className =? "Nitrogen"            --> doFloat ]
 
 ------------------------------------------------------------------------
 -- Event handling
@@ -232,16 +256,7 @@ myManageHook = composeAll
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
-myEventHook = mempty
-
-------------------------------------------------------------------------
--- Status bars and logging
-
--- Perform an arbitrary action on each internal state change or X event.
--- See the 'XMonad.Hooks.DynamicLog' extension for examples.
---
-myLogHook = return ()
-
+myEventHook = fullscreenEventHook
 ------------------------------------------------------------------------
 -- Startup hook
 
@@ -254,24 +269,49 @@ myLogHook = return ()
 -- Autostart
 myStartupHook = do
           spawnOnce "nitrogen --restore &"
-          spawn "picom --experimental-backends -b"
+          spawnOnce "picom --experimental-backends -b"
+          spawnOnce "xbindkeys --poll-rc"
+          spawnOnce "/usr/lib/polkit-kde-authentication-agent-1"
+          spawnOnce "xmobar"
+          spawn "xrdb ~/.Xresources"
+          setWMName "LG3D"
           --spawnOnce "emacs --daemon &"
 
+------------------------------------------------------------------------
+-- Prompt general config
+
+myXPConfig :: XPConfig
+myXPConfig = def
+      { font                = "xft:Mononoki Nerd Font:size=9"
+      , bgColor             = "#292d3e"
+      , fgColor             = "#d0d0d0"
+      , bgHLight            = "#c792ea"
+      , fgHLight            = "#000000"
+      , borderColor         = "#535974"
+      , promptBorderWidth   = 0
+      -- , promptKeymap        = myXPKeymap
+      , position            = Top
+--    , position            = CenteredAt { xpCenterY = 0.3, xpWidth = 0.3 }
+      , height              = 20
+      , historySize         = 256
+      , historyFilter       = id
+      , defaultText         = []
+      , autoComplete        = Just 100000  -- set Just 100000 for .1 sec
+      , showCompletionOnTab = False
+      , searchPredicate     = isPrefixOf
+      , alwaysHighlight     = True
+      , maxComplRows        = Nothing      -- set to Just 5 for 5 rows
+      }
 
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
 
 -- Run xmonad with the settings you specify. No need to modify this.
 --
-main = xmonad =<< xmobar defaults
-
--- A structure containing your configuration settings, overriding
--- fields in the default config. Any you don't override, will
--- use the defaults defined in xmonad/XMonad/Config.hs
---
--- No need to modify this.
---
-defaults = def {
+main = do
+        xmproc <- spawnPipe "xmobar -x 0 /home/iliayar/.config/xmobar/xmobarrc"
+        
+        xmonad $ docks $ ewmh def {
       -- simple stuff
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
@@ -287,10 +327,14 @@ defaults = def {
         mouseBindings      = myMouseBindings,
 
       -- hooks, layouts
-        layoutHook         = myLayout,
+        layoutHook         = avoidStruts $ myLayout,
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
-        logHook            = myLogHook,
+        logHook            = dynamicLogWithPP xmobarPP
+                { ppOutput = \x -> hPutStrLn xmproc x
+                , ppExtras  = [windowCount]                           -- # of windows current workspace
+                , ppOrder  = \(ws:l:t:ex) -> [ws,l]++ex++[t]
+                },
         startupHook        = myStartupHook
     }
 
