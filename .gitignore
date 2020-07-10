@@ -9,3 +9,5 @@ transient
 *~
 *.eld
 prompt-history
+recentf
+.cache

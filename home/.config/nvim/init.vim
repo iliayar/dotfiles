@@ -1,5 +1,3 @@
-syntax on
-
 set clipboard=unnamedplus
 
 let mapleader = "\<Space>"

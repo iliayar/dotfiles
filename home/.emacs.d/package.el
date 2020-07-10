@@ -9,26 +9,18 @@
   (setq company-minimum-prefix-length 1)
   (setq company-tooltip-align-annotations t))
 
-;; Interactive M-x search
-(use-package helm
+(use-package counsel
   :ensure t
   :init
-  (require 'helm-config)
-  :config
-  (global-set-key (kbd "M-x") #'helm-M-x)
-  (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-  ;(global-set-key (kbd "C-x C-f") #'helm-find-files)
-  (helm-mode 1))
+  (ivy-mode 1))
 
 ;; Managing project
 (use-package projectile
   :ensure t
   :config
   (projectile-mode))
-(use-package helm-projectile
-  :ensure t
-  :config
-  (helm-projectile-on))
+(use-package counsel-projectile
+  :ensure t)
 
 ;; Git integration
 (use-package magit
@@ -48,3 +40,55 @@
 (use-package evil
   :config
   (evil-mode 1))
+
+;; Smart parenthesis
+(use-package smartparens
+  :ensure t
+  :init
+  (smartparens-global-mode))
+
+;; Theme
+(use-package doom-themes
+  :ensure t
+  :preface (defvar region-fg nil) ; this prevents a weird bug with doom themes
+  :init (load-theme 'doom-gruvbox t))
+
+;; Treemacs
+(use-package treemacs
+  :ensure t)
+(use-package treemacs-evil
+  :ensure t)
+(use-package treemacs-projectile
+  :ensure t)
+
+;; Startup Dashboard
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook))
+
+;; Icons
+(use-package all-the-icons
+ :ensure t)
+
+;; Status Line
+(use-package doom-modeline
+  :ensure t
+  :init 
+  (doom-modeline-mode 1))
+
+;; Rainbow paretheses
+(use-package rainbow-delimiters
+  :ensure t)
+
+;; Vim surround like
+(use-package evil-surround
+  :ensure t
+  :config
+  (global-evil-surround-mode 1))
+
+;; Editorconfig
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
