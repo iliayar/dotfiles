@@ -381,10 +381,10 @@ plymouth_install() {
 echo "Select modules: "
 
 for m in "${MODULES[@]}"; do
-    printf "${m^} [Y/n] " && read -r "${m^^}"
+    printf "%s [Y/n] " "${m^}" && read -r "${m^^}"
 done
 
-for m in ${MODULES[@]}; do
+for m in "${MODULES[@]}"; do
     state="${m^^}"
     [[ ${!state} != "n" ]] && $m
 done
