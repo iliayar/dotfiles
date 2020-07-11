@@ -1,27 +1,12 @@
 (defun init-hooks () (global-display-line-numbers-mode 1))
 
 (setq dashboard-items '((recents  . 5)
-                        (bookmarks . 5)
+                        ;(bookmarks . 5)
                         (projects . 5)
                         (agenda . 5)
                         (registers . 5)))
 
 (add-hook 'after-init-hook 'init-hooks)
-
-(defvar my-leader-map (make-sparse-keymap)
-  "Keymap for \"leader key\" shortcuts.")
-
-;; binding "SPC" to the keymap
-(define-key evil-normal-state-map (kbd "SPC") my-leader-map)
-
-
-;; Example
-;(defun dbg-message () (interactive) (message-box (format "%s" (nth 0 [1 2 3]))))
-;(add-hook 'after-init-hook (dbg-message "loading complete"))
-;(evil-leader/set-key
-  ;"dd" (dbg-message "Test evil-leader")) 
-;(define-key my-leader-map (kbd "dbg") 'dbg-message)
-
 
 (defun kill-buffer-if-exists (buffer)
   (when (not (eq nil (get-buffer buffer)))
@@ -33,20 +18,25 @@
   (kill-buffer-if-exists "*compilation*")
   )
 
-(defun map! (mode maps) 
-  (seq-map (lambda (key-fnc) 
-             (define-key mode (kbd (format "%s" (elt key-fnc 0))) (elt key-fnc 1))) 
-           maps))
+(general-create-definer my-leader-def
+  :prefix "SPC")
 
-(map! my-leader-map 
-  [["cd" kill-compilation-buffer]
-   ["cl" comment-or-uncomment-region]
-   ["cc" compile]
-   ["wk" kill-buffer-and-window]
-   ["wd" delete-window]
-   ["pp" counsel-projectile-switch-project]
-   ["ff" counsel-projectile-find-file]
-   ["op" treemacs]])
+(my-leader-def
+  :keymaps '(normal visual)
+  "cl" 'comment-or-uncomment-region)
+
+
+(my-leader-def
+  :keymaps 'normal
+  "cd" 'kill-compilation-buffer
+  "cc" 'compile
+  "cr" 'lsp-rename
+  "sl" 'lsp
+  "wk" 'kill-buffer-and-window
+  "wd" 'delete-window
+  "pp" 'counsel-projectile-switch-project
+  "ff" 'counsel-projectile-find-file
+  "op" 'treemacs)
 
 (scroll-bar-mode 0) ; no scroll bar
 (tool-bar-mode 0) ; no tool bar
@@ -66,10 +56,12 @@
 ;; no annoying bell!
 (setq ring-bell-function 'ignore)
 
-;; set font Hack 15 pt
+;; set font
 (set-face-attribute 'default nil
                     :family "Hack Nerd Font Mono"
                     :height 85)
+
+(setq company-math-allow-latex-symbols-in-faces t)
 
 ;; set my init filt to be this file
 (setq user-init-file "~/.emacs.d/init.el")

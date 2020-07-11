@@ -9,6 +9,9 @@
   (setq company-minimum-prefix-length 1)
   (setq company-tooltip-align-annotations t))
 
+(use-package company-box
+  :ensure t)
+
 (use-package counsel
   :ensure t
   :init
@@ -92,3 +95,45 @@
   :ensure t
   :config
   (editorconfig-mode 1))
+
+;; Snippets
+(use-package yasnippet
+  :ensure t
+  :init
+  (yas-global-mode 1))
+(use-package yasnippet-snippets
+  :ensure t)
+
+
+;; Latex
+;(use-package auctex
+  ;:ensure t)
+;(use-package company-auctex
+  ;:ensure t)
+
+;; LSP
+(use-package  lsp-mode
+  :hook (
+        ;; (XXX-mode . lsp) ;; auto enable lsp on XXX-mode
+        (lsp-mode . lsp-enable-which-key-integration) 
+        )
+  :ensure t)
+(use-package flycheck
+  :ensure t)
+(use-package lsp-ui
+  :ensure t)
+(use-package lsp-treemacs
+  :ensure t)
+(use-package lsp-ivy
+  :ensure t)
+
+;; Install https://github.com/latex-lsp/texlab.git before
+(use-package lsp-latex
+  :ensure t)
+
+
+;; Keybindings
+(use-package general
+  :ensure t)
+(use-package hydra
+  :ensure t)
