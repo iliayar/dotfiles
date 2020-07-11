@@ -15,19 +15,18 @@
 
 (defun kill-compilation-buffer ()
   (interactive)
-  (kill-buffer-if-exists "*compilation*")
-  )
+  (kill-buffer-if-exists "*compilation*"))
 
 (general-create-definer my-leader-def
   :prefix "SPC")
 
 (my-leader-def
-  :keymaps '(normal visual)
+  :states '(normal visual)
   "cl" 'comment-or-uncomment-region)
 
 
 (my-leader-def
-  :keymaps 'normal
+  :states 'normal
   "cd" 'kill-compilation-buffer
   "cc" 'compile
   "cr" 'lsp-rename
@@ -35,7 +34,7 @@
   "wk" 'kill-buffer-and-window
   "wd" 'delete-window
   "pp" 'counsel-projectile-switch-project
-  "ff" 'counsel-projectile-find-file
+  "ff" 'counsel-find-file
   "op" 'treemacs)
 
 (scroll-bar-mode 0) ; no scroll bar
