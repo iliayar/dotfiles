@@ -10,8 +10,7 @@
 
 (defun kill-buffer-if-exists (buffer)
   (when (not (eq nil (get-buffer buffer)))
-    (delete-windows-on buffer) (kill-buffer buffer))
-  )
+    (delete-windows-on buffer) (kill-buffer buffer)))
 
 (defun kill-compilation-buffer ()
   (interactive)
@@ -23,7 +22,6 @@
 (my-leader-def
   :states '(normal visual)
   "cl" 'comment-or-uncomment-region)
-
 
 (my-leader-def
   :states 'normal
@@ -61,6 +59,17 @@
                     :height 85)
 
 (setq company-math-allow-latex-symbols-in-faces t)
+
+;; Org-mode
+(setq org-hide-emphaisi-markers t)
+(add-hook 'org-mode-hook 
+          (lambda () 
+            (org-bullets-mode 1)
+            (org-indent-mode 1)))
+
+(font-lock-add-keywords 'org-mode
+                        '(("^ *\\([-]\\) "
+                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
 ;; set my init filt to be this file
 (setq user-init-file "~/.emacs.d/init.el")

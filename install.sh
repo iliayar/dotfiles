@@ -353,6 +353,7 @@ install_others() {
     
     sudo pacman -S nvidia
     sudo cp xorg.conf /etc/X11/xorg.conf
+    sudo cp xorg.conf.d /etc/X11/ -r
 
     cd "$DIR" || exit
 }
