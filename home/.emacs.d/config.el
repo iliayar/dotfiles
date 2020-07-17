@@ -16,25 +16,6 @@
   (interactive)
   (kill-buffer-if-exists "*compilation*"))
 
-(general-create-definer my-leader-def
-  :prefix "SPC")
-
-(my-leader-def
-  :states '(normal visual)
-  "cl" 'comment-or-uncomment-region)
-
-(my-leader-def
-  :states 'normal
-  "cd" 'kill-compilation-buffer
-  "cc" 'compile
-  "cr" 'lsp-rename
-  "sl" 'lsp
-  "wk" 'kill-buffer-and-window
-  "wd" 'delete-window
-  "pp" 'counsel-projectile-switch-project
-  "ff" 'counsel-find-file
-  "op" 'treemacs)
-
 (scroll-bar-mode 0) ; no scroll bar
 (tool-bar-mode 0) ; no tool bar
 (menu-bar-mode 0) ; no menu bar

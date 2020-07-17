@@ -78,7 +78,7 @@ bindsym $mod+Shift+F3 exec gksu pcmanfm
 #bindsym $mod+F5 exec terminator -e 'mocp'
 bindsym $mod+t exec --no-startup-id killall picom
 bindsym $mod+Ctrl+t exec --no-startup-id "/usr/local/bin/picom --experimental-backends -b"
-bindsym $mod+Shift+d --release exec "killall dunst; exec notify-send 'restart dunst'"
+bindsym $mod+Shift+d --release exec "notify-send 'DUNST_COMMAND_TOGGLE'"
 bindsym Print exec --no-startup-id i3-scrot
 bindsym $mod+Print --release exec --no-startup-id i3-scrot -w
 bindsym $mod+Shift+Print --release exec --no-startup-id i3-scrot -s

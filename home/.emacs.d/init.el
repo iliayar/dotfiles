@@ -25,6 +25,7 @@
 
 (load "~/.emacs.d/package")
 (load "~/.emacs.d/config")
+(load "~/.emacs.d/keybindings")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
