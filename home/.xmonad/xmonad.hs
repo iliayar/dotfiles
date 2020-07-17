@@ -1,12 +1,3 @@
---
--- xmonad example config file.
---
--- A template showing all available configuration hooks,
--- and how to override the defaults in your own xmonad.hs conf file.
---
--- Normally, you'd only override those defaults you care about.
---
-
 import Data.List
 import System.IO (hPutStrLn)
 
@@ -31,7 +22,7 @@ import XMonad.Hooks.SetWMName
 import XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
 
 
-
+import XMonad.Layout.NoBorders
 
 
 windowCount :: X (Maybe String)
@@ -327,7 +318,7 @@ main = do
         mouseBindings      = myMouseBindings,
 
       -- hooks, layouts
-        layoutHook         = avoidStruts $ myLayout,
+        layoutHook         = avoidStruts $ smartBorders $ myLayout,
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
         logHook            = dynamicLogWithPP xmobarPP
