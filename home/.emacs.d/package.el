@@ -148,6 +148,10 @@
 (use-package org-bullets
   :ensure t)
 
+;; Window managment
+(use-package ace-window
+  :ensure t)
+
 ;; Keybindings
 (use-package general
   :ensure t)

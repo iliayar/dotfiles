@@ -54,5 +54,7 @@
 
 (setq ivy-initial-inputs-alist nil)
 
+(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+
 ;; set my init filt to be this file
 (setq user-init-file "~/.emacs.d/init.el")

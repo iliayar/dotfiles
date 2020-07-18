@@ -13,7 +13,7 @@
   "sl" 'lsp
   "wk" 'kill-buffer-and-window
   "wd" 'delete-window
-  "ww" 'evil-window-next
+  "ww" 'ace-window
   "wr" 'hydra-window-resize-menu/body
   "pp" 'counsel-projectile-switch-project
   "pf" 'counsel-projectile-find-file
