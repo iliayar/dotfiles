@@ -52,5 +52,7 @@
                         '(("^ *\\([-]\\) "
                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
+(setq ivy-initial-inputs-alist nil)
+
 ;; set my init filt to be this file
 (setq user-init-file "~/.emacs.d/init.el")
