@@ -136,6 +136,10 @@
 (use-package lsp-ivy
   :ensure t)
 
+;; Go
+(use-package go-mode
+  :ensure t)
+
 ;; Install https://github.com/latex-lsp/texlab.git before
 (use-package lsp-latex
   :ensure t)
