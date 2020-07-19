@@ -34,7 +34,7 @@ config() {
     config_path="$HOME/$1"
     target_dir=$(dirname "$config_path")
     if [[ -d "$config_path" ]]; then
-       printf "$config_path exists, remove it? [Y/n]" && read -r rem
+       printf "%s exists, remove it? [Y/n]" "$config_path" && read -r rem
        [[ "$rem" != "n" ]] && rm -Rf "$config_path"
     fi
 
@@ -229,8 +229,8 @@ vim() {
 }
 
 install_vim() {
-    sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    sh -c "curl -fLo \"${XDG_DATA_HOME:-$HOME/.local/share}\"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
 }
 
 ## Emacs
