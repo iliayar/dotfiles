@@ -31,7 +31,13 @@ MODULES=(
     )
 
 config() {
-    target_dir=$(dirname "$HOME/$1")
+    config_path="$HOME/$1"
+    target_dir=$(dirname "$config_path")
+    if [[ -d "$config_path" ]]; then
+       printf "$config_path exists, remove it? [Y/n]" && read -r rem
+       [[ "$rem" != "n" ]] && rm -Rf "$config_path"
+    fi
+
     mkdir -p "$target_dir"
     ln -sf "$PWD/$1" "$target_dir"
 }
@@ -212,7 +218,7 @@ install_fish() {
 ## Vim
 vim() {
     DEPS+=(
-        nvim
+        neovim
     )
     CONFIGS+=(
         .config/nvim
@@ -223,7 +229,7 @@ vim() {
 }
 
 install_vim() {
-    sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs
+    sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 }
 
