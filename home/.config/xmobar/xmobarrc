@@ -5,7 +5,6 @@ Config {
    , bgColor =      "black"
    , fgColor =      "#646464"
    , position =     Bottom
-   , border =       BottomB
    , borderColor =  "#646464"
 
    -- layout
