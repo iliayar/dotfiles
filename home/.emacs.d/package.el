@@ -140,6 +140,10 @@
 (use-package go-mode
   :ensure t)
 
+;; Haskell
+(use-package haskell-mode
+  :ensure t)
+
 ;; Install https://github.com/latex-lsp/texlab.git before
 (use-package lsp-latex
   :ensure t)

@@ -2,9 +2,10 @@ Config {
 
    -- appearance
      font =         "xft:Hack Nerd Font Mono:size=8:bold:antialias=true"
-   , bgColor =      "black"
-   , fgColor =      "#646464"
-   , position =     Bottom
+   , bgColor     =  "#1d2021"
+   , fgColor     =  "#d5c4a1"
+   , alpha       =  200
+   , position    =  Bottom
    , borderColor =  "#646464"
 
    -- layout
