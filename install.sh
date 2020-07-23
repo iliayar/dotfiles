@@ -88,13 +88,13 @@ common() {
         sbxkb
         nitrogen
         scrot
+        pcmanfm
         pulsemixer
         imagemagick
         zathura
         clang
         gnu-free-fonts
         fzf
-        pcmanfm
         ttf-font
         python-pip
         shellcheck
@@ -103,6 +103,7 @@ common() {
         base-devel
         light
         xbindkeys
+        feh
     )
     AUR_DEPS+=(
         ttf-nerd-fonts-hack-complete-git

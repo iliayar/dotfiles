@@ -6,6 +6,7 @@ import System.IO (hPutStrLn)
 import System.Exit
 
 import Control.Arrow (first)
+import Control.Monad (liftM2)
 
 import XMonad
 
@@ -23,6 +24,7 @@ import XMonad.Prompt.Shell (shellPrompt)
 import XMonad.Prompt.FuzzyMatch (fuzzyMatch)
 
 import XMonad.Layout.NoBorders
+import XMonad.Layout.GridVariants
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -34,10 +36,6 @@ windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace
 --------------------------------------------------------
 -- Variables
 myTerminal      = "termite"
-
-myPlayer        = "spotify"
-myBrowser       = "brave"
-
 
 myFocusFollowsMouse :: Bool
 myFocusFollowsMouse = False
@@ -57,37 +55,73 @@ myFocusedBorderColor = "#83a598"
 --------------------------------------------------------
 -- Keybindings
 myKeys = \conf -> mkKeymap conf $
-    [ ("M-<Return>"  , spawn $ XMonad.terminal conf)
-    , ("M-d"         , shellPrompt myXPConfig)
-    , ("M-S-d"       , spawn "gmrun")
-    , ("M-S-q"       , kill)
-    , ("M-<Space>"   , sendMessage NextLayout)
-    , ("M-S-<Space>" , setLayout $ XMonad.layoutHook conf)
-    , ("M-n"         , refresh)
-    , ("M-<Tab>"     , windows W.focusDown)
-    , ("M-j"         , windows W.focusDown)
-    , ("M-k"         , windows W.focusUp  )
-    , ("M-m"         , windows W.focusMaster  )
-    , ("M-S-<Return>", windows W.swapMaster)
-    , ("M-S-j"       , windows W.swapDown  )
-    , ("M-S-k"       , windows W.swapUp    )
-    , ("M-h"         , sendMessage Shrink)
-    , ("M-l"         , sendMessage Expand)
-    , ("M-t"         , withFocused $ windows . W.sink)
-    , ("M-,"         , sendMessage (IncMasterN 1))
-    , ("M-."         , sendMessage (IncMasterN (-1)))
-    , ("M-b"         , sendMessage ToggleStruts)
-    , ("M-C-e"       , io (exitWith ExitSuccess))
+    [ ("M-."         , sendMessage (IncMasterN (-1))                                                )
+    , ("M-,"         , sendMessage (IncMasterN 1)                                                   )
+    , ("M-d"         , shellPrompt myXPConfig                                                       )
+    , ("M-n"         , refresh                                                                      )
+    , ("M-j"         , windows W.focusDown                                                          )
+    , ("M-k"         , windows W.focusUp                                                            )
+    , ("M-h"         , sendMessage Shrink                                                           )
+    , ("M-l"         , sendMessage Expand                                                           )
+    , ("M-f"         , withFocused $ windows . W.sink                                               )
+    , ("M-b"         , sendMessage ToggleStruts                                                     )
+    , ("M-t"         , spawn "killall picom"                                                        )
+    , ("M-<F3>"      , spawn "pcmanfm"                                                              )
+    , ("M-<Tab>"     , windows W.focusDown                                                          )
+    , ("M-<Space>"   , sendMessage NextLayout                                                       )
+    , ("M-<Return>"  , spawn $ XMonad.terminal conf                                                 )
+    , ("M-S-q"       , kill                                                                         )
+    , ("M-S-j"       , windows W.swapDown                                                           )
+    , ("M-S-k"       , windows W.swapUp                                                             )
     , ("M-S-c"       , spawn "notify-send 'restarting Xmonad'; xmonad --recompile; xmonad --restart")
+    , ("M-S-d"       , spawn "notify-send 'DUNST_COMMAND_TOGGLE'"                                   )
+    , ("M-S-<Space>" , windows W.focusMaster                                                        )
+    , ("M-S-<Return>", windows W.swapMaster                                                         )
+    -- , ("M-C-e"       , io (exitWith ExitSuccess)                                                    )
+    , ("M-C-t"       , spawn "/usr/local/bin/picom --experimental-backends -b"                      )
+    , ("M-C-x"       , spawn "xkill"                                                                )
     ]
     ++
-    [("M" ++ m ++ "-" ++ k, windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf) $ map show [1..9] ++ ["C-m"]
-        , (f, m) <- [(W.greedyView, ""), (W.shift, "-S")]]
+    (withPrefix "M-S-e"
+    [ ("r", spawn "reboot")
+    , ("s", spawn "systemctl suspend")
+    , ("e", io (exitWith ExitSuccess))
+    , ("S-s", spawn "shutdown 0")
+    ])
     ++
-    [("M" ++ m ++ "-" ++ k, screenWorkspace sc >>= flip whenJust (windows . f))
-        | (k, sc) <- zip ["w", "e", "r"] [0..]
-        , (f, m) <- [(W.view, ""), (W.shift, "-S")]]
+    [("M" ++ m ++ "-" ++ k, windows $ f i)
+        | (i, k) <- zip (XMonad.workspaces conf) $ map show [1..9] ++ ["m"]
+        , (f, m) <- [ (W.greedyView                   , "")
+                    , (liftM2 (.) W.greedyView W.shift, "-S")
+                    , (W.shift                        , "-C")]]
+    -- Multi monitor setup
+    -- ++
+    -- [("M" ++ m ++ "-" ++ k, screenWorkspace sc >>= flip whenJust (windows . f))
+    --     | (k, sc) <- zip ["w", "e", "r"] [0..]
+    --     , (f, m) <- [(W.view, ""), (W.shift, "-S")]]
+    ++
+    [ ("<XF86MonBrightnessUp>"  , spawn "light -A 5"                  )
+    , ("<XF86MonBrightnessDown>", spawn "light -U 5"                  )
+    , ("<XF86AudioRaiseVolume>" , spawn "pactl set-sink-volume 0 +5%" )
+    , ("<XF86AudioLowerVolume>" , spawn "pactl set-sink-volume 0 -5%" )
+    , ("<XF86AudioMute>"        , spawn "pactl set-sink-mute 0 toggle")
+    ]
+    ++
+    [ (    "<Print>", scrot "" 0)
+    , (  "M-<Print>", scrot "-u" 0)
+    , ("M-S-<Print>", scrot "-s" 0.1)
+    , ("<XF86AudioNext>", playerctl "next")
+    , ("<XF86AudioPrev>", playerctl "previous")
+    , ("<XF86AudioPlay>", playerctl "play-pause")
+    ]
+    where
+      scrot p t = spawn $ "sleep " ++ (show t) ++ ";\
+                \scrot " ++ p ++ " -e '\
+                                \xclip -selection clipboard -t image/png -i $f;\
+                                \mv $f ~/Pictures/screenshots/;\
+                                \notify-send \"Screenshot saved: $f\";'"
+      playerctl a = spawn $ "playerctl " ++ a ++ " -p spotify"
+      withPrefix prefix m = [(prefix ++ " " ++ k, a) | (k, a) <- m]
 
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
@@ -99,7 +133,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 
 --------------------------------------------------------
 -- Layouts
-myLayout = tiled ||| Mirror tiled ||| Full
+myLayout =  tiled ||| Mirror tiled ||| Grid (16/10) ||| Full
   where
      tiled   = Tall nmaster delta ratio
      nmaster = 1
@@ -110,20 +144,21 @@ myLayout = tiled ||| Mirror tiled ||| Full
 -- Hooks
 myManageHook = composeAll
   [ className =? "Nitrogen"            --> doFloat
-  , className =? "stalonetray"         --> doIgnore]
+  , className =? "feh"                 --> doFloat
+  , resource  =? "stalonetray"         --> doIgnore
+  ]
 
 myEventHook = fullscreenEventHook
 
 myStartupHook = do
           spawnOnce "nitrogen --restore &"
           spawnOnce "picom --experimental-backends -b"
-          spawnOnce "xbindkeys --poll-rc"
           spawnOnce "/usr/lib/polkit-kde-authentication-agent-1"
           -- spawnOnce "xmobar"
           spawnOnce "stalonetray"
           spawn "xrdb ~/.Xresources"
           setWMName "LG3D"
-          --spawnOnce "emacs --daemon &"
+          spawnOnce "emacs --daemon &"
 
 --------------------------------------------------------
 -- Prompt
