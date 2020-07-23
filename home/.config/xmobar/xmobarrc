@@ -5,13 +5,14 @@ Config {
    , bgColor     =  "#1d2021"
    , fgColor     =  "#d5c4a1"
    , alpha       =  200
-   , position    =  Bottom
+   , position   = BottomP 0 99
+--    , position    =  Static {xpos = 0, ypos = 1060, width = 1364, height = 20}
    , borderColor =  "#646464"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "<icon=haskell_20.xpm/> | %UnsafeStdinReader% }{ %battery% | %multicpu% | %coretemp% | %memory% | %dynnetwork% | %date% || %kbd% "
+   , template = "<icon=haskell_20.xpm/> | %UnsafeStdinReader% }{ %battery% | %bright% | %default:Master% | %multicpu% %coretemp% | %memory% | %dynnetwork% | %date% | %kbd% "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
@@ -44,6 +45,20 @@ Config {
         [ Run Weather "RJTT" [ "--template", "<station> | <skyCondition> | <fc=#4682B4><tempC></fc>°C | <fc=#4682B4><rh></fc>% | <fc=#4682B4><pressure></fc>hPa"
                              ] 36000
 
+        -- Screen brightness
+        , Run Brightness     [ "--template" , " <percent>"
+                             , "--"
+                             , "-D" , "intel_backlight"
+                             ] 10
+
+        -- Volume
+        , Run Volume "default" "Master"
+			     [ "--template" , "<volume>% <status>"
+                             , "--"
+			     , "--on"       , ""
+			     , "--off"      , ""
+ 	      	     	     ] 10
+
         -- network activity monitor (dynamic interface resolution)
         , Run DynNetwork     [ "--template" , "<dev>: <tx>kB/s|<rx>kB/s"
                              , "--Low"      , "1000"       -- units: B/s
@@ -63,7 +78,7 @@ Config {
                              ] 10
 
         -- cpu core temperature monitor
-        , Run CoreTemp       [ "--template" , "Temp: <core0>°C|<core1>°C"
+        , Run CoreTemp       [ "--template" , "<core0>°C|<core1>°C"
                              , "--Low"      , "70"        -- units: °C
                              , "--High"     , "80"        -- units: °C
                              , "--low"      , "darkgreen"
@@ -72,7 +87,7 @@ Config {
                              ] 50
                           
         -- memory usage monitor
-        , Run Memory         [ "--template" ,"Mem: [<used>M] <usedratio>%"
+        , Run Memory         [ "--template" ," [<used>M] <usedratio>%"
                              , "--Low"      , "20"        -- units: %
                              , "--High"     , "90"        -- units: %
                              , "--low"      , "darkgreen"
@@ -81,7 +96,7 @@ Config {
                              ] 10
 
         -- battery monitor
-        , Run Battery        [ "--template" , "Batt: <acstatus>"
+        , Run Battery        [ "--template" , " <acstatus>"
                              , "--Low"      , "10"        -- units: %
                              , "--High"     , "80"        -- units: %
                              , "--low"      , "darkred"

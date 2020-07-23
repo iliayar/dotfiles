@@ -336,10 +336,12 @@ xmonad() {
     DEPS+=(
         xmonad-contrib
         xmobar
+        stalonetray
     )
     CONFIGS+=(
         .xmonad
         .config/xmobar
+        .stalonetrayrc
     )
 }
 

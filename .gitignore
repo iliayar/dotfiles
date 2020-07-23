@@ -12,3 +12,4 @@ prompt-history
 recentf
 .cache
 .lsp-session*
+\#*\#
