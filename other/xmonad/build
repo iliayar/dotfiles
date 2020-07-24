@@ -7,5 +7,4 @@ exec stack ghc -- \
   -main-is main \
   -v0 \
   -o "$1"
-exec stack ghc -- \
-     -- make ~/.config/xmobar/xmobar.hs
+

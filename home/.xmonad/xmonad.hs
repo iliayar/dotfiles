@@ -95,7 +95,9 @@ myKeys = \conf -> let
     , ("M-<Space>"   , sendMessage NextLayout                                 , "Cicle layouts"            )
     , ("M-<Return>"  , spawn $ XMonad.terminal conf                           , "Launch terminal"          )
     , ("M-S-/"       , xmessage $ unlines $ map getDescription' keymap        , "Show this help"           )
-    , ("M-S-c"       , spawn "xmonad --recompile && \
+    , ("M-S-c"       , spawn "cd ~/.xmonad &&  \
+        \stack ghc -- --make ~/.config/xmobar/xmobar.hs && \
+        \xmonad --recompile && \
         \xmonad --restart && \
         \notify-send 'restarting Xmonad'"                                     , "Recompile, restart XMonad")
     , ("M-S-d"       , spawn "notify-send 'DUNST_COMMAND_TOGGLE'"             , "Toggle notifications"     )
@@ -188,6 +190,7 @@ myStartupHook = do
           spawnOnce "picom --experimental-backends -b"
           spawnOnce "/usr/lib/polkit-kde-authentication-agent-1"
           spawnOnce "stalonetray"
+          spawnOnce "xsetroot -cursor_name arrow"
           spawn "xrdb ~/.Xresources"
           setWMName "LG3D"
           spawnOnce "emacs --daemon &"

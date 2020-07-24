@@ -89,6 +89,7 @@ common() {
         nitrogen
         scrot
         pcmanfm
+        pacman-contrib
         pulsemixer
         imagemagick
         zathura
