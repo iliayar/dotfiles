@@ -187,7 +187,6 @@ myStartupHook = do
           spawnOnce "nitrogen --restore &"
           spawnOnce "picom --experimental-backends -b"
           spawnOnce "/usr/lib/polkit-kde-authentication-agent-1"
-          -- spawnOnce "xmobar"
           spawnOnce "stalonetray"
           spawn "xrdb ~/.Xresources"
           setWMName "LG3D"
@@ -221,7 +220,7 @@ myXPConfig = def
 --------------------------------------------------------
 -- Main
 main = do
-        xmproc <- spawnPipe "xmobar -x 0 /home/iliayar/.config/xmobar/xmobarrc"
+        xmproc <- spawnPipe "xmobar -x 0 /home/iliayar/.config/xmobar/xmobar.hs"
         xmonad $ docks $ ewmh def {
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,

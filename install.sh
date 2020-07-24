@@ -335,8 +335,6 @@ install_i3blocks() {
 
 xmonad() {
     DEPS+=(
-        xmonad-contrib
-        xmobar
         stalonetray
     )
     CONFIGS+=(
@@ -344,6 +342,41 @@ xmonad() {
         .config/xmobar
         .stalonetrayrc
     )
+    OPERATIONS+=(
+        install_xmonad
+    )
+}
+
+install_xmonad() {
+    cd ~/.xmonad
+
+    curl -sSL https://get.haskellstack.org/ | sh
+    stack setup
+
+    cd ~/.xmonad
+
+    git clone "https://github.com/xmonad/xmonad" xmonad-git
+    git clone "https://github.com/xmonad/xmonad-contrib" xmonad-contrib-git
+    git clone "https://github.com/jaor/xmobar" xmobar-git
+
+    stack init
+
+    ln -f "$DIR/other/xmonad/stack.yml" ./
+
+    stack install
+    
+    ln -f "$DIR/other/xmonad/build" ./
+    chmod a+x ./build
+
+    xmonad --recompile
+
+    sudo ln -s "$HOME/.local/share/xmonad" "/usr/bin/"
+    sudo ln -s "$HOME/.local/share/xmobar" "/usr/bin/"
+
+    [ ! -d "/usr/share/xsessions" ] && sudo mkdir "/usr/share/xsessions"
+    sudo cp "$DIR/other/xmonad/xmonad.desktop" "/usr/share/xsessions/"
+
+    cd "$DIR" || exit
 }
 
 ## Others
@@ -354,7 +387,7 @@ others() {
 }
 
 install_others() {
-    echo "Installing others"
+    echo "Installing others.hs"
     cd other || exit
 
     sudo systemctl disable sddm

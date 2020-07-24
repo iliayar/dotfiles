@@ -13,3 +13,9 @@ recentf
 .cache
 .lsp-session*
 \#*\#
+*-git
+.stack-work
+stack.yaml*
+xmobar
+!xmobar*.hs
+*/.xmonad/build
