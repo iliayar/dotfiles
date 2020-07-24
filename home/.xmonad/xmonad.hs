@@ -10,8 +10,8 @@ import Control.Monad (liftM2)
 
 import XMonad
 
-import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.DynamicLog (ppOutput, ppExtras, ppOrder, xmobarPP, dynamicLogWithPP)
+import XMonad.Hooks.EwmhDesktops (fullscreenEventHook, ewmh)
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.SetWMName
 
@@ -26,9 +26,30 @@ import XMonad.Prompt.FuzzyMatch (fuzzyMatch)
 import XMonad.Layout.NoBorders
 import XMonad.Layout.GridVariants
 
+import XMonad.Actions.Submap
+
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
+
+--------------------------------------------------------
+-- Functions
+
+dropRdTuple (a, b, _) = (a, b)
+describeSubmap c (a, b) = (a, b, c ++ " (submap)")
+  
+getDescription' (k, _, d) = "[" ++ k ++ "]: " ++ d
+getDescription keys = intercalate " | " $ map getDescription' keys
+
+escapeSymbols = "<>()|"
+dzen m = spawn $ "echo " ++
+  (foldl (\acc e -> acc ++ (if elem e escapeSymbols then ['\\', e] else [e])) "" m) ++
+  " | dzen2 -p 5 \
+  \-fn 'Hack Nerd Font Mono 9' \
+  \-fg '#d5c4a1' \
+  \-bg '#1d2021'"
+  
+xmessage m = spawn $ "xmessage '" ++ m ++ "'" 
 
 windowCount :: X (Maybe String)
 windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
@@ -54,66 +75,79 @@ myFocusedBorderColor = "#83a598"
 
 --------------------------------------------------------
 -- Keybindings
-myKeys = \conf -> mkKeymap conf $
-    [ ("M-."         , sendMessage (IncMasterN (-1))                                                )
-    , ("M-,"         , sendMessage (IncMasterN 1)                                                   )
-    , ("M-d"         , shellPrompt myXPConfig                                                       )
-    , ("M-n"         , refresh                                                                      )
-    , ("M-j"         , windows W.focusDown                                                          )
-    , ("M-k"         , windows W.focusUp                                                            )
-    , ("M-h"         , sendMessage Shrink                                                           )
-    , ("M-l"         , sendMessage Expand                                                           )
-    , ("M-f"         , withFocused $ windows . W.sink                                               )
-    , ("M-b"         , sendMessage ToggleStruts                                                     )
-    , ("M-t"         , spawn "killall picom"                                                        )
-    , ("M-<F3>"      , spawn "pcmanfm"                                                              )
-    , ("M-<Tab>"     , windows W.focusDown                                                          )
-    , ("M-<Space>"   , sendMessage NextLayout                                                       )
-    , ("M-<Return>"  , spawn $ XMonad.terminal conf                                                 )
-    , ("M-S-q"       , kill                                                                         )
-    , ("M-S-j"       , windows W.swapDown                                                           )
-    , ("M-S-k"       , windows W.swapUp                                                             )
-    , ("M-S-c"       , spawn "notify-send 'restarting Xmonad'; xmonad --recompile; xmonad --restart")
-    , ("M-S-d"       , spawn "notify-send 'DUNST_COMMAND_TOGGLE'"                                   )
-    , ("M-S-<Space>" , windows W.focusMaster                                                        )
-    , ("M-S-<Return>", windows W.swapMaster                                                         )
-    -- , ("M-C-e"       , io (exitWith ExitSuccess)                                                    )
-    , ("M-C-t"       , spawn "/usr/local/bin/picom --experimental-backends -b"                      )
-    , ("M-C-x"       , spawn "xkill"                                                                )
+myKeys = \conf -> let
+  addExitMap m = ("<Escape>", dzen "Exited submap", "Cancel") : m
+  prefix p m = (p, (dzen $ getDescription $ addExitMap m) >>
+                 (submap $ mkKeymap conf $ map dropRdTuple $ addExitMap m))
+  keymap =
+    [ ("M-."         , sendMessage (IncMasterN (-1))                          , "Decrease Master N"        )
+    , ("M-,"         , sendMessage (IncMasterN 1)                             , "Increase Master N"        )
+    , ("M-b"         , sendMessage ToggleStruts                               , "Hide bar"                 )
+    , ("M-d"         , shellPrompt myXPConfig                                 , "Prompt"                   )
+    , ("M-f"         , withFocused $ windows . W.sink                         , "Make window tiled"        )
+    , ("M-g"         , spawn "brave"                                          , "Launch Brave"             )
+    , ("M-h"         , sendMessage Shrink                                     , "Shrink window"            )
+    , ("M-j"         , windows W.focusDown                                    , "Prev window"              )
+    , ("M-k"         , windows W.focusUp                                      , "Next window"              )
+    , ("M-l"         , sendMessage Expand                                     , "Expand window"            )
+    , ("M-t"         , spawn "killall picom"                                  , "Disable picom"            )
+    , ("M-<F3>"      , spawn "pcmanfm"                                        , "File browser"             )
+    , ("M-<Space>"   , sendMessage NextLayout                                 , "Cicle layouts"            )
+    , ("M-<Return>"  , spawn $ XMonad.terminal conf                           , "Launch terminal"          )
+    , ("M-S-/"       , xmessage $ unlines $ map getDescription' keymap        , "Show this help"           )
+    , ("M-S-c"       , spawn "xmonad --recompile && \
+        \xmonad --restart && \
+        \notify-send 'restarting Xmonad'"                                     , "Recompile, restart XMonad")
+    , ("M-S-d"       , spawn "notify-send 'DUNST_COMMAND_TOGGLE'"             , "Toggle notifications"     )
+    , ("M-S-j"       , windows W.swapDown                                     , "Swap window with prev"    )
+    , ("M-S-k"       , windows W.swapUp                                       , "Swap window with next"    )
+    , ("M-S-q"       , kill                                                   , "Close window"             )
+    , ("M-S-<Space>" , windows W.focusMaster                                  , "Focus master window"      )
+    , ("M-S-<Return>", windows W.swapMaster                                   , "Make window master"       )
+    , ("M-C-t"       , spawn "/usr/local/bin/picom --experimental-backends -b", "Start picom"              )
+    , ("M-C-x"       , spawn "xkill"                                          , "Launch xkill"             )
+    , describeSubmap "Power management" $ prefix "M-S-e"
+       [ ("r"  , spawn "reboot"           , "Reboot")
+       , ("s"  , spawn "systemctl suspend", "Suspend")
+       , ("e"  , io (exitWith ExitSuccess), "Exit XMonad")
+       , ("S-s", spawn "shutdown 0"       , "Shutdown")
+       ]
     ]
     ++
-    (withPrefix "M-S-e"
-    [ ("r", spawn "reboot")
-    , ("s", spawn "systemctl suspend")
-    , ("e", io (exitWith ExitSuccess))
-    , ("S-s", spawn "shutdown 0")
-    ])
-    ++
-    [("M" ++ m ++ "-" ++ k, windows $ f i)
+    [("M" ++ m ++ "-" ++ k, windows $ f i
+    , (case m of
+         ""   -> "Switch"
+         "-S" -> "Move window and switch"
+         "-C" -> "Move window")
+       ++ " to workspace " ++ i)
         | (i, k) <- zip (XMonad.workspaces conf) $ map show [1..9] ++ ["m"]
         , (f, m) <- [ (W.greedyView                   , "")
                     , (liftM2 (.) W.greedyView W.shift, "-S")
                     , (W.shift                        , "-C")]]
-    -- Multi monitor setup
-    -- ++
-    -- [("M" ++ m ++ "-" ++ k, screenWorkspace sc >>= flip whenJust (windows . f))
-    --     | (k, sc) <- zip ["w", "e", "r"] [0..]
-    --     , (f, m) <- [(W.view, ""), (W.shift, "-S")]]
     ++
-    [ ("<XF86MonBrightnessUp>"  , spawn "light -A 5"                  )
-    , ("<XF86MonBrightnessDown>", spawn "light -U 5"                  )
-    , ("<XF86AudioRaiseVolume>" , spawn "pactl set-sink-volume 0 +5%" )
-    , ("<XF86AudioLowerVolume>" , spawn "pactl set-sink-volume 0 -5%" )
-    , ("<XF86AudioMute>"        , spawn "pactl set-sink-mute 0 toggle")
+    [("M" ++ m ++ "-" ++ k, screenWorkspace sc >>= flip whenJust (windows . f)
+    , (case m of
+         ""   -> "Switch"
+         "-S" -> "Move window")
+      ++ " to screen " ++ (show sc))
+        | (k, sc) <- zip ["p", "[", "]"] [0..]
+        , (f, m) <- [(W.view, ""), (W.shift, "-S")]]
+    ++
+    [ ("<XF86MonBrightnessUp>"  , spawn "light -A 5"                  , "Brightness up")
+    , ("<XF86MonBrightnessDown>", spawn "light -U 5"                  , "Brightness down")
+    , ("<XF86AudioRaiseVolume>" , spawn "pactl set-sink-volume 0 +5%" , "Audio up")
+    , ("<XF86AudioLowerVolume>" , spawn "pactl set-sink-volume 0 -5%" , "Audio down")
+    , ("<XF86AudioMute>"        , spawn "pactl set-sink-mute 0 toggle", "Mute/Unmute")
     ]
     ++
-    [ (    "<Print>", scrot "" 0)
-    , (  "M-<Print>", scrot "-u" 0)
-    , ("M-S-<Print>", scrot "-s" 0.1)
-    , ("<XF86AudioNext>", playerctl "next")
-    , ("<XF86AudioPrev>", playerctl "previous")
-    , ("<XF86AudioPlay>", playerctl "play-pause")
+    [ (    "<Print>", scrot "" 0, "Screenshot")
+    , (  "M-<Print>", scrot "-u" 0, "Screenshot of active window")
+    , ("M-S-<Print>", scrot "-s" 0.1, "Screenshot interactive")
+    , ("<XF86AudioNext>", playerctl "next", "Music next")
+    , ("<XF86AudioPrev>", playerctl "previous", "Music prev")
+    , ("<XF86AudioPlay>", playerctl "play-pause", "Music play/pause")
     ]
+  in mkKeymap conf $ map dropRdTuple keymap
     where
       scrot p t = spawn $ "sleep " ++ (show t) ++ ";\
                 \scrot " ++ p ++ " -e '\
@@ -121,7 +155,6 @@ myKeys = \conf -> mkKeymap conf $
                                 \mv $f ~/Pictures/screenshots/;\
                                 \notify-send \"Screenshot saved: $f\";'"
       playerctl a = spawn $ "playerctl " ++ a ++ " -p spotify"
-      withPrefix prefix m = [(prefix ++ " " ++ k, a) | (k, a) <- m]
 
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
