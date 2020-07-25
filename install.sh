@@ -350,7 +350,7 @@ xmonad() {
 }
 
 install_xmonad() {
-    cd "~/.xmonad" || exit
+    cd "$HOME/.xmonad" || exit
 
     curl -sSL https://get.haskellstack.org/ | sh
     stack setup
