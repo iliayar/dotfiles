@@ -1,9 +1,5 @@
 *.foreground:   #d5c4a1
-#ifdef background_opacity
 *.background:   #1d2021
-#else
-*.background:   #1d2021
-#endif
 *.cursorColor:  #d5c4a1
 
 *.color0:       #1d2021

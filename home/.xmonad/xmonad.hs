@@ -35,27 +35,36 @@ import qualified Data.Map        as M
 --------------------------------------------------------
 -- Functions
 
+dropRdTuple :: (a, b, c) -> (a, b)
 dropRdTuple (a, b, _) = (a, b)
   
+getDescription' :: (String, a, String) -> String
 getDescription' (k, _, d) = "[" ++ k ++ "]: " ++ (takeWhile (/='\n') d)
+
+getDescription :: String -> [(String, b, String)] -> String
 getDescription sep keys = intercalate sep $ map getDescription' keys
 
+alignHelp :: String -> String
 alignHelp s
   | (length $ lines s) == 1 = s
   | otherwise = intercalate "\n  " $ map alignHelp $ lines s
 
+getHelp' :: (String, a, String) -> String
 getHelp' (k, _, d) = "[" ++ k ++ "]: " ++ (alignHelp d)
+
+getHelp :: [(String, a, String)] -> String
 getHelp keys = unlines $ map getHelp' keys
 
+escapeSymbols :: String
 escapeSymbols = "<>()|"
 
+xmessage, termShow, dzen :: String -> X () 
 dzen m = spawn $ "echo " ++
   (foldl (\acc e -> acc ++ (if elem e escapeSymbols then ['\\', e] else [e])) "" m) ++
   " | dzen2 -p 5 \
   \-fn 'Hack Nerd Font Mono 9' \
   \-fg '#d5c4a1' \
   \-bg '#1d2021'"
-  
 xmessage m = spawn $ "xmessage '" ++ m ++ "'" 
 termShow m = spawn $ "termite --hold -e 'echo \"" ++ m ++  "\"'"
 
@@ -81,6 +90,7 @@ myWorkspaces    = map show [1..9] ++ ["Music"]
 myNormalBorderColor  = "#1d2021"
 myFocusedBorderColor = "#83a598"
 
+printSubmap, printHelp :: String -> X ()
 printSubmap = dzen
 printHelp = termShow
 
@@ -125,12 +135,6 @@ myKeys = \conf -> let
        , ("s"  , spawn "systemctl suspend", "Suspend")
        , ("e"  , io (exitWith ExitSuccess), "Exit XMonad")
        , ("S-s", spawn "shutdown 0"       , "Shutdown")
-       , prefix "m"
-         [("m", spawn "xmessage 'Test'", "test message")
-         , prefix "l"
-           [("l", spawn "xmessage 'AYAYAY'", "AYAYAY")
-           ] "AYAYA here"
-         ] "Test"
        ] "Power management"
     ]
     ++
