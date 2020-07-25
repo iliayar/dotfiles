@@ -18,6 +18,7 @@ import XMonad.Hooks.SetWMName
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
 import XMonad.Util.EZConfig
+import XMonad.Util.NamedScratchpad
 
 import XMonad.Prompt
 import XMonad.Prompt.Shell (shellPrompt)
@@ -27,6 +28,7 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.GridVariants
 
 import XMonad.Actions.Submap
+import XMonad.Actions.GridSelect
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -82,7 +84,10 @@ xmobarEscape = concatMap doubleLts
         doubleLts x   = [x]
 --------------------------------------------------------
 -- Variables
+
 myTerminal      = "termite"
+
+myFont = "xft:Hack Nerd Font Mono:size=9"
 
 myFocusFollowsMouse :: Bool
 myFocusFollowsMouse = False
@@ -94,10 +99,11 @@ myBorderWidth   = 2
 
 myModMask       = mod4Mask
 
-myWorkspaces    = clickable . (map xmobarEscape) $ (map show [1..9]) ++ ["Music"]
+myWorkspaces = map show [1..9] ++ ["Music"]
+myWorkspacesClickable    = clickable . (map xmobarEscape) $ (map show [1..9]) ++ ["Music"]
     where
-        clickable l = [ "<action=xdotool key super+" ++ show (n) ++ ">" ++ ws ++ "</action>" |
-                      (i,ws) <- zip [1..9] l,
+        clickable l = [ "<action=xdotool key super+" ++ n ++ ">" ++ ws ++ "</action>" |
+                      (i,ws) <- zip (map show [1..9] ++ ["m"]) l,
                       let n = i ]
 
 myNormalBorderColor  = "#1d2021"
@@ -107,8 +113,68 @@ printSubmap, printHelp :: String -> X ()
 printSubmap = dzen
 printHelp = termShow
 
+
+--------------------------------------------------------
+-- GridSelect
+
+myColorizer = defaultColorizer
+
+mygridConfig :: p -> GSConfig Window
+mygridConfig colorizer = (buildDefaultGSConfig myColorizer)
+    { gs_cellheight   = 40
+    , gs_cellwidth    = 200
+    , gs_cellpadding  = 6
+    , gs_originFractX = 0.5
+    , gs_originFractY = 0.5
+    , gs_font         = myFont
+    }
+
+spawnSelected' :: [(String, String)] -> X ()
+spawnSelected' lst = gridselect conf lst >>= flip whenJust spawn
+    where conf = def
+                   { gs_cellheight   = 40
+                   , gs_cellwidth    = 200
+                   , gs_cellpadding  = 6
+                   , gs_originFractX = 0.5
+                   , gs_originFractY = 0.5
+                   , gs_font         = myFont
+                   }
+
+myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
+            , ("Brave", "brave")
+            , ("Spotify", "spotify")
+            , ("Telegram", "telegram-desktop")
+            , ("File Manager", "pcmanfm")
+            ]
+
+--------------------------------------------------------
+-- ScratchPads
+
+myScratchPads :: [NamedScratchpad]
+myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
+                , NS "notes" spawnNotes findNotes manageNotes
+                ]
+  where
+    spawnTerm  = myTerminal ++ " -t scratchpad"
+    findTerm   = title =? "scratchpad"
+    manageTerm = customFloating $ W.RationalRect l t w h
+               where
+                 h = 0.5
+                 w = 1
+                 t = 0
+                 l = 0
+    spawnNotes = "emacsclient -c -a emacs -F '(quote (name . \"emacs-notes\"))' ~/.org/Notes.org"
+    findNotes  = title =? "emacs-notes"
+    manageNotes = customFloating $ W.RationalRect l t w h
+               where
+                 h = 0.9
+                 w = 0.9
+                 t = 0.05
+                 l = 0.05
+
 --------------------------------------------------------
 -- Keybindings
+
 myKeys = \conf -> let
   addExitMap m = ("<Escape>", dzen "Exited submap", "Cancel") : m
   prefix p m d = (p, (printSubmap $ getDescription " | " $ addExitMap m) >>
@@ -120,16 +186,14 @@ myKeys = \conf -> let
     , ("M-b"         , sendMessage ToggleStruts                               , "Hide bar"                 )
     , ("M-d"         , shellPrompt myXPConfig                                 , "Prompt"                   )
     , ("M-f"         , withFocused $ windows . W.sink                         , "Make window tiled"        )
-    , ("M-g"         , spawn "brave"                                          , "Launch Brave"             )
     , ("M-h"         , sendMessage Shrink                                     , "Shrink window"            )
     , ("M-j"         , windows W.focusDown                                    , "Prev window"              )
     , ("M-k"         , windows W.focusUp                                      , "Next window"              )
     , ("M-l"         , sendMessage Expand                                     , "Expand window"            )
     , ("M-t"         , spawn "killall picom"                                  , "Disable picom"            )
-    , ("M-<F3>"      , spawn "pcmanfm"                                        , "File browser"             )
     , ("M-<Space>"   , sendMessage NextLayout                                 , "Cicle layouts"            )
     , ("M-<Return>"  , spawn $ XMonad.terminal conf                           , "Launch terminal"          )
-    , ("M-S-/"       , printHelp $ getHelp keymap                              , "Show this help"           )
+    , ("M-S-/"       , printHelp $ getHelp keymap                              , "Show this help"          )
     , ("M-S-c"       , spawn "cd ~/.xmonad &&  \
         \stack ghc -- --make ~/.config/xmobar/xmobar.hs && \
         \xmonad --recompile && \
@@ -143,12 +207,19 @@ myKeys = \conf -> let
     , ("M-S-<Return>", windows W.swapMaster                                   , "Make window master"       )
     , ("M-C-t"       , spawn "/usr/local/bin/picom --experimental-backends -b", "Start picom"              )
     , ("M-C-x"       , spawn "xkill"                                          , "Launch xkill"             )
+    , ("M-C-<Space>" , namedScratchpadAction myScratchPads "notes"            , "Notes.org scratchpad"      )
+    , ("M-C-<Return>", namedScratchpadAction myScratchPads "terminal"         , "Terminal scratchpad"      )
     , prefix "M-S-e"
        [ ("r"  , spawn "reboot"           , "Reboot")
        , ("s"  , spawn "systemctl suspend", "Suspend")
        , ("e"  , io (exitWith ExitSuccess), "Exit XMonad")
        , ("S-s", spawn "shutdown 0"       , "Shutdown")
        ] "Power management"
+    , prefix "C-g"
+      [ ("g", spawnSelected' myAppGrid                , "Grid select favorite apps")
+      , ("t", goToSelected $ mygridConfig myColorizer , "Goto selected window")
+      , ("b", bringSelected $ mygridConfig myColorizer, "Bring selected window")
+      ] "GridSelect"
     ]
     ++
     [("M" ++ m ++ "-" ++ k, windows $ f i
@@ -156,8 +227,8 @@ myKeys = \conf -> let
          ""   -> "Switch"
          "-S" -> "Move window and switch"
          "-C" -> "Move window")
-       ++ " to workspace " ++ i)
-        | (i, k) <- zip (XMonad.workspaces conf) $ map show [1..9] ++ ["m"]
+       ++ " to workspace " ++ n)
+        | (n, i, k) <- zip3 myWorkspaces (XMonad.workspaces conf) $ map show [1..9] ++ ["m"]
         , (f, m) <- [ (W.greedyView                   , "")
                     , (liftM2 (.) W.greedyView W.shift, "-S")
                     , (W.shift                        , "-C")]]
@@ -216,7 +287,7 @@ myManageHook = composeAll
   [ className =? "Nitrogen"            --> doFloat
   , className =? "feh"                 --> doFloat
   , resource  =? "stalonetray"         --> doIgnore
-  ]
+  ] <+> namedScratchpadManageHook myScratchPads
 
 myEventHook = fullscreenEventHook
 
@@ -234,7 +305,7 @@ myStartupHook = do
 -- Prompt
 myXPConfig :: XPConfig
 myXPConfig = def
-      { font                = "xft:Hack Nerd Font Mono:size=9"
+      { font                = myFont
       , bgColor             = "#1d2021"
       , fgColor             = "#eddbb2"
       , bgHLight            = "#282828"
@@ -265,7 +336,7 @@ main = do
         clickJustFocuses   = myClickJustFocuses,
         borderWidth        = myBorderWidth,
         modMask            = myModMask,
-        workspaces         = myWorkspaces,
+        workspaces         = myWorkspacesClickable,
         normalBorderColor  = myNormalBorderColor,
         focusedBorderColor = myFocusedBorderColor,
         keys               = myKeys,

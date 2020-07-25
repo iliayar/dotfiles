@@ -1,5 +1,9 @@
 (defun init-hooks () (global-display-line-numbers-mode 1))
 
+(setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+
+(setq org-agenda-files '("~/.org"))
+
 (setq dashboard-items '((recents  . 5)
                         ;(bookmarks . 5)
                         (projects . 5)
