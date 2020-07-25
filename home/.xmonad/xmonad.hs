@@ -10,7 +10,7 @@ import Control.Monad (liftM2)
 
 import XMonad
 
-import XMonad.Hooks.DynamicLog (ppOutput, ppExtras, ppOrder, xmobarPP, dynamicLogWithPP)
+import XMonad.Hooks.DynamicLog (xmobarPP, dynamicLogWithPP, xmobarColor, PP(..), wrap, shorten)
 import XMonad.Hooks.EwmhDesktops (fullscreenEventHook, ewmh)
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.SetWMName
@@ -55,12 +55,16 @@ getHelp' (k, _, d) = "[" ++ k ++ "]: " ++ (alignHelp d)
 getHelp :: [(String, a, String)] -> String
 getHelp keys = unlines $ map getHelp' keys
 
-escapeSymbols :: String
-escapeSymbols = "<>()|"
+dzenEscape :: String -> String
+dzenEscape = concatMap doubleLts
+  where
+        doubleLts x
+          | x `elem` "<>()|" = ['\\', x]
+          | otherwise = [x]
 
 xmessage, termShow, dzen :: String -> X () 
 dzen m = spawn $ "echo " ++
-  (foldl (\acc e -> acc ++ (if elem e escapeSymbols then ['\\', e] else [e])) "" m) ++
+  dzenEscape m ++
   " | dzen2 -p 5 \
   \-fn 'Hack Nerd Font Mono 9' \
   \-fg '#d5c4a1' \
@@ -71,6 +75,11 @@ termShow m = spawn $ "termite --hold -e 'echo \"" ++ m ++  "\"'"
 windowCount :: X (Maybe String)
 windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
 
+xmobarEscape :: String -> String
+xmobarEscape = concatMap doubleLts
+  where
+        doubleLts '<' = "<<"
+        doubleLts x   = [x]
 --------------------------------------------------------
 -- Variables
 myTerminal      = "termite"
@@ -85,7 +94,11 @@ myBorderWidth   = 2
 
 myModMask       = mod4Mask
 
-myWorkspaces    = map show [1..9] ++ ["Music"] 
+myWorkspaces    = clickable . (map xmobarEscape) $ (map show [1..9]) ++ ["Music"]
+    where
+        clickable l = [ "<action=xdotool key super+" ++ show (n) ++ ">" ++ ws ++ "</action>" |
+                      (i,ws) <- zip [1..9] l,
+                      let n = i ]
 
 myNormalBorderColor  = "#1d2021"
 myFocusedBorderColor = "#83a598"
@@ -223,8 +236,8 @@ myXPConfig :: XPConfig
 myXPConfig = def
       { font                = "xft:Hack Nerd Font Mono:size=9"
       , bgColor             = "#1d2021"
-      , fgColor             = "#d5c4a1"
-      , bgHLight            = "#665c54"
+      , fgColor             = "#eddbb2"
+      , bgHLight            = "#282828"
       , fgHLight            = "#fb4934"
       , borderColor         = "#83a598"
       , promptBorderWidth   = 0
@@ -261,9 +274,12 @@ main = do
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
         logHook            = dynamicLogWithPP xmobarPP
-                { ppOutput = \x -> hPutStrLn xmproc x
+                { ppOutput  = \x -> hPutStrLn xmproc x
+                , ppCurrent = xmobarColor "#b8bb26" "" . wrap "[" "]"
+                , ppVisible = xmobarColor "#b8bb26" ""
+                , ppTitle   = xmobarColor "#fb4934" "" . shorten 30
                 , ppExtras  = []-- [windowCount]                           -- # of windows current workspace
-                , ppOrder  = \(ws:l:t:ex) -> [ws,l]++ex++[t] -- workspaces : layout : extras : title
+                , ppOrder   = \(ws:l:t:ex) -> [ws,l]++ex++[t] -- workspaces : layout : extras : title
                 },
         startupHook        = myStartupHook
     }
