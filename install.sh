@@ -89,6 +89,7 @@ common() {
         nitrogen
         scrot
         pcmanfm
+        xdotool
         pacman-contrib
         pulsemixer
         imagemagick

@@ -36,12 +36,19 @@ import qualified Data.Map        as M
 -- Functions
 
 dropRdTuple (a, b, _) = (a, b)
-describeSubmap c (a, b) = (a, b, c ++ " (submap)")
   
-getDescription' (k, _, d) = "[" ++ k ++ "]: " ++ d
-getDescription keys = intercalate " | " $ map getDescription' keys
+getDescription' (k, _, d) = "[" ++ k ++ "]: " ++ (takeWhile (/='\n') d)
+getDescription sep keys = intercalate sep $ map getDescription' keys
+
+alignHelp s
+  | (length $ lines s) == 1 = s
+  | otherwise = intercalate "\n  " $ map alignHelp $ lines s
+
+getHelp' (k, _, d) = "[" ++ k ++ "]: " ++ (alignHelp d)
+getHelp keys = unlines $ map getHelp' keys
 
 escapeSymbols = "<>()|"
+
 dzen m = spawn $ "echo " ++
   (foldl (\acc e -> acc ++ (if elem e escapeSymbols then ['\\', e] else [e])) "" m) ++
   " | dzen2 -p 5 \
@@ -50,6 +57,7 @@ dzen m = spawn $ "echo " ++
   \-bg '#1d2021'"
   
 xmessage m = spawn $ "xmessage '" ++ m ++ "'" 
+termShow m = spawn $ "termite --hold -e 'echo \"" ++ m ++  "\"'"
 
 windowCount :: X (Maybe String)
 windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
@@ -73,12 +81,16 @@ myWorkspaces    = map show [1..9] ++ ["Music"]
 myNormalBorderColor  = "#1d2021"
 myFocusedBorderColor = "#83a598"
 
+printSubmap = dzen
+printHelp = termShow
+
 --------------------------------------------------------
 -- Keybindings
 myKeys = \conf -> let
   addExitMap m = ("<Escape>", dzen "Exited submap", "Cancel") : m
-  prefix p m = (p, (dzen $ getDescription $ addExitMap m) >>
-                 (submap $ mkKeymap conf $ map dropRdTuple $ addExitMap m))
+  prefix p m d = (p, (printSubmap $ getDescription " | " $ addExitMap m) >>
+                 (submap $ mkKeymap conf $ map dropRdTuple $ addExitMap m),
+                  d ++ " (submap)\n" ++ getHelp m)
   keymap =
     [ ("M-."         , sendMessage (IncMasterN (-1))                          , "Decrease Master N"        )
     , ("M-,"         , sendMessage (IncMasterN 1)                             , "Increase Master N"        )
@@ -94,7 +106,7 @@ myKeys = \conf -> let
     , ("M-<F3>"      , spawn "pcmanfm"                                        , "File browser"             )
     , ("M-<Space>"   , sendMessage NextLayout                                 , "Cicle layouts"            )
     , ("M-<Return>"  , spawn $ XMonad.terminal conf                           , "Launch terminal"          )
-    , ("M-S-/"       , xmessage $ unlines $ map getDescription' keymap        , "Show this help"           )
+    , ("M-S-/"       , printHelp $ getHelp keymap                              , "Show this help"           )
     , ("M-S-c"       , spawn "cd ~/.xmonad &&  \
         \stack ghc -- --make ~/.config/xmobar/xmobar.hs && \
         \xmonad --recompile && \
@@ -108,12 +120,18 @@ myKeys = \conf -> let
     , ("M-S-<Return>", windows W.swapMaster                                   , "Make window master"       )
     , ("M-C-t"       , spawn "/usr/local/bin/picom --experimental-backends -b", "Start picom"              )
     , ("M-C-x"       , spawn "xkill"                                          , "Launch xkill"             )
-    , describeSubmap "Power management" $ prefix "M-S-e"
+    , prefix "M-S-e"
        [ ("r"  , spawn "reboot"           , "Reboot")
        , ("s"  , spawn "systemctl suspend", "Suspend")
        , ("e"  , io (exitWith ExitSuccess), "Exit XMonad")
        , ("S-s", spawn "shutdown 0"       , "Shutdown")
-       ]
+       , prefix "m"
+         [("m", spawn "xmessage 'Test'", "test message")
+         , prefix "l"
+           [("l", spawn "xmessage 'AYAYAY'", "AYAYAY")
+           ] "AYAYA here"
+         ] "Test"
+       ] "Power management"
     ]
     ++
     [("M" ++ m ++ "-" ++ k, windows $ f i
