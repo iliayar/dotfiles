@@ -194,6 +194,13 @@ myKeys = \conf -> let
   prefix p m d = (p, withDzenKeymapsPipe d m $ createSubmap m,
                   d ++ " (submap)\n" ++ getHelp m)
   dzenAllBindings = withDzenKeymapsPipe "Keybindings" keymap $ createSubmap []
+  restartRecompile = intercalate " && "
+    [ "cd ~/.xmonad"
+    , "stack ghc -- --make ~/.config/xmobar/xmobar.hs"
+    , "xmonad --recompile"
+    , "xmonad --restart"
+    , "notify-send 'restarting Xmonad'"
+    ]
   keymap =
     [ ("M-."         , sendMessage (IncMasterN (-1))                          , "Decrease Master N"        )
     , ("M-,"         , sendMessage (IncMasterN 1)                             , "Increase Master N"        )
@@ -208,11 +215,7 @@ myKeys = \conf -> let
     , ("M-<Space>"   , sendMessage NextLayout                                 , "Cicle layouts"            )
     , ("M-<Return>"  , spawn $ XMonad.terminal conf                           , "Launch terminal"          )
     , ("M-S-/"       , termShowKeybindings $ getHelp keymap                   , "Show this help"           )
-    , ("M-S-c"       , spawn "cd ~/.xmonad &&  \
-        \stack ghc -- --make ~/.config/xmobar/xmobar.hs && \
-        \xmonad --recompile && \
-        \xmonad --restart && \
-        \notify-send 'restarting Xmonad'"                                     , "Recompile, restart XMonad")
+    , ("M-S-c"       , spawn restartRecompile                                 , "Recompile, restart XMonad")
     , ("M-S-d"       , spawn "notify-send 'DUNST_COMMAND_TOGGLE'"             , "Toggle notifications"     )
     , ("M-S-j"       , windows W.swapDown                                     , "Swap window with prev"    )
     , ("M-S-k"       , windows W.swapUp                                       , "Swap window with next"    )
