@@ -1,5 +1,6 @@
 home/.config/nvim/plugged
-home/bin
+# home/bin
+color-utils
 *.errors
 *.hi
 *.o
