@@ -2,7 +2,7 @@
 import Data.List
 import Data.Monoid
 
-import System.IO (hPutStrLn)
+import System.IO (hPutStrLn, hClose, hPutStr, Handle)
 import System.Exit
 
 import Control.Arrow (first)
@@ -41,7 +41,7 @@ dropRdTuple :: (a, b, c) -> (a, b)
 dropRdTuple (a, b, _) = (a, b)
   
 getDescription' :: (String, a, String) -> String
-getDescription' (k, _, d) = "[" ++ k ++ "]: " ++ (takeWhile (/='\n') d)
+getDescription' (k, _, d) = k ++ ": " ++ (takeWhile (/='\n') d)
 
 getDescription :: String -> [(String, b, String)] -> String
 getDescription sep keys = intercalate sep $ map getDescription' keys
@@ -61,18 +61,20 @@ dzenEscape :: String -> String
 dzenEscape = concatMap doubleLts
   where
         doubleLts x
-          | x `elem` "<>()|" = ['\\', x]
+          | x `elem` "|" = ['\\', x]
           | otherwise = [x]
 
-xmessage, termShow, dzen :: String -> X () 
-dzen m = spawn $ "echo " ++
+dzen' :: String -> String
+dzen' m = "(echo " ++
   dzenEscape m ++
-  " | dzen2 -p 5 \
-  \-fn 'Hack Nerd Font Mono 9' \
-  \-fg '#d5c4a1' \
-  \-bg '#1d2021'"
-xmessage m = spawn $ "xmessage '" ++ m ++ "'" 
-termShow m = spawn $ "termite --hold -e 'echo \"" ++ m ++  "\"'"
+  " | column; cat) | " ++ unwords [ "dzen2"
+                         , "-fn 'Hack Nerd Font Mono 9'"
+                         , "-fg '#d5c4a1'"
+                         , "-bg '#1d2021'"
+                         ]
+
+termShowKeybindings :: String -> X () 
+termShowKeybindings m = spawn $ "termite --hold -e \"echo '" ++ m ++  "'\" -t 'termite-keybindings'"
 
 windowCount :: X (Maybe String)
 windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
@@ -82,6 +84,23 @@ xmobarEscape = concatMap doubleLts
   where
         doubleLts '<' = "<<"
         doubleLts x   = [x]
+
+addExitMap :: [(String, X (), String)] -> [(String, X (), String)]
+addExitMap m = ("<Escape>", io $ return (), "Cancel") : m
+
+dzenKeymapsPipe :: String -> [(String, X (), String)] -> X Handle
+dzenKeymapsPipe d m = do
+   h <- spawnPipe $ "~/bin/dzenShowKeymap.sh \"" ++ (dzenEscape d) ++ "\""
+   io $ hPutStrLn h $ dzenEscape $ getDescription "\n" $ addExitMap m
+   io $ hPutStrLn h "END"
+   io $ return h
+
+withDzenKeymapsPipe :: String -> [(String, X (), String)] -> X () -> X ()
+withDzenKeymapsPipe d m f = do
+  h <- dzenKeymapsPipe d m
+  f
+  io $ hClose h
+
 --------------------------------------------------------
 -- Variables
 
@@ -108,11 +127,6 @@ myWorkspacesClickable    = clickable . (map xmobarEscape) $ (map show [1..9]) ++
 
 myNormalBorderColor  = "#1d2021"
 myFocusedBorderColor = "#83a598"
-
-printSubmap, printHelp :: String -> X ()
-printSubmap = dzen
-printHelp = termShow
-
 
 --------------------------------------------------------
 -- GridSelect
@@ -176,10 +190,10 @@ myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
 -- Keybindings
 
 myKeys = \conf -> let
-  addExitMap m = ("<Escape>", dzen "Exited submap", "Cancel") : m
-  prefix p m d = (p, (printSubmap $ getDescription " | " $ addExitMap m) >>
-                 (submap $ mkKeymap conf $ map dropRdTuple $ addExitMap m),
+  createSubmap m = submap $ mkKeymap conf $ map dropRdTuple $ addExitMap m
+  prefix p m d = (p, withDzenKeymapsPipe d m $ createSubmap m,
                   d ++ " (submap)\n" ++ getHelp m)
+  dzenAllBindings = withDzenKeymapsPipe "Keybindings" keymap $ createSubmap []
   keymap =
     [ ("M-."         , sendMessage (IncMasterN (-1))                          , "Decrease Master N"        )
     , ("M-,"         , sendMessage (IncMasterN 1)                             , "Increase Master N"        )
@@ -193,7 +207,7 @@ myKeys = \conf -> let
     , ("M-t"         , spawn "killall picom"                                  , "Disable picom"            )
     , ("M-<Space>"   , sendMessage NextLayout                                 , "Cicle layouts"            )
     , ("M-<Return>"  , spawn $ XMonad.terminal conf                           , "Launch terminal"          )
-    , ("M-S-/"       , printHelp $ getHelp keymap                              , "Show this help"          )
+    , ("M-S-/"       , termShowKeybindings $ getHelp keymap                   , "Show this help"           )
     , ("M-S-c"       , spawn "cd ~/.xmonad &&  \
         \stack ghc -- --make ~/.config/xmobar/xmobar.hs && \
         \xmonad --recompile && \
@@ -205,20 +219,21 @@ myKeys = \conf -> let
     , ("M-S-q"       , kill                                                   , "Close window"             )
     , ("M-S-<Space>" , windows W.focusMaster                                  , "Focus master window"      )
     , ("M-S-<Return>", windows W.swapMaster                                   , "Make window master"       )
+    , ("M-C-/"       , dzenAllBindings                                        , "Show this help"           )
     , ("M-C-t"       , spawn "/usr/local/bin/picom --experimental-backends -b", "Start picom"              )
     , ("M-C-x"       , spawn "xkill"                                          , "Launch xkill"             )
-    , ("M-C-<Space>" , namedScratchpadAction myScratchPads "notes"            , "Notes.org scratchpad"      )
+    , ("M-C-<Space>" , namedScratchpadAction myScratchPads "notes"            , "Notes.org scratchpad"     )
     , ("M-C-<Return>", namedScratchpadAction myScratchPads "terminal"         , "Terminal scratchpad"      )
     , prefix "M-S-e"
-       [ ("r"  , spawn "reboot"           , "Reboot")
-       , ("s"  , spawn "systemctl suspend", "Suspend")
+       [ ("r"  , spawn "reboot"           , "Reboot"     )
+       , ("s"  , spawn "systemctl suspend", "Suspend"    )
        , ("e"  , io (exitWith ExitSuccess), "Exit XMonad")
-       , ("S-s", spawn "shutdown 0"       , "Shutdown")
+       , ("S-s", spawn "shutdown 0"       , "Shutdown"   )
        ] "Power management"
     , prefix "C-g"
       [ ("g", spawnSelected' myAppGrid                , "Grid select favorite apps")
-      , ("t", goToSelected $ mygridConfig myColorizer , "Goto selected window")
-      , ("b", bringSelected $ mygridConfig myColorizer, "Bring selected window")
+      , ("t", goToSelected $ mygridConfig myColorizer , "Goto selected window"     )
+      , ("b", bringSelected $ mygridConfig myColorizer, "Bring selected window"    )
       ] "GridSelect"
     ]
     ++
@@ -241,18 +256,18 @@ myKeys = \conf -> let
         | (k, sc) <- zip ["p", "[", "]"] [0..]
         , (f, m) <- [(W.view, ""), (W.shift, "-S")]]
     ++
-    [ ("<XF86MonBrightnessUp>"  , spawn "light -A 5"                  , "Brightness up")
+    [ ("<XF86MonBrightnessUp>"  , spawn "light -A 5"                  , "Brightness up"  )
     , ("<XF86MonBrightnessDown>", spawn "light -U 5"                  , "Brightness down")
-    , ("<XF86AudioRaiseVolume>" , spawn "pactl set-sink-volume 0 +5%" , "Audio up")
-    , ("<XF86AudioLowerVolume>" , spawn "pactl set-sink-volume 0 -5%" , "Audio down")
-    , ("<XF86AudioMute>"        , spawn "pactl set-sink-mute 0 toggle", "Mute/Unmute")
+    , ("<XF86AudioRaiseVolume>" , spawn "pactl set-sink-volume 0 +5%" , "Audio up"       )
+    , ("<XF86AudioLowerVolume>" , spawn "pactl set-sink-volume 0 -5%" , "Audio down"     )
+    , ("<XF86AudioMute>"        , spawn "pactl set-sink-mute 0 toggle", "Mute/Unmute"    )
     ]
     ++
-    [ (    "<Print>", scrot "" 0, "Screenshot")
-    , (  "M-<Print>", scrot "-u" 0, "Screenshot of active window")
-    , ("M-S-<Print>", scrot "-s" 0.1, "Screenshot interactive")
-    , ("<XF86AudioNext>", playerctl "next", "Music next")
-    , ("<XF86AudioPrev>", playerctl "previous", "Music prev")
+    [ (    "<Print>", scrot "" 0, "Screenshot"                      )
+    , (  "M-<Print>", scrot "-u" 0, "Screenshot of active window"   )
+    , ("M-S-<Print>", scrot "-s" 0.1, "Screenshot interactive"      )
+    , ("<XF86AudioNext>", playerctl "next", "Music next"            )
+    , ("<XF86AudioPrev>", playerctl "previous", "Music prev"        )
     , ("<XF86AudioPlay>", playerctl "play-pause", "Music play/pause")
     ]
   in mkKeymap conf $ map dropRdTuple keymap
@@ -287,6 +302,7 @@ myManageHook = composeAll
   [ className =? "Nitrogen"            --> doFloat
   , className =? "feh"                 --> doFloat
   , resource  =? "stalonetray"         --> doIgnore
+  , title     =? "termite-keybindings" --> (customFloating $ W.RationalRect 0 0 0.5 1)
   ] <+> namedScratchpadManageHook myScratchPads
 
 myEventHook = fullscreenEventHook
