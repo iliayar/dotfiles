@@ -3,6 +3,7 @@ export PATH=$HOME/.local/bin:$HOME/.cargo/bin:$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
+export BROWSER="brave"
 
 # if [[ $(nc -h 2&>1 | grep "GNU" -c) == 1 ]]; then
 #     alias nc="nc -c"
@@ -100,7 +101,7 @@ alias vim="nvim"
 export TERM=xterm-256color
 export LANG=en_US.UTF-8
 export XDG_CONFIG_HOME="$HOME/.config"
-export EDITOR=vim
+export EDITOR=nvim
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 

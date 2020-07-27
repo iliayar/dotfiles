@@ -20,3 +20,4 @@ stack.yaml*
 xmobar
 !xmobar*.hs
 */.xmonad/build
+*.zip

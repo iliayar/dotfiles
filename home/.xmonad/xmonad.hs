@@ -33,12 +33,26 @@ import XMonad.Prompt.FuzzyMatch (fuzzyMatch)
 
 import XMonad.Layout.NoBorders
 import XMonad.Layout.GridVariants
+import XMonad.Layout.ResizableTile
+import XMonad.Layout.Spiral
+import XMonad.Layout.Tabbed
+import XMonad.Layout.SimplestFloat
 import XMonad.Layout.MultiToggle (mkToggle, single, EOT(EOT), (??))
 import XMonad.Layout.MultiToggle.Instances (StdTransformers(FULL, NBFULL, MIRROR, NOBORDERS))
+import XMonad.Layout.LayoutModifier
+import XMonad.Layout.LimitWindows (limitWindows, increaseLimit, decreaseLimit)
+import XMonad.Layout.Magnifier
+import XMonad.Layout.Renamed (renamed, Rename(Replace))
+import XMonad.Layout.ShowWName
+import XMonad.Layout.Spacing
+import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
+import qualified XMonad.Layout.ToggleLayouts as T (toggleLayouts, ToggleLayout(Toggle))
 import qualified XMonad.Layout.MultiToggle as MT (Toggle(..))
 
 import XMonad.Actions.Submap
 import XMonad.Actions.GridSelect
+import XMonad.Actions.WithAll (sinkAll, killAll)
+import qualified XMonad.Actions.Search as S
 
 import qualified XMonad.Actions.TreeSelect as TS
 import qualified XMonad.StackSet as W
@@ -223,14 +237,23 @@ tsManagement =
        , Node (TS.TSNode "Norm Brightness" "Set Brightness to 50" (spawn "light -S 50")) []
        , Node (TS.TSNode "Min Brightness" "Set Brightness to 5" (spawn "light -S 5")) []
        ]
-   , Node (TS.TSNode "Windows" "Manipulate windown" (return ()))
-       [ Node (TS.TSNode "Tile" "Make Window Tiled" (withFocused $ windows . W.sink)) []
-       , Node (TS.TSNode "Toggle bar"   "Show/Hide bar" (sendMessage ToggleStruts)) [ ]
-       , Node (TS.TSNode "Toggle fullscreen"   "Toggle fullscreen layout " (sendMessage (MT.Toggle NBFULL))) [ ]
-       , Node (TS.TSNode "Toggle mirrored"   "Toggle mirror layout " (sendMessage (MT.Toggle MIRROR))) [ ]
-       ]
+   , Node (TS.TSNode "Layout" "Manipulate layout" (return ()))
+     tsLayout
    ]
+tsLayout =
+       [ Node (TS.TSNode "Tile" "Make Window Tiled" (withFocused $ windows . W.sink)) []
+       , Node (TS.TSNode "Tile All" "Make All Windows Tiled" sinkAll) []
+       , Node (TS.TSNode "Toggle Struts"   "Show/Hide bar" (sendMessage ToggleStruts)) [ ]
+       , Node (TS.TSNode "Toggle Fullscreen"   "" makeFullscreenNoDock) [ ]
+       , Node (TS.TSNode "Toggle NoBorders"   "" (sendMessage (MT.Toggle NOBORDERS))) [ ]
+       , Node (TS.TSNode "Toggle Mirrored"   "" (sendMessage (MT.Toggle MIRROR))) [ ]
+       , Node (TS.TSNode "Toggle Floats"   "" (sendMessage (T.Toggle "floats"))) [ ]
+       , Node (TS.TSNode "Arrange"   "" (sendMessage Arrange)) [ ]
+       , Node (TS.TSNode "DeArrange"   "" (sendMessage DeArrange)) [ ]
+       ]
 
+makeFullscreenNoDock :: X ()
+makeFullscreenNoDock = sendMessage (MT.Toggle NBFULL) >> sendMessage ToggleStruts
   
 tsDefaultConfig :: TS.TSConfig a
 tsDefaultConfig = TS.TSConfig { TS.ts_hidechildren = True
@@ -269,6 +292,7 @@ myKeys = \conf -> let
     , ("M-j"         , windows W.focusDown                                    , "Prev window"              )
     , ("M-k"         , windows W.focusUp                                      , "Next window"              )
     , ("M-l"         , sendMessage Expand                                     , "Expand window"            )
+    , ("M-f"         , makeFullscreenNoDock                                   , "Fullscreen Toggle"        )
     , ("M-<Space>"   , sendMessage NextLayout                                 , "Cicle layouts"            )
     , ("M-<Return>"  , spawn $ XMonad.terminal conf                           , "Launch terminal"          )
     , ("M-S-/"       , termShowKeybindings $ getHelp keymap                   , "Show this help"           )
@@ -302,11 +326,14 @@ myKeys = \conf -> let
     , prefix "M-t"
       [ ("a", TS.treeselectAction tsDefaultConfig tsAll, "TreeSelect All")
       , ("m", TS.treeselectAction tsDefaultConfig tsManagement, "TreeSelect Management")
+      , ("l", TS.treeselectAction tsDefaultConfig tsLayout, "TreeSelect Layout")
       ] "TreesSlect"
     , prefix "M-d"
       [ ("d", shellPrompt myXPConfig, "Shell prompt")
       , ("a", appPrompt myXPConfig  , "Applications prompt")
       ] "Prompts"
+    , prefix "M-C-f" ( createSearchPrompt searchEngines) "Search Engines Prompt"
+    , prefix "M-S-f" ( createSearchSelect searchEngines) "Selech Engines Select"
     ]
     ++
     [("M" ++ m ++ "-" ++ k, windows $ f i
@@ -350,6 +377,15 @@ myKeys = \conf -> let
                                 \mv $f ~/Pictures/screenshots/;\
                                 \notify-send \"Screenshot saved: $f\";'"
       playerctl a = spawn $ "playerctl " ++ a ++ " -p spotify"
+      createSearchPrompt = map (\ (a, b, c) -> (a, S.promptSearch myXPConfig b, c))
+      createSearchSelect = map (\ (a, b, c) -> (a, S.selectSearch b, c))
+      archwiki = S.searchEngine "archwiki" "https://wiki.archlinux.org/index.php?search="
+      searchEngines = [ ("g", S.google, "Google")
+                      , ("h", S.hoogle, "Hoogle")
+                      , ("i", S.images, "Images")
+                      , ("d", S.duckduckgo, "DuckDuckGo")
+                      , ("a", archwiki, "Arch Wiki")
+                      ]
 
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
@@ -361,23 +397,74 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 
 --------------------------------------------------------
 -- Layouts
-myLayout =  tiled ||| Grid (16/9)
+
+mySpacing :: Integer -> l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spacing l a
+mySpacing i = spacingRaw False (Border i i i i) True (Border i i i i) True
+
+mySpacing' :: Integer -> l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spacing l a
+mySpacing' i = spacingRaw True (Border i i i i) True (Border i i i i) True
+
+myLayout = avoidStruts
+         $ windowArrange
+         $ mkToggle (NBFULL ?? NOBORDERS ?? EOT)
+         $ T.toggleLayouts floats
+         -- $ smartBorders
+         $   tall
+         ||| floats
+         ||| noBorders tabs
+         ||| magnify
+         ||| noBorders monocle
+         ||| spirals
+         ||| grid
   where
-     tiled   = Tall nmaster delta ratio
-     nmaster = 1
-     ratio   = 1/2
-     delta   = 3/100
+    tall    = renamed [Replace "tall"]
+            $ limitWindows 12
+            $ mySpacing' 4
+            $ mkToggle (single MIRROR)
+            $ ResizableTall 1 (3/100) (1/2) []
+    floats  = renamed [Replace "floats"]
+            $ limitWindows 20 simplestFloat
+    magnify = renamed [Replace "magnify"]
+            $ magnifier
+            $ limitWindows 12
+            $ mySpacing 6
+            $ ResizableTall 1 (3/100) (1/2) []
+    monocle = renamed [Replace "monocle"]
+            $ limitWindows 20 Full
+    spirals = renamed [Replace "spirals"]
+            $ mySpacing' 4
+            $ spiral (6/7)
+    grid    = renamed [Replace "grid"]
+            $ limitWindows 12
+            $ mySpacing 4
+            $ mkToggle (single MIRROR)
+            $ Grid (16/10)
+    tabs    = renamed [Replace "tabs"]
+           -- I cannot add spacing to this layout because it will
+           -- add spacing between window and tabs which looks bad.
+            $ tabbed shrinkText $ def
+                   { fontName            = "xft:Hack Nerd Font Mono:size=9"
+                   , activeColor         = "#292d3e"
+                   , inactiveColor       = "#3e445e"
+                   , activeBorderColor   = "#292d3e"
+                   , inactiveBorderColor = "#292d3e"
+                   , activeTextColor     = "#ffffff"
+                   , inactiveTextColor   = "#d0d0d0"
+                   }
 
 --------------------------------------------------------
 -- Hooks
 myManageHook = composeAll
-  [ className =? "Nitrogen"            --> doFloat
+  [ isFullscreen                       --> doFullFloat
+  , className =? "Nitrogen"            --> doFloat
   , className =? "feh"                 --> doFloat
   , resource  =? "stalonetray"         --> doIgnore
   , title     =? "termite-keybindings" --> (customFloating $ W.RationalRect 0 0 0.5 1)
-  ] <+> namedScratchpadManageHook myScratchPads
+  , manageDocks
+  , namedScratchpadManageHook myScratchPads
+  ]
 
-myEventHook = fullscreenEventHook
+myEventHook = docksEventHook
 
 myStartupHook = do
           spawnOnce "nitrogen --restore &"
@@ -468,9 +555,9 @@ main = do
         focusedBorderColor = myFocusedBorderColor,
         keys               = myKeys,
         mouseBindings      = myMouseBindings,
-        layoutHook         = smartBorders $ avoidStruts $ mkToggle (single MIRROR) $ mkToggle (NBFULL ?? EOT) myLayout,
-        manageHook         = (isFullscreen --> doFullFloat) <+> myManageHook <+> manageDocks,
-        handleEventHook    = myEventHook <+> docksEventHook,
+        layoutHook         = myLayout,
+        manageHook         = myManageHook,
+        handleEventHook    = myEventHook,
         logHook            = dynamicLogWithPP xmobarPP
                 { ppOutput  = \x -> hPutStrLn xmproc x
                 , ppCurrent = xmobarColor "#b8bb26" "" . wrap "[" "]"
