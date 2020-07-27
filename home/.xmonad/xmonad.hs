@@ -152,8 +152,8 @@ myWorkspacesClickable    = clickable . (map xmobarEscape) $ (map show [1..9]) ++
                       (i,ws) <- zip (map show [1..9] ++ ["m"]) l,
                       let n = i ]
 
-myNormalBorderColor  = "#1d2021"
-myFocusedBorderColor = "#83a598"
+myNormalBorderColor  = "#928374"
+myFocusedBorderColor = "#cc241d"
 
 --------------------------------------------------------
 -- GridSelect
@@ -237,6 +237,7 @@ tsManagement =
        , Node (TS.TSNode "Norm Brightness" "Set Brightness to 50" (spawn "light -S 50")) []
        , Node (TS.TSNode "Min Brightness" "Set Brightness to 5" (spawn "light -S 5")) []
        ]
+   , Node (TS.TSNode "Close all dzen" "Kill broken dzen" (spawn "killall dzen2")) []
    , Node (TS.TSNode "Layout" "Manipulate layout" (return ()))
      tsLayout
    ]
@@ -444,12 +445,12 @@ myLayout = avoidStruts
            -- add spacing between window and tabs which looks bad.
             $ tabbed shrinkText $ def
                    { fontName            = "xft:Hack Nerd Font Mono:size=9"
-                   , activeColor         = "#292d3e"
-                   , inactiveColor       = "#3e445e"
+                   , activeColor         = "#282828"
+                   , inactiveColor       = "#1d2021"
                    , activeBorderColor   = "#292d3e"
                    , inactiveBorderColor = "#292d3e"
-                   , activeTextColor     = "#ffffff"
-                   , inactiveTextColor   = "#d0d0d0"
+                   , activeTextColor     = "#fb4934"
+                   , inactiveTextColor   = "#ebdbb2"
                    }
 
 --------------------------------------------------------
@@ -482,11 +483,11 @@ myXPConfig :: XPConfig
 myXPConfig = def
       { font                = myFont
       , bgColor             = "#1d2021"
-      , fgColor             = "#eddbb2"
+      , fgColor             = "#ebdbb2"
       , bgHLight            = "#282828"
       , fgHLight            = "#fb4934"
-      , borderColor         = "#83a598"
-      , promptBorderWidth   = 0
+      , borderColor         = "#fabd2f"
+      , promptBorderWidth   = 2
       , promptKeymap        = defaultXPKeymap
       , position            = Top
 --    , position            = CenteredAt { xpCenterY = 0.3, xpWidth = 0.3 }
@@ -538,7 +539,7 @@ getApplicationData dir file = do
   return (if names == [] then [Nothing] else map Just $ addPrefix $ map (\ (a, b) -> (getValue a, getValue b)) values) 
   where
     getValue = dropWhile (==' ') . drop 1 . dropWhile (/='=')
-    addPrefix a = (head a) : (map (\ (b, c) -> ((fst $ head a) ++ " " ++ b, c)) (tail a))
+    addPrefix a = (head a) : (map (\ (b, c) -> ((fst $ head a) ++ " (" ++ b ++ ")", c)) (tail a))
   
 --------------------------------------------------------
 -- Main
