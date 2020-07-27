@@ -137,10 +137,8 @@ myFocusedBorderColor = "#83a598"
 --------------------------------------------------------
 -- GridSelect
 
-myColorizer = defaultColorizer
-
-mygridConfig :: p -> GSConfig Window
-mygridConfig colorizer = (buildDefaultGSConfig myColorizer)
+mygridConfig :: (a -> Bool -> X (String, String)) -> GSConfig a
+mygridConfig colorizer = (buildDefaultGSConfig colorizer)
     { gs_cellheight   = 40
     , gs_cellwidth    = 200
     , gs_cellpadding  = 6
@@ -149,16 +147,17 @@ mygridConfig colorizer = (buildDefaultGSConfig myColorizer)
     , gs_font         = myFont
     }
 
-spawnSelected' :: [(String, String)] -> X ()
-spawnSelected' lst = gridselect conf lst >>= flip whenJust spawn
-    where conf = def
-                   { gs_cellheight   = 40
-                   , gs_cellwidth    = 200
-                   , gs_cellpadding  = 6
-                   , gs_originFractX = 0.5
-                   , gs_originFractY = 0.5
-                   , gs_font         = myFont
-                   }
+orange :: a -> Bool -> X (String, String)
+orange = myColor "#ff4301"
+
+myColor :: String -> a -> Bool -> X (String, String)
+myColor color _ isFg = do
+  return $ if isFg
+           then (color, "#1d2021")
+           else ("#1d2021" ,"#d5c4a1")
+
+spawnSelected' :: [(String, String)] -> X()
+spawnSelected' = runSelectedAction (mygridConfig orange) . map (\(a, b) -> (a, spawn b))
 
 myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
             , ("Brave", "brave")
@@ -285,7 +284,7 @@ myKeys = \conf -> let
     , ("M-S-<Return>", windows W.swapMaster                                   , "Make window master"       )
     , ("M-C-/"       , dzenAllBindings                                        , "Show this help"           )
     , ("M-C-x"       , spawn "xkill"                                          , "Launch xkill"             )
-    , prefix "M-C-<Return>"
+    , prefix "M-s"
       [ ("t", namedScratchpadAction myScratchPads "terminal", "Terminal scratchpad" )
       , ("n", namedScratchpadAction myScratchPads "notes"   , "Notes.org scratchpad")
       , ("w", namedScratchpadAction myScratchPads "weather" , "Weather scratchpad")
@@ -299,8 +298,8 @@ myKeys = \conf -> let
        ] "Power management"
     , prefix "M-g"
       [ ("g", spawnSelected' myAppGrid                , "Grid select favorite apps")
-      , ("t", goToSelected $ mygridConfig myColorizer , "Goto selected window"     )
-      , ("b", bringSelected $ mygridConfig myColorizer, "Bring selected window"    )
+      , ("t", goToSelected $ mygridConfig orange , "Goto selected window"     )
+      , ("b", bringSelected $ mygridConfig orange, "Bring selected window"    )
       ] "GridSelect"
     , prefix "M-t"
       [ ("a", TS.treeselectAction tsDefaultConfig tsAll, "TreeSelect All")
