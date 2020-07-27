@@ -12,8 +12,9 @@ import Control.Monad (liftM2)
 import XMonad
 
 import XMonad.Hooks.DynamicLog (xmobarPP, dynamicLogWithPP, xmobarColor, PP(..), wrap, shorten)
-import XMonad.Hooks.EwmhDesktops (fullscreenEventHook, ewmh)
-import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.EwmhDesktops (ewmh)
+import XMonad.Hooks.ManageDocks (avoidStruts, manageDocks, docksEventHook, ToggleStruts(..))
+import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat)
 import XMonad.Hooks.SetWMName
 
 import XMonad.Util.SpawnOnce
@@ -27,6 +28,7 @@ import XMonad.Prompt.FuzzyMatch (fuzzyMatch)
 
 import XMonad.Layout.NoBorders
 import XMonad.Layout.GridVariants
+import XMonad.Layout.Fullscreen (fullscreenEventHook, fullscreenManageHook)
 
 import XMonad.Actions.Submap
 import XMonad.Actions.GridSelect
@@ -415,7 +417,7 @@ myXPConfig = def
 -- Main
 main = do
         xmproc <- spawnPipe "xmobar -x 0 /home/iliayar/.config/xmobar/xmobar.hs"
-        xmonad $ docks $ ewmh def {
+        xmonad $ ewmh def {
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
         clickJustFocuses   = myClickJustFocuses,
@@ -427,8 +429,8 @@ main = do
         keys               = myKeys,
         mouseBindings      = myMouseBindings,
         layoutHook         = avoidStruts $ smartBorders $ myLayout,
-        manageHook         = myManageHook,
-        handleEventHook    = myEventHook,
+        manageHook         = (isFullscreen --> doFullFloat) <+> myManageHook <+> manageDocks,
+        handleEventHook    = myEventHook <+> docksEventHook,
         logHook            = dynamicLogWithPP xmobarPP
                 { ppOutput  = \x -> hPutStrLn xmproc x
                 , ppCurrent = xmobarColor "#b8bb26" "" . wrap "[" "]"
