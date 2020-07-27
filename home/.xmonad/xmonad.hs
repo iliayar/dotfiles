@@ -170,37 +170,22 @@ myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
 -- ScratchPads
 
 myScratchPads :: [NamedScratchpad]
-myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
+myScratchPads = [ termApp "terminal" "" manageQuake
                 , NS "notes" spawnNotes findNotes manageNotes
-                , NS "weather" spawnWeather findWeather manageWeather
-                , NS "ipython" spawnIPython findTerm manageTerm
+                , termApp "weather" "--hold -e 'bash -c \"curl wttr.in; cat\"'" manageWeather
+                , termApp "ipython" "-e 'ipython'" manageQuake
                 ]
   where
-    spawnTerm  = myTerminal ++ " -t scratchpad"
-    findTerm   = title =? "scratchpad"
-    manageTerm = customFloating $ W.RationalRect l t w h
-               where
-                 h = 0.5
-                 w = 1
-                 t = 0
-                 l = 0
+    termApp name cmd manage = NS name ("termite -r '" ++ name ++ "-scratchpad' " ++ cmd) (role =? (name ++ "-scratchpad")) manage
+
     spawnNotes = "emacsclient -c -a emacs -F '(quote (name . \"emacs-notes\"))' ~/.org/Notes.org"
     findNotes  = title =? "emacs-notes"
-    manageNotes = customFloating $ W.RationalRect l t w h
-               where
-                 h = 0.9
-                 w = 0.9
-                 t = 0.05
-                 l = 0.05
-    spawnWeather  = myTerminal ++ " -t weather-scratchpad --hold -e 'bash -c \"curl wttr.in; cat\"'"
-    findWeather   = title =? "weather-scratchpad"
-    manageWeather = customFloating $ W.RationalRect l t w h
-               where
-                 h = 0.64
-                 w = 0.53
-                 t = 0.1
-                 l = 0.1
-    spawnIPython  = myTerminal ++ " -t scratchpad -e 'ipython'"
+
+    manageNotes = customFloating $ W.RationalRect 0.05 0.05 0.9 0.9
+    manageWeather = customFloating $ W.RationalRect 0.1 0.1 0.53 0.64
+    manageQuake = customFloating $ W.RationalRect 0 0 1 0.5
+
+    role = stringProperty "WM_WINDOW_ROLE"
 
 --------------------------------------------------------
 -- TreeSelect
