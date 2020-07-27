@@ -17,7 +17,5 @@ recentf
 *-git
 .stack-work
 stack.yaml*
-xmobar
-!xmobar*.hs
 */.xmonad/build
 *.zip
