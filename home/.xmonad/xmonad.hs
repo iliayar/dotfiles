@@ -212,7 +212,7 @@ tsAll =
        , Node (TS.TSNode "Brave" "Browser" (spawn "brave")) []
        ]
    , Node (TS.TSNode "+ Programming" "programming" (return ()))
-       [ Node (TS.TSNode "IPython" "IPython interactive shell" (spawn "termite -t scratchpad -e 'ipython'")) []
+       [ Node (TS.TSNode "IPython" "IPython interactive shell" (namedScratchpadAction myScratchPads "ipython")) []
        , Node (TS.TSNode "Emacs" "IDE/Text editor" (spawn "emacsclient -c -a emacs")) []
        , Node (TS.TSNode "Termite" "Terminal" (spawn "termite")) []
        ]
