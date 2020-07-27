@@ -12,7 +12,7 @@ import Control.Monad (liftM2)
 import XMonad
 
 import XMonad.Hooks.DynamicLog (xmobarPP, dynamicLogWithPP, xmobarColor, PP(..), wrap, shorten)
-import XMonad.Hooks.EwmhDesktops (ewmh)
+import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.ManageDocks (avoidStruts, manageDocks, docksEventHook, ToggleStruts(..))
 import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat)
 import XMonad.Hooks.SetWMName
@@ -28,7 +28,9 @@ import XMonad.Prompt.FuzzyMatch (fuzzyMatch)
 
 import XMonad.Layout.NoBorders
 import XMonad.Layout.GridVariants
-import XMonad.Layout.Fullscreen (fullscreenEventHook, fullscreenManageHook)
+import XMonad.Layout.MultiToggle (mkToggle, single, EOT(EOT), (??))
+import XMonad.Layout.MultiToggle.Instances (StdTransformers(FULL, NBFULL, MIRROR, NOBORDERS))
+import qualified XMonad.Layout.MultiToggle as MT (Toggle(..))
 
 import XMonad.Actions.Submap
 import XMonad.Actions.GridSelect
@@ -198,7 +200,7 @@ tsAll =
        , Node (TS.TSNode "Brave" "Browser" (spawn "brave")) []
        ]
    , Node (TS.TSNode "+ Programming" "programming" (return ()))
-       [ Node (TS.TSNode "IPython" "IPython interactive shell" (namedScratchpadAction myScratchPads "ipython")) []
+       [ Node (TS.TSNode "IPython" "IPython interactive shell" (spawn "termite -e 'ipython'")) []
        , Node (TS.TSNode "Emacs" "IDE/Text editor" (spawn "emacsclient -c -a emacs")) []
        , Node (TS.TSNode "Termite" "Terminal" (spawn "termite")) []
        ]
@@ -213,6 +215,12 @@ tsManagement =
        [ Node (TS.TSNode "Max Brightness" "Set Brightness to 100" (spawn "light -S 100")) []
        , Node (TS.TSNode "Norm Brightness" "Set Brightness to 50" (spawn "light -S 50")) []
        , Node (TS.TSNode "Min Brightness" "Set Brightness to 5" (spawn "light -S 5")) []
+       ]
+   , Node (TS.TSNode "Windows" "Manipulate windown" (return ()))
+       [ Node (TS.TSNode "Tile" "Make Window Tiled" (withFocused $ windows . W.sink)) []
+       , Node (TS.TSNode "Toggle bar"   "Show/Hide bar" (sendMessage ToggleStruts)) [ ]
+       , Node (TS.TSNode "Toggle fullscreen"   "Toggle fullscreen layout " (sendMessage (MT.Toggle NBFULL))) [ ]
+       , Node (TS.TSNode "Toggle mirrored"   "Toggle mirror layout " (sendMessage (MT.Toggle MIRROR))) [ ]
        ]
    ]
 
@@ -250,9 +258,7 @@ myKeys = \conf -> let
   keymap =
     [ ("M-."         , sendMessage (IncMasterN (-1))                          , "Decrease Master N"        )
     , ("M-,"         , sendMessage (IncMasterN 1)                             , "Increase Master N"        )
-    , ("M-b"         , sendMessage ToggleStruts                               , "Hide bar"                 )
     , ("M-d"         , shellPrompt myXPConfig                                 , "Prompt"                   )
-    , ("M-f"         , withFocused $ windows . W.sink                         , "Make window tiled"        )
     , ("M-h"         , sendMessage Shrink                                     , "Shrink window"            )
     , ("M-j"         , windows W.focusDown                                    , "Prev window"              )
     , ("M-k"         , windows W.focusUp                                      , "Next window"              )
@@ -344,7 +350,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 
 --------------------------------------------------------
 -- Layouts
-myLayout =  tiled ||| Mirror tiled ||| Grid (16/10) ||| Full
+myLayout =  tiled ||| Grid (16/9)
   where
      tiled   = Tall nmaster delta ratio
      nmaster = 1
@@ -412,7 +418,7 @@ main = do
         focusedBorderColor = myFocusedBorderColor,
         keys               = myKeys,
         mouseBindings      = myMouseBindings,
-        layoutHook         = avoidStruts $ smartBorders $ myLayout,
+        layoutHook         = smartBorders $ avoidStruts $ mkToggle (single MIRROR) $ mkToggle (NBFULL ?? EOT) myLayout,
         manageHook         = (isFullscreen --> doFullFloat) <+> myManageHook <+> manageDocks,
         handleEventHook    = myEventHook <+> docksEventHook,
         logHook            = dynamicLogWithPP xmobarPP
