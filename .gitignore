@@ -1,21 +1,25 @@
+# Downloadable
 home/.config/nvim/plugged
-# home/bin
+elpa
+*-git
+*.zip
+
+# Binaries
+xmonad-x86_64-linux
 color-utils
-*.errors
+transient
 *.hi
 *.o
-xmonad-x86_64-linux
-elpa
-transient
-*~
 *.eld
+*/.xmonad/build
+
+# Temp
+*~
 prompt-history
 recentf
 .cache
 .lsp-session*
 \#*\#
-*-git
 .stack-work
 stack.yaml*
-*/.xmonad/build
-*.zip
+*.errors
