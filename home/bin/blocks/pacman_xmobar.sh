@@ -4,8 +4,8 @@ PACNUM="$(checkupdates | wc -l)"
 AURNUM="$(yay -Qum | wc -l)"
 
 red="<fc=$(xrdb -query | grep color1: | gawk '{ print $2 }')>"
-green="<fc=$(xrdb -query | grep color10: | gawk '{ print $2 }')>"
-yellow="<fc=$(xrdb -query | grep color9: | gawk '{ print $2 }')>"
+green="<fc=$(xrdb -query | grep color2: | gawk '{ print $2 }')>"
+yellow="<fc=$(xrdb -query | grep color3: | gawk '{ print $2 }')>"
 reset="</fc>"
 
 PACMAN_COLOR=$green

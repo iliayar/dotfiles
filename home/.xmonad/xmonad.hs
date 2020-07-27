@@ -1,6 +1,7 @@
 -- Imports
 import Data.List
 import Data.Monoid
+import Data.Tree
 
 import System.IO (hPutStrLn, hClose, hPutStr, Handle)
 import System.Exit
@@ -30,6 +31,7 @@ import XMonad.Layout.GridVariants
 import XMonad.Actions.Submap
 import XMonad.Actions.GridSelect
 
+import qualified XMonad.Actions.TreeSelect as TS
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
@@ -57,12 +59,14 @@ getHelp' (k, _, d) = "[" ++ k ++ "]: " ++ (alignHelp d)
 getHelp :: [(String, a, String)] -> String
 getHelp keys = unlines $ map getHelp' keys
 
-dzenEscape :: String -> String
-dzenEscape = concatMap doubleLts
+escapeSymbols :: String -> String -> String
+escapeSymbols esc = concatMap doubleLts
   where
         doubleLts x
-          | x `elem` "|" = ['\\', x]
+          | x `elem` esc = ['\\', x]
           | otherwise = [x]
+
+dzenEscape = escapeSymbols "|"
 
 dzen' :: String -> String
 dzen' m = "(echo " ++
@@ -167,6 +171,8 @@ myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
 myScratchPads :: [NamedScratchpad]
 myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
                 , NS "notes" spawnNotes findNotes manageNotes
+                , NS "weather" spawnWeather findWeather manageWeather
+                , NS "ipython" spawnIPython findTerm manageTerm
                 ]
   where
     spawnTerm  = myTerminal ++ " -t scratchpad"
@@ -185,7 +191,61 @@ myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
                  w = 0.9
                  t = 0.05
                  l = 0.05
+    spawnWeather  = myTerminal ++ " -t weather-scratchpad --hold -e 'bash -c \"curl wttr.in; cat\"'"
+    findWeather   = title =? "weather-scratchpad"
+    manageWeather = customFloating $ W.RationalRect l t w h
+               where
+                 h = 0.64
+                 w = 0.53
+                 t = 0.1
+                 l = 0.1
+    spawnIPython  = myTerminal ++ " -t scratchpad -e 'ipython'"
 
+--------------------------------------------------------
+-- TreeSelect
+
+tsAll =
+   [ Node (TS.TSNode "+ Management" "Any management commands" (return ()))
+       tsManagement
+   , Node (TS.TSNode "+ General" "General purpose applications" (return ()))
+       [ Node (TS.TSNode "Pcmanfm" "File Manager" (spawn "pcmanfm")) []
+       , Node (TS.TSNode "Brave" "Browser" (spawn "brave")) []
+       ]
+   , Node (TS.TSNode "+ Programming" "programming" (return ()))
+       [ Node (TS.TSNode "IPython" "IPython interactive shell" (spawn "termite -t scratchpad -e 'ipython'")) []
+       , Node (TS.TSNode "Emacs" "IDE/Text editor" (spawn "emacsclient -c -a emacs")) []
+       , Node (TS.TSNode "Termite" "Terminal" (spawn "termite")) []
+       ]
+   ]
+
+tsManagement =
+   [ Node (TS.TSNode "Picom" "Picom switch on/off" (return ()))
+       [ Node (TS.TSNode "off" "Switch off compositor" (spawn "killall picom")) []
+       , Node (TS.TSNode "on" "Switch on compositor" (spawn "/usr/local/bin/picom --experimental-backends -b")) []
+       ]
+   , Node (TS.TSNode "Brightness" "Set Brightness" (return ()))
+       [ Node (TS.TSNode "Max Brightness" "Set Brightness to 100" (spawn "light -S 100")) []
+       , Node (TS.TSNode "Norm Brightness" "Set Brightness to 50" (spawn "light -S 50")) []
+       , Node (TS.TSNode "Min Brightness" "Set Brightness to 5" (spawn "light -S 5")) []
+       ]
+   ]
+
+  
+tsDefaultConfig :: TS.TSConfig a
+tsDefaultConfig = TS.TSConfig { TS.ts_hidechildren = True
+                              , TS.ts_background   = 0x00000000
+                              , TS.ts_font         = "xft:Hack Nerd Font Mono:size=9"
+                              , TS.ts_node         = (0xffd5c4a1, 0xff1d2021)
+                              , TS.ts_nodealt      = (0xffd5c4a1, 0xff282828)
+                              , TS.ts_highlight    = (0xffffffff, 0xffff4301)
+                              , TS.ts_extra        = 0xffd5c4a1
+                              , TS.ts_node_width   = 200
+                              , TS.ts_node_height  = 25
+                              , TS.ts_originX      = 0
+                              , TS.ts_originY      = 0
+                              , TS.ts_indent       = 80
+                              , TS.ts_navigate     = TS.defaultNavigation
+                              }
 --------------------------------------------------------
 -- Keybindings
 
@@ -211,7 +271,6 @@ myKeys = \conf -> let
     , ("M-j"         , windows W.focusDown                                    , "Prev window"              )
     , ("M-k"         , windows W.focusUp                                      , "Next window"              )
     , ("M-l"         , sendMessage Expand                                     , "Expand window"            )
-    , ("M-t"         , spawn "killall picom"                                  , "Disable picom"            )
     , ("M-<Space>"   , sendMessage NextLayout                                 , "Cicle layouts"            )
     , ("M-<Return>"  , spawn $ XMonad.terminal conf                           , "Launch terminal"          )
     , ("M-S-/"       , termShowKeybindings $ getHelp keymap                   , "Show this help"           )
@@ -223,21 +282,28 @@ myKeys = \conf -> let
     , ("M-S-<Space>" , windows W.focusMaster                                  , "Focus master window"      )
     , ("M-S-<Return>", windows W.swapMaster                                   , "Make window master"       )
     , ("M-C-/"       , dzenAllBindings                                        , "Show this help"           )
-    , ("M-C-t"       , spawn "/usr/local/bin/picom --experimental-backends -b", "Start picom"              )
     , ("M-C-x"       , spawn "xkill"                                          , "Launch xkill"             )
-    , ("M-C-<Space>" , namedScratchpadAction myScratchPads "notes"            , "Notes.org scratchpad"     )
-    , ("M-C-<Return>", namedScratchpadAction myScratchPads "terminal"         , "Terminal scratchpad"      )
+    , prefix "M-C-<Return>"
+      [ ("t", namedScratchpadAction myScratchPads "terminal", "Terminal scratchpad" )
+      , ("n", namedScratchpadAction myScratchPads "notes"   , "Notes.org scratchpad")
+      , ("w", namedScratchpadAction myScratchPads "weather" , "Weather scratchpad")
+      , ("p", namedScratchpadAction myScratchPads "ipython" , "IPython intercative shell")
+      ] "Sratchpads"
     , prefix "M-S-e"
        [ ("r"  , spawn "reboot"           , "Reboot"     )
        , ("s"  , spawn "systemctl suspend", "Suspend"    )
        , ("e"  , io (exitWith ExitSuccess), "Exit XMonad")
        , ("S-s", spawn "shutdown 0"       , "Shutdown"   )
        ] "Power management"
-    , prefix "C-g"
+    , prefix "M-g"
       [ ("g", spawnSelected' myAppGrid                , "Grid select favorite apps")
       , ("t", goToSelected $ mygridConfig myColorizer , "Goto selected window"     )
       , ("b", bringSelected $ mygridConfig myColorizer, "Bring selected window"    )
       ] "GridSelect"
+    , prefix "M-t"
+      [ ("a", TS.treeselectAction tsDefaultConfig tsAll, "TreeSelect All")
+      , ("m", TS.treeselectAction tsDefaultConfig tsManagement, "TreeSelect Management")
+      ] "TreesSlect"
     ]
     ++
     [("M" ++ m ++ "-" ++ k, windows $ f i
