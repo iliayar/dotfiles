@@ -2,12 +2,17 @@
 import Data.List
 import Data.Monoid
 import Data.Tree
+import Data.Maybe
+import qualified Data.Map as Map  
+
 
 import System.IO (hPutStrLn, hClose, hPutStr, Handle)
 import System.Exit
+import System.Directory
+import System.FilePath ((</>))
 
 import Control.Arrow (first)
-import Control.Monad (liftM2)
+import Control.Monad
 
 import XMonad
 
@@ -176,6 +181,7 @@ myScratchPads = [ termApp "terminal" "" manageQuake
                 , NS "notes" spawnNotes findNotes manageNotes
                 , termApp "weather" "--hold -e 'bash -c \"curl wttr.in; cat\"'" manageWeather
                 , termApp "ipython" "-e 'ipython'" manageQuake
+                , termApp "ghci" "-e 'ghci'" manageQuake
                 ]
   where
     termApp name cmd manage = NS name ("termite -r '" ++ name ++ "-scratchpad' " ++ cmd) (role =? (name ++ "-scratchpad")) manage
@@ -204,6 +210,7 @@ tsAll =
        , Node (TS.TSNode "Emacs" "IDE/Text editor" (spawn "emacsclient -c -a emacs")) []
        , Node (TS.TSNode "Termite" "Terminal" (spawn "termite")) []
        ]
+   , Node (TS.TSNode "Test" "Test command for debug" (appPrompt myXPConfig)) []
    ]
 
 tsManagement =
@@ -258,7 +265,6 @@ myKeys = \conf -> let
   keymap =
     [ ("M-."         , sendMessage (IncMasterN (-1))                          , "Decrease Master N"        )
     , ("M-,"         , sendMessage (IncMasterN 1)                             , "Increase Master N"        )
-    , ("M-d"         , shellPrompt myXPConfig                                 , "Prompt"                   )
     , ("M-h"         , sendMessage Shrink                                     , "Shrink window"            )
     , ("M-j"         , windows W.focusDown                                    , "Prev window"              )
     , ("M-k"         , windows W.focusUp                                      , "Next window"              )
@@ -280,6 +286,7 @@ myKeys = \conf -> let
       , ("n", namedScratchpadAction myScratchPads "notes"   , "Notes.org scratchpad")
       , ("w", namedScratchpadAction myScratchPads "weather" , "Weather scratchpad")
       , ("p", namedScratchpadAction myScratchPads "ipython" , "IPython intercative shell")
+      , ("g", namedScratchpadAction myScratchPads "ghci"    , "Haskell intercative shell")
       ] "Sratchpads"
     , prefix "M-S-e"
        [ ("r"  , spawn "reboot"           , "Reboot"     )
@@ -296,6 +303,10 @@ myKeys = \conf -> let
       [ ("a", TS.treeselectAction tsDefaultConfig tsAll, "TreeSelect All")
       , ("m", TS.treeselectAction tsDefaultConfig tsManagement, "TreeSelect Management")
       ] "TreesSlect"
+    , prefix "M-d"
+      [ ("d", shellPrompt myXPConfig, "Shell prompt")
+      , ("a", appPrompt myXPConfig  , "Applications prompt")
+      ] "Prompts"
     ]
     ++
     [("M" ++ m ++ "-" ++ k, windows $ f i
@@ -403,6 +414,40 @@ myXPConfig = def
       , maxComplRows        = Nothing      -- set to Just 5 for 5 rows
       }
 
+data App = App
+
+instance XPrompt App where
+  showXPrompt App = "Application: "
+  commandToComplete _ c = c
+  nextCompletion _ = getNextCompletion
+
+appPrompt :: XPConfig -> X ()
+appPrompt c = do
+  li' <- io $ getApplications "/usr/share/applications/" -- FIXME
+  let li = catMaybes li'
+      compl = \s -> map fst $ filter (\ (x, _) -> s `fuzzyMatch` x) li
+  mkXPrompt App c (return . compl) (spawn . (\s -> Map.fromList li M.! s))
+
+getApplications :: FilePath -> IO [Maybe (String, String)]
+getApplications dir = do
+  l <- listDirectory dir
+  -- apps <- mapM (getApplicationData dir) l
+  -- return $ foldl (++) [] apps
+  foldM (\acc e -> do
+            appData <- getApplicationData dir e
+            return $ acc ++ appData) [] l
+
+getApplicationData :: FilePath -> FilePath -> IO [Maybe (String, String)]
+getApplicationData dir file = do
+  t <- readFile $ dir </> file
+  let names = filter (isPrefixOf "Name=") $ lines t
+      cmds = filter (isPrefixOf "Exec=") $ lines t
+      values = zip names cmds
+  return (if names == [] then [Nothing] else map Just $ addPrefix $ map (\ (a, b) -> (getValue a, getValue b)) values) 
+  where
+    getValue = dropWhile (==' ') . drop 1 . dropWhile (/='=')
+    addPrefix a = (head a) : (map (\ (b, c) -> ((fst $ head a) ++ " " ++ b, c)) (tail a))
+  
 --------------------------------------------------------
 -- Main
 main = do
