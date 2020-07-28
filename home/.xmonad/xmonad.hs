@@ -358,9 +358,9 @@ myKeys = \conf -> let
     ++
     [ ("<XF86MonBrightnessUp>"  , spawn "light -A 5"                  , "Brightness up"  )
     , ("<XF86MonBrightnessDown>", spawn "light -U 5"                  , "Brightness down")
-    , ("<XF86AudioRaiseVolume>" , spawn "pactl set-sink-volume 0 +5%" , "Audio up"       )
-    , ("<XF86AudioLowerVolume>" , spawn "pactl set-sink-volume 0 -5%" , "Audio down"     )
-    , ("<XF86AudioMute>"        , spawn "pactl set-sink-mute 0 toggle", "Mute/Unmute"    )
+    , ("<XF86AudioRaiseVolume>" , spawn "pactl set-sink-volume '@DEFAULT_SINK@' +5%" , "Audio up"       )
+    , ("<XF86AudioLowerVolume>" , spawn "pactl set-sink-volume '@DEFAULT_SINK@' -5%" , "Audio down"     )
+    , ("<XF86AudioMute>"        , spawn "pactl set-sink-mute '@DEFAULT_SINK@' toggle", "Mute/Unmute"    )
     ]
     ++
     [ (    "<Print>", scrot "" 0, "Screenshot"                      )
