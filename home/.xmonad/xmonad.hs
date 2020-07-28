@@ -103,6 +103,9 @@ dzen' m = "(echo " ++
 termShowKeybindings :: String -> X () 
 termShowKeybindings m = spawn $ "termite --hold -e \"echo '" ++ m ++  "'\" -t 'termite-keybindings'"
 
+termSpawn :: String -> [String] -> X ()
+termSpawn a p = spawn $ "termite " ++ (unwords p) ++ " -e '" ++ a ++ "'"  
+
 windowCount :: X (Maybe String)
 windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
 
@@ -213,9 +216,7 @@ myScratchPads = [ termApp "terminal" "" manageQuake
 -- TreeSelect
 
 tsAll =
-   [ Node (TS.TSNode "+ Management" "Any management commands" (return ()))
-       tsManagement
-   , Node (TS.TSNode "+ General" "General purpose applications" (return ()))
+   [ Node (TS.TSNode "+ General" "General purpose applications" (return ()))
        [ Node (TS.TSNode "Pcmanfm" "File Manager" (spawn "pcmanfm")) []
        , Node (TS.TSNode "Brave" "Browser" (spawn "brave")) []
        ]
@@ -224,6 +225,10 @@ tsAll =
        , Node (TS.TSNode "Emacs" "IDE/Text editor" (spawn "emacsclient -c -a emacs")) []
        , Node (TS.TSNode "Termite" "Terminal" (spawn "termite")) []
        ]
+   , Node (TS.TSNode "+ Tools" "Various tools" (return ()))
+       tsTools
+   , Node (TS.TSNode "+ Management" "Any management commands" (return ()))
+       tsManagement
    , Node (TS.TSNode "Test" "Test command for debug" (appPrompt myXPConfig)) []
    ]
 
@@ -242,16 +247,21 @@ tsManagement =
      tsLayout
    ]
 tsLayout =
-       [ Node (TS.TSNode "Tile" "Make Window Tiled" (withFocused $ windows . W.sink)) []
-       , Node (TS.TSNode "Tile All" "Make All Windows Tiled" sinkAll) []
-       , Node (TS.TSNode "Toggle Struts"   "Show/Hide bar" (sendMessage ToggleStruts)) [ ]
-       , Node (TS.TSNode "Toggle Fullscreen"   "" makeFullscreenNoDock) [ ]
-       , Node (TS.TSNode "Toggle NoBorders"   "" (sendMessage (MT.Toggle NOBORDERS))) [ ]
-       , Node (TS.TSNode "Toggle Mirrored"   "" (sendMessage (MT.Toggle MIRROR))) [ ]
-       , Node (TS.TSNode "Toggle Floats"   "" (sendMessage (T.Toggle "floats"))) [ ]
-       , Node (TS.TSNode "Arrange"   "" (sendMessage Arrange)) [ ]
-       , Node (TS.TSNode "DeArrange"   "" (sendMessage DeArrange)) [ ]
-       ]
+   [ Node (TS.TSNode "Tile" "Make Window Tiled" (withFocused $ windows . W.sink)) []
+   , Node (TS.TSNode "Tile All" "Make All Windows Tiled" sinkAll) []
+   , Node (TS.TSNode "Toggle Struts"   "Show/Hide bar" (sendMessage ToggleStruts)) [ ]
+   , Node (TS.TSNode "Toggle Fullscreen"   "" makeFullscreenNoDock) [ ]
+   , Node (TS.TSNode "Toggle NoBorders"   "" (sendMessage (MT.Toggle NOBORDERS))) [ ]
+   , Node (TS.TSNode "Toggle Mirrored"   "" (sendMessage (MT.Toggle MIRROR))) [ ]
+   , Node (TS.TSNode "Toggle Floats"   "" (sendMessage (T.Toggle "floats"))) [ ]
+   , Node (TS.TSNode "Arrange"   "" (sendMessage Arrange)) [ ]
+   , Node (TS.TSNode "DeArrange"   "" (sendMessage DeArrange)) [ ]
+   ]
+tsTools =
+  [ Node (TS.TSNode "NetworkManager TUI" "Terminal Interface for NetworkManager" (termSpawn "nmtui" [])) []
+  , Node (TS.TSNode "PulseMixer" "Pulse Audio Mixer" (termSpawn "pulsemixer" [])) []
+  ]
+
 
 makeFullscreenNoDock :: X ()
 makeFullscreenNoDock = sendMessage (MT.Toggle NBFULL) >> sendMessage ToggleStruts
@@ -328,6 +338,7 @@ myKeys = \conf -> let
       [ ("a", TS.treeselectAction tsDefaultConfig tsAll, "TreeSelect All")
       , ("m", TS.treeselectAction tsDefaultConfig tsManagement, "TreeSelect Management")
       , ("l", TS.treeselectAction tsDefaultConfig tsLayout, "TreeSelect Layout")
+      , ("t", TS.treeselectAction tsDefaultConfig tsTools, "TreeSelect Tools")
       ] "TreesSlect"
     , prefix "M-d"
       [ ("d", shellPrompt myXPConfig, "Shell prompt")
