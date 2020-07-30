@@ -3,8 +3,7 @@ import Data.List
 import Data.Monoid
 import Data.Tree
 import Data.Maybe
-import qualified Data.Map as Map  
-
+import qualified Data.Map as M
 
 import System.IO (hPutStrLn, hClose, hPutStr, Handle)
 import System.Exit
@@ -53,10 +52,9 @@ import XMonad.Actions.Submap
 import XMonad.Actions.GridSelect
 import XMonad.Actions.WithAll (sinkAll, killAll)
 import qualified XMonad.Actions.Search as S
-
 import qualified XMonad.Actions.TreeSelect as TS
+
 import qualified XMonad.StackSet as W
-import qualified Data.Map        as M
 
 
 --------------------------------------------------------
@@ -243,6 +241,8 @@ tsManagement =
        , Node (TS.TSNode "Min Brightness" "Set Brightness to 5" (spawn "light -S 5")) []
        ]
    , Node (TS.TSNode "Close all dzen" "Kill broken dzen" (spawn "killall dzen2")) []
+   , Node (TS.TSNode "Pacman update" "Get updates from pacman" (termSpawn "sudo pacman -Syyu" [])) []
+   , Node (TS.TSNode "AUR update" "Get updates from AUR" (termSpawn "yay -Syyu" [])) []
    , Node (TS.TSNode "Layout" "Manipulate layout" (return ()))
      tsLayout
    ]
@@ -348,24 +348,17 @@ myKeys = \conf -> let
     , prefix "M-S-f" ( createSearchSelect searchEngines) "Selech Engines Select"
     ]
     ++
-    [("M" ++ m ++ "-" ++ k, windows $ f i
-    , (case m of
-         ""   -> "Switch"
-         "-S" -> "Move window and switch"
-         "-C" -> "Move window")
-       ++ " to workspace " ++ n)
+    [("M" ++ m ++ "-" ++ k, windows $ f i, d ++ " to workspace " ++ n)
         | (n, i, k) <- zip3 myWorkspaces (XMonad.workspaces conf) $ map show [1..9] ++ ["m"]
-        , (f, m) <- [ (W.greedyView                   , "")
-                    , (liftM2 (.) W.greedyView W.shift, "-S")
-                    , (W.shift                        , "-C")]]
+        , (f, m, d) <- [ (W.greedyView                   , ""  , "Switch")
+                    , (liftM2 (.) W.greedyView W.shift, "-S", "Move window and switch")
+                    , (W.shift                        , "-C", "Move window")]]
     ++
     [("M" ++ m ++ "-" ++ k, screenWorkspace sc >>= flip whenJust (windows . f)
-    , (case m of
-         ""   -> "Switch"
-         "-S" -> "Move window")
-      ++ " to screen " ++ (show sc))
+    , d ++ " to screen " ++ (show sc))
         | (k, sc) <- zip ["p", "[", "]"] [0..]
-        , (f, m) <- [(W.view, ""), (W.shift, "-S")]]
+        , (f, m, d) <- [ (W.view, ""   , "Switch")
+                       , (W.shift, "-S", "Move window")]]
     ++
     [ ("<XF86MonBrightnessUp>"  , spawn "light -A 5"                  , "Brightness up"  )
     , ("<XF86MonBrightnessDown>", spawn "light -U 5"                  , "Brightness down")
@@ -502,7 +495,7 @@ myXPConfig = def
       , promptKeymap        = defaultXPKeymap
       , position            = Top
 --    , position            = CenteredAt { xpCenterY = 0.3, xpWidth = 0.3 }
-      , height              = 20
+      , height              = 25
       , historySize         = 256
       , historyFilter       = id
       , defaultText         = []
@@ -523,15 +516,14 @@ instance XPrompt App where
 appPrompt :: XPConfig -> X ()
 appPrompt c = do
   userHome <- io $ getHomeDirectory
-  li' <- io $ foldM (\acc e -> do
+  li <- fmap catMaybes $  io $ foldM (\acc e -> do
                    apps <- getApplications e
                    return $ acc ++ apps) []
          [ "/usr/share/applications"
          , userHome ++ "/.local/share/applications"
          ]
-  let li = catMaybes li'
-      compl = \s -> map fst $ filter (\ (x, _) -> s `fuzzyMatch` x) li
-  mkXPrompt App c (return . compl) (spawn . (\s -> Map.fromList li M.! s))
+  let compl = \s -> map fst $ filter (\ (x, _) -> s `fuzzyMatch` x) li
+  mkXPrompt App c (return . compl) (spawn . (\s -> M.fromList li M.! s))
 
 
 getApplications :: FilePath -> IO [Maybe (String, String)]
