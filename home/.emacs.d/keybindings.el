@@ -7,6 +7,7 @@
   :prefix "SPC"
   :non-normal-prefix "M-SPC"
   :keymaps 'override
+  "bb" 'ibuffer
   "cd" 'kill-compilation-buffer
   "cc" 'compile
   "cr" 'lsp-rename
