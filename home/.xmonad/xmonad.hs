@@ -238,7 +238,7 @@ tsManagement =
    , Node (TS.TSNode "Brightness" "Set Brightness" (return ()))
        [ Node (TS.TSNode "Max Brightness" "Set Brightness to 100" (spawn "light -S 100")) []
        , Node (TS.TSNode "Norm Brightness" "Set Brightness to 50" (spawn "light -S 50")) []
-       , Node (TS.TSNode "Min Brightness" "Set Brightness to 5" (spawn "light -S 5")) []
+       , Node (TS.TSNode "Min Brightness" "Set Brightness to 1" (spawn "light -S 1")) []
        ]
    , Node (TS.TSNode "Close all dzen" "Kill broken dzen" (spawn "killall dzen2")) []
    , Node (TS.TSNode "Pacman update" "Get updates from pacman" (termSpawn "sudo pacman -Syyu" [])) []
