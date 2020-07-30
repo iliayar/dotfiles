@@ -516,22 +516,18 @@ instance XPrompt App where
 appPrompt :: XPConfig -> X ()
 appPrompt c = do
   userHome <- io $ getHomeDirectory
-  li <- fmap catMaybes $  io $ foldM (\acc e -> do
-                   apps <- getApplications e
-                   return $ acc ++ apps) []
+  li <- fmap catMaybes $  io $ foldM (\acc -> fmap (acc++) . getApplications) []
          [ "/usr/share/applications"
          , userHome ++ "/.local/share/applications"
          ]
-  let compl = \s -> map fst $ filter (\ (x, _) -> s `fuzzyMatch` x) li
-  mkXPrompt App c (return . compl) (spawn . (\s -> M.fromList li M.! s))
+  let compl = \s -> fst <$> filter (fuzzyMatch s . fst) li
+  mkXPrompt App c (return . compl) (spawn . (M.fromList li M.!))
 
 
 getApplications :: FilePath -> IO [Maybe (String, String)]
 getApplications dir = do
   l <- listDirectory dir
-  foldM (\acc e -> do
-            appData <- getApplicationData dir e
-            return $ acc ++ appData) [] l
+  foldM (\acc -> fmap (acc++) . getApplicationData dir) [] l
 
 getApplicationData :: FilePath -> FilePath -> IO [Maybe (String, String)]
 getApplicationData dir file = do
