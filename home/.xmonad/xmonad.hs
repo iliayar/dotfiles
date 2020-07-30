@@ -563,6 +563,7 @@ main = do
                 , ppCurrent = xmobarColor "#b8bb26" "" . wrap "[" "]"
                 , ppVisible = xmobarColor "#b8bb26" ""
                 , ppTitle   = xmobarColor "#fb4934" "" . shorten 30
+                , ppLayout  = (\x -> "<action=xdotool key super+space>" ++ x ++ "</action>")
                 , ppExtras  = []-- [windowCount]                           -- # of windows current workspace
                 , ppOrder   = \(ws:l:t:ex) -> [ws,l]++ex++[t] -- workspaces : layout : extras : title
                 },
