@@ -27,8 +27,11 @@ import XMonad.Util.EZConfig
 import XMonad.Util.NamedScratchpad
 
 import XMonad.Prompt
+import XMonad.Prompt.Input
 import XMonad.Prompt.Shell (shellPrompt)
-import XMonad.Prompt.FuzzyMatch (fuzzyMatch)
+import XMonad.Prompt.FuzzyMatch (fuzzyMatch, fuzzySort)
+import XMonad.Prompt.AppLauncher as AL
+
 
 import XMonad.Layout.NoBorders
 import XMonad.Layout.GridVariants
@@ -99,7 +102,7 @@ dzen' m = "(echo " ++
                          ]
 
 termShowKeybindings :: String -> X () 
-termShowKeybindings m = spawn $ "termite --hold -e \"echo '" ++ m ++  "'\" -t 'termite-keybindings'"
+termShowKeybindings m = spawn $ "termite --hold -e \"echo '" ++ m ++  "'\" -t 'temp-term'"
 
 termSpawn :: String -> [String] -> X ()
 termSpawn a p = spawn $ "termite " ++ (unwords p) ++ " -e '" ++ a ++ "'"  
@@ -343,6 +346,7 @@ myKeys = \conf -> let
     , prefix "M-d"
       [ ("d", shellPrompt myXPConfig, "Shell prompt")
       , ("a", appPrompt myXPConfig  , "Applications prompt")
+      , ("h", hooglePrompt myXPConfig  , "Hoogle search prompt")
       ] "Prompts"
     , prefix "M-C-f" ( createSearchPrompt searchEngines) "Search Engines Prompt"
     , prefix "M-S-f" ( createSearchSelect searchEngines) "Selech Engines Select"
@@ -464,7 +468,7 @@ myManageHook = composeAll
   , className =? "Nitrogen"            --> doFloat
   , className =? "feh"                 --> doFloat
   , resource  =? "stalonetray"         --> doIgnore
-  , title     =? "termite-keybindings" --> (customFloating $ W.RationalRect 0 0 0.5 1)
+  , title     =? "temp-term" --> (customFloating $ W.RationalRect 0.05 0.05 0.9 0.9)
   , manageDocks
   , namedScratchpadManageHook myScratchPads
   ]
@@ -502,6 +506,7 @@ myXPConfig = def
       , autoComplete        = Nothing  -- set Just 100000 for .1 sec
       , showCompletionOnTab = False
       , searchPredicate     = fuzzyMatch
+      , sorter              = fuzzySort
       , alwaysHighlight     = True
       , maxComplRows        = Nothing      -- set to Just 5 for 5 rows
       }
@@ -540,6 +545,10 @@ getApplicationData dir file = do
     getValue = dropWhile (==' ') . drop 1 . dropWhile (/='=')
     addPrefix a = (head a) : (map (\ (b, c) -> ((fst $ head a) ++ " (" ++ b ++ ")", c)) (tail a))
   
+hooglePrompt c =
+    inputPrompt c "Hoogle" ?+ \query ->
+        termSpawn ("hoogle " ++ query) ["-t", "temp-term", "--hold"]
+
 --------------------------------------------------------
 -- Main
 main = do

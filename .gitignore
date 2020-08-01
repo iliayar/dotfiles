@@ -21,5 +21,4 @@ recentf
 .lsp-session*
 \#*\#
 .stack-work
-stack.yaml*
 *.errors
