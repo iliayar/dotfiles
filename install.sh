@@ -85,6 +85,7 @@ common() {
     DEPS+=(
         dunst
         udiskie
+        rxvt-unicode
         sbxkb
         nitrogen
         scrot

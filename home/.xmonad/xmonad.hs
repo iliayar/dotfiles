@@ -103,10 +103,12 @@ dzen' m = "(echo " ++
                          ]
 
 termShowKeybindings :: String -> X () 
-termShowKeybindings m = spawn $ "termite --hold -e \"echo '" ++ m ++  "'\" -t 'temp-term'"
+-- termShowKeybindings m = spawn $ "termite --hold -e \"echo '" ++ m ++  "'\" -t 'temp-term'"
+termShowKeybindings m = spawn $ "urxvt -title temp-term -hold -e 'echo' '" ++ m ++  "'"
 
 termSpawn :: String -> [String] -> X ()
-termSpawn a p = spawn $ "termite " ++ (unwords p) ++ " -e '" ++ a ++ "'"  
+-- termSpawn a p = spawn $ "termite " ++ (unwords p) ++ " -e '" ++ a ++ "'"  
+termSpawn a p = spawn $ "urxvt " ++ (unwords p) ++ " -e " ++ a  
 
 windowCount :: X (Maybe String)
 windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
@@ -136,7 +138,8 @@ withDzenKeymapsPipe d m f = do
 --------------------------------------------------------
 -- Variables
 
-myTerminal      = "termite"
+-- myTerminal      = "termite"
+myTerminal      = "urxvt"
 
 myFont = "xft:Hack Nerd Font Mono:size=9"
 
@@ -190,6 +193,8 @@ myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
             , ("Spotify", "spotify")
             , ("Telegram", "telegram-desktop")
             , ("File Manager", "pcmanfm")
+            , ("Urxvt", "urxvt")
+            , ("Termite", "termite")
             ]
 
 --------------------------------------------------------
@@ -198,12 +203,13 @@ myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
 myScratchPads :: [NamedScratchpad]
 myScratchPads = [ termApp "terminal" "" manageQuake
                 , NS "notes" spawnNotes findNotes manageNotes
-                , termApp "weather" "--hold -e 'bash -c \"curl wttr.in; cat\"'" manageWeather
+                , termApp "weather" "-hold -e 'curl' 'wttr.in'" manageWeather
                 , termApp "ipython" "-e 'ipython'" manageQuake
                 , termApp "ghci" "-e 'ghci'" manageQuake
                 ]
   where
-    termApp name cmd manage = NS name ("termite -r '" ++ name ++ "-scratchpad' " ++ cmd) (role =? (name ++ "-scratchpad")) manage
+    -- termApp name cmd manage = NS name ("termite -r '" ++ name ++ "-scratchpad' " ++ cmd) (role =? (name ++ "-scratchpad")) manage
+    termApp name cmd manage = NS name ("urxvt -title " ++ name ++ "-scratchpad " ++ cmd) (title =? (name ++ "-scratchpad")) manage
 
     spawnNotes = "emacsclient -c -a emacs -F '(quote (name . \"emacs-notes\"))' ~/.org/Notes.org"
     findNotes  = title =? "emacs-notes"
@@ -223,9 +229,10 @@ tsAll =
        , Node (TS.TSNode "Brave" "Browser" (spawn "brave")) []
        ]
    , Node (TS.TSNode "+ Programming" "programming" (return ()))
-       [ Node (TS.TSNode "IPython" "IPython interactive shell" (spawn "termite -e 'ipython'")) []
+       [ Node (TS.TSNode "IPython" "IPython interactive shell" (termSpawn "ipython" [])) []
        , Node (TS.TSNode "Emacs" "IDE/Text editor" (spawn "emacsclient -c -a emacs")) []
        , Node (TS.TSNode "Termite" "Terminal" (spawn "termite")) []
+       , Node (TS.TSNode "Urxvt" "Rxvt Unicode" (spawn "urxvt")) []
        , Node (TS.TSNode "Restart Emacs" "Restart Emacs daemon" (spawn "killall emacs; emacs --daemon")) []
        ]
    , Node (TS.TSNode "+ Tools" "Various tools" (return ()))
@@ -564,7 +571,7 @@ getApplicationData dir file = do
   
 hooglePrompt c =
     inputPrompt c "Hoogle" ?+ \query ->
-        termSpawn ("hoogle " ++ query) ["-t", "temp-term", "--hold"]
+        termSpawn ("'hoogle' '" ++ query ++ "'") ["-title", "temp-term", "-hold"]
 
 --------------------------------------------------------
 -- Main
