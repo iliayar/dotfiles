@@ -108,12 +108,12 @@ common() {
         feh
     )
     AUR_DEPS+=(
+        picom-ibhagwan-git
         ttf-nerd-fonts-hack-complete-git
         ly-git
         gksu
     )
     OPERATIONS+=(
-        install_picom
         config_user
     )
     CONFIGS+=(
@@ -127,19 +127,6 @@ common() {
         .bashrc
     )
 }
-
-install_picom() {
-    cd /tmp || exit
-    git clone https://github.com/tryone144/picom.git
-    cd picom || exit
-    git checkout feature/dual_kawase
-    git submodule update --init --recursive
-    meson --buildtype=release . build
-    ninja -C build
-    ninja -C build install
-    cd "$DIR" || exit
-}
-
 
 config_user() {
     sudo usermod -a -G video "$USER"

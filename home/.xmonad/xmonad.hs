@@ -225,6 +225,7 @@ tsAll =
        [ Node (TS.TSNode "IPython" "IPython interactive shell" (spawn "termite -e 'ipython'")) []
        , Node (TS.TSNode "Emacs" "IDE/Text editor" (spawn "emacsclient -c -a emacs")) []
        , Node (TS.TSNode "Termite" "Terminal" (spawn "termite")) []
+       , Node (TS.TSNode "Restart Emacs" "Restart Emacs daemon" (spawn "killall emacs; emacs --daemon")) []
        ]
    , Node (TS.TSNode "+ Tools" "Various tools" (return ()))
        tsTools
@@ -236,7 +237,7 @@ tsAll =
 tsManagement =
    [ Node (TS.TSNode "Picom" "Picom switch on/off" (return ()))
        [ Node (TS.TSNode "off" "Switch off compositor" (spawn "killall picom")) []
-       , Node (TS.TSNode "on" "Switch on compositor" (spawn "/usr/local/bin/picom --experimental-backends -b")) []
+       , Node (TS.TSNode "on" "Switch on compositor" (spawn "picom --experimental-backends -b")) []
        ]
    , Node (TS.TSNode "Brightness" "Set Brightness" (return ()))
        [ Node (TS.TSNode "Max Brightness" "Set Brightness to 100" (spawn "light -S 100")) []
