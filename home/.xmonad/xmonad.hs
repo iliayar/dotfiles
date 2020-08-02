@@ -3,6 +3,7 @@ import Data.List
 import Data.Monoid
 import Data.Tree
 import Data.Maybe
+import Data.Bifunctor (first, bimap)
 import qualified Data.Map as M
 
 import System.IO (hPutStrLn, hClose, hPutStr, Handle)
@@ -10,7 +11,7 @@ import System.Exit
 import System.Directory
 import System.FilePath ((</>))
 
-import Control.Arrow (first)
+-- import Control.Arrow (first)
 import Control.Monad
 
 import XMonad
@@ -520,15 +521,22 @@ instance XPrompt App where
   commandToComplete _ c = c
   nextCompletion _ = getNextCompletion
 
+
+newtype PairFirst a b = PairFirst {getPairFirst :: (a, b)}
+instance Eq a => Eq (PairFirst a b) where
+  PairFirst (x, _) == PairFirst (y, _) = x == y
+
 appPrompt :: XPConfig -> X ()
 appPrompt c = do
   userHome <- io $ getHomeDirectory
-  li <- fmap catMaybes $  io $ foldM (\acc -> fmap (acc++) . getApplications) []
+  li <- fmap (nubPairs . catMaybes) $ io $ foldM (\acc -> fmap (acc++) . getApplications) []
          [ "/usr/share/applications"
          , userHome ++ "/.local/share/applications"
          ]
   let compl = \s -> fst <$> filter (fuzzyMatch s . fst) li
   mkXPrompt App c (return . compl) (spawn . (M.fromList li M.!))
+  where
+    nubPairs = map getPairFirst . nub . map PairFirst
 
 
 getApplications :: FilePath -> IO [Maybe (String, String)]
@@ -538,14 +546,21 @@ getApplications dir = do
 
 getApplicationData :: FilePath -> FilePath -> IO [Maybe (String, String)]
 getApplicationData dir file = do
-  t <- readFile $ dir </> file
-  let names = filter (isPrefixOf "Name=") $ lines t
-      cmds = filter (isPrefixOf "Exec=") $ lines t
-      values = zip names cmds
-  return (if names == [] then [Nothing] else map Just $ addPrefix $ map (\ (a, b) -> (getValue a, getValue b)) values) 
+  f <- doesFileExist $ dir </> file
+  if f
+    then do
+      t <- readFile $ dir </> file
+      let
+        names = filter (isPrefixOf "Name=") $ lines t
+        cmds = filter (isPrefixOf "Exec=") $ lines t
+        values = zip names cmds
+      return $ map Just $ addPrefix $ map (bimap getValue getValue) values
+  else
+    return []
   where
     getValue = dropWhile (==' ') . drop 1 . dropWhile (/='=')
-    addPrefix a = (head a) : (map (\ (b, c) -> ((fst $ head a) ++ " (" ++ b ++ ")", c)) (tail a))
+    addPrefix [] = []
+    addPrefix (x@(xName, _):xs) = x : (map (first (\ x -> xName ++ " (" ++ x ++ ")")) xs)
   
 hooglePrompt c =
     inputPrompt c "Hoogle" ?+ \query ->
