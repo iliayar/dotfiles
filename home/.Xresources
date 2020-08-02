@@ -96,3 +96,9 @@ rofi.separator-style:                solid
 rofi.hide-scrollbar:                 true
 rofi.markup-rows:                    false
 rofi.scrollbar-width:                8
+
+urxvt*depth: 32
+urxvt*background: rgba:1d00/2000/2100/bbbb
+URxvt*scrollBar: False
+URxvt.font:      xft:Hack Nerd Font Mono:size=9
+URxvt.boldFont:  xft:Hack Nerd Font Mono:bold:size=9
