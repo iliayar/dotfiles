@@ -295,6 +295,7 @@ myKeys = \conf -> let
   restartRecompile = intercalate " && "
     [ "cd ~/.xmonad"
     , "stack ghc -- --make ~/.config/xmobar/xmobar.hs"
+    , "stack ghc -- --make ~/.config/xmobar/xmobar_mon2.hs"
     , "xmonad --recompile"
     , "xmonad --restart"
     , "notify-send 'restarting Xmonad'"
@@ -355,12 +356,12 @@ myKeys = \conf -> let
     [("M" ++ m ++ "-" ++ k, windows $ f i, d ++ " to workspace " ++ n)
         | (n, i, k) <- zip3 myWorkspaces (XMonad.workspaces conf) $ map show [1..9] ++ ["m"]
         , (f, m, d) <- [ (W.greedyView                   , ""  , "Switch")
-                    , (liftM2 (.) W.greedyView W.shift, "-S", "Move window and switch")
+                    , (liftM2 (.) W.view W.shift, "-S", "Move window and switch")
                     , (W.shift                        , "-C", "Move window")]]
     ++
     [("M" ++ m ++ "-" ++ k, screenWorkspace sc >>= flip whenJust (windows . f)
     , d ++ " to screen " ++ (show sc))
-        | (k, sc) <- zip ["p", "[", "]"] [0..]
+        | (k, sc) <- zip ["[", "]"] [0..]
         , (f, m, d) <- [ (W.view, ""   , "Switch")
                        , (W.shift, "-S", "Move window")]]
     ++
@@ -552,7 +553,9 @@ hooglePrompt c =
 --------------------------------------------------------
 -- Main
 main = do
-        xmproc <- spawnPipe "xmobar -x 0 /home/iliayar/.config/xmobar/xmobar.hs"
+        homeDir <- getHomeDirectory
+        xmproc0 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar"
+        xmproc1 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_mon2"
         xmonad $ ewmh def {
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
@@ -568,7 +571,8 @@ main = do
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
         logHook            = dynamicLogWithPP xmobarPP
-                { ppOutput  = \x -> hPutStrLn xmproc x
+                { ppOutput  = \x -> hPutStrLn xmproc0 x
+                  >> hPutStrLn xmproc1 x
                 , ppCurrent = xmobarColor "#b8bb26" "" . wrap "[" "]"
                 , ppVisible = xmobarColor "#b8bb26" ""
                 , ppTitle   = xmobarColor "#fb4934" "" . shorten 30

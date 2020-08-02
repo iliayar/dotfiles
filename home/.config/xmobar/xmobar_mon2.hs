@@ -18,14 +18,14 @@ config = defaultConfig {
    , bgColor     =  "#1d2021"
    , fgColor     =  "#eddbb2"
    , alpha       =  255
-   , position   = OnScreen 0 $ BottomP 0 99
+   , position   = OnScreen 1 Bottom
 --    , position    =  Static {xpos = 0, ypos = 1060, width = 1364, height = 20}
    , borderColor =  "#646464"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "<icon=haskell_20.xpm/> | %UnsafeStdinReader% }{ %music% | %updates% | %disku% | %bright% | %default:Master% | %kbd% | %memory% | %multicpu% | %dynnetwork% | %battery% | %multicoretemp% | %date% "
+   , template = "<icon=haskell_20.xpm/> | %UnsafeStdinReader% }{ %date% "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start

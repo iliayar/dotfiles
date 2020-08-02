@@ -22,3 +22,4 @@ recentf
 \#*\#
 .stack-work
 *.errors
+*.lock

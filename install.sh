@@ -370,8 +370,8 @@ install_xmonad() {
 
     xmonad --recompile
 
-    sudo ln -s "$HOME/.local/share/xmonad" "/usr/bin/"
-    sudo ln -s "$HOME/.local/share/xmobar" "/usr/bin/"
+    sudo ln -s "$HOME/.local/bin/xmonad" "/usr/bin/"
+    sudo ln -s "$HOME/.local/bin/xmobar" "/usr/bin/"
 
     [ ! -d "/usr/share/xsessions" ] && sudo mkdir "/usr/share/xsessions"
     sudo cp "$DIR/other/xmonad/xmonad.desktop" "/usr/share/xsessions/"
