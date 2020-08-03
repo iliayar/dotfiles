@@ -25,7 +25,7 @@ config = defaultConfig {
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "<icon=haskell_20.xpm/> | %UnsafeStdinReader% }{ %music% | %updates% | %disku% | %bright% | %default:Master% | %kbd% | %memory% | %multicpu% | %dynnetwork% | %battery% | %multicoretemp% | %date% "
+   , template = "<action=~/.xmonad/xmonadctl 1><icon=haskell_20.xpm/></action> | %UnsafeStdinReader% }{ %music% | %updates% | %disku% | %bright% | %default:Master% | %kbd% | %memory% | %multicpu% | %dynnetwork% | %battery% | %multicoretemp% | %date% "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start

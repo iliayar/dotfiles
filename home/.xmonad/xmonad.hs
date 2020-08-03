@@ -155,8 +155,8 @@ withDzenKeymapsPipe d m f = do
 --------------------------------------------------------
 -- Variables
 
--- myTerminal      = "termite"
-myTerminal      = "urxvt"
+myTerminal      = "termite"
+-- myTerminal      = "urxvt"
 
 myFont = "xft:Hack Nerd Font Mono:size=9"
 
@@ -269,10 +269,11 @@ tsManagement =
        , Node (TS.TSNode "Norm Brightness" "Set Brightness to 50" (spawn "light -S 50")) []
        , Node (TS.TSNode "Min Brightness" "Set Brightness to 1" (spawn "light -S 1")) []
        ]
+   , Node (TS.TSNode "XMonad config" "Open xmonad.hs in Emacs" (spawn "emacsclient -c -a emacs ~/.xmonad/xmonad.hs")) []
    , Node (TS.TSNode "Close all dzen" "Kill broken dzen" (spawn "killall dzen2")) []
    , Node (TS.TSNode "Pacman update" "Get updates from pacman" (termSpawn "sudo pacman -Syyu" [])) []
    , Node (TS.TSNode "AUR update" "Get updates from AUR" (termSpawn "yay -Syyu" [])) []
-   , Node (TS.TSNode "Layout" "Manipulate layout" (return ()))
+   , Node (TS.TSNode "+ Layout" "Manipulate layout" (return ()))
      tsLayout
    ]
 tsLayout =
@@ -502,7 +503,12 @@ myManageHook = composeAll
   , namedScratchpadManageHook myScratchPads
   ]
 
-myEventHook = serverModeEventHook' (liftM2 (++) defaultCommands $ return [("test", spawn "xmessage Test")])
+myCommands = [ ("XMonad config", (spawn "emacsclient -c -a emacs ~/.xmonad/xmonad.hs"))
+             ]
+
+
+myEventHook = serverModeEventHook' (return myCommands)
+-- myEventHook = serverModeEventHook' (liftM2 (++) defaultCommands $ return myCommands)
           <+> serverModeEventHookCmd
           <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn)
           <+> docksEventHook
