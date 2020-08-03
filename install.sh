@@ -28,6 +28,7 @@ MODULES=(
         bins
         themes
         others
+        spotifyd
     )
 
 config() {
@@ -79,6 +80,7 @@ install_operations() {
         $op
     done
 }
+
 
 ## Common utils
 common() {
@@ -407,6 +409,31 @@ plymouth_install() {
         /boot/EFI/refind/refind.conf
     sudo mkinitcpio -p linux
     sudo plymouth-set-default-theme -R arch-logo-new
+}
+
+## Spotifyd
+spotifyd() {
+    DEPS+=(
+        cargo
+    )
+    CONFIGS+=(
+        .config/spotifyd
+    )
+    OPERATIONS+=(
+        spotifyd_install
+    )
+}
+
+spotifyd_install() {
+    cd "/tmp" || exit
+
+    git clone https://github.com/Spotifyd/spotifyd.git
+    cd spotifyd
+
+    cargo build --release --features pulseaudio_backend,dbus_mpris
+    cargo install --features pulseaudio_backend,dbus_mpris --path . --locked
+
+    cd "$DIR" || exit
 }
 
 echo "Select modules: "
