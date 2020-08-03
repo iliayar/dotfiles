@@ -1,5 +1,5 @@
 Xft.dpi:                        109
-*font: xft:Hack Nerd Font Mono:size=9
+*font: Hack Nerd Font Mono 9
 Xcursor.theme: Adwaita
 !! GENERAL !
 !
@@ -97,9 +97,9 @@ rofi.hide-scrollbar:                 true
 rofi.markup-rows:                    false
 rofi.scrollbar-width:                8
 
-urxvt*depth: 32
-urxvt*background: rgba:1d00/2000/2100/bbbb
+URxvt*depth: 32
+URxvt*background: rgba:1d00/2000/2100/bbbb
 URxvt*scrollBar: False
-URxvt.letterSpace: -1
-!URxvt.font:      xft:Hack Nerd Font Mono 9
+URxvt*letterSpace: -1
+URxvt*font:      xft:Hack Nerd Font Mono:size=9
 !URxvt.boldFont:  xft:Hack Nerd Font Mono:style=bold:size=9

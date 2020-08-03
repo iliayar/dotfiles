@@ -6,10 +6,13 @@ import Data.Maybe
 import Data.Bifunctor (first, bimap)
 import qualified Data.Map as M
 
-import System.IO (hPutStrLn, hClose, hPutStr, Handle)
+import System.IO
 import System.Exit
 import System.Directory
 import System.FilePath ((</>))
+import System.Environment
+
+import GHC.IO.Handle ( hDuplicateTo )
 
 -- import Control.Arrow (first)
 import Control.Monad
@@ -21,6 +24,7 @@ import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.ManageDocks (avoidStruts, manageDocks, docksEventHook, ToggleStruts(..))
 import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat)
 import XMonad.Hooks.SetWMName
+import XMonad.Hooks.ServerMode
 
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
@@ -55,14 +59,27 @@ import qualified XMonad.Layout.MultiToggle as MT (Toggle(..))
 import XMonad.Actions.Submap
 import XMonad.Actions.GridSelect
 import XMonad.Actions.WithAll (sinkAll, killAll)
+import XMonad.Actions.Commands (defaultCommands)
 import qualified XMonad.Actions.Search as S
 import qualified XMonad.Actions.TreeSelect as TS
 
 import qualified XMonad.StackSet as W
 
-
 --------------------------------------------------------
 -- Functions
+
+redirectStdHandles :: IO ()
+redirectStdHandles = do
+  home <- getEnv "HOME"
+  let xmonadDir = home </>  ".xmonad"
+  hClose stdout
+  hClose stderr
+  stdout' <- openFile (xmonadDir </> "xmonad-stdout.log") AppendMode
+  stderr' <- openFile (xmonadDir </> "xmonad-stderr.log") AppendMode
+  hDuplicateTo stdout' stdout
+  hDuplicateTo stderr' stderr
+  hSetBuffering stdout NoBuffering
+  hSetBuffering stderr NoBuffering
 
 dropRdTuple :: (a, b, c) -> (a, b)
 dropRdTuple (a, b, _) = (a, b)
@@ -303,6 +320,7 @@ myKeys = \conf -> let
   dzenAllBindings = withDzenKeymapsPipe "Keybindings" keymap $ createSubmap []
   restartRecompile = intercalate " && "
     [ "cd ~/.xmonad"
+    , "stack ghc -- --make ~/.xmonad/xmonadctl.hs"
     , "stack ghc -- --make ~/.config/xmobar/xmobar.hs"
     , "stack ghc -- --make ~/.config/xmobar/xmobar_mon2.hs"
     , "xmonad --recompile"
@@ -478,14 +496,19 @@ myManageHook = composeAll
   , className =? "Nitrogen"            --> doFloat
   , className =? "feh"                 --> doFloat
   , resource  =? "stalonetray"         --> doIgnore
+  , title     =? "xmessage"            --> doFloat
   , title     =? "temp-term" --> (customFloating $ W.RationalRect 0.05 0.05 0.9 0.9)
   , manageDocks
   , namedScratchpadManageHook myScratchPads
   ]
 
-myEventHook = docksEventHook
+myEventHook = serverModeEventHook' (liftM2 (++) defaultCommands $ return [("test", spawn "xmessage Test")])
+          <+> serverModeEventHookCmd
+          <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn)
+          <+> docksEventHook
 
 myStartupHook = do
+          io redirectStdHandles
           spawnOnce "nitrogen --restore &"
           spawnOnce "picom --experimental-backends -b"
           spawnOnce "/usr/lib/polkit-kde-authentication-agent-1"
