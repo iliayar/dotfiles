@@ -218,12 +218,11 @@ myBorderWidth   = 2
 
 myModMask       = mod4Mask
 
-myWorkspaces = map show [1..9]
-myWorkspacesClickable    = clickable . (map xmobarEscape) $ (map show [1..9])
+myWorkspaces = "Music" : map show [1..9]
+myWorkspacesClickable    = clickable . (map xmobarEscape) $ myWorkspaces
     where
-        clickable l = [ "<action=xdotool key super+" ++ n ++ ">" ++ ws ++ "</action>" |
-                      (i,ws) <- zip (map show [1..9]) l,
-                      let n = i ]
+        clickable l = [ "<action=~/.xmonad/xmonadctl " ++ i ++ ">" ++ ws ++ "</action>" |
+                      (i,ws) <- zip (map show [2..11]) l]
 
 myNormalBorderColor  = "#928374"
 myFocusedBorderColor = "#cc241d"
@@ -452,7 +451,7 @@ myKeys = \conf -> let
     ]
     ++
     [("M" ++ m ++ "-" ++ k, windows $ f i, d ++ " to workspace " ++ n)
-        | (n, i, k) <- zip3 myWorkspaces (XMonad.workspaces conf) $ map show [1..9]
+        | (n, i, k) <- zip3 myWorkspaces (XMonad.workspaces conf) $ map show [0..9]
         , (f, m, d) <- [ (W.greedyView                   , ""  , "Switch")
                     , (liftM2 (.) W.view W.shift, "-S", "Move window and switch")
                     , (W.shift                        , "-C", "Move window")]]
@@ -573,7 +572,13 @@ myManageHook = composeAll
   , namedScratchpadManageHook myScratchPads
   ]
 
-myCommands = [ ("XMonad config", (spawn "emacsclient -c -a emacs ~/.xmonad/xmonad.hs"))
+myCommands = [ ("XMonad config", (spawn "emacsclient -c -a emacs ~/.xmonad/xmonad.hs")) -- 1 Action on bar icon
+             ]
+             ++
+             [("Switch to workspace " ++ n, windows $ W.greedyView i) | (n, i) <- zip myWorkspaces myWorkspacesClickable]
+             ++
+             [ ("Switch layout", sendMessage NextLayout) -- 12
+             , ("Music scratchpad", namedScratchpadAction myScratchPads "spotify") -- 13
              ]
 
 
@@ -707,7 +712,7 @@ main = do
                 , ppCurrent = xmobarColor "#b8bb26" "" . wrap "[" "]"
                 , ppVisible = xmobarColor "#b8bb26" ""
                 , ppTitle   = xmobarColor "#fb4934" "" . shorten 30
-                , ppLayout  = (\x -> "<action=xdotool key super+space>" ++ x ++ "</action>")
+                , ppLayout  = (\x -> "<action=~/.xmonad/xmonadctl 12>" ++ x ++ "</action>")
                 , ppExtras  = []-- [windowCount]                           -- # of windows current workspace
                 , ppOrder   = \(ws:l:t:ex) -> [ws,l]++ex++[t] -- workspaces : layout : extras : title
                 },

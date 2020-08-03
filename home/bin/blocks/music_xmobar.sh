@@ -22,7 +22,7 @@ fi
 
 track="$(playerctl metadata -f "{{artist}} - {{title}}" -p $PLAYER 2> /dev/null)"
 
-label=$(printf "<action=xdotool key super+m>%-.30s</action> %s" "${track}" "${state}")
+label=$(printf "<action=~/.xmonad/xmonadctl 13>%-.30s</action> %s" "${track}" "${state}")
 
 [[ -z $track ]] && label="${red}$PLAYER not found${reset}"
 
