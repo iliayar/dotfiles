@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PLAYER=spotify
+PLAYER=spotifyd
 
 red="<fc=$(xrdb -query | grep color1: | gawk '{ print $2 }')>"
 green="<fc=$(xrdb -query | grep color2: | gawk '{ print $2 }')>"

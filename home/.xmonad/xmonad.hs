@@ -482,7 +482,7 @@ myKeys = \conf -> let
                                 \xclip -selection clipboard -t image/png -i $f;\
                                 \mv $f ~/Pictures/screenshots/;\
                                 \notify-send \"Screenshot saved: $f\";'"
-      playerctl a = spawn $ "playerctl " ++ a ++ " -p spotify"
+      playerctl a = spawn $ "playerctl " ++ a ++ " -p spotifyd"
       createSearchPrompt = map (\ (a, b, c) -> (a, S.promptSearch myXPConfig b, c))
       createSearchSelect = map (\ (a, b, c) -> (a, S.selectSearch b, c))
       archwiki = S.searchEngine "archwiki" "https://wiki.archlinux.org/index.php?search="
@@ -583,9 +583,11 @@ myEventHook = serverModeEventHook' (return myCommands)
 
 myStartupHook = do
           io redirectStdHandles
+          spawnOnce "spotifyd"
           spawnOnce "nitrogen --restore &"
           spawnOnce "picom --experimental-backends -b"
-          spawnOnce "/usr/lib/polkit-kde-authentication-agent-1"
+          -- spawnOnce "/usr/lib/polkit-kde-authentication-agent-1"
+          spawnOnce "lxpolkit"
           spawnOnce "stalonetray"
           spawnOnce "xsetroot -cursor_name arrow"
           spawn "xrdb ~/.Xresources"
