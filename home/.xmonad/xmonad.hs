@@ -218,11 +218,11 @@ myBorderWidth   = 2
 
 myModMask       = mod4Mask
 
-myWorkspaces = map show [1..9] ++ ["Music"]
-myWorkspacesClickable    = clickable . (map xmobarEscape) $ (map show [1..9]) ++ ["Music"]
+myWorkspaces = map show [1..9]
+myWorkspacesClickable    = clickable . (map xmobarEscape) $ (map show [1..9])
     where
         clickable l = [ "<action=xdotool key super+" ++ n ++ ">" ++ ws ++ "</action>" |
-                      (i,ws) <- zip (map show [1..9] ++ ["m"]) l,
+                      (i,ws) <- zip (map show [1..9]) l,
                       let n = i ]
 
 myNormalBorderColor  = "#928374"
@@ -271,6 +271,7 @@ myScratchPads = [ termApp termiteScratchpad "terminal" "" manageQuake
                 , termApp termiteScratchpadHold "weather" "bash -c 'curl wttr.in; cat'" manageWeather
                 , termApp termiteScratchpad "ipython" "ipython" manageQuake
                 , termApp termiteScratchpad "ghci" "ghci" manageQuake
+                , termApp termiteScratchpad "spotify" "spt" manageNotes
                 ]
   where
     termApp term name cmd manage = NS name (termSpawnCmd (term $ name ++ "-scratchpad") cmd) (role =? (name ++ "-scratchpad")) manage
@@ -414,6 +415,7 @@ myKeys = \conf -> let
       , ("w", namedScratchpadAction myScratchPads "weather" , "Weather scratchpad")
       , ("p", namedScratchpadAction myScratchPads "ipython" , "IPython intercative shell")
       , ("g", namedScratchpadAction myScratchPads "ghci"    , "Haskell intercative shell")
+      , ("m", namedScratchpadAction myScratchPads "spotify" , "Spotify TUI client")
       ] "Sratchpads"
     , prefix "M-S-e"
        [ ("r"  , spawn "reboot"           , "Reboot"     )
@@ -450,7 +452,7 @@ myKeys = \conf -> let
     ]
     ++
     [("M" ++ m ++ "-" ++ k, windows $ f i, d ++ " to workspace " ++ n)
-        | (n, i, k) <- zip3 myWorkspaces (XMonad.workspaces conf) $ map show [1..9] ++ ["m"]
+        | (n, i, k) <- zip3 myWorkspaces (XMonad.workspaces conf) $ map show [1..9]
         , (f, m, d) <- [ (W.greedyView                   , ""  , "Switch")
                     , (liftM2 (.) W.view W.shift, "-S", "Move window and switch")
                     , (W.shift                        , "-C", "Move window")]]

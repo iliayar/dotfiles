@@ -416,7 +416,11 @@ spotifyd() {
     DEPS+=(
         cargo
     )
+    AUR_DEPS+=(
+        spotify-tui
+    )
     CONFIGS+=(
+        .config/spotify-tui/config.yml
         .config/spotifyd
     )
     OPERATIONS+=(

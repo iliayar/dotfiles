@@ -2,9 +2,9 @@ import Xmobar
 
 -- TODO xresources
 red, green, yellow :: String
-red    = "#cc241d"
+red    = "#fb4934"
 green  = "#b8bb26"
-yellow = "#fb4934"
+yellow = "#fabd2f"
 
 setColor :: String -> String -> String
 setColor color s = "<fc=" ++ color ++ ">" ++ s ++ "</fc>"
@@ -77,8 +77,8 @@ config = defaultConfig {
         -- network activity monitor (dynamic interface resolution)
         , Run $ DynNetwork   [ "--template" , "<dev>: \61813<rx>kB/s \61814<tx>kB/s"
                              , "--width"    , "4"
-                             , "--Low"      , "1000"       -- units: B/s
-                             , "--High"     , "5000"       -- units: B/s
+                             , "--Low"      , "1000000"       -- units: B/s
+                             , "--High"     , "5000000"       -- units: B/s
                              , "--low"      , green
                              , "--normal"   , yellow
                              , "--high"     , red
@@ -104,12 +104,12 @@ config = defaultConfig {
                              ] 50
                           
         -- memory usage monitor
-        , Run $ Memory       [ "--template" ,"\62611 [<used>M] <usedratio>%"
-                             , "--Low"      , "20"        -- units: %
-                             , "--High"     , "90"        -- units: %
-                             , "--low"      , green
+        , Run $ Memory       [ "--template" ,"\62611 <available> M"
+                             , "--Low"      , "2000"        -- units: M
+                             , "--High"     , "6000"        -- units: M
+                             , "--low"      , red
                              , "--normal"   , yellow
-                             , "--high"     , red
+                             , "--high"     , green
                              ] 10
 
         -- battery monitor
@@ -138,8 +138,8 @@ config = defaultConfig {
                              , ("us"         , setColor green "US")
                              ]
         , Run $ DiskU [("/", "/ <usedp>%")]
-                    [ "--Low"      , "20"
-                    , "--High"     , "50"
+                    [ "--Low"      , "30"
+                    , "--High"     , "60"
                     , "--low"      , green
                     , "--normal"   , yellow
                     , "--high"     , red
