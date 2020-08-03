@@ -122,11 +122,58 @@ dzen' m = "(echo " ++
 
 termShowKeybindings :: String -> X () 
 -- termShowKeybindings m = spawn $ "termite --hold -e \"echo '" ++ m ++  "'\" -t 'temp-term'"
-termShowKeybindings m = spawn $ "urxvt -title temp-term -hold -e 'echo' '" ++ m ++  "'"
+-- termShowKeybindings m = spawn $ "urxvt -title temp-term -hold -e 'echo' '" ++ m ++  "'"
+termShowKeybindings m = termSpawn tempTermiteHold $ "echo '" ++ m ++ "'"
 
-termSpawn :: String -> [String] -> X ()
--- termSpawn a p = spawn $ "termite " ++ (unwords p) ++ " -e '" ++ a ++ "'"  
-termSpawn a p = spawn $ "urxvt " ++ (unwords p) ++ " -e " ++ a  
+data Terminal = Termite
+                { termiteTitle :: Maybe String
+                , termiteRole  :: Maybe String
+                , termiteHold  :: Bool
+                , termiteArgs  :: [String]
+                }
+              | URxvt
+                { urxvtTitle :: Maybe String
+                , urxvtHold  :: Bool
+                , urxvtArgs  :: [String]
+                }
+
+termSpawnCmd :: Terminal -> String -> String
+termSpawnCmd (Termite t r h a) cmd = unwords
+                                   [ "termite"
+                                   , getTermRole r
+                                   , getTermTitle t
+                                   , getTermHold h
+                                   , unwords a
+                                   , "-e", "\"" ++ cmd ++ "\""
+                                   ]
+  where
+    getTermRole (Just s) = "-r " ++ s
+    getTermRole Nothing = ""
+    getTermTitle (Just s) = "-t " ++ s
+    getTermTitle Nothing = ""
+    getTermHold True = "--hold"
+    getTermHold False = ""
+  
+termSpawnCmd (URxvt t h a) cmd = unwords
+                               [ "urxvt"
+                               , getTermTitle t
+                               , getTermHold h
+                               , unwords a
+                               , "-e", cmd
+                               ]
+  where
+    getTermTitle (Just s) = "-title " ++ s
+    getTermTitle Nothing = ""
+    getTermHold True = "-hold"
+    getTermHold False = ""
+
+termSpawn :: Terminal -> String -> X()
+termSpawn t c = spawn $ termSpawnCmd t c
+
+tempTermiteHold = Termite (Just "temp-term") Nothing True []
+termite = Termite Nothing Nothing False []
+tempTermite = Termite (Just "temp-term") Nothing False []
+tempURxvt   = URxvt (Just "temp-term") False []
 
 windowCount :: X (Maybe String)
 windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
@@ -219,15 +266,18 @@ myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
 -- ScratchPads
 
 myScratchPads :: [NamedScratchpad]
-myScratchPads = [ termApp "terminal" "" manageQuake
+myScratchPads = [ termApp termiteScratchpad "terminal" "" manageQuake
                 , NS "notes" spawnNotes findNotes manageNotes
-                , termApp "weather" "-hold -e 'curl' 'wttr.in'" manageWeather
-                , termApp "ipython" "-e 'ipython'" manageQuake
-                , termApp "ghci" "-e 'ghci'" manageQuake
+                , termApp termiteScratchpadHold "weather" "bash -c 'curl wttr.in; cat'" manageWeather
+                , termApp termiteScratchpad "ipython" "ipython" manageQuake
+                , termApp termiteScratchpad "ghci" "ghci" manageQuake
                 ]
   where
-    -- termApp name cmd manage = NS name ("termite -r '" ++ name ++ "-scratchpad' " ++ cmd) (role =? (name ++ "-scratchpad")) manage
-    termApp name cmd manage = NS name ("urxvt -title " ++ name ++ "-scratchpad " ++ cmd) (title =? (name ++ "-scratchpad")) manage
+    termApp term name cmd manage = NS name (termSpawnCmd (term $ name ++ "-scratchpad") cmd) (role =? (name ++ "-scratchpad")) manage
+    -- termApp name cmd manage = NS name ("urxvt -title " ++ name ++ "-scratchpad " ++ cmd) (title =? (name ++ "-scratchpad")) manage
+
+    termiteScratchpad r = Termite Nothing (Just r) False [] 
+    termiteScratchpadHold r = Termite Nothing (Just r) True [] 
 
     spawnNotes = "emacsclient -c -a emacs -F '(quote (name . \"emacs-notes\"))' ~/.org/Notes.org"
     findNotes  = title =? "emacs-notes"
@@ -247,7 +297,7 @@ tsAll =
        , Node (TS.TSNode "Brave" "Browser" (spawn "brave")) []
        ]
    , Node (TS.TSNode "+ Programming" "programming" (return ()))
-       [ Node (TS.TSNode "IPython" "IPython interactive shell" (termSpawn "ipython" [])) []
+       [ Node (TS.TSNode "IPython" "IPython interactive shell" (termSpawn termite "ipython")) []
        , Node (TS.TSNode "Emacs" "IDE/Text editor" (spawn "emacsclient -c -a emacs")) []
        , Node (TS.TSNode "Termite" "Terminal" (spawn "termite")) []
        , Node (TS.TSNode "Urxvt" "Rxvt Unicode" (spawn "urxvt")) []
@@ -255,28 +305,37 @@ tsAll =
        ]
    , Node (TS.TSNode "+ Tools" "Various tools" (return ()))
        tsTools
-   , Node (TS.TSNode "+ Management" "Any management commands" (return ()))
-       tsManagement
+   , Node (TS.TSNode "+ System" "Any system commands" (return ()))
+       tsSystem
+   , Node (TS.TSNode "+ Commands" "Any usefull commands" (return ()))
+       tsCommands
    , Node (TS.TSNode "Test" "Test command for debug" (appPrompt myXPConfig)) []
    ]
 
-tsManagement =
-   [ Node (TS.TSNode "Picom" "Picom switch on/off" (return ()))
+tsSystem =
+   [ Node (TS.TSNode "+ Picom" "Picom switch on/off" (return ()))
        [ Node (TS.TSNode "off" "Switch off compositor" (spawn "killall picom")) []
        , Node (TS.TSNode "on" "Switch on compositor" (spawn "picom --experimental-backends -b")) []
        ]
-   , Node (TS.TSNode "Brightness" "Set Brightness" (return ()))
+   , Node (TS.TSNode "+ Brightness" "Set Brightness" (return ()))
        [ Node (TS.TSNode "Max Brightness" "Set Brightness to 100" (spawn "light -S 100")) []
        , Node (TS.TSNode "Norm Brightness" "Set Brightness to 50" (spawn "light -S 50")) []
        , Node (TS.TSNode "Min Brightness" "Set Brightness to 1" (spawn "light -S 1")) []
        ]
-   , Node (TS.TSNode "XMonad config" "Open xmonad.hs in Emacs" (spawn "emacsclient -c -a emacs ~/.xmonad/xmonad.hs")) []
-   , Node (TS.TSNode "Close all dzen" "Kill broken dzen" (spawn "killall dzen2")) []
-   , Node (TS.TSNode "Pacman update" "Get updates from pacman" (termSpawn "sudo pacman -Syyu" [])) []
-   , Node (TS.TSNode "AUR update" "Get updates from AUR" (termSpawn "yay -Syyu" [])) []
    , Node (TS.TSNode "+ Layout" "Manipulate layout" (return ()))
      tsLayout
    ]
+tsCommands =
+   [ Node (TS.TSNode "XMonad config" "Open xmonad.hs in Emacs" (spawn "emacsclient -c -a emacs ~/.xmonad/xmonad.hs")) []
+   , Node (TS.TSNode "Close all dzen" "Kill broken dzen" (spawn "killall dzen2")) []
+   , Node (TS.TSNode "Pacman update" "Get updates from pacman" (termSpawn termite "sudo pacman -Syyu")) []
+   , Node (TS.TSNode "AUR update" "Get updates from AUR" (termSpawn termite "yay -Syyu")) []
+   , Node (TS.TSNode "+ Pass" "Pass commands" (return ()))
+     [ Node (TS.TSNode "Push" "Push to remote" (spawn "pass git push origin master")) []
+     , Node (TS.TSNode "Pull" "Pull from remote" (spawn "pass git pull origin master")) []
+     ]
+   ]
+  
 tsLayout =
    [ Node (TS.TSNode "Tile" "Make Window Tiled" (withFocused $ windows . W.sink)) []
    , Node (TS.TSNode "Tile All" "Make All Windows Tiled" sinkAll) []
@@ -289,8 +348,8 @@ tsLayout =
    , Node (TS.TSNode "DeArrange"   "" (sendMessage DeArrange)) [ ]
    ]
 tsTools =
-  [ Node (TS.TSNode "NetworkManager TUI" "Terminal Interface for NetworkManager" (termSpawn "nmtui" [])) []
-  , Node (TS.TSNode "PulseMixer" "Pulse Audio Mixer" (termSpawn "pulsemixer" [])) []
+  [ Node (TS.TSNode "NetworkManager TUI" "Terminal Interface for NetworkManager" (termSpawn termite "nmtui")) []
+  , Node (TS.TSNode "PulseMixer" "Pulse Audio Mixer" (termSpawn termite "pulsemixer")) []
   ]
 
 
@@ -369,7 +428,8 @@ myKeys = \conf -> let
       ] "GridSelect"
     , prefix "M-t"
       [ ("a", TS.treeselectAction tsDefaultConfig tsAll, "TreeSelect All")
-      , ("m", TS.treeselectAction tsDefaultConfig tsManagement, "TreeSelect Management")
+      , ("s", TS.treeselectAction tsDefaultConfig tsSystem, "TreeSelect System")
+      , ("c", TS.treeselectAction tsDefaultConfig tsCommands, "TreeSelect Commands")
       , ("l", TS.treeselectAction tsDefaultConfig tsLayout, "TreeSelect Layout")
       , ("t", TS.treeselectAction tsDefaultConfig tsTools, "TreeSelect Tools")
       ] "TreesSlect"
@@ -608,7 +668,7 @@ getApplicationData dir file = do
   
 hooglePrompt c =
     inputPrompt c "Hoogle" ?+ \query ->
-        termSpawn ("hoogle " ++ query) ["-title", "temp-term", "-hold"]
+        termSpawn tempTermiteHold ("hoogle " ++ query)
 
 anonGooglePrompt c =
     inputPrompt c "Anonymous google" ?+ \query ->
@@ -616,7 +676,7 @@ anonGooglePrompt c =
 
 passInsertPrompt c =
     inputPrompt c "Add password" ?+ \query ->
-         termSpawn ("pass insert " ++ query) ["-title", "temp-term"]
+         termSpawn tempTermite $ "pass insert " ++ query
 --------------------------------------------------------
 -- Main
 main = do
