@@ -23,4 +23,4 @@ elif [ $AURNUM -ge 5 ]; then
     AUR_COLOR=$yellow
 fi
 
-echo -e "${PACMAN_COLOR}Pacman: ${PACNUM}${reset} ${AUR_COLOR}AUR: ${AURNUM}${reset}"
+echo -e "<action=urxvt -e sudo pacman -Syyu>${PACMAN_COLOR}Pacman: ${PACNUM}${reset}</action> <action=urxvt -e yay -Syyu>${AUR_COLOR}AUR: ${AURNUM}${reset}</action>"

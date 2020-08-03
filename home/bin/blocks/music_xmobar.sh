@@ -12,15 +12,17 @@ if [[ "${BLOCK_BUTTON}" -eq 1 ]]; then
 fi
 
 
+state="<action=playerctl previous -p ${PLAYER}> 玲 </action><action=playerctl play-pause -p ${PLAYER}> %s </action><action=playerctl next -p ${PLAYER}> 怜 </action>"
+
 if [[ $(playerctl status -p $PLAYER 2> /dev/null ) == "Paused" ]]; then
-    state="${yellow}▮▮${reset}"
+    state="${yellow}$(printf "${state}" "")${reset}"
 else
-    state="${green}▶${reset}"
+    state="${green}$(printf "${state}" "契")${reset}"
 fi
 
 track="$(playerctl metadata -f "{{artist}} - {{title}}" -p $PLAYER 2> /dev/null)"
 
-label="$state $track"
+label=$(printf "<action=xdotool key super+m>%-.30s</action> %s" "${track}" "${state}")
 
 [[ -z $track ]] && label="${red}$PLAYER not found${reset}"
 

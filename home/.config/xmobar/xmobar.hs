@@ -59,14 +59,14 @@ config = defaultConfig {
                              ] 36000
 
         -- Screen brightness
-        , Run $ Brightness     [ "--template" , "\62943 <percent>"
+        , Run $ Brightness   [ "--template" , "\62943 <percent>"
                              , "--"
                              , "-D" , "intel_backlight"
                              ] 10
 
         -- Volume
         , Run $ Volume "default" "Master"
-                             [ "--template" , "<status> <volume>%"
+                             [ "--template" , "<action=pactl set-sink-mute '@DEFAULT_SINK@' toggle><status> <volume>%</action>"
                              , "--"
                              , "--on"       , "\61602"
                              , "--onc"      , green
@@ -75,7 +75,8 @@ config = defaultConfig {
                              ] 10
 
         -- network activity monitor (dynamic interface resolution)
-        , Run $ DynNetwork     [ "--template" , "<dev>: \61813<rx>kB/s \61814<tx>kB/s"
+        , Run $ DynNetwork   [ "--template" , "<dev>: \61813<rx>kB/s \61814<tx>kB/s"
+                             , "--width"    , "4"
                              , "--Low"      , "1000"       -- units: B/s
                              , "--High"     , "5000"       -- units: B/s
                              , "--low"      , green
@@ -84,7 +85,8 @@ config = defaultConfig {
                              ] 10
 
         -- cpu activity monitor
-        , Run $ MultiCpu       [ "--template" , "\63578 <total0>%|<total1>%"
+        , Run $ MultiCpu     [ "--template" , "\63578 <total0>%|<total1>%"
+                             , "--width"    , "2"
                              , "--Low"      , "50"         -- units: %
                              , "--High"     , "85"         -- units: %
                              , "--low"      , green
@@ -102,7 +104,7 @@ config = defaultConfig {
                              ] 50
                           
         -- memory usage monitor
-        , Run $ Memory         [ "--template" ,"\62611 [<used>M] <usedratio>%"
+        , Run $ Memory       [ "--template" ,"\62611 [<used>M] <usedratio>%"
                              , "--Low"      , "20"        -- units: %
                              , "--High"     , "90"        -- units: %
                              , "--low"      , green
