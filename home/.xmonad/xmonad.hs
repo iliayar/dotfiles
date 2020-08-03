@@ -32,6 +32,7 @@ import XMonad.Util.EZConfig
 import XMonad.Util.NamedScratchpad
 
 import XMonad.Prompt
+import XMonad.Prompt.Pass
 import XMonad.Prompt.Input
 import XMonad.Prompt.Shell (shellPrompt)
 import XMonad.Prompt.FuzzyMatch (fuzzyMatch, fuzzySort)
@@ -317,7 +318,7 @@ tsDefaultConfig = TS.TSConfig { TS.ts_hidechildren = True
 myKeys = \conf -> let
   createSubmap m = submap $ mkKeymap conf $ map dropRdTuple $ addExitMap m
   prefix p m d = (p, withDzenKeymapsPipe d m $ createSubmap m,
-                  d ++ " (submap)\n" ++ getHelp m)
+                  "+ " ++ d ++ "\n" ++ getHelp m)
   dzenAllBindings = withDzenKeymapsPipe "Keybindings" keymap $ createSubmap []
   restartRecompile = intercalate " && "
     [ "cd ~/.xmonad"
@@ -376,6 +377,13 @@ myKeys = \conf -> let
       [ ("d", shellPrompt myXPConfig, "Shell prompt")
       , ("a", appPrompt myXPConfig  , "Applications prompt")
       , ("h", hooglePrompt myXPConfig  , "Hoogle search prompt")
+      , ("g", anonGooglePrompt myXPConfig  , "Anonymous Google search prompt")
+      , prefix "p"
+        [ ("p", passPrompt myXPConfig, "Get password")
+        , ("g", passGeneratePrompt myXPConfig, "Generate password")
+        , ("r", passRemovePrompt myXPConfig, "Remove password")
+        , ("i", passInsertPrompt myXPConfig, "Add password")
+        ] "Pass prompts"
       ] "Prompts"
     , prefix "M-C-f" ( createSearchPrompt searchEngines) "Search Engines Prompt"
     , prefix "M-S-f" ( createSearchSelect searchEngines) "Selech Engines Select"
@@ -600,8 +608,15 @@ getApplicationData dir file = do
   
 hooglePrompt c =
     inputPrompt c "Hoogle" ?+ \query ->
-        termSpawn ("'hoogle' '" ++ query ++ "'") ["-title", "temp-term", "-hold"]
+        termSpawn ("hoogle " ++ query) ["-title", "temp-term", "-hold"]
 
+anonGooglePrompt c =
+    inputPrompt c "Anonymous google" ?+ \query ->
+        spawn $ "brave 'https://google.com/search?q=" ++ query ++ "' --incognito"
+
+passInsertPrompt c =
+    inputPrompt c "Add password" ?+ \query ->
+         termSpawn ("pass insert " ++ query) ["-title", "temp-term"]
 --------------------------------------------------------
 -- Main
 main = do
