@@ -428,7 +428,7 @@ spotifyd_install() {
     cd "/tmp" || exit
 
     git clone https://github.com/Spotifyd/spotifyd.git
-    cd spotifyd
+    cd spotifyd || exit
 
     cargo build --release --features pulseaudio_backend,dbus_mpris
     cargo install --features pulseaudio_backend,dbus_mpris --path . --locked
