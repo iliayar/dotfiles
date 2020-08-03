@@ -438,14 +438,43 @@ spotifyd_install() {
 
 echo "Select modules: "
 
-for m in "${MODULES[@]}"; do
-    printf "%s [Y/n] " "${m^}" && read -r "${m^^}"
-done
+DIALOG_MODE=2
 
-for m in "${MODULES[@]}"; do
-    state="${m^^}"
-    [[ ${!state} != "n" ]] && $m
-done
+if [[ $DIALOG_MODE -eq 1 ]]; then
+    for m in "${MODULES[@]}"; do
+        printf "%s [Y/n] " "${m^}" && read -r "${m^^}"
+    done
+fi
+
+if [[ $DIALOG_MODE -eq 2 ]]; then
+    i=1
+
+    for m in "${MODULES[@]}"; do
+        printf "[%2s] %s\n" "${i}" "${m^}"
+        i=$((i+1))
+    done
+
+    echo "Type numbers separated by spaces(e.g 1 4 5):"
+
+    read -r NUMS
+fi
+
+echo "Modules to install:"
+
+if [[ $DIALOG_MODE -eq 1 ]]; then
+    for m in "${MODULES[@]}"; do
+        state="${m^^}"
+        [[ ${!state} != "n" ]] && echo "${m^}" && $m
+    done
+fi
+
+if [[ $DIALOG_MODE -eq 2 ]]; then
+    for i in $NUMS; do
+        ${MODULES[$((i-1))]}
+        echo "${MODULES[$((i-1))]^}"
+    done
+fi
+
 
 echo "DEPS: "
 echo "${DEPS[@]}"
