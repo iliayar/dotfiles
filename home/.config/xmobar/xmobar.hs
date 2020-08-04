@@ -6,6 +6,9 @@ red    = "#fb4934"
 green  = "#b8bb26"
 yellow = "#fabd2f"
 
+icon :: String -> String
+icon f = "<icon=" ++ f ++".xpm/>"
+
 setColor :: String -> String -> String
 setColor color s = "<fc=" ++ color ++ ">" ++ s ++ "</fc>"
 
@@ -16,7 +19,7 @@ config = defaultConfig {
    -- appearance
      font =         "xft:Hack Nerd Font Mono:size=8:bold:antialias=true"
    , bgColor     =  "#1d2021"
-   , fgColor     =  "#eddbb2"
+   , fgColor     =  "#ebdbb2"
    , alpha       =  255
    , position   = OnScreen 0 $ BottomP 0 99
 --    , position    =  Static {xpos = 0, ypos = 1060, width = 1364, height = 20}
@@ -25,7 +28,7 @@ config = defaultConfig {
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "<action=~/.xmonad/xmonadctl 1><icon=haskell_20.xpm/></action> | %UnsafeStdinReader% }{ %music% | %updates% | %disku% | %bright% | %default:Master% | %kbd% | %memory% | %multicpu% | %dynnetwork% | %battery% | %multicoretemp% | %date% "
+   , template = "<action=~/.xmonad/xmonadctl 1>" ++ (icon "haskell_20") ++ "</action> | %UnsafeStdinReader% }{ %music% | %updates% | %disku% | %bright% | %default:Master% | %kbd% | %memory% | %multicpu% | %dynnetwork% | %battery% | %multicoretemp% | %date% "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
@@ -59,7 +62,7 @@ config = defaultConfig {
                              ] 36000
 
         -- Screen brightness
-        , Run $ Brightness   [ "--template" , "\62943 <percent>"
+        , Run $ Brightness   [ "--template" , (icon "brightness") ++ " <percent>"
                              , "--"
                              , "-D" , "intel_backlight"
                              ] 10
@@ -68,9 +71,9 @@ config = defaultConfig {
         , Run $ Volume "default" "Master"
                              [ "--template" , "<action=pactl set-sink-mute '@DEFAULT_SINK@' toggle><status> <volume>%</action>"
                              , "--"
-                             , "--on"       , "\61602"
+                             , "--on"       , icon "sound"
                              , "--onc"      , green
-                             , "--off"      , "\61943"
+                             , "--off"      , icon "sound_mute"
                              , "--offc"     , red
                              ] 10
 
@@ -85,7 +88,7 @@ config = defaultConfig {
                              ] 10
 
         -- cpu activity monitor
-        , Run $ MultiCpu     [ "--template" , "\63578 <total0>%|<total1>%"
+        , Run $ MultiCpu     [ "--template" , (icon "cpu") ++ " <total0>%|<total1>%"
                              , "--width"    , "2"
                              , "--Low"      , "50"         -- units: %
                              , "--High"     , "85"         -- units: %
@@ -95,7 +98,7 @@ config = defaultConfig {
                              ] 10
 
         -- cpu core temperature monitor
-        , Run $ MultiCoreTemp       [ "--template" , "\57866<avg>°C"
+        , Run $ MultiCoreTemp       [ "--template" , (icon "temperature") ++ "<avg>°C"
                              , "--Low"      , "70"        -- units: °C
                              , "--High"     , "80"        -- units: °C
                              , "--low"      , green
@@ -104,7 +107,7 @@ config = defaultConfig {
                              ] 50
                           
         -- memory usage monitor
-        , Run $ Memory       [ "--template" ,"\62611 <available> M"
+        , Run $ Memory       [ "--template" , (icon "memory") ++ " <available> M"
                              , "--Low"      , "2000"        -- units: M
                              , "--High"     , "6000"        -- units: M
                              , "--low"      , red
@@ -113,20 +116,15 @@ config = defaultConfig {
                              ] 10
 
         -- battery monitor
-        , Run $ Battery        [ "--template" , "\62016 <acstatus>"
-                             , "--Low"      , "10"        -- units: %
-                             , "--High"     , "80"        -- units: %
-                             , "--low"      , red
-                             , "--normal"   , yellow
-                             , "--high"     , green
+        , Run $ Battery        [ "--template" ,  "<acstatus>"
 
                              , "--" -- battery specific options
                                        -- discharging status
-                                       , "-o"    , "<left>% (<timeleft>)"
+                                       , "-o"    , (icon "battery_bad") ++ "<left>%"
                                        -- AC "on" status
-                                       , "-O"    , setColor yellow "Charging"
+                                       , "-O"    , icon "battery_norm"
                                        -- charged status
-                                       , "-i"    , setColor green "Charged"
+                                       , "-i"    , icon "battery"
                              ] 50
 
         -- time and date indicator 

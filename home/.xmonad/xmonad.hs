@@ -97,7 +97,7 @@ alignHelp s
   | otherwise = intercalate "\n  " $ map alignHelp $ lines s
 
 getHelp' :: (String, a, String) -> String
-getHelp' (k, _, d) = "[" ++ k ++ "]: " ++ (alignHelp d)
+getHelp' (k, _, d) = "[\x1b[33m" ++ k ++ "\x1b[m]: " ++ (alignHelp d)
 
 getHelp :: [(String, a, String)] -> String
 getHelp keys = unlines $ map getHelp' keys
@@ -271,6 +271,7 @@ myScratchPads = [ termApp termiteScratchpad "terminal" "" manageQuake
                 , termApp termiteScratchpad "ipython" "ipython" manageQuake
                 , termApp termiteScratchpad "ghci" "ghci" manageQuake
                 , termApp termiteScratchpad "spotify" "spt" manageNotes
+                , termApp termiteScratchpad "htop" "htop" manageNotes
                 ]
   where
     termApp term name cmd manage = NS name (termSpawnCmd (term $ name ++ "-scratchpad") cmd) (role =? (name ++ "-scratchpad")) manage
@@ -415,6 +416,7 @@ myKeys = \conf -> let
       , ("p", namedScratchpadAction myScratchPads "ipython" , "IPython intercative shell")
       , ("g", namedScratchpadAction myScratchPads "ghci"    , "Haskell intercative shell")
       , ("m", namedScratchpadAction myScratchPads "spotify" , "Spotify TUI client")
+      , ("h", namedScratchpadAction myScratchPads "htop"    , "System monitoring scratchpad")
       ] "Sratchpads"
     , prefix "M-S-e"
        [ ("r"  , spawn "reboot"           , "Reboot"     )
@@ -590,7 +592,7 @@ myEventHook = serverModeEventHook' (return myCommands)
 
 myStartupHook = do
           --io redirectStdHandles
-          spawnOnce "spotifyd"
+          spawnOnce "~/.cargo/bin/spotifyd"
           spawnOnce "nitrogen --restore &"
           spawnOnce "picom --experimental-backends -b"
           -- spawnOnce "/usr/lib/polkit-kde-authentication-agent-1"
