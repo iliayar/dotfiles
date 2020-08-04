@@ -69,18 +69,18 @@ import qualified XMonad.StackSet as W
 --------------------------------------------------------
 -- Functions
 
-redirectStdHandles :: IO ()
-redirectStdHandles = do
-  home <- getEnv "HOME"
-  let xmonadDir = home </>  ".xmonad"
-  hClose stdout
-  hClose stderr
-  stdout' <- openFile (xmonadDir </> "xmonad-stdout.log") AppendMode
-  stderr' <- openFile (xmonadDir </> "xmonad-stderr.log") AppendMode
-  hDuplicateTo stdout' stdout
-  hDuplicateTo stderr' stderr
-  hSetBuffering stdout NoBuffering
-  hSetBuffering stderr NoBuffering
+--redirectStdHandles :: IO ()
+--redirectStdHandles = do
+  --home <- getEnv "HOME"
+  --let xmonadDir = home </>  ".xmonad"
+  --hClose stdout
+  --hClose stderr
+  --stdout' <- openFile (xmonadDir </> "xmonad-stdout.log") AppendMode
+  --stderr' <- openFile (xmonadDir </> "xmonad-stderr.log") AppendMode
+  --hDuplicateTo stdout' stdout
+  --hDuplicateTo stderr' stderr
+  --hSetBuffering stdout NoBuffering
+  --hSetBuffering stderr NoBuffering
 
 dropRdTuple :: (a, b, c) -> (a, b)
 dropRdTuple (a, b, _) = (a, b)
@@ -589,7 +589,7 @@ myEventHook = serverModeEventHook' (return myCommands)
           <+> docksEventHook
 
 myStartupHook = do
-          io redirectStdHandles
+          --io redirectStdHandles
           spawnOnce "spotifyd"
           spawnOnce "nitrogen --restore &"
           spawnOnce "picom --experimental-backends -b"
