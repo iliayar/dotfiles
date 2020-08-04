@@ -178,10 +178,13 @@ termSpawnCmd (URxvt t h a cmd) = unwords
 termSpawn :: (Maybe String -> Terminal) -> String -> X()
 termSpawn t c = spawn $ termSpawnCmd $ t $ Just c
 
+tempTermiteQuake = Termite (Just "temp-term-quake") Nothing False []
 tempTermiteHold = Termite (Just "temp-term") Nothing True []
 termite = Termite Nothing Nothing False []
 tempTermite = Termite (Just "temp-term") Nothing False []
 tempURxvt   = URxvt (Just "temp-term") False []
+
+wrapBash c = "bash -c '" ++ c ++ "'"
 
 windowCount :: X (Maybe String)
 windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
@@ -275,7 +278,7 @@ myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
 myScratchPads :: [NamedScratchpad]
 myScratchPads = [ termApp termiteScratchpad "terminal" Nothing manageQuake
                 , NS "notes" spawnNotes findNotes manageNotes
-                , termApp termiteScratchpadHold "weather" (Just "bash -c 'curl wttr.in; cat'") manageWeather
+                , termApp termiteScratchpad "weather" (Just $ wrapBash "curl wttr.in; cat") manageWeather
                 , termApp termiteScratchpad "ipython" (Just "ipython") manageQuake
                 , termApp termiteScratchpad "ghci" (Just "ghci") manageQuake
                 , termApp termiteScratchpad "spotify" (Just "spt") manageNotes
@@ -341,7 +344,9 @@ tsCommands =
    , Node (TS.TSNode "Pacman update" "Get updates from pacman" (termSpawn termite "sudo pacman -Syyu")) []
    , Node (TS.TSNode "AUR update" "Get updates from AUR" (termSpawn termite "yay -Syyu")) []
    , Node (TS.TSNode "+ Pass" "Pass commands" (return ()))
-     [ Node (TS.TSNode "Push" "Push to remote" (spawn $ intercalate "; " $ map (\ x -> "pass git push " ++ x ++ " master") ["origin", "github"])) []
+     [ Node (TS.TSNode "Push" "Push to remote" (termSpawn tempTermiteQuake $ wrapBash $ (++ "; sleep 1")
+                                                $ intercalate "; " $ map (\ x -> "echo " ++ x ++ "; pass git push " ++ x ++ " master")
+                                                ["origin", "github", "gitlab"])) []
      , Node (TS.TSNode "Pull" "Pull from remote" (spawn "pass git pull origin master")) []
      ]
    ]
@@ -389,7 +394,7 @@ myKeys = \conf -> let
   prefix p m d = (p, withDzenKeymapsPipe d m $ createSubmap m,
                   "+ " ++ d ++ "\n" ++ getHelp m)
   dzenAllBindings = withDzenKeymapsPipe "Keybindings" keymap $ createSubmap []
-  restartRecompile = wrap "bash -c '(" ") || (echo Failed; killall xmessage; echo Press Enter; read)'" $ intercalate " && "
+  restartRecompile = wrapBash $ (++" || (echo \x1b[31mFailed\x1b[m; killall xmessage; echo Press Enter; read)") $ wrap "(" ")" $ intercalate " && "
     [ "cd ~/.xmonad"
     , "stack ghc -- --make ~/.xmonad/xmonadctl.hs"
     , "stack ghc -- --make ~/.config/xmobar/xmobar.hs"
@@ -397,7 +402,7 @@ myKeys = \conf -> let
     , "xmonad --recompile"
     , "xmonad --restart"
     -- , "notify-send 'restarting Xmonad'"
-    , "echo Succeed"
+    , "echo \x1b[32mSucceed\x1b[m"
     , "sleep 1"
     ]
   keymap =
@@ -580,7 +585,8 @@ myManageHook = composeAll
   , className =? "feh"                 --> doFloat
   , resource  =? "stalonetray"         --> doIgnore
   , title     =? "xmessage"            --> doFloat
-  , title     =? "temp-term" --> (customFloating $ W.RationalRect 0.05 0.05 0.9 0.9)
+  , title     =? "temp-term"           --> (customFloating $ W.RationalRect 0.05 0.05 0.9 0.9)
+  , title     =? "temp-term-quake"     --> (customFloating $ W.RationalRect 0 0 1 0.5)
   , manageDocks
   , namedScratchpadManageHook myScratchPads
   ]
