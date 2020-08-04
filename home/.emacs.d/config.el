@@ -62,3 +62,8 @@
 
 ;; set my init filt to be this file
 (setq user-init-file "~/.emacs.d/init.el")
+
+;; Evil initial states
+(cl-loop for (mode . state) in '( (dired-mode . emacs)
+                             )
+      do (evil-set-initial-state mode state))

@@ -8,6 +8,7 @@ import qualified Data.Map as M
 
 import System.IO
 import System.Exit
+import System.Posix.IO
 import System.Directory
 import System.FilePath ((</>))
 import System.Environment
@@ -314,7 +315,8 @@ tsAll =
    ]
 
 tsSystem =
-   [ Node (TS.TSNode "+ Picom" "Picom switch on/off" (return ()))
+   [ Node (TS.TSNode "Lock" "Lock screen" (spawn "~/bin/lock.sh")) []
+   , Node (TS.TSNode "+ Picom" "Picom switch on/off" (return ()))
        [ Node (TS.TSNode "off" "Switch off compositor" (spawn "killall picom")) []
        , Node (TS.TSNode "on" "Switch on compositor" (spawn "picom --experimental-backends -b")) []
        ]
@@ -332,7 +334,7 @@ tsCommands =
    , Node (TS.TSNode "Pacman update" "Get updates from pacman" (termSpawn termite "sudo pacman -Syyu")) []
    , Node (TS.TSNode "AUR update" "Get updates from AUR" (termSpawn termite "yay -Syyu")) []
    , Node (TS.TSNode "+ Pass" "Pass commands" (return ()))
-     [ Node (TS.TSNode "Push" "Push to remote" (spawn "pass git push origin master")) []
+     [ Node (TS.TSNode "Push" "Push to remote" (spawn $ intercalate "; " $ map (\ x -> "pass git push " ++ x ++ " master") ["origin", "github"])) []
      , Node (TS.TSNode "Pull" "Pull from remote" (spawn "pass git pull origin master")) []
      ]
    ]
@@ -380,14 +382,16 @@ myKeys = \conf -> let
   prefix p m d = (p, withDzenKeymapsPipe d m $ createSubmap m,
                   "+ " ++ d ++ "\n" ++ getHelp m)
   dzenAllBindings = withDzenKeymapsPipe "Keybindings" keymap $ createSubmap []
-  restartRecompile = intercalate " && "
+  restartRecompile = wrap "bash -c '(" ") || (echo Failed; killall xmessage; echo Press any key; read)'" $ intercalate " && "
     [ "cd ~/.xmonad"
     , "stack ghc -- --make ~/.xmonad/xmonadctl.hs"
     , "stack ghc -- --make ~/.config/xmobar/xmobar.hs"
     , "stack ghc -- --make ~/.config/xmobar/xmobar_mon2.hs"
     , "xmonad --recompile"
     , "xmonad --restart"
-    , "notify-send 'restarting Xmonad'"
+    -- , "notify-send 'restarting Xmonad'"
+    , "echo Succeed"
+    , "sleep 1"
     ]
   keymap =
     [ ("M-."         , sendMessage (IncMasterN (-1))                          , "Decrease Master N"        )
@@ -400,7 +404,7 @@ myKeys = \conf -> let
     , ("M-<Space>"   , sendMessage NextLayout                                 , "Cicle layouts"            )
     , ("M-<Return>"  , spawn $ XMonad.terminal conf                           , "Launch terminal"          )
     , ("M-S-/"       , termShowKeybindings $ getHelp keymap                   , "Show this help"           )
-    , ("M-S-c"       , spawn restartRecompile                                 , "Recompile, restart XMonad")
+    , ("M-S-c"       , termSpawn tempTermite restartRecompile                                 , "Recompile, restart XMonad")
     , ("M-S-d"       , spawn "notify-send 'DUNST_COMMAND_TOGGLE'"             , "Toggle notifications"     )
     , ("M-S-j"       , windows W.swapDown                                     , "Swap window with prev"    )
     , ("M-S-k"       , windows W.swapUp                                       , "Swap window with next"    )
@@ -691,6 +695,8 @@ passInsertPrompt c =
 --------------------------------------------------------
 -- Main
 main = do
+        -- Lets see how this fix work
+        closeFd 2 >> openFd ".xsession-errors" WriteOnly (Just 0644) defaultFileFlags
         homeDir <- getHomeDirectory
         xmproc0 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar"
         xmproc1 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_mon2"

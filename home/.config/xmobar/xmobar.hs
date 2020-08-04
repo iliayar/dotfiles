@@ -147,7 +147,7 @@ config = defaultConfig {
         -- Xmonad worspaces and program title
         , Run $ UnsafeStdinReader
         , Run $ Com "bash" ["-c", "~/bin/blocks/pacman_xmobar.sh &"] "updates" 36000
-        , Run $ Com "bash" ["-c", "~/bin/blocks/music_xmobar.sh"] "music" 20
+        , Run $ Com "bash" ["-c", "~/bin/blocks/music_xmobar.sh &"] "music" 50
         ]
    }
 main :: IO ()
