@@ -131,45 +131,52 @@ data Terminal = Termite
                 , termiteRole  :: Maybe String
                 , termiteHold  :: Bool
                 , termiteArgs  :: [String]
+                , termiteCmd   :: Maybe String
                 }
               | URxvt
                 { urxvtTitle :: Maybe String
                 , urxvtHold  :: Bool
                 , urxvtArgs  :: [String]
+                , urxvtCmd   :: Maybe String
                 }
 
-termSpawnCmd :: Terminal -> String -> String
-termSpawnCmd (Termite t r h a) cmd = unwords
+termSpawnCmd :: Terminal -> String
+termSpawnCmd (Termite t r h a cmd) = unwords
                                    [ "termite"
                                    , getTermRole r
                                    , getTermTitle t
                                    , getTermHold h
                                    , unwords a
-                                   , "-e", "\"" ++ cmd ++ "\""
+                                   , getTermCmd cmd
                                    ]
   where
+    -- Sure there is a function that do this FIXME
     getTermRole (Just s) = "-r " ++ s
     getTermRole Nothing = ""
     getTermTitle (Just s) = "-t " ++ s
     getTermTitle Nothing = ""
     getTermHold True = "--hold"
     getTermHold False = ""
+    getTermCmd Nothing = ""
+    getTermCmd (Just cmd) = "-e \"" ++ cmd ++ "\"" 
   
-termSpawnCmd (URxvt t h a) cmd = unwords
+termSpawnCmd (URxvt t h a cmd) = unwords
                                [ "urxvt"
                                , getTermTitle t
                                , getTermHold h
                                , unwords a
-                               , "-e", cmd
+                               , getTermCmd cmd
                                ]
   where
     getTermTitle (Just s) = "-title " ++ s
     getTermTitle Nothing = ""
     getTermHold True = "-hold"
     getTermHold False = ""
+    getTermCmd Nothing = ""
+    getTermCmd (Just cmd) = "-e " ++ cmd
 
-termSpawn :: Terminal -> String -> X()
-termSpawn t c = spawn $ termSpawnCmd t c
+termSpawn :: (Maybe String -> Terminal) -> String -> X()
+termSpawn t c = spawn $ termSpawnCmd $ t $ Just c
 
 tempTermiteHold = Termite (Just "temp-term") Nothing True []
 termite = Termite Nothing Nothing False []
@@ -266,16 +273,16 @@ myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
 -- ScratchPads
 
 myScratchPads :: [NamedScratchpad]
-myScratchPads = [ termApp termiteScratchpad "terminal" "" manageQuake
+myScratchPads = [ termApp termiteScratchpad "terminal" Nothing manageQuake
                 , NS "notes" spawnNotes findNotes manageNotes
-                , termApp termiteScratchpadHold "weather" "bash -c 'curl wttr.in; cat'" manageWeather
-                , termApp termiteScratchpad "ipython" "ipython" manageQuake
-                , termApp termiteScratchpad "ghci" "ghci" manageQuake
-                , termApp termiteScratchpad "spotify" "spt" manageNotes
-                , termApp termiteScratchpad "htop" "htop" manageNotes
+                , termApp termiteScratchpadHold "weather" (Just "bash -c 'curl wttr.in; cat'") manageWeather
+                , termApp termiteScratchpad "ipython" (Just "ipython") manageQuake
+                , termApp termiteScratchpad "ghci" (Just "ghci") manageQuake
+                , termApp termiteScratchpad "spotify" (Just "spt") manageNotes
+                , termApp termiteScratchpad "htop" (Just "htop") manageNotes
                 ]
   where
-    termApp term name cmd manage = NS name (termSpawnCmd (term $ name ++ "-scratchpad") cmd) (role =? (name ++ "-scratchpad")) manage
+    termApp term name cmd manage = NS name (termSpawnCmd $ term (name ++ "-scratchpad") cmd) (role =? (name ++ "-scratchpad")) manage
     -- termApp name cmd manage = NS name ("urxvt -title " ++ name ++ "-scratchpad " ++ cmd) (title =? (name ++ "-scratchpad")) manage
 
     termiteScratchpad r = Termite Nothing (Just r) False [] 
@@ -382,7 +389,7 @@ myKeys = \conf -> let
   prefix p m d = (p, withDzenKeymapsPipe d m $ createSubmap m,
                   "+ " ++ d ++ "\n" ++ getHelp m)
   dzenAllBindings = withDzenKeymapsPipe "Keybindings" keymap $ createSubmap []
-  restartRecompile = wrap "bash -c '(" ") || (echo Failed; killall xmessage; echo Press any key; read)'" $ intercalate " && "
+  restartRecompile = wrap "bash -c '(" ") || (echo Failed; killall xmessage; echo Press Enter; read)'" $ intercalate " && "
     [ "cd ~/.xmonad"
     , "stack ghc -- --make ~/.xmonad/xmonadctl.hs"
     , "stack ghc -- --make ~/.config/xmobar/xmobar.hs"
