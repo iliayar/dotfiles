@@ -616,6 +616,7 @@ myStartupHook = do
           spawnOnce "lxpolkit"
           spawnOnce "stalonetray"
           spawnOnce "xsetroot -cursor_name arrow"
+          spawnOnce "~/bin/blocks/music_xmobar_async.sh"
           spawn "xrdb ~/.Xresources"
           setWMName "LG3D"
           spawnOnce "emacs --daemon &"
