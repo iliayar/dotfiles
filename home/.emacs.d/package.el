@@ -47,11 +47,16 @@
   (setq evil-want-keybinding nil)
   :config
   (evil-mode 1))
-;(use-package evil-collection
-  ;:after evil
-  ;:ensure t
-  ;:config
-  ;(evil-collection-init))
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
+(use-package evil-snipe
+  :ensure t
+  :config
+  (evil-snipe-mode +1)
+  (evil-snipe-override-mode +1))
 
 ;; Smart parenthesis
 (use-package smartparens
@@ -98,6 +103,14 @@
   :ensure t
   :config
   (global-evil-surround-mode 1))
+
+;; Multicursor
+(use-package evil-multiedit
+  :ensure t)
+(use-package evil-mc
+  :ensure t
+  :config
+  (global-evil-mc-mode 1))
 
 ;; Editorconfig
 (use-package editorconfig
@@ -150,6 +163,10 @@
 
 ;; Org mode
 (use-package org-bullets
+  :ensure t)
+
+;; Avy search
+(use-package avy
   :ensure t)
 
 ;; Window managment

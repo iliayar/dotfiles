@@ -45,6 +45,11 @@
 
 (setq company-math-allow-latex-symbols-in-faces t)
 
+;; isearch
+(define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance)
+(define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat)
+(setq case-fold-search t)
+
 ;; Org-mode
 (setq org-hide-emphaisi-markers t)
 (add-hook 'org-mode-hook 

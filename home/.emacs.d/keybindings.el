@@ -26,11 +26,35 @@
 
 ;; For all other keybindings
 (general-define-key
-  :states '(normal visual emacs insert treemacs)
+  :states '(normal visual insert)
+  :prefix "g"
+  :non-normal-prefix "C-g"
   :keymaps 'override
+  "s" 'avy-goto-char-timer
+  "l" 'avy-goto-line
+  "rm" 'evil-mc-make-all-cursors
+  "rq" 'evil-mc-undo-all-cursors
+  "rp" 'evil-mc-pause-cursors
+  "rr" 'evil-mc-resume-cursors
+  "rh" 'evil-mc-make-cursor-here
+  "rn" 'evil-mc-make-and-goto-next-match
+  "rs" 'evil-mc-skip-and-goto-next-match
   )
 
+(general-define-key
+  :states '(visual)
+  :keymaps 'override
+  "R"  'evil-multiedit-match-all
+  )
 
+(general-define-key
+  :states '(normal visual insert)
+  :prefix "SPC"
+  :non-normal-prefix "M-SPC"
+  :keymaps 'override
+  :map 'latex-mode-map
+  "si" 'latex-insert-block
+  )
 ;; Hydra
 
 (defhydra hydra-window-resize-menu (:color red
