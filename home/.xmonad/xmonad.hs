@@ -116,7 +116,7 @@ dzen' :: String -> String
 dzen' m = "(echo " ++
   dzenEscape m ++
   " | column; cat) | " ++ unwords [ "dzen2"
-                         , "-fn 'Hack Nerd Font Mono 9'"
+                         , "-fn 'Hack 9'"
                          , "-fg '#d5c4a1'"
                          , "-bg '#1d2021'"
                          ]
@@ -217,7 +217,7 @@ withDzenKeymapsPipe d m f = do
 myTerminal      = "termite"
 -- myTerminal      = "urxvt"
 
-myFont = "xft:Hack Nerd Font Mono:size=9"
+myFont = "xft:Hack:size=9"
 
 myFocusFollowsMouse :: Bool
 myFocusFollowsMouse = False
@@ -335,6 +335,10 @@ tsSystem =
        , Node (TS.TSNode "Norm Brightness" "Set Brightness to 50" (spawn "light -S 50")) []
        , Node (TS.TSNode "Min Brightness" "Set Brightness to 1" (spawn "light -S 1")) []
        ]
+   , Node (TS.TSNode "+ Tray" "Show/Hide stalonetray" (return ()))
+       [ Node (TS.TSNode "Show" "Show stalonetray" (spawn "stalonetray &")) []
+       , Node (TS.TSNode "Hide" "HIde stalonetray" (spawn "killall stalonetray")) []
+       ]
    , Node (TS.TSNode "+ Layout" "Manipulate layout" (return ()))
      tsLayout
    ]
@@ -374,9 +378,9 @@ makeFullscreenNoDock = sendMessage (MT.Toggle NBFULL) >> sendMessage ToggleStrut
 tsDefaultConfig :: TS.TSConfig a
 tsDefaultConfig = TS.TSConfig { TS.ts_hidechildren = True
                               , TS.ts_background   = 0x00000000
-                              , TS.ts_font         = "xft:Hack Nerd Font Mono:size=9"
-                              , TS.ts_node         = (0xffd5c4a1, 0xff1d2021)
-                              , TS.ts_nodealt      = (0xffd5c4a1, 0xff282828)
+                              , TS.ts_font         = myFont
+                              , TS.ts_node         = (0xffebdbb2, 0xff1d2021)
+                              , TS.ts_nodealt      = (0xffebdbb2, 0xff282828)
                               , TS.ts_highlight    = (0xffffffff, 0xffff4301)
                               , TS.ts_extra        = 0xffd5c4a1
                               , TS.ts_node_width   = 200
@@ -451,7 +455,7 @@ myKeys = \conf -> let
       , ("c", TS.treeselectAction tsDefaultConfig tsCommands, "TreeSelect Commands")
       , ("l", TS.treeselectAction tsDefaultConfig tsLayout, "TreeSelect Layout")
       , ("t", TS.treeselectAction tsDefaultConfig tsTools, "TreeSelect Tools")
-      ] "TreesSlect"
+      ] "TreesSelect"
     , prefix "M-d"
       [ ("d", shellPrompt myXPConfig, "Shell prompt")
       , ("a", appPrompt myXPConfig  , "Applications prompt")
@@ -568,7 +572,7 @@ myLayout = avoidStruts
            -- I cannot add spacing to this layout because it will
            -- add spacing between window and tabs which looks bad.
             $ tabbed shrinkText $ def
-                   { fontName            = "xft:Hack Nerd Font Mono:size=9"
+                   { fontName            = myFont
                    , activeColor         = "#282828"
                    , inactiveColor       = "#1d2021"
                    , activeBorderColor   = "#292d3e"

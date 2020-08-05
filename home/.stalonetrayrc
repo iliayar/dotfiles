@@ -1,9 +1,9 @@
-geometry 5x1+1821+1061
+geometry 5x5+1+1
 icon_size 20
 transparent false
 sticky false
 window_type dock
 window_strut auto
 skip_taskbar 1
-icon_gravity NE
+icon_gravity NW
 background "#1d2021"

@@ -31,4 +31,4 @@ echo "$INFO"
 
 N_LINES=$(wc -l <<< "$INFO")
 Y=$(($3 + $5 - ($LH * ($N_LINES+1)) - 19))
-(echo "$INFO"; cat) | dzen2 -l $(($N_LINES)) -fn "-*-Hack Nerd Font Mono-*-*-*-*-14-*-*-*-*-*-*-*" -fg '#d5c4a1' -bg '#1d2021' -h $LH -x $X -y $Y -w $W -e onstart=uncollapse
+(echo "$INFO"; cat) | dzen2 -l $(($N_LINES)) -fn "-*-Hack-*-*-*-*-14-*-*-*-*-*-*-*" -fg '#d5c4a1' -bg '#1d2021' -h $LH -x $X -y $Y -w $W -e onstart=uncollapse

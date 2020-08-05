@@ -1,5 +1,5 @@
 Xft.dpi:                        109
-*font: Hack Nerd Font Mono 9
+*font: Hack 9
 Xcursor.theme: Adwaita
 !! GENERAL !
 !
@@ -40,7 +40,7 @@ Xcursor.theme: Adwaita
 !*color7:        #ccff00
 !*color15:       #c7c700
 *background: #1d2021
-*foreground: #d5c4a1
+*foreground: #ebdbb2
 !!*fading: 40
 *fadeColor: #002b36
 *cursorColor: #d5c4a1
@@ -101,5 +101,5 @@ URxvt*depth: 32
 URxvt*background: rgba:1d00/2000/2100/bbbb
 URxvt*scrollBar: False
 URxvt*letterSpace: -1
-URxvt*font:      xft:Hack Nerd Font Mono:size=9
-!URxvt.boldFont:  xft:Hack Nerd Font Mono:style=bold:size=9
+URxvt*font:      xft:Hack:size=9
+!URxvt.boldFont:  xft:Hack:style=bold:size=9

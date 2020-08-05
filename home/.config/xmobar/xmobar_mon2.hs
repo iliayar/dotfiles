@@ -14,7 +14,7 @@ config :: Config
 config = defaultConfig { 
 
    -- appearance
-     font =         "xft:Hack Nerd Font Mono:size=8:bold:antialias=true"
+     font =         "xft:Hack:size=8:bold:antialias=true"
    , bgColor     =  "#1d2021"
    , fgColor     =  "#eddbb2"
    , alpha       =  255

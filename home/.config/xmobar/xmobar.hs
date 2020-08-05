@@ -9,6 +9,9 @@ yellow = "#fabd2f"
 icon :: String -> String
 icon f = "<icon=" ++ f ++".xpm/>"
 
+awIcon :: String -> String
+awIcon s = "<fn=1>" ++ s ++ "</fn>"
+
 setColor :: String -> String -> String
 setColor color s = "<fc=" ++ color ++ ">" ++ s ++ "</fc>"
 
@@ -17,11 +20,12 @@ config :: Config
 config = defaultConfig { 
 
    -- appearance
-     font =         "xft:Hack Nerd Font Mono:size=8:bold:antialias=true"
+     font =         "xft:Hack-8:bold:antialias=true"
    , bgColor     =  "#1d2021"
+   , additionalFonts = ["xft:FontAwesome-8"]
    , fgColor     =  "#ebdbb2"
    , alpha       =  255
-   , position   = OnScreen 0 $ BottomP 0 99
+   , position   = OnScreen 0 $ Bottom
 --    , position    =  Static {xpos = 0, ypos = 1060, width = 1364, height = 20}
    , borderColor =  "#646464"
 
@@ -78,7 +82,7 @@ config = defaultConfig {
                              ] 10
 
         -- network activity monitor (dynamic interface resolution)
-        , Run $ DynNetwork   [ "--template" , "<dev>: \61813<rx>kB/s \61814<tx>kB/s"
+        , Run $ DynNetwork   [ "--template" , "<dev>: " ++ (awIcon "\xf063") ++ "<rx>kB/s " ++ (awIcon "\xf062") ++ "<tx>kB/s"
                              , "--width"    , "4"
                              , "--Low"      , "1000000"       -- units: B/s
                              , "--High"     , "5000000"       -- units: B/s
@@ -107,7 +111,7 @@ config = defaultConfig {
                              ] 50
                           
         -- memory usage monitor
-        , Run $ Memory       [ "--template" , (icon "memory") ++ " <available> M"
+        , Run $ Memory       [ "--template" , (icon "memory") ++ "<fn=1>\xf538</fn> <available> M"
                              , "--Low"      , "2000"        -- units: M
                              , "--High"     , "6000"        -- units: M
                              , "--low"      , red

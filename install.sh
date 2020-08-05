@@ -109,10 +109,11 @@ common() {
         light
         xbindkeys
         feh
+        awesome-terminal-fonts
+        ttf-hack
     )
     AUR_DEPS+=(
         picom-ibhagwan-git
-        ttf-nerd-fonts-hack-complete-git
         ly-git
         gksu
     )

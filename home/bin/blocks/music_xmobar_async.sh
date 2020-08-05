@@ -12,7 +12,7 @@ SOCKET="/tmp/.music_data"
 
 [[ -p "$SOCKET" ]] || mkfifo $SOCKET
 
-state_f="<action=playerctl previous -p ${PLAYER}> 玲 </action><action=playerctl play-pause -p ${PLAYER}> %s </action><action=playerctl next -p ${PLAYER}> 怜 </action>"
+state_f="<action=playerctl previous -p ${PLAYER}> <fn=1>\uf04a</fn> </action><action=playerctl play-pause -p ${PLAYER}> %s </action><action=playerctl next -p ${PLAYER}> <fn=1>\uf04e</fn> </action>"
 
 while true; do
     state=$(playerctl status -p $PLAYER 2> /dev/null)
@@ -22,9 +22,9 @@ while true; do
     else
         track="$(playerctl metadata -f "{{artist}} - {{title}}" -p $PLAYER 2> /dev/null)"
         if [[ "$state" == "Paused" || "$state" == "Stopped" ]]; then
-            state="${yellow}$(printf "${state_f}" "")${reset}"
+            state="${yellow}$(printf "${state_f}" "<fn=1></fn>")${reset}"
         elif [[ "$state" == "Playing" ]]; then
-            state="${green}$(printf "${state_f}" "契")${reset}"
+            state="${green}$(printf "${state_f}" "<fn=1></fn>")${reset}"
         else
             state="${red}Unknown error${reset}"
         fi

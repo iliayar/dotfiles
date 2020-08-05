@@ -40,7 +40,7 @@
 
 ;; set font
 (set-face-attribute 'default nil
-                    :family "Hack Nerd Font Mono"
+                    :family "Hack"
                     :height 85)
 
 (setq company-math-allow-latex-symbols-in-faces t)
