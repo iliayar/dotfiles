@@ -20,5 +20,7 @@ jobs:
           install.sh
       run: |
         pwd
+	shellcheck install.sh
+	shellcheck ./install.sh
         shellcheck $SCRIPTS
       
