@@ -21,7 +21,8 @@
   "ff" 'counsel-find-file
   "cl" 'comment-or-uncomment-region
   "cf" 'counsel-grep-or-swiper
-  "op" 'treemacs)
+  "op" 'treemacs
+  "om" 'magit)
 
 
 ;; For all other keybindings

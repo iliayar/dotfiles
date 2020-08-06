@@ -1,4 +1,7 @@
--- Imports
+-------------------------------------------------
+------------------ Imports ----------------------
+-------------------------------------------------
+
 import Data.List
 import Data.Monoid
 import Data.Tree
@@ -13,10 +16,6 @@ import System.Directory
 import System.FilePath ((</>))
 import System.Environment
 
-import GHC.IO.Handle ( hDuplicateTo )
-import qualified GHC.IO.Encoding as GIO
-
--- import Control.Arrow (first)
 import Control.Monad
 
 import XMonad
@@ -68,21 +67,9 @@ import qualified XMonad.Actions.TreeSelect as TS
 
 import qualified XMonad.StackSet as W
 
---------------------------------------------------------
--- Functions
-
---redirectStdHandles :: IO ()
---redirectStdHandles = do
-  --home <- getEnv "HOME"
-  --let xmonadDir = home </>  ".xmonad"
-  --hClose stdout
-  --hClose stderr
-  --stdout' <- openFile (xmonadDir </> "xmonad-stdout.log") AppendMode
-  --stderr' <- openFile (xmonadDir </> "xmonad-stderr.log") AppendMode
-  --hDuplicateTo stdout' stdout
-  --hDuplicateTo stderr' stderr
-  --hSetBuffering stdout NoBuffering
-  --hSetBuffering stderr NoBuffering
+-------------------------------------------------
+----------------- Functions ---------------------
+-------------------------------------------------
 
 dropRdTuple :: (a, b, c) -> (a, b)
 dropRdTuple (a, b, _) = (a, b)
@@ -123,8 +110,6 @@ dzen' m = "(echo " ++
                          ]
 
 termShowKeybindings :: String -> X () 
--- termShowKeybindings m = spawn $ "termite --hold -e \"echo '" ++ m ++  "'\" -t 'temp-term'"
--- termShowKeybindings m = spawn $ "urxvt -title temp-term -hold -e 'echo' '" ++ m ++  "'"
 termShowKeybindings m = termSpawn tempTermiteHold $ "echo '" ++ m ++ "'"
 
 data Terminal = Termite
@@ -218,11 +203,11 @@ withDzenKeymapsPipe d m f = do
   f
   io $ hClose h
 
---------------------------------------------------------
--- Variables
+-------------------------------------------------
+----------------- Variables ---------------------
+-------------------------------------------------
 
 myTerminal      = "termite"
--- myTerminal      = "urxvt"
 
 myFont = "xft:Hack:size=9"
 
@@ -245,8 +230,9 @@ myWorkspacesClickable    = clickable . (map xmobarEscape) $ myWorkspaces
 myNormalBorderColor  = "#928374"
 myFocusedBorderColor = "#cc241d"
 
---------------------------------------------------------
--- GridSelect
+-------------------------------------------------
+---------------- GridSelect ---------------------
+-------------------------------------------------
 
 mygridConfig :: (a -> Bool -> X (String, String)) -> GSConfig a
 mygridConfig colorizer = (buildDefaultGSConfig colorizer)
@@ -279,8 +265,9 @@ myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
             , ("Termite", "termite")
             ]
 
---------------------------------------------------------
--- ScratchPads
+-------------------------------------------------
+--------------- Scratchpads ---------------------
+-------------------------------------------------
 
 myScratchPads :: [NamedScratchpad]
 myScratchPads = [ termApp termiteScratchpad "terminal" Nothing manageQuake
@@ -293,7 +280,6 @@ myScratchPads = [ termApp termiteScratchpad "terminal" Nothing manageQuake
                 ]
   where
     termApp term name cmd manage = NS name (termSpawnCmd $ term (name ++ "-scratchpad") cmd) (role =? (name ++ "-scratchpad")) manage
-    -- termApp name cmd manage = NS name ("urxvt -title " ++ name ++ "-scratchpad " ++ cmd) (title =? (name ++ "-scratchpad")) manage
 
     termiteScratchpad r = Termite Nothing (Just r) False [] 
     termiteScratchpadHold r = Termite Nothing (Just r) True [] 
@@ -307,8 +293,9 @@ myScratchPads = [ termApp termiteScratchpad "terminal" Nothing manageQuake
 
     role = stringProperty "WM_WINDOW_ROLE"
 
---------------------------------------------------------
--- TreeSelect
+-------------------------------------------------
+---------------- TreeSelect ---------------------
+-------------------------------------------------
 
 tsAll =
    [ Node (TS.TSNode "+ General" "General purpose applications" (return ()))
@@ -398,8 +385,10 @@ tsDefaultConfig = TS.TSConfig { TS.ts_hidechildren = True
                               , TS.ts_indent       = 80
                               , TS.ts_navigate     = TS.defaultNavigation
                               }
---------------------------------------------------------
--- Keybindings
+
+-------------------------------------------------
+---------------- Keybindings --------------------
+-------------------------------------------------
 
 myKeys = \conf -> let
   createSubmap m = submap $ mkKeymap conf $ map dropRdTuple $ addExitMap m
@@ -413,7 +402,6 @@ myKeys = \conf -> let
     , "stack ghc -- --make ~/.config/xmobar/xmobar_mon2.hs"
     , "xmonad --recompile"
     , "xmonad --restart"
-    -- , "notify-send 'restarting Xmonad'"
     , "echo \x1b[32mSucceed\x1b[m"
     , "sleep 1"
     ]
@@ -532,8 +520,9 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
                                        >> windows W.shiftMaster))
     ]
 
---------------------------------------------------------
--- Layouts
+-------------------------------------------------
+----------------- Layouts -----------------------
+-------------------------------------------------
 
 mySpacing :: Integer -> l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spacing l a
 mySpacing i = spacingRaw False (Border i i i i) True (Border i i i i) True
@@ -577,8 +566,6 @@ myLayout = avoidStruts
             $ mkToggle (single MIRROR)
             $ Grid (16/10)
     tabs    = renamed [Replace "tabs"]
-           -- I cannot add spacing to this layout because it will
-           -- add spacing between window and tabs which looks bad.
             $ tabbed shrinkText $ def
                    { fontName            = myFont
                    , activeColor         = "#282828"
@@ -589,8 +576,10 @@ myLayout = avoidStruts
                    , inactiveTextColor   = "#ebdbb2"
                    }
 
---------------------------------------------------------
--- Hooks
+-------------------------------------------------
+------------------ Hooks ------------------------
+-------------------------------------------------
+
 myManageHook = composeAll
   [ isFullscreen                       --> doFullFloat
   , className =? "Nitrogen"            --> doFloat
@@ -609,34 +598,32 @@ myCommands = [ ("XMonad config", (spawn "emacsclient -c -a emacs ~/.xmonad/xmona
              ++
              [("Switch to workspace " ++ n, windows $ W.greedyView i) | (n, i) <- zip myWorkspaces myWorkspacesClickable]
              ++
-             [ ("Switch layout", sendMessage NextLayout) -- 12
-             , ("Music scratchpad", namedScratchpadAction myScratchPads "spotify") -- 13
+             [ ("Switch layout", sendMessage NextLayout)
+             , ("Music scratchpad", namedScratchpadAction myScratchPads "spotify")
              ]
 
 
 myEventHook = serverModeEventHook' (return myCommands)
--- myEventHook = serverModeEventHook' (liftM2 (++) defaultCommands $ return myCommands)
           <+> serverModeEventHookCmd
           <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn)
           <+> docksEventHook
 
 myStartupHook = do
-          --io redirectStdHandles
           spawnOnce "~/.cargo/bin/spotifyd"
           spawnOnce "nitrogen --restore &"
           spawnOnce "picom --experimental-backends -b"
-          -- spawnOnce "/usr/lib/polkit-kde-authentication-agent-1"
           spawnOnce "lxpolkit"
           spawnOnce "stalonetray"
           spawnOnce "xsetroot -cursor_name arrow"
           spawnOnce "~/bin/blocks/music_xmobar_async.sh"
           spawn "xrdb ~/.Xresources"
-          -- setWMName "LG3D"
-          setWMName "Xmonad"
+          setWMName "LG3D"
           spawnOnce "emacs --daemon &"
 
---------------------------------------------------------
--- Prompt
+-------------------------------------------------
+------------------ Prompts ----------------------
+-------------------------------------------------
+
 myXPConfig :: XPConfig
 myXPConfig = def
       { font                = myFont
@@ -648,17 +635,16 @@ myXPConfig = def
       , promptBorderWidth   = 2
       , promptKeymap        = defaultXPKeymap
       , position            = Top
---    , position            = CenteredAt { xpCenterY = 0.3, xpWidth = 0.3 }
       , height              = 25
       , historySize         = 256
       , historyFilter       = id
       , defaultText         = []
-      , autoComplete        = Nothing  -- set Just 100000 for .1 sec
+      , autoComplete        = Nothing
       , showCompletionOnTab = False
       , searchPredicate     = fuzzyMatch
       , sorter              = fuzzySort
       , alwaysHighlight     = True
-      , maxComplRows        = Nothing      -- set to Just 5 for 5 rows
+      , maxComplRows        = Nothing
       }
 
 data App = App
@@ -720,11 +706,12 @@ anonGooglePrompt c =
 passInsertPrompt c =
     inputPrompt c "Add password" ?+ \query ->
          termSpawn tempTermite $ "pass insert " ++ query
---------------------------------------------------------
--- Main
+
+-------------------------------------------------
+------------------ Main -------------------------
+-------------------------------------------------
+
 main = do
-        -- Lets see how this fix work
-        -- closeFd 2 >> openFd ".xsession-errors" WriteOnly (Just 0644) defaultFileFlags
         GIO.setFileSystemEncoding GIO.char8
         homeDir <- getHomeDirectory
         xmproc0 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar"
@@ -750,8 +737,8 @@ main = do
                 , ppVisible = xmobarColor "#b8bb26" ""
                 , ppTitle   = xmobarColor "#fb4934" "" . shorten 15
                 , ppLayout  = (\x -> "<action=~/.xmonad/xmonadctl 12>" ++ x ++ "</action>")
-                , ppExtras  = [] -- [return $ Just "<fn=1>\xf063</fn>"]-- [windowCount]                           -- # of windows current workspace
-                , ppOrder   = \(ws:l:t:ex) -> [ws,l]++ex++[t] -- workspaces : layout : extras : title
+                , ppExtras  = []
+                , ppOrder   = \(ws:l:t:ex) -> [ws,l]++ex++[t]
                 },
         startupHook        = myStartupHook
     }
