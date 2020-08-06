@@ -12,4 +12,4 @@ jobs:
     steps:
     - name: Installing shellcheck
       run: |
-        apt-get update; apt-get install shellcheck
+        sudo apt-get update; sudo apt-get install shellcheck
