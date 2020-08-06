@@ -10,8 +10,6 @@ jobs:
     name: Shellcheck
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - name: Run ShellCheck
-      uses: ludeeus/action-shellcheck@2f2aa0d97fc8dfbed979cbc05a5380c256ba0922
-      with:
-        ignore: home other
+    - name: Installing shellcheck
+      run: |
+        apt-get update; apt-get install shellcheck
