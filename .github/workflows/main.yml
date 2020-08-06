@@ -14,7 +14,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install shellcheck
-    - name: Cloning
+    - name: Checkout
       uses: actions/checkout@v2
     - name: Cheking scripts
       env:
