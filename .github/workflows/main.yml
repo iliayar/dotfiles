@@ -18,5 +18,7 @@ jobs:
       env:
         SCRIPTS: |
           install.sh
-      run: shellcheck $SCRIPTS
+      run: |
+        pwd
+        shellcheck $SCRIPTS
       
