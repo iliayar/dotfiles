@@ -10,6 +10,8 @@ jobs:
     name: Shellcheck
     runs-on: ubuntu-latest
     steps:
+    - name: Cloning
+      uses: actions/checkout@v2
     - name: Installing shellcheck
       run: |
         sudo apt-get update
