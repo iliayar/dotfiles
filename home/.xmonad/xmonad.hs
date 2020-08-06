@@ -712,7 +712,6 @@ passInsertPrompt c =
 -------------------------------------------------
 
 main = do
-        GIO.setFileSystemEncoding GIO.char8
         homeDir <- getHomeDirectory
         xmproc0 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar"
         xmproc1 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_mon2"
