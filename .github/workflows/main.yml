@@ -10,6 +10,14 @@ jobs:
     name: Shellcheck
     runs-on: ubuntu-latest
     steps:
+    - name: Setting scripts for checking
+      env:
+        SCRIPTS: |
+	  install.sh
     - name: Installing shellcheck
       run: |
-        sudo apt-get update; sudo apt-get install shellcheck
+        sudo apt-get update
+	sudo apt-get install shellcheck
+    - name: Cheking scripts
+      run: shellcheck $SCRIPTS
+      
