@@ -3,7 +3,7 @@
 DIR=$(dirname "$(readlink -f "$0")")
 ST_PWD=$PWD
 
-cd "$DIR" || exit
+cd "$DIR"
 
 DEPS=()
 AUR_DEPS=()

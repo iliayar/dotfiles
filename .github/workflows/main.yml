@@ -21,6 +21,5 @@ jobs:
         SCRIPTS: |
           install.sh
       run: |
-        pwd
         shellcheck $SCRIPTS
       
