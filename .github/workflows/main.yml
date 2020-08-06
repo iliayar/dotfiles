@@ -10,19 +10,17 @@ jobs:
     name: Shellcheck
     runs-on: ubuntu-latest
     steps:
-    - name: Cloning
-      uses: actions/checkout@v2
     - name: Installing shellcheck
       run: |
         sudo apt-get update
         sudo apt-get install shellcheck
+    - name: Cloning
+      uses: actions/checkout@v2
     - name: Cheking scripts
       env:
         SCRIPTS: |
           install.sh
       run: |
         pwd
-        ls -la
-        shellcheck ./install.sh
         shellcheck $SCRIPTS
       
