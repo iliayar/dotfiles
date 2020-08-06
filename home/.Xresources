@@ -102,4 +102,5 @@ URxvt*background: rgba:1d00/2000/2100/bbbb
 URxvt*scrollBar: False
 URxvt*letterSpace: -1
 URxvt*font:      xft:Hack:size=9
+!URxvt*font:      xft:FontAwesome:size=9
 !URxvt.boldFont:  xft:Hack:style=bold:size=9

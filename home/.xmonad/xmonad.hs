@@ -14,6 +14,7 @@ import System.FilePath ((</>))
 import System.Environment
 
 import GHC.IO.Handle ( hDuplicateTo )
+import qualified GHC.IO.Encoding as GIO
 
 -- import Control.Arrow (first)
 import Control.Monad
@@ -178,13 +179,19 @@ termSpawnCmd (URxvt t h a cmd) = unwords
 termSpawn :: (Maybe String -> Terminal) -> String -> X()
 termSpawn t c = spawn $ termSpawnCmd $ t $ Just c
 
+termSpawn' :: Terminal -> X ()
+termSpawn' t = spawn $ termSpawnCmd t
+
 tempTermiteQuake = Termite (Just "temp-term-quake") Nothing False []
 tempTermiteHold = Termite (Just "temp-term") Nothing True []
 termite = Termite Nothing Nothing False []
 tempTermite = Termite (Just "temp-term") Nothing False []
 tempURxvt   = URxvt (Just "temp-term") False []
 
-wrapBash c = "bash -c '" ++ c ++ "'"
+wrapBash c = "bash -c 'source ~/.bashrc; " ++ c ++ "'"
+wrapZsh c = "zsh -c 'source ~/.zshrc; " ++ c ++ "'"
+
+
 
 windowCount :: X (Maybe String)
 windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
@@ -229,7 +236,7 @@ myBorderWidth   = 2
 
 myModMask       = mod4Mask
 
-myWorkspaces = "Music" : map show [1..9]
+myWorkspaces = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 myWorkspacesClickable    = clickable . (map xmobarEscape) $ myWorkspaces
     where
         clickable l = [ "<action=~/.xmonad/xmonadctl " ++ i ++ ">" ++ ws ++ "</action>" |
@@ -295,7 +302,7 @@ myScratchPads = [ termApp termiteScratchpad "terminal" Nothing manageQuake
     findNotes  = title =? "emacs-notes"
 
     manageNotes = customFloating $ W.RationalRect 0.05 0.05 0.9 0.9
-    manageWeather = customFloating $ W.RationalRect 0.1 0.1 0.53 0.64
+    manageWeather = customFloating $ W.RationalRect 0.05 0.05 0.53 0.64
     manageQuake = customFloating $ W.RationalRect 0 0 1 0.5
 
     role = stringProperty "WM_WINDOW_ROLE"
@@ -307,6 +314,7 @@ tsAll =
    [ Node (TS.TSNode "+ General" "General purpose applications" (return ()))
        [ Node (TS.TSNode "Pcmanfm" "File Manager" (spawn "pcmanfm")) []
        , Node (TS.TSNode "Brave" "Browser" (spawn "brave")) []
+       , Node (TS.TSNode "Neofetch" "Show off" (termSpawn' $ URxvt (Just "neofetch-term") True [] $ Just "neofetch --w3m --source ~/Themes/Neofetch.jpg --image_size none")) []
        ]
    , Node (TS.TSNode "+ Programming" "programming" (return ()))
        [ Node (TS.TSNode "IPython" "IPython interactive shell" (termSpawn termite "ipython")) []
@@ -591,6 +599,7 @@ myManageHook = composeAll
   , title     =? "xmessage"            --> doFloat
   , title     =? "temp-term"           --> (customFloating $ W.RationalRect 0.05 0.05 0.9 0.9)
   , title     =? "temp-term-quake"     --> (customFloating $ W.RationalRect 0 0 1 0.5)
+  , title     =? "neofetch-term"       --> (customFloating $ W.RationalRect 0.6 0.05 0.39 0.39)
   , manageDocks
   , namedScratchpadManageHook myScratchPads
   ]
@@ -622,7 +631,8 @@ myStartupHook = do
           spawnOnce "xsetroot -cursor_name arrow"
           spawnOnce "~/bin/blocks/music_xmobar_async.sh"
           spawn "xrdb ~/.Xresources"
-          setWMName "LG3D"
+          -- setWMName "LG3D"
+          setWMName "Xmonad"
           spawnOnce "emacs --daemon &"
 
 --------------------------------------------------------
@@ -714,7 +724,8 @@ passInsertPrompt c =
 -- Main
 main = do
         -- Lets see how this fix work
-        closeFd 2 >> openFd ".xsession-errors" WriteOnly (Just 0644) defaultFileFlags
+        -- closeFd 2 >> openFd ".xsession-errors" WriteOnly (Just 0644) defaultFileFlags
+        GIO.setFileSystemEncoding GIO.char8
         homeDir <- getHomeDirectory
         xmproc0 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar"
         xmproc1 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_mon2"
@@ -737,9 +748,9 @@ main = do
                   >> hPutStrLn xmproc1 x
                 , ppCurrent = xmobarColor "#b8bb26" "" . wrap "[" "]"
                 , ppVisible = xmobarColor "#b8bb26" ""
-                , ppTitle   = xmobarColor "#fb4934" "" . shorten 30
+                , ppTitle   = xmobarColor "#fb4934" "" . shorten 15
                 , ppLayout  = (\x -> "<action=~/.xmonad/xmonadctl 12>" ++ x ++ "</action>")
-                , ppExtras  = []-- [windowCount]                           -- # of windows current workspace
+                , ppExtras  = [] -- [return $ Just "<fn=1>\xf063</fn>"]-- [windowCount]                           -- # of windows current workspace
                 , ppOrder   = \(ws:l:t:ex) -> [ws,l]++ex++[t] -- workspaces : layout : extras : title
                 },
         startupHook        = myStartupHook
