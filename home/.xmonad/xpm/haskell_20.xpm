@@ -1,28 +1,24 @@
 /* XPM */
-static char *haskell_resized[] = {
+static char *haskell_20[] = {
 /* columns rows colors chars-per-pixel */
-"40 17 5 1 ",
+"20 9 9 1 ",
 "  c None",
-". c #453B61",
-"X c #5F5286",
-"o c #8D508A",
-"O c #8E508A",
+". c #443A60",
+"X c #453B60",
+"o c #453B61",
+"O c #5E5286",
+"+ c #5F5286",
+"@ c #5F5287",
+"# c #8E508A",
+"$ c #8F508A",
 /* pixels */
-"    .......   XXXXXXX                   ",
-"     .......  XXXXXXX                   ",
-"     .......   XXXXXXX                  ",
-"      .......   XXXXXXX  OOOOOOOOOOOOOOO",
-"       .......  XXXXXXX   OOOOOOOOOOOOOO",
-"       .......   XXXXXXX  OOOOOOOOOOOOOO",
-"        .......  XXXXXXXX  OOOOOOOOOOOOO",
-"         .......  XXXXXXX               ",
-"         .......   XXXXXXX              ",
-"         .......  XXXXXXXXX             ",
-"        .......   XXXXXXXXX   OOOOOOOOOO",
-"        .......  XXXXXXXXXXX  OOOOOOOOOO",
-"       .......  XXXXXXXXXXXXX  OOOOOOOOO",
-"      .......   XXXXXXXXXXXXX   OOOOOOOO",
-"      .......  XXXXXXX XXXXXXX   OOOOOOO",
-"     .......  XXXXXXX  XXXXXXX          ",
-"    .......   XXXXXXX   XXXXXXX         "
+"  oooo ++++         ",
+"   ooo  +++         ",
+"   oooo ++++ #######",
+"    oooo +++  ######",
+"     ooo ++++       ",
+"    oooo +++++ #####",
+"    ooo ++++++ #####",
+"   ooo  +++++++ ####",
+"  oooo ++++ +++     "
 };

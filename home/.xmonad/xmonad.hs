@@ -662,13 +662,14 @@ instance Eq a => Eq (PairFirst a b) where
 appPrompt :: XPConfig -> X ()
 appPrompt c = do
   userHome <- io $ getHomeDirectory
-  li <- fmap (nubPairs . catMaybes) $ io $ foldM (\acc -> fmap (acc++) . getApplications) []
+  li <- fmap (nubPairs . filterWithArgs . catMaybes) $ io $ foldM (\acc -> fmap (acc++) . getApplications) []
          [ "/usr/share/applications"
          , userHome ++ "/.local/share/applications"
          ]
   let compl = \s -> fst <$> filter (fuzzyMatch s . fst) li
   mkXPrompt App c (return . compl) (spawn . (M.fromList li M.!))
   where
+    filterWithArgs = filter (\ (_, c) -> not $ '%' `elem` c)
     nubPairs = map getPairFirst . nub . map PairFirst
 
 
