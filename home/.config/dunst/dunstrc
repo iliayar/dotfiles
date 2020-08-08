@@ -21,8 +21,12 @@
     #   %I  iconname (without its path)
     #   %p  progress value if set ([  0%] to [100%]) or nothing
     # Markup is allowed
-    format = "%s %p\n%b"
-    
+    format = "<b>%s</b> %p\n%b\n<span size="7500">%a</span>"
+
+    max_icon_size = 80
+
+    corner_radius=10
+
     # Sort messages by urgency.
     sort = yes
     
@@ -65,7 +69,7 @@
     # the top and down respectevly.
     # The width can be negative.  In this case the actual width is the
     # screen width minus the width defined in within the geometry option.
-    geometry = "500x10-15-30"
+    geometry = "400x5-15-30"
     
     # Shrink window if it's smaller than the width.  Will be ignored if
     # width is 0.
@@ -96,7 +100,7 @@
     # 
     # If this option is set to mouse or keyboard, the monitor option
     # will be ignored.
-    follow = mo`use
+    follow = none
     
     # Should a notification popped up from history be sticky or timeout
     # as if it would normally do.
@@ -142,7 +146,7 @@
     dmenu = /usr/bin/dmenu -p dunst:
     
     # Browser for opening urls in context menu.
-    browser = firefox
+    browser = brave
 
     # Align icons left/right/off
     icon_position = left
@@ -151,8 +155,8 @@
     icon_folders = /usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x16/devices/
 
 [frame]
-    width = 2
-    color = "#81a2be"
+    width = 1
+    color = "#454947"
 
 [shortcuts]
 

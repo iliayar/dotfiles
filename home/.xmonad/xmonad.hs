@@ -258,8 +258,9 @@ spawnSelected' = runSelectedAction (mygridConfig orange) . map (\(a, b) -> (a, s
 
 myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
             , ("Brave", "brave")
-            , ("Spotify", "spotify")
             , ("Telegram", "telegram-desktop")
+            , ("Qutebrowser", "qutebrowse r")
+            -- , ("Spotify", "spotify")
             , ("File Manager", "pcmanfm")
             , ("Urxvt", "urxvt")
             , ("Termite", "termite")
@@ -500,7 +501,7 @@ myKeys = \conf -> let
                 \scrot " ++ p ++ " -e '\
                                 \xclip -selection clipboard -t image/png -i $f;\
                                 \mv $f ~/Pictures/screenshots/;\
-                                \notify-send \"Screenshot saved: $f\";'"
+                                \notify-send -a 'XMonad' 'Scrot' \"Screenshot copied to clipboard\" -i \"~/Pictures/screenshots/$f\"'"
       playerctl a = spawn $ "playerctl " ++ a ++ " -p spotifyd"
       createSearchPrompt = map (\ (a, b, c) -> (a, S.promptSearch myXPConfig b, c))
       createSearchSelect = map (\ (a, b, c) -> (a, S.selectSearch b, c))
@@ -570,7 +571,7 @@ myLayout = avoidStruts
                    { fontName            = myFont
                    , activeColor         = "#282828"
                    , inactiveColor       = "#1d2021"
-                   , activeBorderColor   = "#292d3e"
+                   , activeBorderColor   = "#cc241d"
                    , inactiveBorderColor = "#292d3e"
                    , activeTextColor     = "#fb4934"
                    , inactiveTextColor   = "#ebdbb2"

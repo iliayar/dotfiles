@@ -1,7 +1,9 @@
 #!/bin/bash
 
-PLAYER=spotifyd
-PLAYER_CMD="~/.cargo/bin/spotifyd"
+#PLAYER=spotifyd
+#PLAYER_CMD="~/.cargo/bin/spotifyd"
+PLAYER=spotify
+PLAYER_CMD="spotify"
 
 red="<fc=$(xrdb -query | grep color1: | gawk '{ print $2 }')>"
 green="<fc=$(xrdb -query | grep color2: | gawk '{ print $2 }')>"

@@ -1,4 +1,4 @@
-notify-send "Fetching pacman and aur updates"
+notify-send "Updates" "Fetching pacman and aur updates" -a "XMobar" -i "/usr/share/icons/Adwaita/96x96/emblems/emblem-synchronizing-symbolic.symbolic.png"
 
 PACNUM="$(checkupdates | wc -l)"
 AURNUM="$(yay -Qum | wc -l)"
