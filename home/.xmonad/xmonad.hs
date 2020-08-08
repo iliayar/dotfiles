@@ -259,7 +259,7 @@ spawnSelected' = runSelectedAction (mygridConfig orange) . map (\(a, b) -> (a, s
 myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
             , ("Brave", "brave")
             , ("Telegram", "telegram-desktop")
-            , ("Qutebrowser", "qutebrowse r")
+            , ("Qutebrowser", "qutebrowser")
             -- , ("Spotify", "spotify")
             , ("File Manager", "pcmanfm")
             , ("Urxvt", "urxvt")
@@ -399,8 +399,9 @@ myKeys = \conf -> let
   restartRecompile = wrapBash $ (++" || (echo \x1b[31mFailed\x1b[m; killall xmessage; echo Press Enter; read)") $ wrap "(" ")" $ intercalate " && "
     [ "cd ~/.xmonad"
     , "stack ghc -- --make ~/.xmonad/xmonadctl.hs"
-    , "stack ghc -- --make ~/.config/xmobar/xmobar.hs"
-    , "stack ghc -- --make ~/.config/xmobar/xmobar_mon2.hs"
+    , "stack ghc -- --make ~/.config/xmobar/xmobar.hs  -i$HOME/.config/xmobar/"
+    , "stack ghc -- --make ~/.config/xmobar/xmobar_top.hs  -i$HOME/.config/xmobar/"
+    , "stack ghc -- --make ~/.config/xmobar/xmobar_mon2.hs  -i$HOME/.config/xmobar/"
     , "xmonad --recompile"
     , "xmonad --restart"
     , "echo \x1b[32mSucceed\x1b[m"
@@ -502,7 +503,7 @@ myKeys = \conf -> let
                                 \xclip -selection clipboard -t image/png -i $f;\
                                 \mv $f ~/Pictures/screenshots/;\
                                 \notify-send -a 'XMonad' 'Scrot' \"Screenshot copied to clipboard\" -i \"~/Pictures/screenshots/$f\"'"
-      playerctl a = spawn $ "playerctl " ++ a ++ " -p spotifyd"
+      playerctl a = spawn $ "playerctl " ++ a ++ " -p spotify"
       createSearchPrompt = map (\ (a, b, c) -> (a, S.promptSearch myXPConfig b, c))
       createSearchSelect = map (\ (a, b, c) -> (a, S.selectSearch b, c))
       archwiki = S.searchEngine "archwiki" "https://wiki.archlinux.org/index.php?search="
@@ -717,6 +718,7 @@ main = do
         homeDir <- getHomeDirectory
         xmproc0 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar"
         xmproc1 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_mon2"
+        xmproc2 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_top"
         xmonad $ ewmh def {
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,

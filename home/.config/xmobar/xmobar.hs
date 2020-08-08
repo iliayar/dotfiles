@@ -1,21 +1,7 @@
 import Xmobar
 
--- TODO xresources
-red, green, yellow :: String
-red    = "#fb4934"
-green  = "#b8bb26"
-yellow = "#fabd2f"
+import Helpers
 
-icon :: String -> String
-icon f = "<icon=" ++ f ++".xpm/>"
-
-afIcon :: String -> String
-afIcon s = "<fn=1>" ++ s ++ "</fn>"
-
-setColor :: String -> String -> String
-setColor color s = "<fc=" ++ color ++ ">" ++ s ++ "</fc>"
-
-  
 config :: Config
 config = defaultConfig { 
 
@@ -43,25 +29,8 @@ config = defaultConfig {
    , persistent =       True    -- enable/disable hiding (True = disabled)
    , iconRoot = "/home/iliayar/.xmonad/xpm/"  -- default: "."
 
-   -- plugins
-   --   Numbers can be automatically colored according to their value. xmobar
-   --   decides color based on a three-tier/two-cutoff system, controlled by
-   --   command options:
-   --     --Low sets the low cutoff
-   --     --High sets the high cutoff
-   --
-   --     --low sets the color below --Low cutoff
-   --     --normal sets the color between --Low and --High cutoffs
-   --     --High sets the color above --High cutoff
-   --
-   --   The --template option controls how the plugin is displayed. Text
-   --   color can be set by enclosing in <fc></fc> tags. For more details
-   --   see http://projects.haskell.org/xmobar/#system-monitor-plugins.
    , commands = 
 
-        -- weather monitor
-        -- %RJTT% in template
-        -- RJTT is station id
         [ Run $ Weather "RJTT" [ "--template", "<station> | <skyCondition> | <fc=#4682B4><tempC></fc>°C | <fc=#4682B4><rh></fc>% | <fc=#4682B4><pressure></fc>hPa"
                              ] 36000
 
