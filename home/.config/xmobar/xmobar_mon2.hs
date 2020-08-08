@@ -7,6 +7,7 @@ config = defaultConfig {
 
    -- appearance
      font =         "xft:Hack:size=8:bold:antialias=true"
+   , additionalFonts = ["xft:FontAwesome5Brands:pixelsize=14,FontAwesome5Free:style=Solid:pixelsize=14"]
    , bgColor     =  "#1d2021"
    , fgColor     =  "#eddbb2"
    , alpha       =  255
@@ -30,99 +31,10 @@ config = defaultConfig {
 
    , commands = 
 
-        [ Run $ Weather "RJTT" [ "--template", "<station> | <skyCondition> | <fc=#4682B4><tempC></fc>°C | <fc=#4682B4><rh></fc>% | <fc=#4682B4><pressure></fc>hPa"
-                             ] 36000
-
-        -- Screen brightness
-        , Run $ Brightness     [ "--template" , "\62943 <percent>"
-                             , "--"
-                             , "-D" , "intel_backlight"
-                             ] 10
-
-        -- Volume
-        , Run $ Volume "default" "Master"
-                             [ "--template" , "<status> <volume>%"
-                             , "--"
-                             , "--on"       , "\61602"
-                             , "--onc"      , green
-                             , "--off"      , "\61943"
-                             , "--offc"     , red
-                             ] 10
-
-        -- network activity monitor (dynamic interface resolution)
-        , Run $ DynNetwork     [ "--template" , "<dev>: \61813<rx>kB/s \61814<tx>kB/s"
-                             , "--Low"      , "1000"       -- units: B/s
-                             , "--High"     , "5000"       -- units: B/s
-                             , "--low"      , green
-                             , "--normal"   , yellow
-                             , "--high"     , red
-                             ] 10
-
-        -- cpu activity monitor
-        , Run $ MultiCpu       [ "--template" , "\63578 <total0>%|<total1>%"
-                             , "--Low"      , "50"         -- units: %
-                             , "--High"     , "85"         -- units: %
-                             , "--low"      , green
-                             , "--normal"   , yellow
-                             , "--high"     , red
-                             ] 10
-
-        -- cpu core temperature monitor
-        , Run $ MultiCoreTemp       [ "--template" , "\57866<avg>°C"
-                             , "--Low"      , "70"        -- units: °C
-                             , "--High"     , "80"        -- units: °C
-                             , "--low"      , green
-                             , "--normal"   , yellow
-                             , "--high"     , red
-                             ] 50
-                          
-        -- memory usage monitor
-        , Run $ Memory         [ "--template" ,"\62611 [<used>M] <usedratio>%"
-                             , "--Low"      , "20"        -- units: %
-                             , "--High"     , "90"        -- units: %
-                             , "--low"      , green
-                             , "--normal"   , yellow
-                             , "--high"     , red
-                             ] 10
-
-        -- battery monitor
-        , Run $ Battery        [ "--template" , "\62016 <acstatus>"
-                             , "--Low"      , "10"        -- units: %
-                             , "--High"     , "80"        -- units: %
-                             , "--low"      , red
-                             , "--normal"   , yellow
-                             , "--high"     , green
-
-                             , "--" -- battery specific options
-                                       -- discharging status
-                                       , "-o"    , "<left>% (<timeleft>)"
-                                       -- AC "on" status
-                                       , "-O"    , setColor yellow "Charging"
-                                       -- charged status
-                                       , "-i"    , setColor green "Charged"
-                             ] 50
-
-        -- time and date indicator 
-        --   (%F = y-m-d date, %a = day of week, %T = h:m:s time)
-        , Run $ Date           "%F (%a) %T" "date" 10
-
-        -- keyboard layout indicator
-        , Run $ Kbd          [ ("ru"         , setColor red "RU")
-                             , ("us"         , setColor green "US")
-                             ]
-        , Run $ DiskU [("/", "/ <usedp>%")]
-                    [ "--Low"      , "20"
-                    , "--High"     , "50"
-                    , "--low"      , green
-                    , "--normal"   , yellow
-                    , "--high"     , red
-                    ]
-                    20
+        [  Run $ Date           "%F (%a) %T" "date" 10
 
         -- Xmonad worspaces and program title
         , Run $ UnsafeStdinReader
-        , Run $ Com "bash" ["-c", "~/bin/blocks/pacman_xmobar.sh &"] "updates" 36000
-        , Run $ Com "bash" ["-c", "~/bin/blocks/music_xmobar.sh"] "music" 10
         ]
    }
 main :: IO ()
