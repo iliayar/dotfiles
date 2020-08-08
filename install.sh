@@ -109,7 +109,7 @@ common() {
         light
         xbindkeys
         feh
-        awesome-terminal-fonts
+        ttf-font-awesome
         ttf-hack
     )
     AUR_DEPS+=(

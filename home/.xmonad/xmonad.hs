@@ -16,6 +16,10 @@ import System.Directory
 import System.FilePath ((</>))
 import System.Environment
 
+import Codec.Binary.UTF8.String (decodeString)
+
+-- import qualified System.IO.UTF8 as UTF8
+
 import Control.Monad
 
 import XMonad
@@ -221,8 +225,9 @@ myBorderWidth   = 2
 
 myModMask       = mod4Mask
 
-myWorkspaces = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-myWorkspacesClickable    = clickable . (map xmobarEscape) $ myWorkspaces
+myWorkspaces = ["<fn=1>\xf001</fn>", "1", "<fn=1>\xf1c9</fn>", "3", "4", "5", "6", "7", "<fn=1>\xf268</fn>", "9"]
+myWorkspacesClickable    = clickable myWorkspaces
+-- myWorkspacesClickable    = clickable . (map xmobarEscape) $ myWorkspaces
     where
         clickable l = [ "<action=~/.xmonad/xmonadctl " ++ i ++ ">" ++ ws ++ "</action>" |
                       (i,ws) <- zip (map show [2..11]) l]
@@ -718,7 +723,7 @@ main = do
         homeDir <- getHomeDirectory
         xmproc0 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar"
         xmproc1 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_mon2"
-        xmproc2 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_top"
+        -- xmproc2 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_top"
         xmonad $ ewmh def {
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
@@ -734,14 +739,20 @@ main = do
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
         logHook            = dynamicLogWithPP xmobarPP
-                { ppOutput  = \x -> hPutStrLn xmproc0 x
-                  >> hPutStrLn xmproc1 x
+                { ppOutput  = \x -> let encX = decodeString x
+                  in
+                     hPutStrLn xmproc0 encX
+                  >> hPutStrLn xmproc1 encX
+                  -- >> appendFile "/tmp/.xmonad_data" (deodeString x)
                 , ppCurrent = xmobarColor "#b8bb26" "" . wrap "[" "]"
                 , ppVisible = xmobarColor "#b8bb26" ""
-                , ppTitle   = xmobarColor "#fb4934" "" . shorten 15
+                , ppTitle   = xmobarColor "#fb4934" "" . shorten 25
                 , ppLayout  = (\x -> "<action=~/.xmonad/xmonadctl 12>" ++ x ++ "</action>")
                 , ppExtras  = []
                 , ppOrder   = \(ws:l:t:ex) -> [ws,l]++ex++[t]
                 },
+        -- logHook = io (do
+        --               hPutStrLn xmproc0 "Тест"
+        --           ),
         startupHook        = myStartupHook
     }

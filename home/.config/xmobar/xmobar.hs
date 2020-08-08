@@ -8,7 +8,7 @@ config = defaultConfig {
    -- appearance
      font =         "xft:Hack:size=8:bold:antialias=true"
    , bgColor     =  "#1d2021"
-   , additionalFonts = ["xft:FontAwesome:pixelsize=12"]
+   , additionalFonts = ["xft:FontAwesome5Brands:pixelsize=14,FontAwesome5Free:style=Solid:pixelsize=14"]
    , fgColor     =  "#ebdbb2"
    , alpha       =  255
    , position   = OnScreen 0 $ Bottom
@@ -35,7 +35,7 @@ config = defaultConfig {
                              ] 36000
 
         -- Screen brightness
-        , Run $ Brightness   [ "--template" , (icon "brightness") ++ " <percent>"
+        , Run $ Brightness   [ "--template" , (afIcon "\xf185") ++ " <percent>"
                              , "--"
                              , "-D" , "intel_backlight"
                              ] 10
@@ -44,9 +44,9 @@ config = defaultConfig {
         , Run $ Volume "default" "Master"
                              [ "--template" , "<action=pactl set-sink-mute '@DEFAULT_SINK@' toggle><status> <volume>%</action>"
                              , "--"
-                             , "--on"       , icon "sound"
+                             , "--on"       , afIcon "\xf028"
                              , "--onc"      , green
-                             , "--off"      , icon "sound_mute"
+                             , "--off"      , afIcon "\xf6a9"
                              , "--offc"     , red
                              ] 10
 
@@ -71,7 +71,7 @@ config = defaultConfig {
                              ] 10
 
         -- cpu core temperature monitor
-        , Run $ MultiCoreTemp       [ "--template" , (icon "temperature") ++ "<avg>°C"
+        , Run $ MultiCoreTemp       [ "--template" , (afIcon "\xf2c9") ++ "<avg>°C"
                              , "--Low"      , "70"        -- units: °C
                              , "--High"     , "80"        -- units: °C
                              , "--low"      , green
@@ -80,7 +80,7 @@ config = defaultConfig {
                              ] 50
                           
         -- memory usage monitor
-        , Run $ Memory       [ "--template" , (icon "memory") ++ " <available> M"
+        , Run $ Memory       [ "--template" , (afIcon "\xf538") ++ " <available> M"
                              , "--Low"      , "2000"        -- units: M
                              , "--High"     , "6000"        -- units: M
                              , "--low"      , red
@@ -90,14 +90,27 @@ config = defaultConfig {
 
         -- battery monitor
         , Run $ Battery        [ "--template" ,  "<acstatus>"
-
-                             , "--" -- battery specific options
+                               , "--Low"      , "20"        -- units: %
+                               , "--High"     , "70"        -- units: %
+                               , "--low"      , red
+                               , "--normal"   , yellow
+                               , "--high"     , green
+                               , "--" -- battery specific options
                                        -- discharging status
-                                       , "-o"    , (icon "battery_bad") ++ "<left>%"
+                                       , "-o"    , "<left>% <watts>"
                                        -- AC "on" status
-                                       , "-O"    , icon "battery_norm"
+                                       , "-O"    , afIcon "\xf242"
                                        -- charged status
-                                       , "-i"    , icon "battery"
+                                       , "-i"    , afIcon "\xf240"
+                                       , "-L", "-15"
+                                       , "-H", "-5"
+                                       , "-l", red
+                                       , "-m", yellow
+                                       , "-h", green
+                                       , "-p", green
+                                       , "--lows", afIcon "\xf244 "
+                                       , "--mediums", afIcon "\xf242 "
+                                       , "--highs", afIcon "\xf240 "
                              ] 50
 
         -- time and date indicator 
