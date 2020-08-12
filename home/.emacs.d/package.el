@@ -167,6 +167,10 @@
 (use-package lsp-latex
   :ensure t)
 
+;; Yaml
+(use-package yaml-mode
+  :ensure t)
+
 ;; Org mode
 (use-package org-bullets
   :ensure t)

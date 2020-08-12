@@ -402,7 +402,7 @@ tsDefaultConfig = TS.TSConfig { TS.ts_hidechildren = True
 -------------------------------------------------
 
 myKeys = \conf -> let
-  createSubmap m = submap $ mkKeymap conf $ map dropRdTuple $ addExitMap m
+  createSubmap m = submap $ mkKeymap conf $ map ((\ (k, a) -> (k, spawn "killall dzen2"  >> a)) . dropRdTuple) $ addExitMap m
   prefix p m d = (p, withDzenKeymapsPipe d m $ createSubmap m,
                   "+ " ++ d ++ "\n" ++ getHelp m)
   dzenAllBindings = withDzenKeymapsPipe "Keybindings" keymap $ createSubmap []
@@ -430,7 +430,7 @@ myKeys = \conf -> let
     , ("M-<Space>"   , sendMessage NextLayout                                 , "Cicle layouts"            )
     , ("M-<Return>"  , spawn $ XMonad.terminal conf                           , "Launch terminal"          )
     , ("M-S-/"       , termShowKeybindings $ getHelp keymap                   , "Show this help"           )
-    , ("M-S-c"       , termSpawn tempTermite restartRecompile                                 , "Recompile, restart XMonad")
+    , ("M-S-c"       , termSpawn tempTermite restartRecompile                 , "Recompile, restart XMonad")
     , ("M-S-d"       , spawn "notify-send 'DUNST_COMMAND_TOGGLE'"             , "Toggle notifications"     )
     , ("M-S-j"       , windows W.swapDown                                     , "Swap window with prev"    )
     , ("M-S-k"       , windows W.swapUp                                       , "Swap window with next"    )
