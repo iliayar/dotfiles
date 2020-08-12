@@ -85,7 +85,7 @@ source $ZSH/oh-my-zsh.sh
 
 # alias svim="/usr/bin/vim"
 # alias vim="/usr/bin/vim -Nu ~/.myvim/.vimrc"
-alias neofetch="neofetch --w3m --source ~/Themes/Neofetch.jpg"
+alias neofetch="neofetch --w3m --source ~/Themes/Neofetch.png"
 alias vim="nvim"
 alias emacs="emacsclient -c -a vim"
 alias emacs-git="emacsclient -c -a vim -e '(progn (magit) (delete-other-windows))'"

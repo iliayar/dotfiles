@@ -207,6 +207,8 @@ withDzenKeymapsPipe d m f = do
   f
   io $ hClose h
 
+afIcon s = "<fn=1>" ++ s ++ "</fn>"
+
 -------------------------------------------------
 ----------------- Variables ---------------------
 -------------------------------------------------
@@ -225,7 +227,7 @@ myBorderWidth   = 2
 
 myModMask       = mod4Mask
 
-myWorkspaces = ["<fn=1>\xf001</fn>", "1", "<fn=1>\xf1c9</fn>", "3", "4", "5", "6", "7", "<fn=1>\xf268</fn>", "9"]
+myWorkspaces = [afIcon "\xf001", afIcon "\xf120", afIcon "\xf1c9", "3", afIcon "\xf3f6", "5", "6", "7", afIcon "\xf268", afIcon "\xf3fe"]
 myWorkspacesClickable    = clickable myWorkspaces
 -- myWorkspacesClickable    = clickable . (map xmobarEscape) $ myWorkspaces
     where
@@ -269,6 +271,8 @@ myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
             , ("File Manager", "pcmanfm")
             , ("Urxvt", "urxvt")
             , ("Termite", "termite")
+            , ("Discord", "discord")
+            , ("Steam", "steam")
             ]
 
 -------------------------------------------------
@@ -290,7 +294,7 @@ myScratchPads = [ termApp termiteScratchpad "terminal" Nothing manageQuake
     termiteScratchpad r = Termite Nothing (Just r) False [] 
     termiteScratchpadHold r = Termite Nothing (Just r) True [] 
 
-    spawnNotes = "emacsclient -c -a emacs -F '(quote (name . \"emacs-notes\"))' ~/.org/Notes.org"
+    spawnNotes = "emacsclient -c -a emacs -F '(quote (name . \"emacs-notes\"))' ~/org/Notes.org"
     findNotes  = title =? "emacs-notes"
 
     manageNotes = customFloating $ W.RationalRect 0.05 0.05 0.9 0.9
@@ -307,7 +311,7 @@ tsAll =
    [ Node (TS.TSNode "+ General" "General purpose applications" (return ()))
        [ Node (TS.TSNode "Pcmanfm" "File Manager" (spawn "pcmanfm")) []
        , Node (TS.TSNode "Brave" "Browser" (spawn "brave")) []
-       , Node (TS.TSNode "Neofetch" "Show off" (termSpawn' $ URxvt (Just "neofetch-term") True [] $ Just "neofetch --w3m --source ~/Themes/Neofetch.jpg --image_size none")) []
+       , Node (TS.TSNode "Neofetch" "Show off" (termSpawn' $ URxvt (Just "neofetch-term") True [] $ Just "neofetch --w3m --source ~/Themes/Neofetch.png --image_size 360")) []
        ]
    , Node (TS.TSNode "+ Programming" "programming" (return ()))
        [ Node (TS.TSNode "IPython" "IPython interactive shell" (termSpawn termite "ipython")) []
@@ -349,12 +353,13 @@ tsCommands =
    , Node (TS.TSNode "Pacman update" "Get updates from pacman" (termSpawn termite "sudo pacman -Syyu")) []
    , Node (TS.TSNode "AUR update" "Get updates from AUR" (termSpawn termite "yay -Syyu")) []
    , Node (TS.TSNode "+ Pass" "Pass commands" (return ()))
-     [ Node (TS.TSNode "Push" "Push to remote" (termSpawn tempTermiteQuake $ wrapBash $ (++ "; sleep 1")
-                                                $ intercalate "; " $ map (\ x -> "echo " ++ x ++ "; pass git push " ++ x ++ " master")
-                                                ["origin", "github", "gitlab"])) []
-     , Node (TS.TSNode "Pull" "Pull from remote" (spawn "pass git pull origin master")) []
+     [ Node (TS.TSNode "Push" "Push to remote" $ gitCmd "push" ["origin", "github", "gitlab"]) []
+     , Node (TS.TSNode "Pull" "Pull from remote" $ gitCmd "pull" ["origin"]) []
      ]
    ]
+  where gitCmd s h =
+          (termSpawn tempTermiteQuake $ wrapBash $ (++ "; sleep 1")
+            $ intercalate "; " $ map (\ x -> "echo " ++ x ++ "; pass git " ++ s ++  " " ++ x ++ " master") h)
   
 tsLayout =
    [ Node (TS.TSNode "Tile" "Make Window Tiled" (withFocused $ windows . W.sink)) []
@@ -415,6 +420,8 @@ myKeys = \conf -> let
   keymap =
     [ ("M-."         , sendMessage (IncMasterN (-1))                          , "Decrease Master N"        )
     , ("M-,"         , sendMessage (IncMasterN 1)                             , "Increase Master N"        )
+    , ("M-a"         , sendMessage MirrorShrink                               , "Mirror shrink"            )
+    , ("M-z"         , sendMessage MirrorExpand                               , "Mirror expand"            )
     , ("M-h"         , sendMessage Shrink                                     , "Shrink window"            )
     , ("M-j"         , windows W.focusDown                                    , "Prev window"              )
     , ("M-k"         , windows W.focusUp                                      , "Next window"              )
@@ -508,7 +515,7 @@ myKeys = \conf -> let
                                 \xclip -selection clipboard -t image/png -i $f;\
                                 \mv $f ~/Pictures/screenshots/;\
                                 \notify-send -a 'XMonad' 'Scrot' \"Screenshot copied to clipboard\" -i \"~/Pictures/screenshots/$f\"'"
-      playerctl a = spawn $ "playerctl " ++ a ++ " -p spotify"
+      playerctl a = spawn $ "playerctl " ++ a ++ " -p spotifyd"
       createSearchPrompt = map (\ (a, b, c) -> (a, S.promptSearch myXPConfig b, c))
       createSearchSelect = map (\ (a, b, c) -> (a, S.selectSearch b, c))
       archwiki = S.searchEngine "archwiki" "https://wiki.archlinux.org/index.php?search="
@@ -546,9 +553,10 @@ myLayout = avoidStruts
          ||| floats
          ||| noBorders tabs
          ||| magnify
-         ||| noBorders monocle
-         ||| spirals
+         -- ||| noBorders monocle
+         -- ||| spirals
          ||| grid
+         -- ||| tile
   where
     tall    = renamed [Replace "tall"]
             $ limitWindows 12
@@ -562,16 +570,20 @@ myLayout = avoidStruts
             $ limitWindows 12
             $ mySpacing 6
             $ ResizableTall 1 (3/100) (1/2) []
-    monocle = renamed [Replace "monocle"]
-            $ limitWindows 20 Full
-    spirals = renamed [Replace "spirals"]
-            $ mySpacing' 4
-            $ spiral (6/7)
+    -- monocle = renamed [Replace "monocle"]
+    --         $ limitWindows 20 Full
+    -- spirals = renamed [Replace "spirals"]
+    --         $ mySpacing' 4
+    --         $ spiral (6/7)
     grid    = renamed [Replace "grid"]
             $ limitWindows 12
-            $ mySpacing 4
+            -- $ mySpacing 4
             $ mkToggle (single MIRROR)
+            $ mkToggle (single NOBORDERS)
             $ Grid (16/10)
+    -- tile    = renamed [Replace "tile"]
+    --         $ limitWindows 12
+    --         $ ResizableTall 1 (5/100) (1/3) []
     tabs    = renamed [Replace "tabs"]
             $ tabbed shrinkText $ def
                    { fontName            = myFont
@@ -595,7 +607,7 @@ myManageHook = composeAll
   , title     =? "xmessage"            --> doFloat
   , title     =? "temp-term"           --> (customFloating $ W.RationalRect 0.05 0.05 0.9 0.9)
   , title     =? "temp-term-quake"     --> (customFloating $ W.RationalRect 0 0 1 0.5)
-  , title     =? "neofetch-term"       --> (customFloating $ W.RationalRect 0.6 0.05 0.39 0.39)
+  , title     =? "neofetch-term"       --> (customFloating $ W.RationalRect 0.5 0.05 0.45 0.45)
   , manageDocks
   , namedScratchpadManageHook myScratchPads
   ]

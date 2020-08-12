@@ -52,6 +52,9 @@ Plug 'preservim/nerdcommenter'
 " Gruvbox
 Plug 'morhetz/gruvbox'
 
+" Improved search
+Plug 'easymotion/vim-easymotion'
+
 call plug#end()
 
 " Gruvbox colorscheme
@@ -71,8 +74,10 @@ au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadBraces
 
 
+nnoremap <ESC> :noh<CR>
 nnoremap <leader>op :NERDTreeToggle<CR>
 
+map gs <Plug>(easymotion-sn)
 
 " Copy to system clipboard whem exit
 autocmd VimLeave * call system("xsel -ib", getreg('+'))

@@ -29,6 +29,12 @@
 (use-package magit
   :ensure t)
 
+;; Hightlight TODO words
+(use-package hl-todo
+  :ensure t
+  :config
+  (global-hl-todo-mode t))
+
 ;; Key hints
 (use-package which-key
   :ensure t

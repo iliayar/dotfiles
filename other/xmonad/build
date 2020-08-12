@@ -5,6 +5,6 @@ exec stack ghc -- \
   -ilib \
   -fforce-recomp \
   -main-is main \
-  -v0 \
+  -v1 \
   -o "$1"
 

@@ -2,8 +2,6 @@
 
 (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
 
-(setq org-agenda-files '("~/.org"))
-
 (setq dashboard-items '((recents  . 5)
                         ;(bookmarks . 5)
                         (projects . 5)
@@ -27,6 +25,8 @@
 (global-hl-line-mode 1) ; highlight current line
 (eldoc-mode 1) ; enable docs in minibuffer
 ;; (setq inhibit-startup-screen 1) ; no start screen
+
+(setq ivy-use-selectable-prompt t)
 
 ;; store all backups in a single directory 
 (setq backup-directory-alist
@@ -61,6 +61,12 @@
                         '(("^ *\\([-]\\) "
                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
+(setq org-agenda-files '("~/org"))
+(setq org-default-notes-file (concat org-directory "/Notes.org"))
+
+(eval-after-load "org"
+  '(require 'ox-md nil t))
+
 (setq ivy-initial-inputs-alist nil)
 
 (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
@@ -72,3 +78,8 @@
 (cl-loop for (mode . state) in '( (dired-mode . emacs)
                              )
       do (evil-set-initial-state mode state))
+
+;; Highlight TODO colors
+(setq hl-todo-keyword-faces
+      '(("TODO"   . "#fabd2f")
+        ("FIXME"  . "#fb4934")))
