@@ -183,6 +183,10 @@
 (use-package ace-window
   :ensure t)
 
+;; Formatting
+(use-package format-all
+  :ensure t)
+
 ;; Keybindings
 (use-package general
   :ensure t)

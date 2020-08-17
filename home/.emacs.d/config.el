@@ -67,6 +67,9 @@
 (eval-after-load "org"
   '(require 'ox-md nil t))
 
+(setq org-todo-keywords
+      '((sequence "TODO" "FIXME" "|" "DONE" )))
+
 (setq ivy-initial-inputs-alist nil)
 
 (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))

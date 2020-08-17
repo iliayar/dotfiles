@@ -227,7 +227,7 @@ myBorderWidth   = 2
 
 myModMask       = mod4Mask
 
-myWorkspaces = [afIcon "\xf001", afIcon "\xf120", afIcon "\xf1c9", "3", afIcon "\xf3f6", "5", "6", "7", afIcon "\xf268", afIcon "\xf3fe"]
+myWorkspaces = [afIcon "\xf001", afIcon "\xf120", afIcon "\xf1c9", "3", afIcon "\xf3f6", "5", "6", afIcon "\xf468", afIcon "\xf268", afIcon "\xf3fe"]
 myWorkspacesClickable    = clickable myWorkspaces
 -- myWorkspacesClickable    = clickable . (map xmobarEscape) $ myWorkspaces
     where
@@ -603,6 +603,7 @@ myManageHook = composeAll
   [ isFullscreen                       --> doFullFloat
   , className =? "Nitrogen"            --> doFloat
   , className =? "feh"                 --> doFloat
+  , className =? "Conky"               --> doFloat
   , resource  =? "stalonetray"         --> doIgnore
   , title     =? "xmessage"            --> doFloat
   , title     =? "temp-term"           --> (customFloating $ W.RationalRect 0.05 0.05 0.9 0.9)
@@ -629,6 +630,7 @@ myEventHook = serverModeEventHook' (return myCommands)
 
 myStartupHook = do
           spawnOnce "~/.cargo/bin/spotifyd"
+          spawnOnce "~/.config/conky/run_conky.sh"
           spawnOnce "nitrogen --restore &"
           spawnOnce "picom --experimental-backends -b"
           spawnOnce "lxpolkit"
