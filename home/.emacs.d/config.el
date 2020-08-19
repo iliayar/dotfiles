@@ -1,13 +1,12 @@
-;; Auto completition
 (use-package company
   :ensure t
   :init
   (add-hook 'after-init-hook 'global-company-mode)
   :config
-  ;; (setq company-dabbrev-downcase 0)
-  (setq company-idle-delay 0.1)
-  (setq company-minimum-prefix-length 1))
-  ;; (setq company-tooltip-align-annotations t))
+  (setq company-dabbrev-downcase nil)
+  (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 1)
+  (setq company-tooltip-align-annotations t))
 
 (use-package company-lsp
   :ensure t
@@ -19,6 +18,11 @@
 (use-package company-box
   :ensure t
   :hook (company-mode . company-box-mode))
+
+(use-package company-fuzzy
+  :ensure t
+  :config
+  (global-company-fuzzy-mode 1))
 
 (use-package counsel
   :ensure t

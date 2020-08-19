@@ -4,15 +4,13 @@
 There is initializes package mangers and some other stuff \\
 Package config -- see https://melpa.org/#/getting-started
 #+begin_src emacs-lisp
-(require 'package)
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                    (not (gnutls-available-p))))
-       (proto (if no-ssl "http" "https")))
-#+end_src
-Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
-#+begin_src  emacs-lisp
-  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t))
-  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t))
+(when (>= emacs-major-version 24)
+  (require 'package)
+  (add-to-list
+   'package-archives
+   ;; '("melpa" . "http://stable.melpa.org/packages/") ; many packages won't show if using stable
+   '("melpa" . "https://melpa.org/packages/")
+   t))
 #+end_src
 #+begin_src emacs-lisp
 (package-initialize)
@@ -30,29 +28,44 @@ Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as de
 ;(setq evil-search-module 'evil-search)
 #+end_src
 ** Packages
+*** Auto completion
+Use /company/ for autocompletion
 #+begin_src emacs-lisp :tangle yes
-;; Auto completition
 (use-package company
   :ensure t
   :init
   (add-hook 'after-init-hook 'global-company-mode)
   :config
-  ;; (setq company-dabbrev-downcase 0)
-  (setq company-idle-delay 0.1)
-  (setq company-minimum-prefix-length 1))
-  ;; (setq company-tooltip-align-annotations t))
-
+  (setq company-dabbrev-downcase nil)
+  (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 1)
+  (setq company-tooltip-align-annotations t))
+#+end_src
+Lsp backend for /company/
+#+begin_src emacs-lisp
 (use-package company-lsp
   :ensure t
   :config
   (push 'company-lsp company-backends)
   (setq company-lsp-enable-snippet t)
   (setq lsp-enable-snippet t))
-
+#+end_src
+Pretty icons for /company/
+#+begin_src emacs-lisp
 (use-package company-box
   :ensure t
   :hook (company-mode . company-box-mode))
-
+#+end_src
+Fuzzy match for /company/ \\
+*For some reason won't install*
+#+begin_src emacs-lisp
+(use-package company-fuzzy
+  :ensure t
+  :config
+  (global-company-fuzzy-mode 1))
+#+end_src
+*** TODO Other
+#+begin_src emacs-lisp
 (use-package counsel
   :ensure t
   :init
@@ -240,7 +253,7 @@ company-box  :ensure t
 (use-package hydra
   :ensure t)
 #+end_src
-** Variables and functions
+** TODO Variables and functions
 #+begin_src emacs-lisp :tangle yes
 (defun init-hooks () (global-display-line-numbers-mode 1))
 
@@ -355,23 +368,8 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
 (setq hl-todo-keyword-faces
       '(("TODO"   . "#fabd2f")
         ("FIXME"  . "#fb4934")))
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(company-box-show-single-candidate 'always)
-  '(package-selected-packages
-     '(lsp-python-ms company-lsp company-box format-all yaml-mode ox-md hl-todo evil-multiedit treemacs-all-the-icons evil-collection use-package)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
 #+end_src
-** Keybindings
+** TODO Keybindings
 TODO: Move these to appropriate packages maybe
 #+begin_src emacs-lisp :tangle yes
 (general-define-key
