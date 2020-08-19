@@ -1,3 +1,7 @@
+* Emacs Configs
+** Main config
+There is initializes package mangers and some other stuff
+#+begin_src emacs-lisp
 ;;; Package config -- see https://melpa.org/#/getting-started
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
@@ -433,3 +437,4 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+#+end_src

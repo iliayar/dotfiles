@@ -1,0 +1,4 @@
+* dotfiles
+![Shellcheck](https://github.com/iliayar/dotfiles/workflows/Shellcheck/badge.svg)
+** Emacs
+Emacs config in one org file [[file:home/.emacs.d/config.org][Link]]
