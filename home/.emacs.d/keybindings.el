@@ -1,3 +1,7 @@
+(general-define-key
+  :keymaps 'company-active-map
+  "<tab>"     'yas-expand
+  "<backtab>" 'company-complete-selection)
 
 (general-define-key
   "M-x" 'counsel-M-x)
@@ -16,7 +20,7 @@
   "wd" 'delete-window
   "ww" 'ace-window
   "wr" 'hydra-window-resize-menu/body
-  "pp" 'counsel-projectile-switch-project
+  "pp" 'projectile-switch-project
   "pf" 'counsel-projectile-find-file
   "ff" 'counsel-find-file
   "cl" 'comment-or-uncomment-region
@@ -27,19 +31,11 @@
 
 ;; For all other keybindings
 (general-define-key
-  :states '(normal visual insert)
-  :prefix "g"
-  :non-normal-prefix "C-g"
+  :states '(normal visual)
+  :prefix "M-g"
   :keymaps 'override
   "s" 'avy-goto-char-timer
   "l" 'avy-goto-line
-  "rm" 'evil-mc-make-all-cursors
-  "rq" 'evil-mc-undo-all-cursors
-  "rp" 'evil-mc-pause-cursors
-  "rr" 'evil-mc-resume-cursors
-  "rh" 'evil-mc-make-cursor-here
-  "rn" 'evil-mc-make-and-goto-next-match
-  "rs" 'evil-mc-skip-and-goto-next-match
   )
 
 (general-define-key
@@ -52,8 +48,7 @@
   :states '(normal visual insert)
   :prefix "SPC"
   :non-normal-prefix "M-SPC"
-  :keymaps 'override
-  :map 'latex-mode-map
+  :keymaps 'latex-mode-map
   "si" 'latex-insert-block
   )
 ;; Hydra

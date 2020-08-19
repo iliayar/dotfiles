@@ -2,70 +2,69 @@
 ------------------ Imports ----------------------
 -------------------------------------------------
 
-import Data.List
-import Data.Monoid
-import Data.Tree
-import Data.Maybe
-import Data.Bifunctor (first, bimap)
+import           Data.List
+import           Data.Monoid
+import           Data.Tree
+import           Data.Maybe
+import           Data.Bifunctor (first, bimap)
 import qualified Data.Map as M
 
-import System.IO
-import System.Exit
-import System.Posix.IO
-import System.Directory
-import System.FilePath ((</>))
-import System.Environment
+import           System.IO
+import           System.Exit
+import           System.Posix.IO
+import           System.Directory
+import           System.FilePath ((</>))
+import           System.Environment
 
-import Codec.Binary.UTF8.String (decodeString)
+import           Codec.Binary.UTF8.String (decodeString)
 
 -- import qualified System.IO.UTF8 as UTF8
 
-import Control.Monad
+import           Control.Monad
 
-import XMonad
+import           XMonad
 
-import XMonad.Hooks.DynamicLog (xmobarPP, dynamicLogWithPP, xmobarColor, PP(..), wrap, shorten)
-import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
-import XMonad.Hooks.ManageDocks (avoidStruts, manageDocks, docksEventHook, ToggleStruts(..))
-import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat)
-import XMonad.Hooks.SetWMName
-import XMonad.Hooks.ServerMode
+import           XMonad.Hooks.DynamicLog (xmobarPP, dynamicLogWithPP, xmobarColor, PP(..), wrap, shorten)
+import           XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
+import           XMonad.Hooks.ManageDocks (avoidStruts, manageDocks, docksEventHook, ToggleStruts(..))
+import           XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat)
+import           XMonad.Hooks.SetWMName
+import           XMonad.Hooks.ServerMode
 
-import XMonad.Util.SpawnOnce
-import XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
-import XMonad.Util.EZConfig
-import XMonad.Util.NamedScratchpad
+import           XMonad.Util.EZConfig
+import           XMonad.Util.NamedScratchpad
+import           XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
+import           XMonad.Util.SpawnOnce
 
-import XMonad.Prompt
-import XMonad.Prompt.Pass
-import XMonad.Prompt.Input
-import XMonad.Prompt.Shell (shellPrompt)
-import XMonad.Prompt.FuzzyMatch (fuzzyMatch, fuzzySort)
-import XMonad.Prompt.AppLauncher as AL
+import           XMonad.Prompt
+import           XMonad.Prompt.Pass
+import           XMonad.Prompt.Input
+import           XMonad.Prompt.Shell (shellPrompt)
+import           XMonad.Prompt.FuzzyMatch (fuzzyMatch, fuzzySort)
+import           XMonad.Prompt.AppLauncher as AL
 
-
-import XMonad.Layout.NoBorders
-import XMonad.Layout.GridVariants
-import XMonad.Layout.ResizableTile
-import XMonad.Layout.Spiral
-import XMonad.Layout.Tabbed
-import XMonad.Layout.SimplestFloat
-import XMonad.Layout.MultiToggle (mkToggle, single, EOT(EOT), (??))
-import XMonad.Layout.MultiToggle.Instances (StdTransformers(FULL, NBFULL, MIRROR, NOBORDERS))
-import XMonad.Layout.LayoutModifier
-import XMonad.Layout.LimitWindows (limitWindows, increaseLimit, decreaseLimit)
-import XMonad.Layout.Magnifier
-import XMonad.Layout.Renamed (renamed, Rename(Replace))
-import XMonad.Layout.ShowWName
-import XMonad.Layout.Spacing
-import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
+import           XMonad.Layout.NoBorders
+import           XMonad.Layout.GridVariants
+import           XMonad.Layout.ResizableTile
+import           XMonad.Layout.Spiral
+import           XMonad.Layout.Tabbed
+import           XMonad.Layout.SimplestFloat
+import           XMonad.Layout.MultiToggle (mkToggle, single, EOT(EOT), (??))
+import           XMonad.Layout.MultiToggle.Instances (StdTransformers(FULL, NBFULL, MIRROR, NOBORDERS))
+import           XMonad.Layout.LayoutModifier
+import           XMonad.Layout.LimitWindows (limitWindows, increaseLimit, decreaseLimit)
+import           XMonad.Layout.Magnifier
+import           XMonad.Layout.Renamed (renamed, Rename(Replace))
+import           XMonad.Layout.ShowWName
+import           XMonad.Layout.Spacing
+import           XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
 import qualified XMonad.Layout.ToggleLayouts as T (toggleLayouts, ToggleLayout(Toggle))
 import qualified XMonad.Layout.MultiToggle as MT (Toggle(..))
 
-import XMonad.Actions.Submap
-import XMonad.Actions.GridSelect
-import XMonad.Actions.WithAll (sinkAll, killAll)
-import XMonad.Actions.Commands (defaultCommands)
+import           XMonad.Actions.Submap
+import           XMonad.Actions.GridSelect
+import           XMonad.Actions.WithAll (sinkAll, killAll)
+import           XMonad.Actions.Commands (defaultCommands)
 import qualified XMonad.Actions.Search as S
 import qualified XMonad.Actions.TreeSelect as TS
 
@@ -167,7 +166,7 @@ termSpawnCmd (URxvt t h a cmd) = unwords
 
 termSpawn :: (Maybe String -> Terminal) -> String -> X()
 termSpawn t c = spawn $ termSpawnCmd $ t $ Just c
-
+  
 termSpawn' :: Terminal -> X ()
 termSpawn' t = spawn $ termSpawnCmd t
 
@@ -318,7 +317,7 @@ tsAll =
        , Node (TS.TSNode "Emacs" "IDE/Text editor" (spawn "emacsclient -c -a emacs")) []
        , Node (TS.TSNode "Termite" "Terminal" (spawn "termite")) []
        , Node (TS.TSNode "Urxvt" "Rxvt Unicode" (spawn "urxvt")) []
-       , Node (TS.TSNode "Restart Emacs" "Restart Emacs daemon" (spawn "killall emacs; emacs --daemon")) []
+       , Node (TS.TSNode "Restart Emacs" "Restart Emacs daemon" (spawn $ wrapBash"killall emacs; emacs --daemon")) []
        ]
    , Node (TS.TSNode "+ Tools" "Various tools" (return ()))
        tsTools

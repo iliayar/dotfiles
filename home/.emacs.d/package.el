@@ -4,13 +4,21 @@
   :init
   (add-hook 'after-init-hook 'global-company-mode)
   :config
-  (setq company-dabbrev-downcase 0)
+  ;; (setq company-dabbrev-downcase 0)
   (setq company-idle-delay 0.1)
-  (setq company-minimum-prefix-length 1)
-  (setq company-tooltip-align-annotations t))
+  (setq company-minimum-prefix-length 1))
+  ;; (setq company-tooltip-align-annotations t))
+
+(use-package company-lsp
+  :ensure t
+  :config
+  (push 'company-lsp company-backends)
+  (setq company-lsp-enable-snippet t)
+  (setq lsp-enable-snippet t))
 
 (use-package company-box
-  :ensure t)
+  :ensure t
+  :hook (company-mode . company-box-mode))
 
 (use-package counsel
   :ensure t
@@ -37,7 +45,7 @@
 
 ;; Key hints
 (use-package which-key
-  :ensure t
+company-box  :ensure t
   :config
   (which-key-mode 1))
 
@@ -102,7 +110,8 @@
 
 ;; Rainbow paretheses
 (use-package rainbow-delimiters
-  :ensure t)
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 ;; Vim surround like
 (use-package evil-surround

@@ -1,6 +1,10 @@
 (defun init-hooks () (global-display-line-numbers-mode 1))
 
 (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+(setq dashboard-center-content t)
+(setq dashboard-startup-banner "~/Themes/Neofetch.png")
+(setq dashboard-set-heading-icons t)
+(setq dashboard-set-file-icons t)
 
 (setq dashboard-items '((recents  . 5)
                         ;(bookmarks . 5)
@@ -17,6 +21,25 @@
 (defun kill-compilation-buffer ()
   (interactive)
   (kill-buffer-if-exists "*compilation*"))
+
+(defun mars/company-backend-with-yas (backends)
+  "Add :with company-yasnippet to company BACKENDS.
+Taken from https://github.com/syl20bnr/spacemacs/pull/179."
+  (if (and (listp backends) (memq 'company-yasnippet backends))
+    backends
+    (append (if (consp backends)
+              backends
+              (list backends))
+      '(:with company-yasnippet))))
+
+;; add yasnippet to all backends
+(defun add-yas-in-company ()
+  (setq company-backends
+    (mapcar #'mars/company-backend-with-yas company-backends)))
+
+(add-yas-in-company)
+
+(add-hook 'shell-mode-hook (lambda () (company-mode nil)))
 
 (scroll-bar-mode 0) ; no scroll bar
 (tool-bar-mode 0) ; no tool bar
@@ -49,6 +72,8 @@
 (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance)
 (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat)
 (setq case-fold-search t)
+
+(setq projectile-completion-system 'ivy)
 
 ;; Org-mode
 (setq org-hide-emphaisi-markers t)
