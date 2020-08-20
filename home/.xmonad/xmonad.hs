@@ -226,7 +226,7 @@ myBorderWidth   = 2
 
 myModMask       = mod4Mask
 
-myWorkspaces = [afIcon "\xf001", afIcon "\xf120", afIcon "\xf1c9", "3", afIcon "\xf3f6", "5", "6", afIcon "\xf468", afIcon "\xf268", afIcon "\xf3fe"]
+myWorkspaces = [afIcon "\xf05a", afIcon "\xf120", afIcon "\xf1c9", "3", afIcon "\xf3f6", "5", "6", afIcon "\xf468", afIcon "\xf268", afIcon "\xf3fe"]
 myWorkspacesClickable    = clickable myWorkspaces
 -- myWorkspacesClickable    = clickable . (map xmobarEscape) $ myWorkspaces
     where
@@ -293,7 +293,7 @@ myScratchPads = [ termApp termiteScratchpad "terminal" Nothing manageQuake
     termiteScratchpad r = Termite Nothing (Just r) False [] 
     termiteScratchpadHold r = Termite Nothing (Just r) True [] 
 
-    spawnNotes = "emacsclient -c -a emacs -F '(quote (name . \"emacs-notes\"))' ~/org/Notes.org"
+    spawnNotes = "emacsclient -c -a emacs -F '(quote (name . \"emacs-notes\"))' ~/Dropbox/org/Notes.org"
     findNotes  = title =? "emacs-notes"
 
     manageNotes = customFloating $ W.RationalRect 0.05 0.05 0.9 0.9
@@ -630,6 +630,7 @@ myEventHook = serverModeEventHook' (return myCommands)
 myStartupHook = do
           spawnOnce "~/.cargo/bin/spotifyd"
           spawnOnce "~/.config/conky/run_conky.sh"
+          spawnOnce "~/.dropbox-dist/dropboxd"
           spawnOnce "nitrogen --restore &"
           spawnOnce "picom --experimental-backends -b"
           spawnOnce "lxpolkit"

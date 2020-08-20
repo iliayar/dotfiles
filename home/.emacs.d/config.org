@@ -54,7 +54,10 @@ Pretty icons for /company/
 #+begin_src emacs-lisp
 (use-package company-box
   :ensure t
-  :hook (company-mode . company-box-mode))
+  :hook (company-mode . company-box-mode)
+  :config
+  (push '(company-yasnippet . (:all "lime green" :selected
+    (:background "black"))) company-box-backends-colors))
 #+end_src
 Fuzzy match for /company/ \\
 *For some reason won't install*
@@ -91,7 +94,7 @@ Fuzzy match for /company/ \\
 
 ;; Key hints
 (use-package which-key
-company-box  :ensure t
+  :ensure t
   :config
   (which-key-mode 1))
 
@@ -152,8 +155,8 @@ company-box  :ensure t
 (use-package doom-modeline
   :ensure t
   :init 
-  (doom-modeline-mode 1))
-
+  (doom-modeline-mode 1)
+  (setq doom-modeline-icon (display-graphic-p)))
 ;; Rainbow paretheses
 (use-package rainbow-delimiters
   :ensure t
@@ -343,7 +346,7 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
                         '(("^ *\\([-]\\) "
                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
-(setq org-agenda-files '("~/org"))
+(setq org-agenda-files '("~/Dropbox/org"))
 (setq org-default-notes-file (concat org-directory "/Notes.org"))
 
 (eval-after-load "org"

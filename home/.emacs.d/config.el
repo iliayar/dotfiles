@@ -17,7 +17,10 @@
 
 (use-package company-box
   :ensure t
-  :hook (company-mode . company-box-mode))
+  :hook (company-mode . company-box-mode)
+  :config
+  (push '(company-yasnippet . (:all "lime green" :selected
+    (:background "black"))) company-box-backends-colors))
 
 (use-package company-fuzzy
   :ensure t
@@ -49,7 +52,7 @@
 
 ;; Key hints
 (use-package which-key
-company-box  :ensure t
+  :ensure t
   :config
   (which-key-mode 1))
 
@@ -110,8 +113,8 @@ company-box  :ensure t
 (use-package doom-modeline
   :ensure t
   :init 
-  (doom-modeline-mode 1))
-
+  (doom-modeline-mode 1)
+  (setq doom-modeline-icon (display-graphic-p)))
 ;; Rainbow paretheses
 (use-package rainbow-delimiters
   :ensure t
@@ -299,7 +302,7 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
                         '(("^ *\\([-]\\) "
                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
-(setq org-agenda-files '("~/org"))
+(setq org-agenda-files '("~/Dropbox/org"))
 (setq org-default-notes-file (concat org-directory "/Notes.org"))
 
 (eval-after-load "org"
@@ -324,21 +327,6 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
 (setq hl-todo-keyword-faces
       '(("TODO"   . "#fabd2f")
         ("FIXME"  . "#fb4934")))
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(company-box-show-single-candidate 'always)
-  '(package-selected-packages
-     '(lsp-python-ms company-lsp company-box format-all yaml-mode ox-md hl-todo evil-multiedit treemacs-all-the-icons evil-collection use-package)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
 
 (general-define-key
   :keymaps 'company-active-map
