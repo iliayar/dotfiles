@@ -1,16 +1,17 @@
 import Xmobar
 
 import Helpers
+import qualified Theme
 
-config :: Theme -> Config
-config (Theme red yellow green fg bg) = defaultConfig { 
+config :: Config
+config = defaultConfig { 
 
    -- appearance
      font            = font'
-   , bgColor         = bg
+   , bgColor         = Theme.background
    , additionalFonts = additionalFonts'
-   , fgColor         = fg
-   , alpha           = 255
+   , fgColor         = Theme.foreground
+   , alpha           = 200
    , position        = OnScreen 0 $ Bottom
 --    , position    =  Static {xpos = 0, ypos = 1060, width = 1364, height = 20}
    , borderColor     = "#646464"
@@ -24,7 +25,7 @@ config (Theme red yellow green fg bg) = defaultConfig {
    , lowerOnStart     = True    -- send to bottom of window stack on start
    , hideOnStart      = False   -- start with window unmapped (hidden)
    , allDesktops      = True    -- show on all desktops
-   , overrideRedirect = True    -- set the Override Redirect flag (Xlib)
+   , overrideRedirect = True    -- set the Override Theme.Color1irect flag (Xlib)
    , pickBroadest     = False   -- choose widest display (multi-monitor)
    , persistent       = True    -- enable/disable hiding (True = disabled)
    , iconRoot         = "/home/iliayar/.xmonad/xpm/"  -- default: "."
@@ -45,9 +46,9 @@ config (Theme red yellow green fg bg) = defaultConfig {
                              [ "--template" , "<action=pactl set-sink-mute '@DEFAULT_SINK@' toggle><status> <volume>%</action>"
                              , "--"
                              , "--on"       , afIcon "\xf028"
-                             , "--onc"      , green
+                             , "--onc"      , Theme.color2
                              , "--off"      , afIcon "\xf6a9"
-                             , "--offc"     , red
+                             , "--offc"     , Theme.color1
                              ] 10
 
         -- network activity monitor (dynamic interface resolution)
@@ -55,9 +56,9 @@ config (Theme red yellow green fg bg) = defaultConfig {
                              , "--width"    , "4"
                              , "--Low"      , "1000000"       -- units: B/s
                              , "--High"     , "5000000"       -- units: B/s
-                             , "--low"      , green
-                             , "--normal"   , yellow
-                             , "--high"     , red
+                             , "--low"      , Theme.color2
+                             , "--normal"   , Theme.color3
+                             , "--high"     , Theme.color1
                              ] 10
 
         -- cpu activity monitor
@@ -65,36 +66,36 @@ config (Theme red yellow green fg bg) = defaultConfig {
                              , "--width"    , "2"
                              , "--Low"      , "50"         -- units: %
                              , "--High"     , "85"         -- units: %
-                             , "--low"      , green
-                             , "--normal"   , yellow
-                             , "--high"     , red
+                             , "--low"      , Theme.color2
+                             , "--normal"   , Theme.color3
+                             , "--high"     , Theme.color1
                              ] 10
 
         -- cpu core temperature monitor
         , Run $ MultiCoreTemp       [ "--template" , (afIcon "\xf2c9") ++ "<avg>°C"
                              , "--Low"      , "70"        -- units: °C
                              , "--High"     , "80"        -- units: °C
-                             , "--low"      , green
-                             , "--normal"   , yellow
-                             , "--high"     , red
+                             , "--low"      , Theme.color2
+                             , "--normal"   , Theme.color3
+                             , "--high"     , Theme.color1
                              ] 50
                           
         -- memory usage monitor
         , Run $ Memory       [ "--template" , (afIcon "\xf538") ++ " <available> M"
                              , "--Low"      , "2000"        -- units: M
                              , "--High"     , "6000"        -- units: M
-                             , "--low"      , red
-                             , "--normal"   , yellow
-                             , "--high"     , green
+                             , "--low"      , Theme.color1
+                             , "--normal"   , Theme.color3
+                             , "--high"     , Theme.color2
                              ] 10
 
         -- battery monitor
         , Run $ Battery        [ "--template" ,  "<acstatus>"
                                , "--Low"      , "20"        -- units: %
                                , "--High"     , "70"        -- units: %
-                               , "--low"      , red
-                               , "--normal"   , yellow
-                               , "--high"     , green
+                               , "--low"      , Theme.color1
+                               , "--normal"   , Theme.color3
+                               , "--high"     , Theme.color2
                                , "--" -- battery specific options
                                        -- discharging status
                                        , "-o"    , "<left>% <watts>"
@@ -104,10 +105,10 @@ config (Theme red yellow green fg bg) = defaultConfig {
                                        , "-i"    , afIcon "\xf240"
                                        , "-L", "-15"
                                        , "-H", "-5"
-                                       , "-l", red
-                                       , "-m", yellow
-                                       , "-h", green
-                                       , "-p", green
+                                       , "-l", Theme.color1
+                                       , "-m", Theme.color3
+                                       , "-h", Theme.color2
+                                       , "-p", Theme.color2
                                        , "--lows", afIcon "\xf244 "
                                        , "--mediums", afIcon "\xf242 "
                                        , "--highs", afIcon "\xf240 "
@@ -118,15 +119,15 @@ config (Theme red yellow green fg bg) = defaultConfig {
         , Run $ Date           "%F (%a) %T" "date" 10
 
         -- keyboard layout indicator
-        , Run $ Kbd          [ ("ru"         , setColor red "RU")
-                             , ("us"         , setColor green "US")
+        , Run $ Kbd          [ ("ru"         , setColor Theme.color1 "RU")
+                             , ("us"         , setColor Theme.color2 "US")
                              ]
         , Run $ DiskU [("/", "/ <usedp>%")]
                     [ "--Low"      , "30"
                     , "--High"     , "60"
-                    , "--low"      , green
-                    , "--normal"   , yellow
-                    , "--high"     , red
+                    , "--low"      , Theme.color2
+                    , "--normal"   , Theme.color3
+                    , "--high"     , Theme.color1
                     ]
                     20
 
@@ -138,6 +139,4 @@ config (Theme red yellow green fg bg) = defaultConfig {
         ]
    }
 main :: IO ()
-main = do
-  theme <- fetchTheme
-  xmobar $ config theme
+main = xmobar $ config

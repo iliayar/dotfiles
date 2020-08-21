@@ -3,9 +3,9 @@
 PLAYER=spotifyd
 PLAYER_CMD="~/.cargo/bin/spotifyd"
 
-red="<fc=$(xrdb -query | grep color1: | gawk '{ print $2 }')>"
-green="<fc=$(xrdb -query | grep color2: | gawk '{ print $2 }')>"
-yellow="<fc=$(xrdb -query | grep color3: | gawk '{ print $2 }')>"
+red="<fc=$(xrdb -query | grep *color1: | gawk '{ print $2 }')>"
+green="<fc=$(xrdb -query | grep *color2: | gawk '{ print $2 }')>"
+yellow="<fc=$(xrdb -query | grep *color3: | gawk '{ print $2 }')>"
 reset="</fc>"
 
 state_f="<action=playerctl previous -p ${PLAYER}> 玲 </action><action=playerctl play-pause -p ${PLAYER}> %s </action><action=playerctl next -p ${PLAYER}> 怜 </action>"

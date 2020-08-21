@@ -59,11 +59,12 @@ Pretty icons for /company/
     (:background "black"))) company-box-backends-colors))
 #+end_src
 Fuzzy match for /company/ \\
+*Too slow btw*
 #+begin_src emacs-lisp
-(use-package company-fuzzy
-  :ensure t
-  :config
-  (global-company-fuzzy-mode nil))
+  ;; (use-package company-fuzzy
+  ;;   :ensure t
+  ;;   :config
+  ;;   (global-company-fuzzy-mode f))
 #+end_src
 *** Web
 Package for html live view

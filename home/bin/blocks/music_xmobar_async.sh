@@ -5,11 +5,6 @@ PLAYER_CMD="~/.cargo/bin/spotifyd"
 # PLAYER=spotify
 # PLAYER_CMD="spotify"
 
-red="<fc=$(xrdb -query | grep color1: | gawk '{ print $2 }')>"
-green="<fc=$(xrdb -query | grep color2: | gawk '{ print $2 }')>"
-yellow="<fc=$(xrdb -query | grep color3: | gawk '{ print $2 }')>"
-reset="</fc>"
-
 SOCKET="/tmp/.music_data"
 
 [[ -p "$SOCKET" ]] || mkfifo $SOCKET
@@ -17,6 +12,11 @@ SOCKET="/tmp/.music_data"
 state_f="<action=playerctl previous -p ${PLAYER}> <fn=1>\uf04a</fn> </action><action=playerctl play-pause -p ${PLAYER}> %s </action><action=playerctl next -p ${PLAYER}> <fn=1>\uf04e</fn> </action>"
 
 while true; do
+    red="<fc=$(xrdb -query | grep *color1: | gawk '{ print $2 }')>"
+    green="<fc=$(xrdb -query | grep *color2: | gawk '{ print $2 }')>"
+    yellow="<fc=$(xrdb -query | grep *color3: | gawk '{ print $2 }')>"
+    reset="</fc>"
+
     state=$(playerctl status -p $PLAYER 2> /dev/null)
 
     if [[ -z "$state" ]]; then

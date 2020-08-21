@@ -109,8 +109,8 @@ dzen' m = "(echo " ++
   dzenEscape m ++
   " | column; cat) | " ++ unwords [ "dzen2"
                          , "-fn 'Hack 9'"
-                         , "-fg '#d5c4a1'"
-                         , "-bg '#1d2021'"
+                         , "-fg '" ++ Theme.color7 ++ "'"
+                         , "-bg '" ++ Theme.color0 ++ "'"
                          ]
 
 termShowKeybindings :: String -> X () 
@@ -234,8 +234,8 @@ myWorkspacesClickable    = clickable myWorkspaces
         clickable l = [ "<action=~/.xmonad/xmonadctl " ++ i ++ ">" ++ ws ++ "</action>" |
                       (i,ws) <- zip (map show [2..11]) l]
 
-myNormalBorderColor  = "#928374"
-myFocusedBorderColor = "#cc241d"
+myNormalBorderColor  = Theme.color8
+myFocusedBorderColor = Theme.color1
 
 -------------------------------------------------
 ---------------- GridSelect ---------------------
@@ -252,13 +252,13 @@ mygridConfig colorizer = (buildDefaultGSConfig colorizer)
     }
 
 orange :: a -> Bool -> X (String, String)
-orange = myColor "#ff4301"
+orange = myColor Theme.color4
 
 myColor :: String -> a -> Bool -> X (String, String)
 myColor color _ isFg = do
   return $ if isFg
-           then (color, "#1d2021")
-           else ("#1d2021" ,"#d5c4a1")
+           then (color, Theme.background)
+           else (Theme.color0 ,Theme.foreground)
 
 spawnSelected' :: [(String, String)] -> X()
 spawnSelected' = runSelectedAction (mygridConfig orange) . map (\(a, b) -> (a, spawn b))
@@ -383,12 +383,12 @@ makeFullscreenNoDock = sendMessage (MT.Toggle NBFULL) >> sendMessage ToggleStrut
   
 tsDefaultConfig :: TS.TSConfig a
 tsDefaultConfig = TS.TSConfig { TS.ts_hidechildren = True
-                              , TS.ts_background   = 0x00000000
+                              , TS.ts_background   = Theme.ts_background
                               , TS.ts_font         = myFont
-                              , TS.ts_node         = (0xffebdbb2, 0xff1d2021)
-                              , TS.ts_nodealt      = (0xffebdbb2, 0xff282828)
-                              , TS.ts_highlight    = (0xffffffff, 0xffff4301)
-                              , TS.ts_extra        = 0xffd5c4a1
+                              , TS.ts_node         = Theme.ts_node
+                              , TS.ts_nodealt      = Theme.ts_nodealt
+                              , TS.ts_highlight    = Theme.ts_highlight
+                              , TS.ts_extra        = Theme.ts_extra
                               , TS.ts_node_width   = 200
                               , TS.ts_node_height  = 25
                               , TS.ts_originX      = 0
@@ -587,12 +587,12 @@ myLayout = avoidStruts
     tabs    = renamed [Replace "tabs"]
             $ tabbed shrinkText $ def
                    { fontName            = myFont
-                   , activeColor         = "#282828"
-                   , inactiveColor       = "#1d2021"
-                   , activeBorderColor   = "#cc241d"
-                   , inactiveBorderColor = "#292d3e"
-                   , activeTextColor     = "#fb4934"
-                   , inactiveTextColor   = "#ebdbb2"
+                   , activeColor         = Theme.color0
+                   , inactiveColor       = Theme.background
+                   , activeBorderColor   = Theme.color1
+                   , inactiveBorderColor = Theme.color0
+                   , activeTextColor     = Theme.color1
+                   , inactiveTextColor   = Theme.foreground
                    }
 
 -------------------------------------------------
@@ -649,11 +649,11 @@ myStartupHook = do
 myXPConfig :: XPConfig
 myXPConfig = def
       { font                = myFont
-      , bgColor             = "#1d2021"
-      , fgColor             = "#ebdbb2"
-      , bgHLight            = "#282828"
-      , fgHLight            = "#fb4934"
-      , borderColor         = "#fabd2f"
+      , bgColor             = Theme.background
+      , fgColor             = Theme.foreground
+      , bgHLight            = Theme.color0
+      , fgHLight            = Theme.color1
+      , borderColor         = Theme.color8
       , promptBorderWidth   = 2
       , promptKeymap        = defaultXPKeymap
       , position            = Top
@@ -759,9 +759,9 @@ main = do
                      hPutStrLn xmproc0 encX
                   >> hPutStrLn xmproc1 encX
                   -- >> appendFile "/tmp/.xmonad_data" (deodeString x)
-                , ppCurrent = xmobarColor "#b8bb26" "" . wrap "[" "]"
-                , ppVisible = xmobarColor "#b8bb26" ""
-                , ppTitle   = xmobarColor "#fb4934" "" . shorten 25
+                , ppCurrent = xmobarColor Theme.color2 "" . wrap "[" "]"
+                , ppVisible = xmobarColor Theme.color2 ""
+                , ppTitle   = xmobarColor Theme.color9 "" . shorten 25
                 , ppLayout  = (\x -> "<action=~/.xmonad/xmonadctl 12>" ++ x ++ "</action>")
                 , ppExtras  = []
                 , ppOrder   = \(ws:l:t:ex) -> [ws,l]++ex++[t]
