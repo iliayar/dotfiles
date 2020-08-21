@@ -41,10 +41,10 @@
   (push '(company-yasnippet . (:all "lime green" :selected
     (:background "black"))) company-box-backends-colors))
 
-(use-package company-fuzzy
-  :ensure t
-  :config
-  (global-company-fuzzy-mode nil))
+;; (use-package company-fuzzy
+;;   :ensure t
+;;   :config
+;;   (global-company-fuzzy-mode f))
 
 (use-package impatient-mode
   :ensure t)
@@ -137,7 +137,8 @@
               ewal-use-built-in-on-failure-p t
               ewal-built-in-palette "doom-molokai"))
 (use-package ewal-doom-themes
-  :ensure t)
+  :ensure t
+  :init (load-theme 'ewal-doom-one t))
 
 ;; (use-package xresources-theme
 ;;   :ensure t)
