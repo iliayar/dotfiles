@@ -1,3 +1,22 @@
+(require 'package)
+(add-to-list
+ 'package-archives
+ ;; '("melpa" . "http://stable.melpa.org/packages/") ; many packages won't show if using stable
+ '("melpa" . "https://melpa.org/packages/")
+ t)
+
+(package-initialize)
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+
+(setq evil-want-keybinding nil)
+
+;(setq evil-search-module 'evil-search)
+
 (use-package company
   :ensure t
   :init
@@ -25,7 +44,10 @@
 (use-package company-fuzzy
   :ensure t
   :config
-  (global-company-fuzzy-mode 1))
+  (global-company-fuzzy-mode nil))
+
+(use-package impatient-mode
+  :ensure t)
 
 (use-package counsel
   :ensure t
@@ -85,12 +107,6 @@
   :init
   (smartparens-global-mode))
 
-;; Theme
-(use-package doom-themes
-  :ensure t
-  :preface (defvar region-fg nil) ; this prevents a weird bug with doom themes
-  :init (load-theme 'doom-gruvbox t))
-
 ;; Treemacs
 (use-package treemacs
   :ensure t)
@@ -109,12 +125,28 @@
 (use-package all-the-icons
  :ensure t)
 
-;; Status Line
 (use-package doom-modeline
   :ensure t
   :init 
   (doom-modeline-mode 1)
   (setq doom-modeline-icon (display-graphic-p)))
+
+(use-package ewal
+  :ensure t
+  :init (setq ewal-use-built-in-always nil
+              ewal-use-built-in-on-failure-p t
+              ewal-built-in-palette "doom-molokai"))
+(use-package ewal-doom-themes
+  :ensure t)
+
+;; (use-package xresources-theme
+;;   :ensure t)
+
+;; (use-package doom-themes
+;;   :ensure t
+;;   :preface (defvar region-fg nil) ; this prevents a weird bug with doom themes
+;;   :init (load-theme 'doom-gruvbox t))
+
 ;; Rainbow paretheses
 (use-package rainbow-delimiters
   :ensure t
@@ -214,6 +246,22 @@
 (use-package hydra
   :ensure t)
 
+(defun mars/company-backend-with-yas (backends)
+  "Add :with company-yasnippet to company BACKENDS.
+Taken from https://github.com/syl20bnr/spacemacs/pull/179."
+  (if (and (listp backends) (memq 'company-yasnippet backends))
+    backends
+    (append (if (consp backends)
+              backends
+              (list backends))
+      '(:with company-yasnippet))))
+
+(defun add-yas-in-company ()
+  (setq company-backends
+    (mapcar #'mars/company-backend-with-yas company-backends)))
+
+(add-yas-in-company)
+
 (defun init-hooks () (global-display-line-numbers-mode 1))
 
 (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
@@ -237,23 +285,6 @@
 (defun kill-compilation-buffer ()
   (interactive)
   (kill-buffer-if-exists "*compilation*"))
-
-(defun mars/company-backend-with-yas (backends)
-  "Add :with company-yasnippet to company BACKENDS.
-Taken from https://github.com/syl20bnr/spacemacs/pull/179."
-  (if (and (listp backends) (memq 'company-yasnippet backends))
-    backends
-    (append (if (consp backends)
-              backends
-              (list backends))
-      '(:with company-yasnippet))))
-
-;; add yasnippet to all backends
-(defun add-yas-in-company ()
-  (setq company-backends
-    (mapcar #'mars/company-backend-with-yas company-backends)))
-
-(add-yas-in-company)
 
 (add-hook 'shell-mode-hook (lambda () (company-mode nil)))
 
@@ -302,6 +333,7 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
                         '(("^ *\\([-]\\) "
                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
+(setq org-directory "~/Dropbox/org")
 (setq org-agenda-files '("~/Dropbox/org"))
 (setq org-default-notes-file (concat org-directory "/Notes.org"))
 
@@ -351,6 +383,8 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
   "wk" 'kill-buffer-and-window
   "wd" 'delete-window
   "ww" 'ace-window
+  "gs" 'avy-goto-char-timer
+  "gl" 'avy-goto-line
   "wr" 'hydra-window-resize-menu/body
   "pp" 'projectile-switch-project
   "pf" 'counsel-projectile-find-file
@@ -359,16 +393,6 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
   "cf" 'counsel-grep-or-swiper
   "op" 'treemacs
   "om" 'magit)
-
-
-;; For all other keybindings
-(general-define-key
-  :states '(normal visual)
-  :prefix "M-g"
-  :keymaps 'override
-  "s" 'avy-goto-char-timer
-  "l" 'avy-goto-line
-  )
 
 (general-define-key
   :states '(visual)

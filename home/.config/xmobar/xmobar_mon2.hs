@@ -2,16 +2,16 @@ import Xmobar
 
 import Helpers
 
-config :: Config
-config = defaultConfig { 
+config :: Theme -> Config
+config (Theme red yellow green fg bg) = defaultConfig { 
 
    -- appearance
      font            = font'
-   , bgColor         = "#1d2021"
+   , bgColor         = bg
    , additionalFonts = additionalFonts'
-   , fgColor         = "#ebdbb2"
+   , fgColor         = fg
    , alpha           = 255
-   , position        = OnScreen 0 $ Bottom
+   , position        = OnScreen 1 $ Bottom
 --    , position    =  Static {xpos = 0, ypos = 1060, width = 1364, height = 20}
    , borderColor     = "#646464"
 
@@ -38,4 +38,6 @@ config = defaultConfig {
         ]
    }
 main :: IO ()
-main = xmobar config
+main = do
+  theme <- fetchTheme
+  xmobar $ config theme

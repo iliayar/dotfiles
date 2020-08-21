@@ -4,13 +4,12 @@
 There is initializes package mangers and some other stuff \\
 Package config -- see https://melpa.org/#/getting-started
 #+begin_src emacs-lisp
-(when (>= emacs-major-version 24)
-  (require 'package)
-  (add-to-list
-   'package-archives
-   ;; '("melpa" . "http://stable.melpa.org/packages/") ; many packages won't show if using stable
-   '("melpa" . "https://melpa.org/packages/")
-   t))
+(require 'package)
+(add-to-list
+ 'package-archives
+ ;; '("melpa" . "http://stable.melpa.org/packages/") ; many packages won't show if using stable
+ '("melpa" . "https://melpa.org/packages/")
+ t)
 #+end_src
 #+begin_src emacs-lisp
 (package-initialize)
@@ -30,7 +29,7 @@ Package config -- see https://melpa.org/#/getting-started
 ** Packages
 *** Auto completion
 Use /company/ for autocompletion
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
 (use-package company
   :ensure t
   :init
@@ -60,12 +59,17 @@ Pretty icons for /company/
     (:background "black"))) company-box-backends-colors))
 #+end_src
 Fuzzy match for /company/ \\
-*For some reason won't install*
 #+begin_src emacs-lisp
 (use-package company-fuzzy
   :ensure t
   :config
-  (global-company-fuzzy-mode 1))
+  (global-company-fuzzy-mode nil))
+#+end_src
+*** Web
+Package for html live view
+#+begin_src emacs-lisp
+(use-package impatient-mode
+  :ensure t)
 #+end_src
 *** TODO Other
 #+begin_src emacs-lisp
@@ -127,12 +131,6 @@ Fuzzy match for /company/ \\
   :init
   (smartparens-global-mode))
 
-;; Theme
-(use-package doom-themes
-  :ensure t
-  :preface (defvar region-fg nil) ; this prevents a weird bug with doom themes
-  :init (load-theme 'doom-gruvbox t))
-
 ;; Treemacs
 (use-package treemacs
   :ensure t)
@@ -150,13 +148,40 @@ Fuzzy match for /company/ \\
 ;; Icons
 (use-package all-the-icons
  :ensure t)
-
-;; Status Line
+#+end_src
+*** Themes
+/Doom-modeline/ as modeline
+#+begin_src emacs-lisp
 (use-package doom-modeline
   :ensure t
   :init 
   (doom-modeline-mode 1)
   (setq doom-modeline-icon (display-graphic-p)))
+#+end_src
+Colors from pywal
+#+begin_src emacs-lisp
+(use-package ewal
+  :ensure t
+  :init (setq ewal-use-built-in-always nil
+              ewal-use-built-in-on-failure-p t
+              ewal-built-in-palette "doom-molokai"))
+(use-package ewal-doom-themes
+  :ensure t)
+#+end_src
+*Or* Colors from xresources
+#+begin_src emacs-lisp
+  ;; (use-package xresources-theme
+  ;;   :ensure t)
+#+end_src
+*Or* doom theme
+#+begin_src emacs-lisp
+  ;; (use-package doom-themes
+  ;;   :ensure t
+  ;;   :preface (defvar region-fg nil) ; this prevents a weird bug with doom themes
+  ;;   :init (load-theme 'doom-gruvbox t))
+#+end_src
+*** TODO Other
+#+begin_src emacs-lisp
 ;; Rainbow paretheses
 (use-package rainbow-delimiters
   :ensure t
@@ -257,7 +282,28 @@ Fuzzy match for /company/ \\
   :ensure t)
 #+end_src
 ** TODO Variables and functions
-#+begin_src emacs-lisp :tangle yes
+*** Snippets
+Add snippets to company backends
+*For some reason doesn't execute on start*
+#+begin_src emacs-lisp
+(defun mars/company-backend-with-yas (backends)
+  "Add :with company-yasnippet to company BACKENDS.
+Taken from https://github.com/syl20bnr/spacemacs/pull/179."
+  (if (and (listp backends) (memq 'company-yasnippet backends))
+    backends
+    (append (if (consp backends)
+              backends
+              (list backends))
+      '(:with company-yasnippet))))
+
+(defun add-yas-in-company ()
+  (setq company-backends
+    (mapcar #'mars/company-backend-with-yas company-backends)))
+
+(add-yas-in-company)
+#+end_src
+*** TODO Other
+#+begin_src emacs-lisp
 (defun init-hooks () (global-display-line-numbers-mode 1))
 
 (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
@@ -281,23 +327,6 @@ Fuzzy match for /company/ \\
 (defun kill-compilation-buffer ()
   (interactive)
   (kill-buffer-if-exists "*compilation*"))
-
-(defun mars/company-backend-with-yas (backends)
-  "Add :with company-yasnippet to company BACKENDS.
-Taken from https://github.com/syl20bnr/spacemacs/pull/179."
-  (if (and (listp backends) (memq 'company-yasnippet backends))
-    backends
-    (append (if (consp backends)
-              backends
-              (list backends))
-      '(:with company-yasnippet))))
-
-;; add yasnippet to all backends
-(defun add-yas-in-company ()
-  (setq company-backends
-    (mapcar #'mars/company-backend-with-yas company-backends)))
-
-(add-yas-in-company)
 
 (add-hook 'shell-mode-hook (lambda () (company-mode nil)))
 
@@ -346,6 +375,7 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
                         '(("^ *\\([-]\\) "
                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
+(setq org-directory "~/Dropbox/org")
 (setq org-agenda-files '("~/Dropbox/org"))
 (setq org-default-notes-file (concat org-directory "/Notes.org"))
 
@@ -374,7 +404,7 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
 #+end_src
 ** TODO Keybindings
 TODO: Move these to appropriate packages maybe
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
 (general-define-key
   :keymaps 'company-active-map
   "<tab>"     'yas-expand
@@ -398,6 +428,8 @@ TODO: Move these to appropriate packages maybe
   "wk" 'kill-buffer-and-window
   "wd" 'delete-window
   "ww" 'ace-window
+  "gs" 'avy-goto-char-timer
+  "gl" 'avy-goto-line
   "wr" 'hydra-window-resize-menu/body
   "pp" 'projectile-switch-project
   "pf" 'counsel-projectile-find-file
@@ -406,16 +438,6 @@ TODO: Move these to appropriate packages maybe
   "cf" 'counsel-grep-or-swiper
   "op" 'treemacs
   "om" 'magit)
-
-
-;; For all other keybindings
-(general-define-key
-  :states '(normal visual)
-  :prefix "M-g"
-  :keymaps 'override
-  "s" 'avy-goto-char-timer
-  "l" 'avy-goto-line
-  )
 
 (general-define-key
   :states '(visual)

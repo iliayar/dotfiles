@@ -52,17 +52,22 @@ Plug 'preservim/nerdcommenter'
 " Gruvbox
 Plug 'morhetz/gruvbox'
 
+" pywal
+Plug 'dylanaraps/wal.vim'
+
 " Improved search
 Plug 'easymotion/vim-easymotion'
 
 call plug#end()
 
 " Gruvbox colorscheme
-autocmd VimEnter * colorscheme gruvbox
+" autocmd VimEnter * colorscheme gruvbox
 
 " Monokai colorscheme
 "colorscheme monokai
 
+" Pywal
+colorscheme wal
 
 " Transparent background
 "autocmd VimEnter * hi Normal guibg=NONE ctermbg=NONE

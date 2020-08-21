@@ -2,70 +2,23 @@
 font = Hack 9
 scrollback_lines = -1
 [colors]
-## special
-#foreground      = #ffffff
-#cursor          = #33ff00
-#background      = rgba(43,0,54,0.8)
-#
-## black
-#color0  = #000000
-#color8  = #ff7000
-#
-## red
-#color1  = #22aa00
-#color9  = #ff0099
-#
-## green
-#color2  = #33dd00
-#color10 = #ff003e
-#
-## yellow
-#color3  = #c40075
-#color11 = #b80021
-#
-# blue
-#color4  = #0070ff
-#color12 = #0059b9
-#
-## magenta
-#color5  = #db00ff
-#color13 = #73009b
-#
-## cyan
-#color6  = #00fcff
-#color14 = #019b9b
-#
-## white
-#color7  = #ccff00
-#color15 = #c7c700
-#################################
-# Color settings (Solarized dark)
-#################################
-background = rgba(29, 32, 33, 0.8 )
-foreground = #d5c4a1
+background = rgba(29,32,33,0.8)
+foreground = #ebdbb2
 cursor = #d5c4a1
-# black dark/light
 color0 = #282828
 color8 = #928374
-# red dark/light
 color1 = #cc241d
 color9 = #fb4934
-# green dark/light
 color2 = #98971a
 color10 = #b8bb26
-# yellow dark/light
 color3 = #d79921
 color11 = #fabd2f
-# blue dark/light
 color4 = #458588
 color12 = #83a598
-# magenta dark/light
 color5 = #b16286
 color13 = #d3869b
-# cyan dark/light
 color6 = #689d6a
 color14 = #8ec07c
-# white dark/light
 color7 = #a89984
 color15 = #ebdbb2
 [hints]
