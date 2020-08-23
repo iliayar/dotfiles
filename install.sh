@@ -29,6 +29,7 @@ MODULES=(
         themes
         others
         spotifyd
+        conky
     )
 
 config() {
@@ -357,11 +358,11 @@ install_xmonad() {
 
     stack init
 
-    ln -f "$DIR/other/xmonad/stack.yml" ./
+    ln -sf "$DIR/other/xmonad/stack.yml" ./
 
     stack install
     
-    ln -f "$DIR/other/xmonad/build" ./
+    ln -sf "$DIR/other/xmonad/build" ./
     chmod a+x ./build
 
     xmonad --recompile
@@ -440,6 +441,16 @@ spotifyd_install() {
     cargo install --features pulseaudio_backend,dbus_mpris --path . --locked
 
     cd "$DIR" || exit
+}
+
+## Conky
+conky() {
+    DEPS+=(
+        conky
+    )
+    CONFIGS+=(
+        .config/conky
+    )
 }
 
 echo "Select modules: "

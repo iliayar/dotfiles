@@ -135,7 +135,7 @@
   :ensure t
   :init (setq ewal-use-built-in-always nil
               ewal-use-built-in-on-failure-p t
-              ewal-built-in-palette "doom-molokai"))
+              ewal-built-in-palette "doom-gruvbox"))
 (use-package ewal-doom-themes
   :ensure t
   :init (load-theme 'ewal-doom-one t))
@@ -143,10 +143,10 @@
 ;; (use-package xresources-theme
 ;;   :ensure t)
 
-;; (use-package doom-themes
-;;   :ensure t
-;;   :preface (defvar region-fg nil) ; this prevents a weird bug with doom themes
-;;   :init (load-theme 'doom-gruvbox t))
+(use-package doom-themes
+  :ensure t
+  :preface (defvar region-fg nil)) ; this prevents a weird bug with doom themes
+  ;; :init (load-theme 'doom-gruvbox t))
 
 ;; Rainbow paretheses
 (use-package rainbow-delimiters
