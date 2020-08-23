@@ -64,10 +64,10 @@ call plug#end()
 " autocmd VimEnter * colorscheme gruvbox
 
 " Monokai colorscheme
-"colorscheme monokai
+colorscheme monokai
 
 " Pywal
-colorscheme wal
+" colorscheme wal
 
 " Transparent background
 "autocmd VimEnter * hi Normal guibg=NONE ctermbg=NONE

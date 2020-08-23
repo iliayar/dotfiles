@@ -406,12 +406,12 @@ myKeys = \conf -> let
   prefix p m d = (p, withDzenKeymapsPipe d m $ createSubmap m,
                   "+ " ++ d ++ "\n" ++ getHelp m)
   dzenAllBindings = withDzenKeymapsPipe "Keybindings" keymap $ createSubmap []
-  restartRecompile = wrapBash $ (++" || (echo \x1b[31mFailed\x1b[m; killall xmessage; echo Press Enter; read)") $ wrap "(" ")" $ intercalate " && "
+  restartRecompile =  wrapBash $ (++" || (echo \x1b[31mFailed\x1b[m; killall xmessage; echo Press Enter; read)") $ wrap "(" ")" $ intercalate " && "
     [ "cd ~/.xmonad"
-    , "stack ghc -- --make ~/.xmonad/xmonadctl.hs"
-    , "stack ghc -- --make ~/.config/xmobar/xmobar.hs  -i$HOME/.config/xmobar/"
-    , "stack ghc -- --make ~/.config/xmobar/xmobar_top.hs  -i$HOME/.config/xmobar/"
-    , "stack ghc -- --make ~/.config/xmobar/xmobar_mon2.hs  -i$HOME/.config/xmobar/"
+    , "ghc -threaded ~/.xmonad/xmonadctl.hs"
+    , "ghc -threaded ~/.config/xmobar/xmobar.hs  -i$HOME/.config/xmobar/"
+    , "ghc -threaded ~/.config/xmobar/xmobar_top.hs  -i$HOME/.config/xmobar/"
+    , "ghc -threaded ~/.config/xmobar/xmobar_mon2.hs  -i$HOME/.config/xmobar/"
     , "xmonad --recompile"
     , "xmonad --restart"
     , "echo \x1b[32mSucceed\x1b[m"
@@ -638,9 +638,10 @@ myStartupHook = do
           spawnOnce "stalonetray"
           spawnOnce "xsetroot -cursor_name arrow"
           spawnOnce "~/bin/blocks/music_xmobar_async.sh"
+          spawnOnce "emacs --daemon &"
+          spawnOnce "~/.config/xmobar/xmobar"
           spawn "xrdb ~/.Xresources"
           setWMName "LG3D"
-          spawnOnce "emacs --daemon &"
 
 -------------------------------------------------
 ------------------ Prompts ----------------------
@@ -664,7 +665,7 @@ myXPConfig = def
       , autoComplete        = Nothing
       , showCompletionOnTab = False
       , searchPredicate     = fuzzyMatch
-      , sorter              = fuzzySort
+      -- , sorter              = fuzzySort
       , alwaysHighlight     = True
       , maxComplRows        = Nothing
       }
@@ -735,10 +736,6 @@ passInsertPrompt c =
 -------------------------------------------------
 
 main = do
-        homeDir <- getHomeDirectory
-        xmproc0 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar"
-        xmproc1 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_mon2"
-        -- xmproc2 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_top"
         xmonad $ ewmh def {
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
@@ -755,10 +752,7 @@ main = do
         handleEventHook    = myEventHook,
         logHook            = dynamicLogWithPP xmobarPP
                 { ppOutput  = \x -> let encX = decodeString x
-                  in
-                     hPutStrLn xmproc0 encX
-                  >> hPutStrLn xmproc1 encX
-                  -- >> appendFile "/tmp/.xmonad_data" (deodeString x)
+                  in appendFile "/tmp/.xmonad_data" (encX ++ "\n")
                 , ppCurrent = xmobarColor Theme.color2 "" . wrap "[" "]"
                 , ppVisible = xmobarColor Theme.color2 ""
                 , ppTitle   = xmobarColor Theme.color9 "" . shorten 25
@@ -766,8 +760,5 @@ main = do
                 , ppExtras  = []
                 , ppOrder   = \(ws:l:t:ex) -> [ws,l]++ex++[t]
                 },
-        -- logHook = io (do
-        --               hPutStrLn xmproc0 "Тест"
-        --           ),
         startupHook        = myStartupHook
     }

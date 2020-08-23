@@ -12,14 +12,14 @@ config = defaultConfig {
    , additionalFonts = additionalFonts'
    , fgColor         = Theme.foreground
    , alpha           = 255
-   , position        = OnScreen 0 $ Top
+   , position        = Bottom
 --    , position    =  Static {xpos = 0, ypos = 1060, width = 1364, height = 20}
    , borderColor     = "#646464"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = ""
+   , template = "Test }{ Test"
 
    -- general behavior
    , lowerOnStart     = True    -- send to bottom of window stack on start

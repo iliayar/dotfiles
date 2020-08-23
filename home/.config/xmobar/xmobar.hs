@@ -12,20 +12,20 @@ config = defaultConfig {
    , additionalFonts = additionalFonts'
    , fgColor         = Theme.foreground
    , alpha           = 200
-   , position        = OnScreen 0 $ Bottom
+   , position        = Bottom
 --    , position    =  Static {xpos = 0, ypos = 1060, width = 1364, height = 20}
    , borderColor     = "#646464"
 
    -- layout
    , sepChar  = "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "<action=~/.xmonad/xmonadctl 1>" ++ (icon "edved") ++ "</action> | %UnsafeStdinReader% }{ %music% | %updates% | %disku% | %bright% | %default:Master% | %kbd% | %memory% | %multicpu% | %dynnetwork% | %battery% | %multicoretemp% | %date% "
+   , template = "<action=~/.xmonad/xmonadctl 1>" ++ (icon "edved") ++ "</action> | %xmonad% }{ %music% | %disku% | %bright% | %default:Master% | %kbd% | %memory% | %multicpu% | %dynnetwork% | %battery% | %multicoretemp% | %date% "
 
    -- general behavior
    , lowerOnStart     = True    -- send to bottom of window stack on start
    , hideOnStart      = False   -- start with window unmapped (hidden)
    , allDesktops      = True    -- show on all desktops
-   , overrideRedirect = True    -- set the Override Theme.Color1irect flag (Xlib)
+   , overrideRedirect = False   -- set the Override Theme.Color1irect flag (Xlib)
    , pickBroadest     = False   -- choose widest display (multi-monitor)
    , persistent       = True    -- enable/disable hiding (True = disabled)
    , iconRoot         = "/home/iliayar/.xmonad/xpm/"  -- default: "."
@@ -133,9 +133,10 @@ config = defaultConfig {
 
         -- Xmonad worspaces and program title
         , Run $ UnsafeStdinReader
-        , Run $ Com "bash" ["-c", "~/bin/blocks/pacman_xmobar.sh &"] "updates" 36000
+        -- , Run $ Com "bash" ["-c", "~/bin/blocks/pacman_xmobar.sh &"] "updates" 36000
         -- , Run $ Com "bash" ["-c", "~/bin/blocks/music_xmobar.sh &"] "music" 50
         , Run $ PipeReader "/tmp/.music_data" "music"
+        , Run $ PipeReader "/tmp/.xmonad_data" "xmonad"
         ]
    }
 main :: IO ()
