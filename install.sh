@@ -29,6 +29,7 @@ MODULES=(
         themes
         others
         spotifyd
+        conky
     )
 
 config() {
@@ -439,6 +440,16 @@ spotifyd_install() {
     cargo install --features pulseaudio_backend,dbus_mpris --path . --locked
 
     cd "$DIR" || exit
+}
+
+## Conky
+conky() {
+    DEPS+=(
+        conky
+    )
+    CONFIGS+=(
+        .config/conky
+    )
 }
 
 echo "Select modules: "
