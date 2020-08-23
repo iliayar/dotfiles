@@ -352,11 +352,11 @@ install_xmonad() {
 
     stack init
 
-    ln -f "$DIR/other/xmonad/stack.yml" ./
+    ln -sf "$DIR/other/xmonad/stack.yml" ./
 
     stack install
     
-    ln -f "$DIR/other/xmonad/build" ./
+    ln -sf "$DIR/other/xmonad/build" ./
     chmod a+x ./build
 
     xmonad --recompile
