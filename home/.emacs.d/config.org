@@ -66,44 +66,60 @@ Fuzzy match for /company/ \\
   ;;   :config
   ;;   (global-company-fuzzy-mode f))
 #+end_src
+Completion for commands
+#+begin_src emacs-lisp
+(use-package counsel
+  :ensure t
+  :init
+  (ivy-mode 1))
+#+end_src
+Keys hints
+#+begin_src emacs-lisp
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode 1))
+#+end_src
 *** Web
 Package for html live view
 #+begin_src emacs-lisp
 (use-package impatient-mode
   :ensure t)
 #+end_src
-*** TODO Other
+*** Projects
+Projects management with /counsel/ completion
 #+begin_src emacs-lisp
-(use-package counsel
-  :ensure t
-  :init
-  (ivy-mode 1))
-
-;; Managing project
 (use-package projectile
   :ensure t
   :config
   (projectile-mode))
 (use-package counsel-projectile
   :ensure t)
-
-;; Git integration
+#+end_src
+Git tool
+#+begin_src emacs-lisp
 (use-package magit
   :ensure t)
-
-;; Hightlight TODO words
-(use-package hl-todo
+#+end_src
+Project tree
+#+begin_src emacs-lisp
+(use-package treemacs
+  :ensure t)
+(use-package treemacs-evil
+  :ensure t)
+(use-package treemacs-projectile
+  :ensure t)
+#+end_src
+Start buffer
+#+begin_src emacs-lisp
+(use-package dashboard
   :ensure t
   :config
-  (global-hl-todo-mode t))
-
-;; Key hints
-(use-package which-key
-  :ensure t
-  :config
-  (which-key-mode 1))
-
-;; Evil mode with dependecies
+  (dashboard-setup-startup-hook))
+#+end_src
+*** Evil mode
+Evil with dependecies
+#+begin_src emacs-lisp
 (use-package undo-tree
   :ensure t)
 (use-package goto-chg
@@ -111,44 +127,154 @@ Package for html live view
 (use-package evil
   :ensure t
   :init
-  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+  (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
   :config
   (evil-mode 1))
+#+end_src
+Collection of evil keybindings
+#+begin_src emacs-lisp
 (use-package evil-collection
   :after evil
   :ensure t
   :config
   (evil-collection-init))
+#+end_src
+Fast search
+#+begin_src emacs-lisp
 (use-package evil-snipe
   :ensure t
   :config
   (evil-snipe-mode +1)
   (evil-snipe-override-mode +1))
-
-;; Smart parenthesis
+#+end_src
+Change brakets in evil mode
+#+begin_src emacs-lisp
+(use-package evil-surround
+  :ensure t
+  :config
+  (global-evil-surround-mode 1))
+#+end_src
+Multicursor
+#+begin_src emacs-lisp
+(use-package evil-multiedit
+  :ensure t)
+(use-package evil-mc
+  :ensure t
+  :config
+  (global-evil-mc-mode 1))
+#+end_src
+*** Visual
+Icons
+#+begin_src emacs-lisp
+(use-package all-the-icons
+ :ensure t)
+#+end_src
+HIghlight todo keywords
+#+begin_src emacs-lisp
+(use-package hl-todo
+  :ensure t
+  :config
+  (global-hl-todo-mode t))
+#+end_src
+Colorize parenthesis
+#+begin_src emacs-lisp
+(use-package rainbow-delimiters
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
+#+end_src
+Org headers icons
+#+begin_src emacs-lisp
+(use-package org-bullets
+  :ensure t)
+#+end_src
+*** Programming
+Auto parenthesis
+#+begin_src emacs-lisp
 (use-package smartparens
   :ensure t
   :init
   (smartparens-global-mode))
-
-;; Treemacs
-(use-package treemacs
-  :ensure t)
-(use-package treemacs-evil
-  :ensure t)
-(use-package treemacs-projectile
-  :ensure t)
-
-;; Startup Dashboard
-(use-package dashboard
+#+end_src
+Editconfig support
+#+begin_src emacs-lisp
+(use-package editorconfig
   :ensure t
   :config
-  (dashboard-setup-startup-hook))
-
-;; Icons
-(use-package all-the-icons
- :ensure t)
+  (editorconfig-mode 1))
+#+end_src
+Snippets
+#+begin_src emacs-lisp
+(use-package yasnippet
+  :ensure t
+  :init
+  (yas-global-mode 1))
+(use-package yasnippet-snippets
+  :ensure t)
+#+end_src
+Code formatting
+#+begin_src emacs-lisp
+(use-package format-all
+  :ensure t)
+#+end_src
+Searching
+#+begin_src emacs-lisp
+(use-package avy
+  :ensure t)
+#+end_src
+Windows hoping
+#+begin_src emacs-lisp
+(use-package ace-window
+  :ensure t)
+#+end_src
+**** Languages and lsp
+lsp client
+#+begin_src emacs-lisp
+(use-package  lsp-mode
+  :hook (
+        (lsp-mode . lsp-enable-which-key-integration) 
+        )
+  :ensure t)
+#+end_src
+Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/ \\
+Lsp integration with several plugins
+#+begin_src emacs-lisp
+(use-package flycheck
+  :ensure t)
+(use-package lsp-ui
+  :ensure t)
+(use-package lsp-treemacs
+  :ensure t)
+(use-package lsp-ivy
+  :ensure t)
+#+end_src
+Python lsp
+#+begin_src emacs-lisp
+(use-package lsp-python-ms
+  :ensure t
+  :init (setq lsp-python-ms-auto-install-server t)
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-python-ms))))
+#+end_src
+Lsp for latex
+#+begin_src emacs-lisp
+(use-package lsp-latex
+  :ensure t)
+#+end_src
+Go mode
+#+begin_src emacs-lisp
+(use-package go-mode
+  :ensure t)
+#+end_src
+Haskell mode
+#+begin_src emacs-lisp
+(use-package haskell-mode
+  :ensure t)
+#+end_src
+Yaml files
+#+begin_src emacs-lisp
+(use-package yaml-mode
+  :ensure t)
 #+end_src
 *** Themes
 /Doom-modeline/ as modeline
@@ -157,7 +283,8 @@ Package for html live view
   :ensure t
   :init 
   (doom-modeline-mode 1)
-  (setq doom-modeline-icon (display-graphic-p)))
+  :config
+  (setq doom-modeline-icon t))
 #+end_src
 Colors from pywal
 #+begin_src emacs-lisp
@@ -167,8 +294,8 @@ Colors from pywal
               ewal-use-built-in-on-failure-p t
               ewal-built-in-palette "doom-gruvbox"))
 (use-package ewal-doom-themes
-  :ensure t
-  :init (load-theme 'ewal-doom-one t))
+  :ensure t)
+  ;; :init (load-theme 'ewal-doom-one t))
 #+end_src
 *Or* Colors from xresources
 #+begin_src emacs-lisp
@@ -179,107 +306,20 @@ Colors from pywal
 #+begin_src emacs-lisp
   (use-package doom-themes
     :ensure t
-    :preface (defvar region-fg nil)) ; this prevents a weird bug with doom themes
-    ;; :init (load-theme 'doom-gruvbox t))
+    :preface (defvar region-fg nil)
+    (setq doom-themes-treemacs-theme "doom-colors")
+    (doom-themes-treemacs-config)
+    (doom-themes-org-config)
+    :init (load-theme 'doom-monokai-classic t))
 #+end_src
-*** TODO Other
+*** Keybingings
+Convenient keybindings
 #+begin_src emacs-lisp
-;; Rainbow paretheses
-(use-package rainbow-delimiters
-  :ensure t
-  :hook (prog-mode . rainbow-delimiters-mode))
-
-;; Vim surround like
-(use-package evil-surround
-  :ensure t
-  :config
-  (global-evil-surround-mode 1))
-
-;; Multicursor
-(use-package evil-multiedit
-  :ensure t)
-(use-package evil-mc
-  :ensure t
-  :config
-  (global-evil-mc-mode 1))
-
-;; Editorconfig
-(use-package editorconfig
-  :ensure t
-  :config
-  (editorconfig-mode 1))
-
-;; Snippets
-(use-package yasnippet
-  :ensure t
-  :init
-  (yas-global-mode 1))
-(use-package yasnippet-snippets
-  :ensure t)
-
-
-;; Latex
-;(use-package auctex
-  ;:ensure t)
-;(use-package company-auctex
-  ;:ensure t)
-
-;; LSP
-(use-package  lsp-mode
-  :hook (
-        ;; (XXX-mode . lsp) ;; auto enable lsp on XXX-mode
-        (lsp-mode . lsp-enable-which-key-integration) 
-        )
-  :ensure t)
-(use-package flycheck
-  :ensure t)
-(use-package lsp-ui
-  :ensure t)
-(use-package lsp-treemacs
-  :ensure t)
-(use-package lsp-ivy
-  :ensure t)
-(use-package lsp-python-ms
-  :ensure t
-  :init (setq lsp-python-ms-auto-install-server t)
-  :hook (python-mode . (lambda ()
-                          (require 'lsp-python-ms))))
-
-;; Go
-(use-package go-mode
-  :ensure t)
-
-;; Haskell
-(use-package haskell-mode
-  :ensure t)
-
-;; Install https://github.com/latex-lsp/texlab.git before
-(use-package lsp-latex
-  :ensure t)
-
-;; Yaml
-(use-package yaml-mode
-  :ensure t)
-
-;; Org mode
-(use-package org-bullets
-  :ensure t)
-
-;; Avy search
-(use-package avy
-  :ensure t)
-
-;; Window managment
-(use-package ace-window
-  :ensure t)
-
-;; Formatting
-(use-package format-all
-  :ensure t)
-
-;; Keybindings
 (use-package general
   :ensure t)
+#+end_src
+Cinstructing menus
+#+begin_src emacs-lisp
 (use-package hydra
   :ensure t)
 #+end_src
@@ -304,6 +344,46 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
 
 (add-yas-in-company)
 #+end_src
+*** Org mode
+Increse readability of latex preview in org-mode
+#+begin_src emacs-lisp
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+#+end_src
+*** Functions
+Compilation window behaviour
+#+begin_src emacs-lisp
+(defun kill-buffer-if-exists (buffer)
+  (when (not (eq nil (get-buffer buffer)))
+     (delete-windows-on buffer) (kill-buffer buffer)))
+
+(defun kill-compilation-buffer ()
+  (interactive)
+  (kill-buffer-if-exists "*compilation*"))
+  
+
+(defun my-compile ()
+      "Run compile and resize the compile window"
+      (interactive)
+      (progn
+        (call-interactively 'compile)
+        (setq cur (selected-window))
+        (setq w (get-buffer-window "*compilation*"))
+        (select-window w)
+        (setq h (window-height w))
+        ;; (shrink-window (- h 20))
+        (select-window cur)))
+
+(defun my-compilation-hook () 
+    "Make sure that the compile window is splitting vertically"
+    (progn
+      (if (not (get-buffer-window "*compilation*"))
+         (progn
+	    (split-window-vertically)))))
+
+;; (add-hook 'compilation-mode-hook 'my-compilation-hook)
+(remove-hook 'compilation-mode-hook 'my-compilation-hook t)
+
+#+end_src
 *** TODO Other
 #+begin_src emacs-lisp
 (defun init-hooks () (global-display-line-numbers-mode 1))
@@ -321,14 +401,6 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
                         (registers . 5)))
 
 (add-hook 'after-init-hook 'init-hooks)
-
-(defun kill-buffer-if-exists (buffer)
-  (when (not (eq nil (get-buffer buffer)))
-    (delete-windows-on buffer) (kill-buffer buffer)))
-
-(defun kill-compilation-buffer ()
-  (interactive)
-  (kill-buffer-if-exists "*compilation*"))
 
 (add-hook 'shell-mode-hook (lambda () (company-mode nil)))
 
@@ -435,6 +507,7 @@ TODO: Move these to appropriate packages maybe
   "wr" 'hydra-window-resize-menu/body
   "pp" 'projectile-switch-project
   "pf" 'counsel-projectile-find-file
+  "pc" 'projectile-compile-project
   "ff" 'counsel-find-file
   "cl" 'comment-or-uncomment-region
   "cf" 'counsel-grep-or-swiper

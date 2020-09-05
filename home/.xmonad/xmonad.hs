@@ -418,27 +418,28 @@ myKeys = \conf -> let
     , "sleep 1"
     ]
   keymap =
-    [ ("M-."         , sendMessage (IncMasterN (-1))                          , "Decrease Master N"        )
-    , ("M-,"         , sendMessage (IncMasterN 1)                             , "Increase Master N"        )
-    , ("M-a"         , sendMessage MirrorShrink                               , "Mirror shrink"            )
-    , ("M-z"         , sendMessage MirrorExpand                               , "Mirror expand"            )
-    , ("M-h"         , sendMessage Shrink                                     , "Shrink window"            )
-    , ("M-j"         , windows W.focusDown                                    , "Prev window"              )
-    , ("M-k"         , windows W.focusUp                                      , "Next window"              )
-    , ("M-l"         , sendMessage Expand                                     , "Expand window"            )
-    , ("M-f"         , makeFullscreenNoDock                                   , "Fullscreen Toggle"        )
-    , ("M-<Space>"   , sendMessage NextLayout                                 , "Cicle layouts"            )
-    , ("M-<Return>"  , spawn $ XMonad.terminal conf                           , "Launch terminal"          )
-    , ("M-S-/"       , termShowKeybindings $ getHelp keymap                   , "Show this help"           )
-    , ("M-S-c"       , termSpawn tempTermite restartRecompile                 , "Recompile, restart XMonad")
-    , ("M-S-d"       , spawn "notify-send 'DUNST_COMMAND_TOGGLE'"             , "Toggle notifications"     )
-    , ("M-S-j"       , windows W.swapDown                                     , "Swap window with prev"    )
-    , ("M-S-k"       , windows W.swapUp                                       , "Swap window with next"    )
-    , ("M-S-q"       , kill                                                   , "Close window"             )
-    , ("M-S-<Space>" , windows W.focusMaster                                  , "Focus master window"      )
-    , ("M-S-<Return>", windows W.swapMaster                                   , "Make window master"       )
-    , ("M-C-/"       , dzenAllBindings                                        , "Show this help"           )
-    , ("M-C-x"       , spawn "xkill"                                          , "Launch xkill"             )
+    [ ("M-."         , sendMessage (IncMasterN (-1))             , "Decrease Master N")
+    , ("M-,"         , sendMessage (IncMasterN 1)                , "Increase Master N")
+    , ("M-a"         , sendMessage MirrorShrink                  , "Mirror shrink")
+    , ("M-z"         , sendMessage MirrorExpand                  , "Mirror expand")
+    , ("M-h"         , sendMessage Shrink                        , "Shrink window")
+    , ("M-j"         , windows W.focusDown                       , "Prev window")
+    , ("M-k"         , windows W.focusUp                         , "Next window")
+    , ("M-l"         , sendMessage Expand                        , "Expand window")
+    , ("M-f"         , makeFullscreenNoDock                      , "Fullscreen Toggle")
+    , ("M-<Space>"   , sendMessage NextLayout                    , "Cicle layouts")
+    , ("M-<Return>"  , spawn $ XMonad.terminal conf              , "Launch terminal")
+    , ("M-S-/"       , termShowKeybindings $ getHelp keymap      , "Show this help")
+    , ("M-S-c"       , termSpawn tempTermite restartRecompile    , "Recompile, restart XMonad")
+    , ("M-C-c"       , spawn restartRecompile                    , "Recompile, restart XMonad quite")
+    , ("M-S-d"       , spawn "notify-send 'DUNST_COMMAND_TOGGLE'", "Toggle notifications")
+    , ("M-S-j"       , windows W.swapDown                        , "Swap window with prev")
+    , ("M-S-k"       , windows W.swapUp                          , "Swap window with next")
+    , ("M-S-q"       , kill                                      , "Close window")
+    , ("M-S-<Space>" , windows W.focusMaster                     , "Focus master window")
+    , ("M-S-<Return>", windows W.swapMaster                      , "Make window master")
+    , ("M-C-/"       , dzenAllBindings                           , "Show this help")
+    , ("M-C-x"       , spawn "xkill"                             , "Launch xkill")
     , prefix "M-s"
       [ ("t", namedScratchpadAction myScratchPads "terminal", "Terminal scratchpad" )
       , ("n", namedScratchpadAction myScratchPads "notes"   , "Notes.org scratchpad")
@@ -515,7 +516,7 @@ myKeys = \conf -> let
                                 \xclip -selection clipboard -t image/png -i $f;\
                                 \mv $f ~/Pictures/screenshots/;\
                                 \notify-send -a 'XMonad' 'Scrot' \"Screenshot copied to clipboard\" -i \"~/Pictures/screenshots/$f\"'"
-      playerctl a = spawn $ "playerctl " ++ a ++ " -p spotifyd"
+      playerctl a = spawn $ "playerctl " ++ a ++ " -p spotify"
       createSearchPrompt = map (\ (a, b, c) -> (a, S.promptSearch myXPConfig b, c))
       createSearchSelect = map (\ (a, b, c) -> (a, S.selectSearch b, c))
       archwiki = S.searchEngine "archwiki" "https://wiki.archlinux.org/index.php?search="
@@ -629,18 +630,18 @@ myEventHook = serverModeEventHook' (return myCommands)
           <+> docksEventHook
 
 myStartupHook = do
-          spawnOnce "~/.cargo/bin/spotifyd"
-          spawnOnce "~/.config/conky/run_conky.sh"
-          spawnOnce "~/.dropbox-dist/dropboxd"
+          -- spawnOnce "~/.cargo/bin/spotifyd"
+          spawnOnce "~/.config/conky/run_conky.sh &"
+          spawnOnce "~/.dropbox-dist/dropboxd &"
           spawnOnce "nitrogen --restore &"
-          spawnOnce "picom --experimental-backends -b"
-          spawnOnce "lxpolkit"
-          spawnOnce "stalonetray"
-          spawnOnce "xsetroot -cursor_name arrow"
-          spawnOnce "~/bin/blocks/music_xmobar_async.sh"
+          spawnOnce "picom --experimental-backends -b &"
+          spawnOnce "lxpolkit &"
+          spawnOnce "stalonetray &"
+          spawnOnce "xsetroot -cursor_name arrow &"
+          spawnOnce "~/bin/blocks/music_xmobar_async.sh &"
+          spawnOnce "emacs --daemon &"
           spawn "xrdb ~/.Xresources"
           setWMName "LG3D"
-          spawnOnce "emacs --daemon &"
 
 -------------------------------------------------
 ------------------ Prompts ----------------------
@@ -737,7 +738,7 @@ passInsertPrompt c =
 main = do
         homeDir <- getHomeDirectory
         xmproc0 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar"
-        xmproc1 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_mon2"
+        -- xmproc1 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_mon2"
         -- xmproc2 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_top"
         xmonad $ ewmh def {
         terminal           = myTerminal,
@@ -757,7 +758,7 @@ main = do
                 { ppOutput  = \x -> let encX = decodeString x
                   in
                      hPutStrLn xmproc0 encX
-                  >> hPutStrLn xmproc1 encX
+                  -- >> hPutStrLn xmproc1 encX
                   -- >> appendFile "/tmp/.xmonad_data" (deodeString x)
                 , ppCurrent = xmobarColor Theme.color2 "" . wrap "[" "]"
                 , ppVisible = xmobarColor Theme.color2 ""

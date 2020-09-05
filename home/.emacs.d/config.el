@@ -46,15 +46,19 @@
 ;;   :config
 ;;   (global-company-fuzzy-mode f))
 
-(use-package impatient-mode
-  :ensure t)
-
 (use-package counsel
   :ensure t
   :init
   (ivy-mode 1))
 
-;; Managing project
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode 1))
+
+(use-package impatient-mode
+  :ensure t)
+
 (use-package projectile
   :ensure t
   :config
@@ -62,52 +66,9 @@
 (use-package counsel-projectile
   :ensure t)
 
-;; Git integration
 (use-package magit
   :ensure t)
 
-;; Hightlight TODO words
-(use-package hl-todo
-  :ensure t
-  :config
-  (global-hl-todo-mode t))
-
-;; Key hints
-(use-package which-key
-  :ensure t
-  :config
-  (which-key-mode 1))
-
-;; Evil mode with dependecies
-(use-package undo-tree
-  :ensure t)
-(use-package goto-chg
-  :ensure t)
-(use-package evil
-  :ensure t
-  :init
-  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
-  (setq evil-want-keybinding nil)
-  :config
-  (evil-mode 1))
-(use-package evil-collection
-  :after evil
-  :ensure t
-  :config
-  (evil-collection-init))
-(use-package evil-snipe
-  :ensure t
-  :config
-  (evil-snipe-mode +1)
-  (evil-snipe-override-mode +1))
-
-;; Smart parenthesis
-(use-package smartparens
-  :ensure t
-  :init
-  (smartparens-global-mode))
-
-;; Treemacs
 (use-package treemacs
   :ensure t)
 (use-package treemacs-evil
@@ -115,51 +76,40 @@
 (use-package treemacs-projectile
   :ensure t)
 
-;; Startup Dashboard
 (use-package dashboard
   :ensure t
   :config
   (dashboard-setup-startup-hook))
 
-;; Icons
-(use-package all-the-icons
- :ensure t)
-
-(use-package doom-modeline
+(use-package undo-tree
+  :ensure t)
+(use-package goto-chg
+  :ensure t)
+(use-package evil
   :ensure t
-  :init 
-  (doom-modeline-mode 1)
-  (setq doom-modeline-icon (display-graphic-p)))
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  :config
+  (evil-mode 1))
 
-(use-package ewal
+(use-package evil-collection
+  :after evil
   :ensure t
-  :init (setq ewal-use-built-in-always nil
-              ewal-use-built-in-on-failure-p t
-              ewal-built-in-palette "doom-gruvbox"))
-(use-package ewal-doom-themes
+  :config
+  (evil-collection-init))
+
+(use-package evil-snipe
   :ensure t
-  :init (load-theme 'ewal-doom-one t))
+  :config
+  (evil-snipe-mode +1)
+  (evil-snipe-override-mode +1))
 
-;; (use-package xresources-theme
-;;   :ensure t)
-
-(use-package doom-themes
-  :ensure t
-  :preface (defvar region-fg nil)) ; this prevents a weird bug with doom themes
-  ;; :init (load-theme 'doom-gruvbox t))
-
-;; Rainbow paretheses
-(use-package rainbow-delimiters
-  :ensure t
-  :hook (prog-mode . rainbow-delimiters-mode))
-
-;; Vim surround like
 (use-package evil-surround
   :ensure t
   :config
   (global-evil-surround-mode 1))
 
-;; Multicursor
 (use-package evil-multiedit
   :ensure t)
 (use-package evil-mc
@@ -167,13 +117,31 @@
   :config
   (global-evil-mc-mode 1))
 
-;; Editorconfig
+(use-package all-the-icons
+ :ensure t)
+
+(use-package hl-todo
+  :ensure t
+  :config
+  (global-hl-todo-mode t))
+
+(use-package rainbow-delimiters
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+(use-package org-bullets
+  :ensure t)
+
+(use-package smartparens
+  :ensure t
+  :init
+  (smartparens-global-mode))
+
 (use-package editorconfig
   :ensure t
   :config
   (editorconfig-mode 1))
 
-;; Snippets
 (use-package yasnippet
   :ensure t
   :init
@@ -181,20 +149,21 @@
 (use-package yasnippet-snippets
   :ensure t)
 
+(use-package format-all
+  :ensure t)
 
-;; Latex
-;(use-package auctex
-  ;:ensure t)
-;(use-package company-auctex
-  ;:ensure t)
+(use-package avy
+  :ensure t)
 
-;; LSP
+(use-package ace-window
+  :ensure t)
+
 (use-package  lsp-mode
   :hook (
-        ;; (XXX-mode . lsp) ;; auto enable lsp on XXX-mode
         (lsp-mode . lsp-enable-which-key-integration) 
         )
   :ensure t)
+
 (use-package flycheck
   :ensure t)
 (use-package lsp-ui
@@ -203,47 +172,56 @@
   :ensure t)
 (use-package lsp-ivy
   :ensure t)
+
 (use-package lsp-python-ms
   :ensure t
   :init (setq lsp-python-ms-auto-install-server t)
   :hook (python-mode . (lambda ()
                           (require 'lsp-python-ms))))
 
-;; Go
-(use-package go-mode
-  :ensure t)
-
-;; Haskell
-(use-package haskell-mode
-  :ensure t)
-
-;; Install https://github.com/latex-lsp/texlab.git before
 (use-package lsp-latex
   :ensure t)
 
-;; Yaml
+(use-package go-mode
+  :ensure t)
+
+(use-package haskell-mode
+  :ensure t)
+
 (use-package yaml-mode
   :ensure t)
 
-;; Org mode
-(use-package org-bullets
-  :ensure t)
+(use-package doom-modeline
+  :ensure t
+  :init 
+  (doom-modeline-mode 1)
+  :config
+  ;; (setq doom-modeline-icon (display-graphic-p)))
+  (setq doom-modeline-icon t))
 
-;; Avy search
-(use-package avy
+(use-package ewal
+  :ensure t
+  :init (setq ewal-use-built-in-always nil
+              ewal-use-built-in-on-failure-p t
+              ewal-built-in-palette "doom-gruvbox"))
+(use-package ewal-doom-themes
   :ensure t)
+  ;; :init (load-theme 'ewal-doom-one t))
 
-;; Window managment
-(use-package ace-window
-  :ensure t)
+;; (use-package xresources-theme
+;;   :ensure t)
 
-;; Formatting
-(use-package format-all
-  :ensure t)
+(use-package doom-themes
+  :ensure t
+  :preface (defvar region-fg nil)
+  (setq doom-themes-treemacs-theme "doom-colors")
+  (doom-themes-treemacs-config)
+  (doom-themes-org-config)
+  :init (load-theme 'doom-monokai-classic t))
 
-;; Keybindings
 (use-package general
   :ensure t)
+
 (use-package hydra
   :ensure t)
 
@@ -263,6 +241,39 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
 
 (add-yas-in-company)
 
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+
+(defun kill-buffer-if-exists (buffer)
+  (when (not (eq nil (get-buffer buffer)))
+     (delete-windows-on buffer) (kill-buffer buffer)))
+
+(defun kill-compilation-buffer ()
+  (interactive)
+  (kill-buffer-if-exists "*compilation*"))
+  
+
+(defun my-compile ()
+      "Run compile and resize the compile window"
+      (interactive)
+      (progn
+        (call-interactively 'compile)
+        (setq cur (selected-window))
+        (setq w (get-buffer-window "*compilation*"))
+        (select-window w)
+        (setq h (window-height w))
+        ;; (shrink-window (- h 20))
+        (select-window cur)))
+
+(defun my-compilation-hook () 
+    "Make sure that the compile window is splitting vertically"
+    (progn
+      (if (not (get-buffer-window "*compilation*"))
+         (progn
+	    (split-window-vertically)))))
+
+;; (add-hook 'compilation-mode-hook 'my-compilation-hook)
+(remove-hook 'compilation-mode-hook 'my-compilation-hook t)
+
 (defun init-hooks () (global-display-line-numbers-mode 1))
 
 (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
@@ -278,14 +289,6 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
                         (registers . 5)))
 
 (add-hook 'after-init-hook 'init-hooks)
-
-(defun kill-buffer-if-exists (buffer)
-  (when (not (eq nil (get-buffer buffer)))
-    (delete-windows-on buffer) (kill-buffer buffer)))
-
-(defun kill-compilation-buffer ()
-  (interactive)
-  (kill-buffer-if-exists "*compilation*"))
 
 (add-hook 'shell-mode-hook (lambda () (company-mode nil)))
 
@@ -389,6 +392,7 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
   "wr" 'hydra-window-resize-menu/body
   "pp" 'projectile-switch-project
   "pf" 'counsel-projectile-find-file
+  "pc" 'projectile-compile-project
   "ff" 'counsel-find-file
   "cl" 'comment-or-uncomment-region
   "cf" 'counsel-grep-or-swiper
