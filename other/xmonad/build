@@ -2,6 +2,7 @@
 exec stack ghc -- \
   --make xmonad.hs \
   -i \
+  -i$HOME/.xmonad \
   -ilib \
   -fforce-recomp \
   -main-is main \

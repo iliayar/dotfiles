@@ -92,6 +92,7 @@ common() {
         sbxkb
         nitrogen
         scrot
+        unzip
         pcmanfm
         xdotool
         pacman-contrib
@@ -116,6 +117,7 @@ common() {
     AUR_DEPS+=(
         picom-ibhagwan-git
         ly-git
+        brave-bin
         gksu
     )
     OPERATIONS+=(
@@ -135,6 +137,7 @@ common() {
 
 config_user() {
     sudo usermod -a -G video "$USER"
+    sudo systemctl enable ly
 }
 
 
@@ -330,6 +333,8 @@ install_i3blocks() {
 xmonad() {
     DEPS+=(
         stalonetray
+        python-pywal
+        dzen2
     )
     CONFIGS+=(
         .xmonad
@@ -381,11 +386,7 @@ others() {
 install_others() {
     echo "Installing others.hs"
     cd other || exit
-
-    sudo systemctl disable sddm
-    sudo systemctl enable ly
     
-    sudo pacman -S nvidia
     sudo cp xorg.conf /etc/X11/xorg.conf
     sudo cp xorg.conf.d /etc/X11/ -r
 
