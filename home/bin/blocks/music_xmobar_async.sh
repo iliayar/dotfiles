@@ -2,7 +2,8 @@
 
 # PLAYER=spotifyd
 # PLAYER_CMD="~/.cargo/bin/spotifyd"
-PLAYER=spotify
+PLAYER=chromium
+#PLAYER=spotify
 PLAYER_CMD="spotify"
 
 SOCKET="/tmp/.music_data"

@@ -429,6 +429,7 @@ myKeys = \conf -> let
     , ("M-f"         , makeFullscreenNoDock                      , "Fullscreen Toggle")
     , ("M-<Space>"   , sendMessage NextLayout                    , "Cicle layouts")
     , ("M-<Return>"  , spawn $ XMonad.terminal conf              , "Launch terminal")
+    -- , ("M1-S-c"         , spawn "termite"                     , "Switch to next layout")
     , ("M-S-/"       , termShowKeybindings $ getHelp keymap      , "Show this help")
     , ("M-S-c"       , termSpawn tempTermite restartRecompile    , "Recompile, restart XMonad")
     , ("M-C-c"       , spawn restartRecompile                    , "Recompile, restart XMonad quite")
@@ -516,7 +517,7 @@ myKeys = \conf -> let
                                 \xclip -selection clipboard -t image/png -i $f;\
                                 \mv $f ~/Pictures/screenshots/;\
                                 \notify-send -a 'XMonad' 'Scrot' \"Screenshot copied to clipboard\" -i \"~/Pictures/screenshots/$f\"'"
-      playerctl a = spawn $ "playerctl " ++ a ++ " -p spotify"
+      playerctl a = spawn $ "playerctl " ++ a ++ " -p chromium"
       createSearchPrompt = map (\ (a, b, c) -> (a, S.promptSearch myXPConfig b, c))
       createSearchSelect = map (\ (a, b, c) -> (a, S.selectSearch b, c))
       archwiki = S.searchEngine "archwiki" "https://wiki.archlinux.org/index.php?search="
@@ -771,4 +772,4 @@ main = do
         --               hPutStrLn xmproc0 "Тест"
         --           ),
         startupHook        = myStartupHook
-    }
+    } -- `additionalKeys` [ ("M1-S", spawn "xkb-switch -n") ]

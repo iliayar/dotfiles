@@ -196,7 +196,6 @@
   :init 
   (doom-modeline-mode 1)
   :config
-  ;; (setq doom-modeline-icon (display-graphic-p)))
   (setq doom-modeline-icon t))
 
 (use-package ewal
