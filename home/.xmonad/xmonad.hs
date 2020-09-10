@@ -629,7 +629,7 @@ myEventHook = serverModeEventHook' (return myCommands)
           <+> docksEventHook
 
 myStartupHook = do
-          spawnOnce "~/.cargo/bin/spotifyd"
+          -- spawnOnce "~/.cargo/bin/spotifyd"
           spawnOnce "~/.config/conky/run_conky.sh"
           spawnOnce "~/.dropbox-dist/dropboxd"
           spawnOnce "nitrogen --restore &"
@@ -737,8 +737,8 @@ passInsertPrompt c =
 main = do
         homeDir <- getHomeDirectory
         xmproc0 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar"
-        xmproc1 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_mon2"
-        -- xmproc2 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_top"
+        -- xmproc1 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_mon2"
+        xmproc2 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_top"
         xmonad $ ewmh def {
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
@@ -757,7 +757,7 @@ main = do
                 { ppOutput  = \x -> let encX = decodeString x
                   in
                      hPutStrLn xmproc0 encX
-                  >> hPutStrLn xmproc1 encX
+                  -- >> hPutStrLn xmproc1 encX
                   -- >> appendFile "/tmp/.xmonad_data" (deodeString x)
                 , ppCurrent = xmobarColor Theme.color2 "" . wrap "[" "]"
                 , ppVisible = xmobarColor Theme.color2 ""
