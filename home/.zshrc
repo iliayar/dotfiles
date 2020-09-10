@@ -87,7 +87,8 @@ source $ZSH/oh-my-zsh.sh
 # alias vim="/usr/bin/vim -Nu ~/.myvim/.vimrc"
 alias neofetch="neofetch --w3m --source ~/Themes/Neofetch.png"
 alias vim="nvim"
-alias emacs="emacsclient -nw -c -a vim"
+alias emacs="emacsclient -c -a vim"
+alias emacs-tui="emacsclient -nw -c -a vim"
 alias emacs-git="emacsclient -nw -c -a vim -e '(progn (magit) (delete-other-windows))'"
 
 # You may need to manually set your language environment
