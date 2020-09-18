@@ -8,6 +8,7 @@ set number
 
 set softtabstop=4
 set tabstop=4
+set shiftwidth=4
 set expandtab
 
 " Display these characters
@@ -57,6 +58,9 @@ Plug 'dylanaraps/wal.vim'
 
 " Improved search
 Plug 'easymotion/vim-easymotion'
+
+" Kotlin support
+Plug 'udalov/kotlin-vim'
 
 call plug#end()
 

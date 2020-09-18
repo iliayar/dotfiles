@@ -10,4 +10,5 @@ setColor :: String -> String -> String
 setColor color s = "<fc=" ++ color ++ ">" ++ s ++ "</fc>"
 
 font' = "xft:Hack:size=8:bold:antialias=true"
-additionalFonts' = ["xft:FontAwesome5Brands:pixelsize=14,FontAwesome5Free:style=Solid:pixelsize=14"]
+additionalFonts' = [ "xft:FontAwesome5Brands:pixelsize=14:antialias=true,FontAwesome5Free:style=Solid:pixelsize=14,xft:PowerlineSymbols:style=Medium:pixelsize=14"]
+-- additionalFonts' = ["xft:FontAwesome5Brands:pixelsize=14:antialias=true,FontAwesome5Free:style=Solid:pixelsize=14,all-the-icons:size=50:antialias=true"]

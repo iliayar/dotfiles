@@ -191,6 +191,9 @@
 (use-package yaml-mode
   :ensure t)
 
+(use-package kotlin-mode
+  :ensure t)
+
 (use-package doom-modeline
   :ensure t
   :init 

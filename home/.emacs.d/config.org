@@ -276,6 +276,12 @@ Yaml files
 (use-package yaml-mode
   :ensure t)
 #+end_src
+Kotlin
+#+BEGIN_SRC emacs-lisp
+(use-package kotlin-mode
+  :ensure t)
+#+END_SRC
+
 *** Themes
 /Doom-modeline/ as modeline
 #+begin_src emacs-lisp
@@ -328,6 +334,8 @@ Cinstructing menus
 Add snippets to company backends
 *For some reason doesn't execute on start*
 #+begin_src emacs-lisp
+(setq company-backends '(company-capf company-bbdb company-clang company-keywords company-yasnippet company-lsp))
+
 (defun mars/company-backend-with-yas (backends)
   "Add :with company-yasnippet to company BACKENDS.
 Taken from https://github.com/syl20bnr/spacemacs/pull/179."
@@ -349,6 +357,13 @@ Increse readability of latex preview in org-mode
 #+begin_src emacs-lisp
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
 #+end_src
+Org mode file associations
+#+BEGIN_SRC emacs-lisp
+(setq org-file-apps
+      (append '(
+                ("\\.pdf\\'" . "zathura %s")
+                ) org-file-apps ))
+#+END_SRC
 *** Functions
 Compilation window behaviour
 #+begin_src emacs-lisp

@@ -227,7 +227,7 @@ myBorderWidth   = 2
 
 myModMask       = mod4Mask
 
-myWorkspaces = [afIcon "\xf05a", afIcon "\xf120", afIcon "\xf1c9", "3", afIcon "\xf3f6", "5", "6", afIcon "\xf468", afIcon "\xf268", afIcon "\xf3fe"]
+myWorkspaces = [afIcon "\xf05a", afIcon "\xf120", afIcon "\xf1c9", afIcon "\xf03d", afIcon "\xf3f6", "5", "6", afIcon "\xf468", afIcon "\xf268", afIcon "\xf3fe"]
 myWorkspacesClickable    = clickable myWorkspaces
 -- myWorkspacesClickable    = clickable . (map xmobarEscape) $ myWorkspaces
     where
@@ -517,7 +517,7 @@ myKeys = \conf -> let
                                 \xclip -selection clipboard -t image/png -i $f;\
                                 \mv $f ~/Pictures/screenshots/;\
                                 \notify-send -a 'XMonad' 'Scrot' \"Screenshot copied to clipboard\" -i \"~/Pictures/screenshots/$f\"'"
-      playerctl a = spawn $ "playerctl " ++ a ++ " -p chromium"
+      playerctl a = spawn $ "playerctl " ++ a ++ " -p spotify"
       createSearchPrompt = map (\ (a, b, c) -> (a, S.promptSearch myXPConfig b, c))
       createSearchSelect = map (\ (a, b, c) -> (a, S.selectSearch b, c))
       archwiki = S.searchEngine "archwiki" "https://wiki.archlinux.org/index.php?search="
@@ -740,7 +740,7 @@ main = do
         homeDir <- getHomeDirectory
         xmproc0 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar"
         -- xmproc1 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_mon2"
-        xmproc2 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_top"
+        -- xmproc2 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_top"
         xmonad $ ewmh def {
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
