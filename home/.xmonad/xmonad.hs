@@ -410,8 +410,8 @@ myKeys = \conf -> let
     [ "cd ~/.xmonad"
     , "stack ghc -- --make ~/.xmonad/xmonadctl.hs"
     , "stack ghc -- --make ~/.config/xmobar/xmobar.hs  -i$HOME/.config/xmobar/"
-    , "stack ghc -- --make ~/.config/xmobar/xmobar_top.hs  -i$HOME/.config/xmobar/"
-    , "stack ghc -- --make ~/.config/xmobar/xmobar_mon2.hs  -i$HOME/.config/xmobar/"
+    -- , "stack ghc -- --make ~/.config/xmobar/xmobar_top.hs  -i$HOME/.config/xmobar/"
+    -- , "stack ghc -- --make ~/.config/xmobar/xmobar_mon2.hs  -i$HOME/.config/xmobar/"
     , "xmonad --recompile"
     , "xmonad --restart"
     , "echo \x1b[32mSucceed\x1b[m"
@@ -480,6 +480,13 @@ myKeys = \conf -> let
         , ("i", passInsertPrompt myXPConfig, "Add password")
         ] "Pass prompts"
       ] "Prompts"
+    , prefix "M-n"
+      [ ("a", spawn "dunstctl close-all", "Close all")
+      , ("n", spawn "dunstctl close", "Close last")
+      , ("h", spawn "dunstctl history-pop", "Show history")
+      , ("c", spawn "dunstctl context", "Context action")
+      , ("t", spawn "dunstctl set-paused toggle", "Toggle notifications")
+      ] "Notifications"
     , prefix "M-C-f" ( createSearchPrompt searchEngines) "Search Engines Prompt"
     , prefix "M-S-f" ( createSearchSelect searchEngines) "Selech Engines Select"
     ]

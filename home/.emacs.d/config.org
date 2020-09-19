@@ -396,9 +396,14 @@ Compilation window behaviour
 	    (split-window-vertically)))))
 
 ;; (add-hook 'compilation-mode-hook 'my-compilation-hook)
-(remove-hook 'compilation-mode-hook 'my-compilation-hook t)
+;; (remove-hook 'compilation-mode-hook 'my-compilation-hook t)
 
 #+end_src
+*** Other variables
+#+BEGIN_SRC emacs-lisp
+(setq compilation-scroll-output t)
+#+END_SRC
+
 *** TODO Other
 #+begin_src emacs-lisp
 (defun init-hooks () (global-display-line-numbers-mode 1))
