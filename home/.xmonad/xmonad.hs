@@ -433,7 +433,6 @@ myKeys = \conf -> let
     , ("M-S-/"       , termShowKeybindings $ getHelp keymap      , "Show this help")
     , ("M-S-c"       , termSpawn tempTermite restartRecompile    , "Recompile, restart XMonad")
     , ("M-C-c"       , spawn restartRecompile                    , "Recompile, restart XMonad quite")
-    , ("M-S-d"       , spawn "notify-send 'DUNST_COMMAND_TOGGLE'", "Toggle notifications")
     , ("M-S-j"       , windows W.swapDown                        , "Swap window with prev")
     , ("M-S-k"       , windows W.swapUp                          , "Swap window with next")
     , ("M-S-q"       , kill                                      , "Close window")
@@ -579,20 +578,20 @@ myLayout = avoidStruts
             $ limitWindows 12
             $ mySpacing 6
             $ ResizableTall 1 (3/100) (1/2) []
-    -- monocle = renamed [Replace "monocle"]
-    --         $ limitWindows 20 Full
-    -- spirals = renamed [Replace "spirals"]
-    --         $ mySpacing' 4
-    --         $ spiral (6/7)
+    monocle = renamed [Replace "monocle"]
+            $ limitWindows 20 Full
+    spirals = renamed [Replace "spirals"]
+            $ mySpacing' 4
+            $ spiral (6/7)
     grid    = renamed [Replace "grid"]
             $ limitWindows 12
             -- $ mySpacing 4
             $ mkToggle (single MIRROR)
             $ mkToggle (single NOBORDERS)
             $ Grid (16/10)
-    -- tile    = renamed [Replace "tile"]
-    --         $ limitWindows 12
-    --         $ ResizableTall 1 (5/100) (1/3) []
+    tile    = renamed [Replace "tile"]
+            $ limitWindows 12
+            $ ResizableTall 1 (5/100) (1/3) []
     tabs    = renamed [Replace "tabs"]
             $ tabbed shrinkText $ def
                    { fontName            = myFont

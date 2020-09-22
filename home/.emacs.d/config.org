@@ -255,6 +255,10 @@ Python lsp
   :init (setq lsp-python-ms-auto-install-server t)
   :hook (python-mode . (lambda ()
                           (require 'lsp-python-ms))))
+(use-package anaconda-mode
+  :ensure t)
+(use-package company-anaconda
+  :ensure t)
 #+end_src
 Lsp for latex
 #+begin_src emacs-lisp
@@ -334,7 +338,15 @@ Cinstructing menus
 Add snippets to company backends
 *For some reason doesn't execute on start*
 #+begin_src emacs-lisp
-(setq company-backends '(company-capf company-bbdb company-clang company-keywords company-yasnippet company-lsp))
+(setq company-backends 
+  '(company-capf 
+    company-bbdb 
+    company-clang 
+    company-keywords 
+    company-yasnippet 
+    company-lsp 
+    company-files 
+    company-anaconda))
 
 (defun mars/company-backend-with-yas (backends)
   "Add :with company-yasnippet to company BACKENDS.
@@ -401,7 +413,7 @@ Compilation window behaviour
 #+end_src
 *** Other variables
 #+BEGIN_SRC emacs-lisp
-(setq compilation-scroll-output t)
+(setq compilation-scroll-output 'first-error)
 #+END_SRC
 
 *** TODO Other
@@ -446,7 +458,7 @@ Compilation window behaviour
 
 ;; set font
 (set-face-attribute 'default nil
-                    :family "Hack"
+                    :family "Fira Code"
                     :height 85)
 
 (setq company-math-allow-latex-symbols-in-faces t)
@@ -499,6 +511,7 @@ Compilation window behaviour
 ** TODO Keybindings
 TODO: Move these to appropriate packages maybe
 #+begin_src emacs-lisp
+
 (general-define-key
   :keymaps 'company-active-map
   "<tab>"     'yas-expand

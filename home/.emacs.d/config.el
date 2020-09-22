@@ -178,6 +178,10 @@
   :init (setq lsp-python-ms-auto-install-server t)
   :hook (python-mode . (lambda ()
                           (require 'lsp-python-ms))))
+(use-package anaconda-mode
+  :ensure t)
+(use-package company-anaconda
+  :ensure t)
 
 (use-package lsp-latex
   :ensure t)
@@ -227,6 +231,16 @@
 (use-package hydra
   :ensure t)
 
+(setq company-backends 
+  '(company-capf 
+    company-bbdb 
+    company-clang 
+    company-keywords 
+    company-yasnippet 
+    company-lsp 
+    company-files 
+    company-anaconda))
+
 (defun mars/company-backend-with-yas (backends)
   "Add :with company-yasnippet to company BACKENDS.
 Taken from https://github.com/syl20bnr/spacemacs/pull/179."
@@ -244,6 +258,11 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
 (add-yas-in-company)
 
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+
+(setq org-file-apps
+      (append '(
+                ("\\.pdf\\'" . "zathura %s")
+                ) org-file-apps ))
 
 (defun kill-buffer-if-exists (buffer)
   (when (not (eq nil (get-buffer buffer)))
@@ -274,7 +293,9 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
 	    (split-window-vertically)))))
 
 ;; (add-hook 'compilation-mode-hook 'my-compilation-hook)
-(remove-hook 'compilation-mode-hook 'my-compilation-hook t)
+;; (remove-hook 'compilation-mode-hook 'my-compilation-hook t)
+
+(setq compilation-scroll-output 'first-error)
 
 (defun init-hooks () (global-display-line-numbers-mode 1))
 
@@ -316,7 +337,7 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
 
 ;; set font
 (set-face-attribute 'default nil
-                    :family "Hack"
+                    :family "Fira Code"
                     :height 85)
 
 (setq company-math-allow-latex-symbols-in-faces t)
