@@ -564,6 +564,7 @@ myLayout = avoidStruts
          -- ||| noBorders monocle
          -- ||| spirals
          ||| grid
+         -- ||| showoff
          -- ||| tile
   where
     tall    = renamed [Replace "tall"]
@@ -586,6 +587,12 @@ myLayout = avoidStruts
     grid    = renamed [Replace "grid"]
             $ limitWindows 12
             -- $ mySpacing 4
+            $ mkToggle (single MIRROR)
+            $ mkToggle (single NOBORDERS)
+            $ Grid (16/10)
+    showoff = renamed [Replace "showoff"]
+            $ limitWindows 12
+            $ mySpacing 8
             $ mkToggle (single MIRROR)
             $ mkToggle (single NOBORDERS)
             $ Grid (16/10)
@@ -612,6 +619,7 @@ myManageHook = composeAll
   , className =? "Nitrogen"            --> doFloat
   , className =? "feh"                 --> doFloat
   , className =? "Conky"               --> doFloat
+  , className =? "yakuake"               --> doFloat
   , resource  =? "stalonetray"         --> doIgnore
   , title     =? "xmessage"            --> doFloat
   , title     =? "temp-term"           --> (customFloating $ W.RationalRect 0.05 0.05 0.9 0.9)

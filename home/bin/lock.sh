@@ -4,7 +4,7 @@ tmpbg='/tmp/screen.png'
 
 (( $# )) && { icon=$1; }
 
-icon='~/Themes/AnimuTest.jpg'
+icon="$HOME/Themes/Neofetch.png"
 
 [[ -e $tmpbg ]] && rm $tmpbg
 scrot "$tmpbg"

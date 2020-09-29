@@ -3,6 +3,7 @@ home/.config/nvim/plugged
 elpa
 *-git
 *.zip
+!rice.png
 
 # Binaries
 xmonad-x86_64-linux

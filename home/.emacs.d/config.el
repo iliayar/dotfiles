@@ -59,6 +59,9 @@
 (use-package impatient-mode
   :ensure t)
 
+(use-package web-mode
+  :ensure t)
+
 (use-package projectile
   :ensure t
   :config
@@ -420,7 +423,8 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
   "cl" 'comment-or-uncomment-region
   "cf" 'counsel-grep-or-swiper
   "op" 'treemacs
-  "om" 'magit)
+  "om" 'magit
+  "tt" 'treemacs-select-window)
 
 (general-define-key
   :states '(visual)

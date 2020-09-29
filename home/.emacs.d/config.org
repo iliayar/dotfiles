@@ -86,6 +86,12 @@ Package for html live view
 (use-package impatient-mode
   :ensure t)
 #+end_src
+Cool web stuff
+#+BEGIN_SRC emacs-lisp
+(use-package web-mode
+  :ensure t)
+#+END_SRC
+
 *** Projects
 Projects management with /counsel/ completion
 #+begin_src emacs-lisp
@@ -545,7 +551,8 @@ TODO: Move these to appropriate packages maybe
   "cl" 'comment-or-uncomment-region
   "cf" 'counsel-grep-or-swiper
   "op" 'treemacs
-  "om" 'magit)
+  "om" 'magit
+  "tt" 'treemacs-select-window)
 
 (general-define-key
   :states '(visual)
