@@ -40,6 +40,7 @@ import           XMonad.Util.SpawnOnce
 import           XMonad.Prompt
 import           XMonad.Prompt.Pass
 import           XMonad.Prompt.Input
+import           XMonad.Prompt.Unicode
 import           XMonad.Prompt.Shell (shellPrompt)
 import           XMonad.Prompt.FuzzyMatch (fuzzyMatch, fuzzySort)
 import           XMonad.Prompt.AppLauncher as AL
@@ -268,7 +269,7 @@ myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
             , ("Telegram", "telegram-desktop")
             , ("Qutebrowser", "qutebrowser")
             -- , ("Spotify", "spotify")
-            , ("File Manager", "pcmanfm")
+            , ("File Manager", "caja")
             , ("Urxvt", "urxvt")
             , ("Termite", "termite")
             , ("Discord", "discord")
@@ -309,7 +310,7 @@ myScratchPads = [ termApp termiteScratchpad "terminal" Nothing manageQuake
 
 tsAll =
    [ Node (TS.TSNode "+ General" "General purpose applications" (return ()))
-       [ Node (TS.TSNode "Pcmanfm" "File Manager" (spawn "pcmanfm")) []
+       [ Node (TS.TSNode "Caja" "File Manager" (spawn "caja")) []
        , Node (TS.TSNode "Brave" "Browser" (spawn "brave")) []
        , Node (TS.TSNode "Neofetch" "Show off" (termSpawn' $ URxvt (Just "neofetch-term") True [] $ Just "neofetch --w3m --source ~/Themes/Neofetch.png --image_size 360")) []
        ]
@@ -472,6 +473,7 @@ myKeys = \conf -> let
       , ("a", appPrompt myXPConfig  , "Applications prompt")
       , ("h", hooglePrompt myXPConfig  , "Hoogle search prompt")
       , ("g", anonGooglePrompt myXPConfig  , "Anonymous Google search prompt")
+      , ("e", unicodePrompt "/home/iliayar/Themes/emoji" myXPConfig, "Unicode prompt")
       , prefix "p"
         [ ("p", passPrompt myXPConfig, "Get password")
         , ("g", passGeneratePrompt myXPConfig, "Generate password")
@@ -654,6 +656,7 @@ myStartupHook = do
           spawnOnce "stalonetray &"
           spawnOnce "xsetroot -cursor_name arrow &"
           spawnOnce "~/bin/blocks/music_xmobar_async.sh &"
+          spawnOnce "~/bin/blocks/pacman_xmobar_async.sh"
           spawnOnce "emacs --daemon &"
           spawn "xrdb ~/.Xresources"
           setWMName "LG3D"

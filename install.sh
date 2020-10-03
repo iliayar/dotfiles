@@ -88,12 +88,13 @@ common() {
     DEPS+=(
         dunst
         udiskie
+        crontab
         rxvt-unicode
         sbxkb
         nitrogen
         scrot
         unzip
-        pcmanfm
+        caja
         xdotool
         pacman-contrib
         pulsemixer
