@@ -2,17 +2,20 @@
 
 eval "export $(egrep -z DBUS_SESSION_BUS_ADDRESS /proc/$(pgrep -u $USER xmonad)/environ)"
 
-/usr/bin/notify-send "Updates" "Fetching pacman and aur updates" -a "Cron" -i "/usr/share/icons/Adwaita/96x96/emblems/emblem-synchronizing-symbolic.symbolic.png"
-
 SOCKET="/tmp/.updates_data"
+INITIATOR="cron"
 
 if [[ $1 == '1' ]]; then
    urxvt -e sudo pacman -Syyu
+   INITIATOR="Manual update"
 fi
 
 if [[ $2 == '1' ]]; then
    urxvt -e yay -Syyu
+   INITIATOR="Manual update"
 fi
+
+/usr/bin/notify-send "Updates" "Fetching pacman and aur updates" -a "${INITIATOR}" -i "/usr/share/icons/Adwaita/96x96/emblems/emblem-synchronizing-symbolic.symbolic.png"
 
 [[ -p "$SOCKET" ]] || mkfifo $SOCKET
 
