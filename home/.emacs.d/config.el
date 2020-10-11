@@ -407,6 +407,7 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
   "cd" 'kill-compilation-buffer
   "cc" 'compile
   "cr" 'lsp-rename
+  "ca" 'lsp-execute-code-action
   "sl" 'lsp
   "ss" 'lsp-workspace-shutdown
   "sr" 'lsp-workspace-restart

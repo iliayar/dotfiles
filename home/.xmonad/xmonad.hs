@@ -706,6 +706,8 @@ appPrompt c = do
   li <- fmap (nubPairs . filterWithArgs . catMaybes) $ io $ foldM (\acc -> fmap (acc++) . getApplications) []
          [ "/usr/share/applications"
          , userHome ++ "/.local/share/applications"
+         , userHome ++ "/.local/share/applications/wine"
+         , userHome ++ "/.local/share/applications/wine/Programs/IDA Pro"
          ]
   let compl = \s -> fst <$> filter (fuzzyMatch s . fst) li
   mkXPrompt App c (return . compl) (spawn . (M.fromList li M.!))
