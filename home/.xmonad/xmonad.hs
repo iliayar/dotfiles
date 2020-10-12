@@ -655,7 +655,7 @@ myStartupHook = do
           spawnOnce "lxpolkit &"
           spawnOnce "stalonetray &"
           spawnOnce "xsetroot -cursor_name arrow &"
-          spawnOnce "~/bin/blocks/music_xmobar_async.sh &"
+          spawnOnce "~/bin/blocks/music_xmobar_async.py 2>/dev/null &"
           spawnOnce "~/bin/blocks/pacman_xmobar_async.sh"
           spawnOnce "emacs --daemon &"
           spawn "xrdb ~/.Xresources"

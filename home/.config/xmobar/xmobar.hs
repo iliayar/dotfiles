@@ -19,7 +19,7 @@ config = defaultConfig {
    -- layout
    , sepChar  = "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "<action=~/.xmonad/xmonadctl 1>" ++ (icon "edved") ++ "</action> | %UnsafeStdinReader% }{ %music% | %updates% | %disku% | %bright% | %default:Master% | %kbd% | %memory% | %multicpu% | %dynnetwork% | %battery% | %multicoretemp% | %date% "
+   , template = "<action=~/.xmonad/xmonadctl 1>" ++ (icon "edved") ++ "</action> | %UnsafeStdinReader% }{ %music_pipe% | %updates% | %disku% | %bright% | %default:Master% | %kbd% | %memory% | %multicpu% | %dynnetwork% | %battery% | %multicoretemp% | %date% "
 
    -- general behavior
    , lowerOnStart     = True    -- send to bottom of window stack on start
@@ -135,7 +135,7 @@ config = defaultConfig {
         , Run $ UnsafeStdinReader
         -- , Run $ Com "bash" ["-c", "~/bin/blocks/pacman_xmobar.sh &"] "updates" 36000
         -- , Run $ Com "bash" ["-c", "~/bin/blocks/music_xmobar.sh &"] "music" 50
-        , Run $ PipeReader "/tmp/.music_data" "music"
+        , Run $ PipeReader "/tmp/.music_xmobar" "music_pipe"
         , Run $ PipeReader "/tmp/.updates_data" "updates"
         ]
    }
