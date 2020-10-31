@@ -224,7 +224,7 @@ myFocusFollowsMouse = False
 myClickJustFocuses :: Bool
 myClickJustFocuses = False
 
-myBorderWidth   = 2
+myBorderWidth   = 1
 
 myModMask       = mod4Mask
 
@@ -236,7 +236,7 @@ myWorkspacesClickable    = clickable myWorkspaces
                       (i,ws) <- zip (map show [2..11]) l]
 
 myNormalBorderColor  = Theme.color8
-myFocusedBorderColor = Theme.color1
+myFocusedBorderColor = Theme.foreground
 
 -------------------------------------------------
 ---------------- GridSelect ---------------------
@@ -268,6 +268,7 @@ myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
             , ("Brave", "brave")
             , ("Telegram", "telegram-desktop")
             , ("Qutebrowser", "qutebrowser")
+            , ("Cutter", "Cutter")
             -- , ("Spotify", "spotify")
             , ("File Manager", "caja")
             , ("Urxvt", "urxvt")

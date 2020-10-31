@@ -62,6 +62,9 @@ Plug 'easymotion/vim-easymotion'
 " Kotlin support
 Plug 'udalov/kotlin-vim'
 
+" Completion from VSCode
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
 call plug#end()
 
 " Gruvbox colorscheme
