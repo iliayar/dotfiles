@@ -3,3 +3,7 @@ bookmarks
 eshell
 anaconda-mode
 var
+*.pdf
+*.pyg
+*.tex
+_minted-config/

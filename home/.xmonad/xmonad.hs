@@ -269,10 +269,10 @@ myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
             , ("Telegram", "telegram-desktop")
             , ("Qutebrowser", "qutebrowser")
             , ("Cutter", "Cutter")
-            -- , ("Spotify", "spotify")
-            , ("File Manager", "caja")
+            , ("File Manager", "pcmanfm")
             , ("Urxvt", "urxvt")
             , ("Termite", "termite")
+            , ("Spotify", "spotify")
             , ("Discord", "discord")
             , ("Steam", "steam")
             ]
@@ -621,8 +621,10 @@ myManageHook = composeAll
   [ isFullscreen                       --> doFullFloat
   , className =? "Nitrogen"            --> doFloat
   , className =? "feh"                 --> doFloat
+  , className =? "Peek"                --> doFloat
+  , className =? "Gifview"             --> doFloat
   , className =? "Conky"               --> doFloat
-  , className =? "yakuake"               --> doFloat
+  , className =? "yakuake"             --> doFloat
   , resource  =? "stalonetray"         --> doIgnore
   , title     =? "xmessage"            --> doFloat
   , title     =? "temp-term"           --> (customFloating $ W.RationalRect 0.05 0.05 0.9 0.9)

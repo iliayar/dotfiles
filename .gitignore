@@ -26,3 +26,4 @@ recentf
 *.errors
 *.log
 *.lock
+/home/bin/ics-to-org

@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: sage-block
+# key: <sage
+# --
+
+#+BEGIN_SRC ipython :session :kernel sagemath :exports both :results output drawer
+    $0
+#+END_SRC

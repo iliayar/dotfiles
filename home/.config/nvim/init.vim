@@ -4,7 +4,8 @@ let mapleader = "\<Space>"
 
 let g:rainbow_active = 1
 
-set number
+" set number
+set rnu
 
 set softtabstop=4
 set tabstop=4
@@ -85,12 +86,16 @@ au Syntax * RainbowParenthesesLoadRound
 "au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 
-
 nnoremap <ESC> :noh<CR>
 nnoremap <leader>op :NERDTreeToggle<CR>
 nnoremap <leader>e :new COMMAND_OUTPUT<CR>:read !
 
-map gs <Plug>(easymotion-sn)
+map! <S-Down> <Down>
+map! <S-Up> <Up>
+map <S-Down> <Down>
+map <S-Up> <Up>
+
+map <leader>gs <Plug>(easymotion-sn)
 
 " Copy to system clipboard whem exit
 autocmd VimLeave * call system("xsel -ib", getreg('+'))
