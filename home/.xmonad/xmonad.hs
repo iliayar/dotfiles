@@ -45,6 +45,8 @@ import           XMonad.Prompt.Shell (shellPrompt)
 import           XMonad.Prompt.FuzzyMatch (fuzzyMatch, fuzzySort)
 import           XMonad.Prompt.AppLauncher as AL
 
+import           XMonad.Layout.SubLayouts
+import           XMonad.Layout.LayoutBuilder
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.GridVariants
 import           XMonad.Layout.ResizableTile
@@ -296,7 +298,7 @@ myScratchPads = [ termApp termiteScratchpad "terminal" Nothing manageQuake
     termiteScratchpad r = Termite Nothing (Just r) False [] 
     termiteScratchpadHold r = Termite Nothing (Just r) True [] 
 
-    spawnNotes = "emacsclient -c -a emacs -F '(quote (name . \"emacs-notes\"))' ~/Dropbox/org/Notes.org"
+    spawnNotes = "emacsclient -c -a emacs -F '(quote (name . \"emacs-notes\"))' -e '(find-file \"~/Dropbox/org/Notes.org\")'"
     findNotes  = title =? "emacs-notes"
 
     manageNotes = customFloating $ W.RationalRect 0.05 0.05 0.9 0.9
@@ -350,7 +352,7 @@ tsSystem =
      tsLayout
    ]
 tsCommands =
-   [ Node (TS.TSNode "XMonad config" "Open xmonad.hs in Emacs" (spawn "emacsclient -c -a emacs ~/.xmonad/xmonad.hs")) []
+   [ Node (TS.TSNode "XMonad config" "Open xmonad.hs in Emacs" (spawn "emacsclient -c -a emacs -e '(find-file \"~/.xmonad/xmonad.hs\")'")) []
    , Node (TS.TSNode "Close all dzen" "Kill broken dzen" (spawn "killall dzen2")) []
    , Node (TS.TSNode "Pacman update" "Get updates from pacman" (termSpawn termite "sudo pacman -Syyu")) []
    , Node (TS.TSNode "AUR update" "Get updates from AUR" (termSpawn termite "yay -Syyu")) []
@@ -474,7 +476,7 @@ myKeys = \conf -> let
       , ("a", appPrompt myXPConfig  , "Applications prompt")
       , ("h", hooglePrompt myXPConfig  , "Hoogle search prompt")
       , ("g", anonGooglePrompt myXPConfig  , "Anonymous Google search prompt")
-      , ("e", unicodePrompt "/home/iliayar/Themes/emoji" myXPConfig, "Unicode prompt")
+      , ("e", unicodePrompt "/home/iliayar/Themes/emoji" emojiXPConfig, "Unicode prompt")
       , prefix "p"
         [ ("p", passPrompt myXPConfig, "Get password")
         , ("g", passGeneratePrompt myXPConfig, "Generate password")
@@ -530,11 +532,13 @@ myKeys = \conf -> let
       createSearchPrompt = map (\ (a, b, c) -> (a, S.promptSearch myXPConfig b, c))
       createSearchSelect = map (\ (a, b, c) -> (a, S.selectSearch b, c))
       archwiki = S.searchEngine "archwiki" "https://wiki.archlinux.org/index.php?search="
+      googleTranslate = S.searchEngine "google-translate" "https://translate.google.com/?hl=ru&sl=en&tl=ru&op=translate&text="
       searchEngines = [ ("g", S.google, "Google")
                       , ("h", S.hoogle, "Hoogle")
                       , ("i", S.images, "Images")
                       , ("d", S.duckduckgo, "DuckDuckGo")
                       , ("a", archwiki, "Arch Wiki")
+                      , ("t", googleTranslate, "Google Translate")
                       ]
 
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
@@ -634,7 +638,7 @@ myManageHook = composeAll
   , namedScratchpadManageHook myScratchPads
   ]
 
-myCommands = [ ("XMonad config", (spawn "emacsclient -c -a emacs ~/.xmonad/xmonad.hs")) -- 1 Action on bar icon
+myCommands = [ ("XMonad config", (spawn "emacsclient -c -a emacs -e '(find-file \"~/.xmonad/xmonad.hs\")'")) -- 1 Action on bar icon
              ]
              ++
              [("Switch to workspace " ++ n, windows $ W.greedyView i) | (n, i) <- zip myWorkspaces myWorkspacesClickable]
@@ -667,6 +671,10 @@ myStartupHook = do
 -------------------------------------------------
 ------------------ Prompts ----------------------
 -------------------------------------------------
+
+emojiXPConfig :: XPConfig
+emojiXPConfig = def { font = "" }
+
 
 myXPConfig :: XPConfig
 myXPConfig = def

@@ -108,6 +108,9 @@ export EDITOR=nvim
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
+source .zshrc.private
+source ~/.local/share/codestats.zsh
+
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
 

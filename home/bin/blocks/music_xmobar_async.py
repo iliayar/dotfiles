@@ -6,9 +6,15 @@ from gi.repository import Playerctl, GLib
 
 import os, stat
 import subprocess
+import sys
+import time
+import threading
 
 FIFO = '/tmp/.music_xmobar'
 PLAYER = 'spotify'
+ANIMATE = True
+DELAY = 0.7
+META_LENGTH = 30
 
 def parse_xresources():
     xrdb = subprocess.run(['xrdb', '-query'], capture_output=True).stdout.decode()
@@ -47,8 +53,30 @@ red, green, yellow = parse_xresources()
 
 manager = Playerctl.PlayerManager()
 
+lock = threading.Lock()
+
+class Data:
+    pass
+data = Data()
+
+data.metadata = 'No metadata'
+data.control = 'No control'
+
+def animate(data):
+    while True:
+        with lock:
+            put_data(data)
+            if(len(data.metadata) > META_LENGTH):
+                data.metadata = data.metadata[1:] + data.metadata[0]
+        time.sleep(DELAY)
+
+def put_data(data):
+    fifo.write((f'<action=~/.xmonad/xmonadctl 13>%-.{META_LENGTH}s</action> %s\n') % (data.metadata, data.control))
+    fifo.flush()
+
 def is_playing(player):
     return player.props.status == 'Playing'
+
 def get_metadata(player):
     metadata = player.props.metadata
     keys = metadata.keys()
@@ -56,13 +84,17 @@ def get_metadata(player):
         return('{} - {}'.format(metadata['xesam:artist'][0],
                                metadata['xesam:title']))
     return 'No metadata'
+
 def update(player, event, manager):
-    if is_playing(player):
-        control = colorize(CONTROL_FMT % ('<fn=1></fn>'), green)
-    else:
-        control = colorize(CONTROL_FMT % ('<fn=1></fn>'), yellow)
-    fifo.write('<action=~/.xmonad/xmonadctl 13>%-.30s</action> %s\n' % (get_metadata(player), control))
-    fifo.flush()
+    with lock:
+        if is_playing(player):
+            data.control = colorize(CONTROL_FMT % ('<fn=1></fn>'), green)
+        else:
+            data.control = colorize(CONTROL_FMT % ('<fn=1></fn>'), yellow)
+        data.metadata = get_metadata(player)
+        put_data(data)
+        if len(data.metadata) > META_LENGTH:
+            data.metadata += ' | '
 
 def init_player(name):
     # choose if you want to manage the player based on the name
@@ -89,6 +121,10 @@ manager.connect('player-vanished', on_player_vanished)
 
 for name in manager.props.player_names:
     init_player(name)
+
+if ANIMATE:
+    animate_thread = threading.Thread(target=animate, args=(data,))
+    animate_thread.start()
 
 main = GLib.MainLoop()
 main.run()

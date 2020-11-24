@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: latex aligned
+# key: ali
+# --
+
+\[ $0 \]

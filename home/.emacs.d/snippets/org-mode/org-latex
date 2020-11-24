@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# key: org-latex
+# name: org-latex
+# --
+
+#+LATEX_CLASS: general
+#+TITLE: $1
+#+AUTHOR: Ilya Yaroshevskiy
+
+$0

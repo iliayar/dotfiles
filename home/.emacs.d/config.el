@@ -135,6 +135,9 @@
 (use-package org-bullets
   :ensure t)
 
+(use-package code-stats
+  :ensure t)
+
 (use-package smartparens
   :ensure t
   :init
@@ -159,6 +162,9 @@
   :ensure t)
 
 (use-package ace-window
+  :ensure t)
+
+(use-package dockerfile-mode
   :ensure t)
 
 (use-package  lsp-mode
@@ -202,6 +208,9 @@
   :ensure t)
 
 (use-package graphviz-dot-mode
+  :ensure t)
+
+(use-package ob-ipython
   :ensure t)
 
 (use-package doom-modeline
@@ -315,14 +324,19 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
       ("" "amsmath" t)
       ("" "textcomp" t)
       ("" "capt-of" t)))
+  ;; Reset default value. For debugging
+;;  (custom-reevaluate-setting 'org-latex-classes)
   (with-eval-after-load 'ox-latex
     (add-to-list 'org-latex-classes
-      '("bjmarticle"
+      '("general"
        "\\documentclass{article}
        [NO-DEFAULT-PACKAGES]
        [PACKAGES]
+       [EXTRA]
        \\usepackage{geometry}
-       \\geometry{a4paper,left=2.5cm,top=2cm,right=2.5cm,bottom=2cm,marginparsep=7pt, marginparwidth=.6in}"
+       \\geometry{a4paper,left=2.5cm,top=2cm,right=2.5cm,bottom=2cm,marginparsep=7pt, marginparwidth=.6in}
+"
+
        ("\\section{%s}" . "\\section*{%s}")
        ("\\subsection{%s}" . "\\subsection*{%s}")
        ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
@@ -335,24 +349,24 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 (setq org-latex-minted-options
-   '(("frame" "lines") ("linenos=true")))
+   '(("frame" "lines") ("linenos=true") ("mathescape")))
+(add-to-list 'org-latex-minted-langs '(ipython "python"))
 
 (add-to-list 'org-src-lang-modes (quote ("dot" . graphviz-dot)))
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((dot . t)
   (gnuplot . t)
-  (python . t)))
+  (python . t)
+  (ipython . t)))
 (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
-(defun my-org-confirm-babel-evaluate (lang body)
-  (not (string= lang "dot")))
-(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+(setq org-confirm-babel-evaluate nil)
+(setq org-src-tab-acts-natively t)
 
 ;
 ;; 28.07.2017
 ;; Charles Wang
 ;;
-
 
 (defun org--list-latex-overlays (&optional beg end)
   "List all Org LaTeX overlays in current buffer.
@@ -500,7 +514,15 @@ Limit to overlays between BEG and END when those are provided."
 ;; (add-hook 'compilation-mode-hook 'my-compilation-hook)
 ;; (remove-hook 'compilation-mode-hook 'my-compilation-hook t)
 
+(load "~/.emacs.d/private.el")
+(add-hook 'prog-mode-hook #'code-stats-mode)
+(add-hook 'org-mode-hook #'code-stats-mode)
+(run-with-idle-timer 30 t #'code-stats-sync)
+(add-hook 'kill-emacs-hook (lambda () (code-stats-sync :wait)))
+
 (setq compilation-scroll-output 'first-error)
+
+(add-to-list 'exec-path "~/.local/bin")
 
 (defun init-hooks () (global-display-line-numbers-mode 1))
 
@@ -571,6 +593,36 @@ Limit to overlays between BEG and END when those are provided."
       '(("TODO"   . "#fabd2f")
         ("FIXME"  . "#fb4934")))
 
+;; (define-minor-mode my-override-mode
+;;   "Overrides all major and minor mode keys" t)
+
+;; (defvar my-override-map (make-sparse-keymap "my-override-map")
+;;   "Override all major and minor mode keys")
+
+;; (add-to-list 'emulation-mode-map-alists
+;;   `((my-override-mode . ,my-override-map)))
+
+;; (define-key my-override-map (kbd "<left>")
+;;   (lambda ()
+;;     (interactive)
+;;     (message "Use Vim keys: h for Left")))
+
+;; (define-key my-override-map (kbd "<right>")
+;;   (lambda ()
+;;     (interactive)
+;;     (message "Use Vim keys: l for Right")))
+
+;; (define-key my-override-map (kbd "<up>")
+;;   (lambda ()
+;;     (interactive)
+;;     (message "Use Vim keys: k for Up")))
+
+;; (define-key my-override-map (kbd "<down>")
+;;   (lambda ()
+;;     (interactive)
+;;     (message "Use Vim keys: j for Down")))
+;; (evil-make-intercept-map my-override-map)
+
 (general-define-key
   :keymaps 'company-active-map
   "<tab>"     'yas-expand
@@ -597,6 +649,7 @@ Limit to overlays between BEG and END when those are provided."
   "ww" 'ace-window
   "gs" 'avy-goto-char-timer
   "gl" 'avy-goto-line
+  "gr" 'revert-buffer
   "wr" 'hydra-window-resize-menu/body
   "pp" 'projectile-switch-project
   "pf" 'counsel-projectile-find-file
@@ -621,7 +674,6 @@ Limit to overlays between BEG and END when those are provided."
   :keymaps 'latex-mode-map
   "si" 'latex-insert-block
   )
-;; Hydra
 
 (defhydra hydra-window-resize-menu (:color red
                                     :hint nil)

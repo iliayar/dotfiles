@@ -234,9 +234,16 @@ install_vim() {
 
 ## Emacs
 emacs() {
-    DEPS+=(
-        emacs
-    )
+    read "Install emacs with native compilation(It's take about an hour)? [Y/n]" ans
+    if [[ $ans =~ ^[Yy]$ ]]; then
+        AUR_DEPS+=(
+            emacs-native-compile-git
+        )
+    else
+        DEPS+=(
+            emacs
+        )
+    fi
     CONFIGS+=(
         .emacs.d
     )

@@ -1,4 +1,5 @@
 * Emacs Configs
+Using /emacs-native-comp-git/ from AUR for improving performance
 ** Main config
 *** Repositories
 There is initializes package mangers and some other stuff \\
@@ -195,6 +196,12 @@ Org headers icons
   :ensure t)
 #+end_src
 *** Programming
+Code::stats
+#+BEGIN_SRC emacs-lisp
+  (use-package code-stats
+    :ensure t)
+#+END_SRC
+
 Auto parenthesis
 #+begin_src emacs-lisp
 (use-package smartparens
@@ -233,6 +240,11 @@ Windows hoping
 (use-package ace-window
   :ensure t)
 #+end_src
+Dockerfile support
+#+BEGIN_SRC emacs-lisp
+  (use-package dockerfile-mode
+    :ensure t)
+#+END_SRC
 **** Languages and lsp
 lsp client
 #+begin_src emacs-lisp
@@ -301,7 +313,6 @@ Ipython for org babel
 (use-package ob-ipython
   :ensure t)
 #+END_SRC
-
 
 *** Themes
 /Doom-modeline/ as modeline
@@ -649,8 +660,21 @@ Compilation window behaviour
 
 #+end_src
 *** Other variables
+Code::stats
+#+BEGIN_SRC emacs-lisp
+  (load "~/.emacs.d/private.el")
+  (add-hook 'prog-mode-hook #'code-stats-mode)
+  (add-hook 'org-mode-hook #'code-stats-mode)
+  (run-with-idle-timer 30 t #'code-stats-sync)
+  (add-hook 'kill-emacs-hook (lambda () (code-stats-sync :wait)))  
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (setq compilation-scroll-output 'first-error)
+#+END_SRC
+Executable path
+#+BEGIN_SRC  emacs-lisp
+  (add-to-list 'exec-path "~/.local/bin")
 #+END_SRC
 
 *** TODO Other
@@ -724,8 +748,41 @@ Compilation window behaviour
       '(("TODO"   . "#fabd2f")
         ("FIXME"  . "#fb4934")))
 #+end_src
-** TODO Keybindings
-TODO: Move these to appropriate packages maybe
+** Keybindings
+Disabling arrow keys for *nothing?*
+#+BEGIN_SRC emacs-lisp
+  ;; (define-minor-mode my-override-mode
+  ;;   "Overrides all major and minor mode keys" t)
+
+  ;; (defvar my-override-map (make-sparse-keymap "my-override-map")
+  ;;   "Override all major and minor mode keys")
+
+  ;; (add-to-list 'emulation-mode-map-alists
+  ;;   `((my-override-mode . ,my-override-map)))
+
+  ;; (define-key my-override-map (kbd "<left>")
+  ;;   (lambda ()
+  ;;     (interactive)
+  ;;     (message "Use Vim keys: h for Left")))
+
+  ;; (define-key my-override-map (kbd "<right>")
+  ;;   (lambda ()
+  ;;     (interactive)
+  ;;     (message "Use Vim keys: l for Right")))
+
+  ;; (define-key my-override-map (kbd "<up>")
+  ;;   (lambda ()
+  ;;     (interactive)
+  ;;     (message "Use Vim keys: k for Up")))
+
+  ;; (define-key my-override-map (kbd "<down>")
+  ;;   (lambda ()
+  ;;     (interactive)
+  ;;     (message "Use Vim keys: j for Down")))
+  ;; (evil-make-intercept-map my-override-map)
+#+END_SRC
+
+
 #+begin_src emacs-lisp
 
 (general-define-key
@@ -735,51 +792,57 @@ TODO: Move these to appropriate packages maybe
 
 (general-define-key
   "M-x" 'counsel-M-x)
+#+end_src
 
-(general-define-key
-  :states '(normal visual emacs insert treemacs)
-  :prefix "SPC"
-  :non-normal-prefix "M-SPC"
-  :keymaps 'override
-  "bb" 'ibuffer
-  "cd" 'kill-compilation-buffer
-  "cc" 'compile
-  "cr" 'lsp-rename
-  "ca" 'lsp-execute-code-action
-  "sl" 'lsp
-  "ss" 'lsp-workspace-shutdown
-  "sr" 'lsp-workspace-restart
-  "wk" 'kill-buffer-and-window
-  "wd" 'delete-window
-  "ww" 'ace-window
-  "gs" 'avy-goto-char-timer
-  "gl" 'avy-goto-line
-  "wr" 'hydra-window-resize-menu/body
-  "pp" 'projectile-switch-project
-  "pf" 'counsel-projectile-find-file
-  "pc" 'projectile-compile-project
-  "ff" 'counsel-find-file
-  "cl" 'comment-or-uncomment-region
-  "cf" 'counsel-grep-or-swiper
-  "op" 'treemacs
-  "om" 'magit
-  "tt" 'treemacs-select-window)
+Bindings using /general/ package
+#+begin_src emacs-lisp
+  (general-define-key
+    :states '(normal visual emacs insert treemacs)
+    :prefix "SPC"
+    :non-normal-prefix "M-SPC"
+    :keymaps 'override
+    "bb" 'ibuffer
+    "cd" 'kill-compilation-buffer
+    "cc" 'compile
+    "cr" 'lsp-rename
+    "ca" 'lsp-execute-code-action
+    "sl" 'lsp
+    "ss" 'lsp-workspace-shutdown
+    "sr" 'lsp-workspace-restart
+    "wk" 'kill-buffer-and-window
+    "wd" 'delete-window
+    "ww" 'ace-window
+    "gs" 'avy-goto-char-timer
+    "gl" 'avy-goto-line
+    "gr" 'revert-buffer
+    "wr" 'hydra-window-resize-menu/body
+    "pp" 'projectile-switch-project
+    "pf" 'counsel-projectile-find-file
+    "pc" 'projectile-compile-project
+    "ff" 'counsel-find-file
+    "cl" 'comment-or-uncomment-region
+    "cf" 'counsel-grep-or-swiper
+    "op" 'treemacs
+    "om" 'magit
+    "tt" 'treemacs-select-window)
 
-(general-define-key
-  :states '(visual)
-  :keymaps 'override
-  "R"  'evil-multiedit-match-all
-  )
+  (general-define-key
+    :states '(visual)
+    :keymaps 'override
+    "R"  'evil-multiedit-match-all
+    )
 
-(general-define-key
-  :states '(normal visual insert)
-  :prefix "SPC"
-  :non-normal-prefix "M-SPC"
-  :keymaps 'latex-mode-map
-  "si" 'latex-insert-block
-  )
-;; Hydra
+  (general-define-key
+    :states '(normal visual insert)
+    :prefix "SPC"
+    :non-normal-prefix "M-SPC"
+    :keymaps 'latex-mode-map
+    "si" 'latex-insert-block
+    )
+#+end_src
 
+Hydra
+#+begin_src emacs-lisp
 (defhydra hydra-window-resize-menu (:color red
                                     :hint nil)
   "

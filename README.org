@@ -5,7 +5,8 @@
 [[file:install.sh][Script]] links configs, installs dependecies
 ** Main workflow
 *** Emacs
-Emacs config in one org file [[file:home/.emacs.d/config.org][Link]]
+Emacs config in one org file [[file:home/.emacs.d/config.org][Link]] \\
+*UPD:* Using /emacs-native-compile-git/ from AUR for better performance 
 *** XMonad
 [[file:home/.xmonad/xmonad.hs][Main config]]
 Xmonad and xmobar, compile form source because of arch haskell packages

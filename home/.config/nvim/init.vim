@@ -24,7 +24,8 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 " Info line
-Plug 'itchyny/lightline.vim'
+" Plug 'itchyny/lightline.vim'
+Plug 'vim-airline/vim-airline'
 
 " Surround text with brackets
 Plug 'tpope/vim-surround'
@@ -66,7 +67,16 @@ Plug 'udalov/kotlin-vim'
 " Completion from VSCode
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+" Code stats
+Plug 'https://gitlab.com/code-stats/code-stats-vim.git'
+
 call plug#end()
+
+source ~/.config/nvim/private.vim
+let g:codestats_api_key = codestats_key
+
+" Airline code::stats
+let g:airline_section_x = airline#section#create_right(['tagbar', 'filetype', '%{CodeStatsXp()}'])
 
 " Gruvbox colorscheme
 " autocmd VimEnter * colorscheme gruvbox
