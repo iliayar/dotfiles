@@ -116,7 +116,7 @@ common() {
         ttf-hack
     )
     AUR_DEPS+=(
-        picom-ibhagwan-git
+        picom-jonaburg-git
         ly-git
         brave-bin
         gksu

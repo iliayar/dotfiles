@@ -16,7 +16,7 @@
  '(jdee-db-spec-breakpoint-face-colors (cons "#151818" "#282b2c"))
  '(objed-cursor-color "#ee4531")
   '(package-selected-packages
-     '(org-super-agenda code-stats lsp-intellij dockerfile-mode docker ob-ipython gnuplot graphviz-dot-mode highlight-indentation vterm latex-pretty-symbols pretty-symbols web-mode zzz-to-char dtrt-indent anaconda-mode company-anaconda unicode-fonts gradle-mode kotlin-mode origami ewal-doom-themes ewal xresources-theme company-fuzzy impatient-mode lsp-python-ms company-lsp company-box format-all yaml-mode ox-md hl-todo evil-multiedit treemacs-all-the-icons evil-collection use-package))
+     '(ox-reveal org-super-agenda code-stats lsp-intellij dockerfile-mode docker ob-ipython gnuplot graphviz-dot-mode highlight-indentation vterm latex-pretty-symbols pretty-symbols web-mode zzz-to-char dtrt-indent anaconda-mode company-anaconda unicode-fonts gradle-mode kotlin-mode origami ewal-doom-themes ewal xresources-theme company-fuzzy impatient-mode lsp-python-ms company-lsp company-box format-all yaml-mode ox-md hl-todo evil-multiedit treemacs-all-the-icons evil-collection use-package))
  '(pdf-view-midnight-colors (cons "#d5c4a1" "#1d2021"))
   '(rustic-ansi-faces
      ["#1d2021" "#ee4531" "#aeb124" "#edb32c" "#83a598" "#d3869b" "#8ec07c" "#d5c4a1"])

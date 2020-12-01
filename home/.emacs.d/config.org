@@ -37,7 +37,7 @@ Use /company/ for autocompletion
   (add-hook 'after-init-hook 'global-company-mode)
   :config
   (setq company-dabbrev-downcase nil)
-  (setq company-idle-delay 0.3)
+  (setq company-idle-delay 0)
   (setq company-minimum-prefix-length 1)
   (setq company-tooltip-align-annotations t))
 #+end_src
@@ -124,6 +124,12 @@ Start buffer
   :config
   (dashboard-setup-startup-hook))
 #+end_src
+Reveal.js for presentations
+#+BEGIN_SRC emacs-lisp
+  (use-package ox-reveal
+    :ensure t)
+#+END_SRC
+
 *** Evil mode
 Evil with dependecies
 #+begin_src emacs-lisp
@@ -396,31 +402,32 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
 General Org mode setup
 Bullets, packages
 #+BEGIN_SRC emacs-lisp
-;; Org-mode
-(setq org-hide-emphaisi-markers t)
-(add-hook 'org-mode-hook 
-          (lambda () 
-            (org-bullets-mode 1)
-            (org-indent-mode nil)
-;; Uncomment for enabling auto preview LaTeX in org-mode
-;;            (add-hook 'post-command-hook 'cw/org-auto-toggle-fragment-display t)
-))
+  ;; Org-mode
+  (setq org-hide-emphaisi-markers t)
+  (add-hook 'org-mode-hook 
+            (lambda () 
+              (org-bullets-mode 1)
+              (org-indent-mode nil)
+  ;; Uncomment for enabling auto preview LaTeX in org-mode
+  ;;            (add-hook 'post-command-hook 'cw/org-auto-toggle-fragment-display t)
+  ))
 
-(font-lock-add-keywords 'org-mode
-                        '(("^ *\\([-]\\) "
-                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+  (font-lock-add-keywords 'org-mode
+                          '(("^ *\\([-]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
-(setq org-directory "~/Dropbox/org")
-(setq org-agenda-files '("~/Dropbox/org"))
-(setq org-default-notes-file (concat org-directory "/Notes.org"))
+  (setq org-directory "~/Dropbox/org")
+  (setq org-agenda-files '("~/Dropbox/org"))
+  (setq org-default-notes-file (concat org-directory "/Notes.org"))
 
-(eval-after-load "org"
-(progn
-  '(require 'ox-md nil t)
-  '(require 'ox-latex nil t)))
+  (eval-after-load "org"
+  (progn
+    '(require 'ox-md nil t)
+    '(require 'ox-latex nil t)
+    '(require 'ox-reveal nil t)))
 
-(setq org-todo-keywords
-      '((sequence "TODO" "FIXME" "|" "DONE" )))
+  (setq org-todo-keywords
+        '((sequence "TODO" "FIXME" "|" "DONE" )))
 #+END_SRC
 
 Increse readability of latex preview in org-mode
@@ -622,6 +629,10 @@ Limit to overlays between BEG and END when those are provided."
            (setq cw/org-last-fragment curr))
 
           ))))
+#+END_SRC
+Reveal.js presentations
+#+BEGIN_SRC emacs-lisp
+  (setq org-reveal-root (expand-file-name "~/.local/share/reveal.js-4.1.0"))
 #+END_SRC
 
 *** Functions

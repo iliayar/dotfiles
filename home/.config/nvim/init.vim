@@ -15,6 +15,8 @@ set expandtab
 " Display these characters
 set list listchars=tab:\ ,eol:\ 
 
+set foldmethod=indent
+
 
 " Plugins here
 call plug#begin()
@@ -29,6 +31,9 @@ Plug 'vim-airline/vim-airline'
 
 " Surround text with brackets
 Plug 'tpope/vim-surround'
+
+" Folding
+" Plug 'tmhedberg/SimpylFold'
 
 
 " Syntax checking

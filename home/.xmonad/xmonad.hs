@@ -454,10 +454,10 @@ myKeys = \conf -> let
       , ("h", namedScratchpadAction myScratchPads "htop"    , "System monitoring scratchpad")
       ] "Sratchpads"
     , prefix "M-S-e"
-       [ ("r"  , spawn "reboot"           , "Reboot"     )
-       , ("s"  , spawn "systemctl suspend", "Suspend"    )
-       , ("e"  , io (exitWith ExitSuccess), "Exit XMonad")
-       , ("S-s", spawn "shutdown 0"       , "Shutdown"   )
+       [ ("r"  , spawn "reboot"                                     , "Reboot")
+       , ("s"  , spawn "~/bin/lock.sh" >> (spawn "systemctl suspend"), "Suspend")
+       , ("e"  , io (exitWith ExitSuccess)                          , "Exit XMonad")
+       , ("S-s", spawn "shutdown 0"                                 , "Shutdown")
        ] "Power management"
     , prefix "M-g"
       [ ("g", spawnSelected' myAppGrid                , "Grid select favorite apps")
@@ -611,9 +611,9 @@ myLayout = avoidStruts
                    { fontName            = myFont
                    , activeColor         = Theme.color0
                    , inactiveColor       = Theme.background
-                   , activeBorderColor   = Theme.color1
+                   , activeBorderColor   = Theme.color4
                    , inactiveBorderColor = Theme.color0
-                   , activeTextColor     = Theme.color1
+                   , activeTextColor     = Theme.color4
                    , inactiveTextColor   = Theme.foreground
                    }
 
