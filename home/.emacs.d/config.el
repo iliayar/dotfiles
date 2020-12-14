@@ -84,6 +84,9 @@
   :config
   (dashboard-setup-startup-hook))
 
+(use-package ox-reveal
+  :ensure t)
+
 (use-package undo-tree
   :ensure t)
 (use-package goto-chg
@@ -293,7 +296,8 @@ Taken from https://github.com/syl20bnr/spacemacs/pull/179."
 (eval-after-load "org"
 (progn
   '(require 'ox-md nil t)
-  '(require 'ox-latex nil t)))
+  '(require 'ox-latex nil t)
+  '(require 'ox-reveal nil t)))
 
 (setq org-todo-keywords
       '((sequence "TODO" "FIXME" "|" "DONE" )))
@@ -482,6 +486,8 @@ Limit to overlays between BEG and END when those are provided."
            (setq cw/org-last-fragment curr))
 
           ))))
+
+(setq org-reveal-root (expand-file-name "~/.local/share/reveal.js-4.1.0"))
 
 (defun kill-buffer-if-exists (buffer)
   (when (not (eq nil (get-buffer buffer)))
