@@ -8,5 +8,6 @@ var
 *.tex
 _minted-config/
 private.el
+config.el
 request
 eln-cache

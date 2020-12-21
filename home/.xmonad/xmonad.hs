@@ -230,7 +230,7 @@ myBorderWidth   = 1
 
 myModMask       = mod4Mask
 
-myWorkspaces = [afIcon "\xf05a", afIcon "\xf120", afIcon "\xf1c9", afIcon "\xf03d", afIcon "\xf3f6", "5", "6", afIcon "\xf468", afIcon "\xf268", afIcon "\xf3fe"]
+myWorkspaces = [afIcon "\xf001", afIcon "\xf120", afIcon "\xf1c9", afIcon "\xf03d", afIcon "\xf3f6", "5", "6", afIcon "\xf468", afIcon "\xf268", afIcon "\xf3fe"]
 myWorkspacesClickable    = clickable myWorkspaces
 -- myWorkspacesClickable    = clickable . (map xmobarEscape) $ myWorkspaces
     where
@@ -663,9 +663,9 @@ myStartupHook = do
           spawnOnce "stalonetray &"
           spawnOnce "xsetroot -cursor_name arrow &"
           spawnOnce "~/bin/blocks/music_xmobar_async.py 2>/dev/null &"
-          spawnOnce "~/bin/blocks/pacman_xmobar_async.sh"
+          spawnOnce "~/bin/blocks/pacman_xmobar_async.sh &"
           spawnOnce "emacs --daemon &"
-          spawn "xrdb ~/.Xresources"
+          spawn "xrdb ~/.Xresources &"
           setWMName "LG3D"
 
 -------------------------------------------------

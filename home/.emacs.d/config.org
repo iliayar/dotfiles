@@ -422,6 +422,7 @@ Bullets, packages
 
   (eval-after-load "org"
   (progn
+    '(setq org-highlight-latex-and-related '(latex script entities))
     '(require 'ox-md nil t)
     '(require 'ox-latex nil t)
     '(require 'ox-reveal nil t)))
