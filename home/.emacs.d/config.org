@@ -319,7 +319,10 @@ Ipython for org babel
 (use-package ob-ipython
   :ensure t)
 #+END_SRC
-
+C settings
+#+BEGIN_SRC emacs-lisp
+(setq c-default-style "linux")
+#+END_SRC
 *** Themes
 /Doom-modeline/ as modeline
 #+begin_src emacs-lisp

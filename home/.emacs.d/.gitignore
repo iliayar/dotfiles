@@ -11,3 +11,4 @@ private.el
 config.el
 request
 eln-cache
+tramp
