@@ -375,31 +375,32 @@ Cinstructing menus
 Add snippets to company backends
 *For some reason doesn't execute on start*
 #+begin_src emacs-lisp
-(setq company-backends 
-  '(company-capf 
-    company-bbdb 
-    company-clang 
-    company-keywords 
-    company-yasnippet 
-    company-lsp 
-    company-files 
-    company-anaconda))
+  (setq company-backends 
+    '(company-capf 
+      company-bbdb 
+      company-clang 
+      company-keywords 
+      company-yasnippet 
+      company-lsp 
+      company-files 
+      ;; company-ctags
+      company-anaconda))
 
-(defun mars/company-backend-with-yas (backends)
-  "Add :with company-yasnippet to company BACKENDS.
-Taken from https://github.com/syl20bnr/spacemacs/pull/179."
-  (if (and (listp backends) (memq 'company-yasnippet backends))
-    backends
-    (append (if (consp backends)
-              backends
-              (list backends))
-      '(:with company-yasnippet))))
+  (defun mars/company-backend-with-yas (backends)
+    "Add :with company-yasnippet to company BACKENDS.
+  Taken from https://github.com/syl20bnr/spacemacs/pull/179."
+    (if (and (listp backends) (memq 'company-yasnippet backends))
+      backends
+      (append (if (consp backends)
+                backends
+                (list backends))
+        '(:with company-yasnippet))))
 
-(defun add-yas-in-company ()
-  (setq company-backends
-    (mapcar #'mars/company-backend-with-yas company-backends)))
+  (defun add-yas-in-company ()
+    (setq company-backends
+      (mapcar #'mars/company-backend-with-yas company-backends)))
 
-(add-yas-in-company)
+  (add-yas-in-company)
 #+end_src
 *** Org mode
 General Org mode setup
@@ -459,6 +460,7 @@ Setting packages
       ("" "natbib" t)
       ("" "amssymb" t)
       ("" "amsmath" t)
+      ("" "tikz" t)
       ("" "grffile" t)
       ("" "wrapfig" t)
       ("" "rotating" t)

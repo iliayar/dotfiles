@@ -791,7 +791,7 @@ main = do
                      hPutStrLn xmproc0 encX
                   -- >> hPutStrLn xmproc1 encX
                   -- >> appendFile "/tmp/.xmonad_data" (deodeString x)
-                , ppCurrent = xmobarColor Theme.color2 "" . wrap "[" "]"
+                , ppCurrent = xmobarColor Theme.color2 "" -- . wrap "[" "]"
                 , ppVisible = xmobarColor Theme.color2 ""
                 , ppTitle   = xmobarColor Theme.color9 "" . shorten 25
                 , ppLayout  = (\x -> "<action=~/.xmonad/xmonadctl 12>" ++ x ++ "</action>")
