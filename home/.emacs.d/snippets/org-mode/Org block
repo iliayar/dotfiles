@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: Org block 
+# key: <begin
+# --
+
+#+begin_$1
+$0
+#+end_$1

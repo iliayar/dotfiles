@@ -370,6 +370,12 @@ Cinstructing menus
 (use-package hydra
   :ensure t)
 #+end_src
+*** Org-mode
+theromes in LaTeX with org syntax
+#+begin_src emacs-lisp
+(use-package org-special-block-extras
+  :ensure t)
+#+end_src
 ** Variables and functions
 *** Snippets
 Add snippets to company backends
@@ -446,57 +452,6 @@ Org mode file associations
                 ("\\.pdf\\'" . "zathura %s")
                 ) org-file-apps ))
 #+END_SRC
-Org mode to LaTeX and pdf
-Setting packages
-#+BEGIN_SRC emacs-lisp
-  (setq org-latex-packages-alist '(
-      ("T1, T2A" "fontenc" t)
-      ("lutf8" "luainputenc" t)
-      ("russian, english" "babel" t)
-      ("" "minted" t)
-      ("" "graphicx" t)
-      ("" "longtable" t)
-      ("" "hyperref" t)
-      ("" "natbib" t)
-      ("" "amssymb" t)
-      ("" "amsmath" t)
-      ("" "tikz" t)
-      ("" "grffile" t)
-      ("" "wrapfig" t)
-      ("" "rotating" t)
-      ("" "placeins" t)
-      ("normalem" "ulem" t)
-      ("" "amsmath" t)
-      ("" "textcomp" t)
-      ("" "capt-of" t)))
-  ;; Reset default value. For debugging
-;;  (custom-reevaluate-setting 'org-latex-classes)
-  (with-eval-after-load 'ox-latex
-    (add-to-list 'org-latex-classes
-      '("general"
-       "\\documentclass{article}
-       [NO-DEFAULT-PACKAGES]
-       [PACKAGES]
-       [EXTRA]
-       \\usepackage{geometry}
-       \\geometry{a4paper,left=2.5cm,top=2cm,right=2.5cm,bottom=2cm,marginparsep=7pt, marginparwidth=.6in}
-"
-
-       ("\\section{%s}" . "\\section*{%s}")
-       ("\\subsection{%s}" . "\\subsection*{%s}")
-       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-       ("\\paragraph{%s}" . "\\paragraph*{%s}")
-       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
-)))
-(setq org-latex-listings 'minted
-      org-latex-pdf-process
-      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-(setq org-latex-minted-options
-   '(("frame" "lines") ("linenos=true") ("mathescape")))
-(add-to-list 'org-latex-minted-langs '(ipython "python"))
-#+END_SRC
 
 - Add /dot/ to org-babel
 - Enable redisplaying images after executing block
@@ -517,6 +472,84 @@ Setting packages
 Reveal.js presentations
 #+BEGIN_SRC emacs-lisp
   (setq org-reveal-root (expand-file-name "~/.local/share/reveal.js-4.1.0"))
+#+END_SRC
+
+**** LaTeX
+Org mode to LaTeX and pdf
+Setting packages
+#+BEGIN_SRC emacs-lisp
+    (setq org-latex-packages-alist '(
+        ("T1, T2A" "fontenc" t)
+        ("lutf8" "luainputenc" t)
+        ("russian, english" "babel" t)
+        ("" "minted" t)
+        ("" "graphicx" t)
+        ("" "longtable" t)
+        ("" "hyperref" t)
+        ("" "natbib" t)
+        ("" "amssymb" t)
+        ("" "amsmath" t)
+        ("" "amsthm" t)
+        ("" "tikz" t)
+        ("" "grffile" t)
+        ("" "wrapfig" t)
+        ("" "rotating" t)
+        ("" "placeins" t)
+        ("normalem" "ulem" t)
+        ("" "amsmath" t)
+        ("" "textcomp" t)
+        ("" "capt-of" t)))
+    ;; Reset default value. For debugging
+  ;;  (custom-reevaluate-setting 'org-latex-classes)
+    (with-eval-after-load 'ox-latex
+      (add-to-list 'org-latex-classes
+        '("general"
+         "\\documentclass{article}
+  [NO-DEFAULT-PACKAGES]
+  [PACKAGES]
+  [EXTRA]
+  \\usepackage{geometry}
+  \\geometry{a4paper,left=2.5cm,top=2cm,right=2.5cm,bottom=2cm,marginparsep=7pt, marginparwidth=.6in}
+
+  \\newcommand{\\R}{\\mathbb{R}}
+  \\newcommand{\\rank}{\\text{rank}}
+  \\newcommand{\\const}{\\text{const}}
+  \\newcommand{\\grad}{\\text{grad}}
+
+  \\providetoggle{useproofs}
+  \\settoggle{useproofs}{false}
+
+  \\theoremstyle{plain}
+  \\newtheorem{axiom}{Аксиома}
+  \\newtheorem{lemma}{Лемма}
+
+  \\theoremstyle{remark}
+  \\newtheorem*{remark}{Примечание}
+  \\newtheorem*{exercise}{Упражнение}
+  \\newtheorem{corollary}{Следствие}
+  \\newtheorem*{examp}{Пример}
+  \\newtheorem*{observation}{Наблюдение}
+
+  \\theoremstyle{definition}
+  \\newtheorem{theorem}{Теорема}
+  \\newtheorem*{definition}{Определение}
+  \\newtheorem*{symb}{Обозначение}
+  "
+
+         ("\\section{%s}" . "\\section*{%s}")
+         ("\\subsection{%s}" . "\\subsection*{%s}")
+         ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+         ("\\paragraph{%s}" . "\\paragraph*{%s}")
+         ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
+  )))
+  (setq org-latex-listings 'minted
+        org-latex-pdf-process
+        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+  (setq org-latex-minted-options
+     '(("frame" "lines") ("linenos=true") ("mathescape")))
+  (add-to-list 'org-latex-minted-langs '(ipython "python"))
 #+END_SRC
 
 *** Functions
