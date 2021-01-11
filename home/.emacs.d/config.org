@@ -486,12 +486,16 @@ Setting packages
         ("" "graphicx" t)
         ("" "longtable" t)
         ("" "hyperref" t)
+        ("" "xcolor" t)
         ("" "natbib" t)
         ("" "amssymb" t)
         ("" "amsmath" t)
+        ("" "caption" t)
+        ("" "mathtools" t)
         ("" "amsthm" t)
         ("" "tikz" t)
         ("" "grffile" t)
+        ("" "extarrows" t)
         ("" "wrapfig" t)
         ("" "rotating" t)
         ("" "placeins" t)
@@ -511,7 +515,14 @@ Setting packages
   \\usepackage{geometry}
   \\geometry{a4paper,left=2.5cm,top=2cm,right=2.5cm,bottom=2cm,marginparsep=7pt, marginparwidth=.6in}
 
+  \\usetikzlibrary{decorations.markings}
+  \\usetikzlibrary{cd}
+
+  \\newcommand\\addtag{\\refstepcounter{equation}\\tag{\\theequation}}
+
   \\newcommand{\\R}{\\mathbb{R}}
+  \\renewcommand{\\C}{\\mathbb{C}}
+  \\newcommand{\\N}{\\mathbb{N}}
   \\newcommand{\\rank}{\\text{rank}}
   \\newcommand{\\const}{\\text{const}}
   \\newcommand{\\grad}{\\text{grad}}
@@ -522,6 +533,11 @@ Setting packages
   \\theoremstyle{plain}
   \\newtheorem{axiom}{Аксиома}
   \\newtheorem{lemma}{Лемма}
+  \\newtheorem{manuallemmainner}{Лемма}
+  \\newenvironment{manuallemma}[1]{%
+    \\renewcommand\\themanuallemmainner{#1}%
+    \\manuallemmainner
+  }{\\endmanuallemmainner}
 
   \\theoremstyle{remark}
   \\newtheorem*{remark}{Примечание}
@@ -534,6 +550,41 @@ Setting packages
   \\newtheorem{theorem}{Теорема}
   \\newtheorem*{definition}{Определение}
   \\newtheorem*{symb}{Обозначение}
+  \\newtheorem{manualtheoreminner}{Теорема}
+  \\newenvironment{manualtheorem}[1]{%
+    \\renewcommand\\themanualtheoreminner{#1}%
+    \\manualtheoreminner
+  }{\\endmanualtheoreminner}
+  \\captionsetup{justification=centering,margin=2cm}
+  \\newenvironment{colored}[1]{\\color{#1}}{}
+
+  \\tikzset{->-/.style={decoration={
+    markings,
+    mark=at position .5 with {\\arrow{>}}},postaction={decorate}}}
+  \\makeatletter
+  \\newcommand*{\\relrelbarsep}{.386ex}
+  \\newcommand*{\\relrelbar}{%
+    \\mathrel{%
+      \\mathpalette\\@relrelbar\\relrelbarsep
+    }%
+  }
+  \\newcommand*{\\@relrelbar}[2]{%
+    \\raise#2\\hbox to 0pt{$\\m@th#1\\relbar$\\hss}%
+    \\lower#2\\hbox{$\\m@th#1\\relbar$}%
+  }
+  \\providecommand*{\\rightrightarrowsfill@}{%
+    \\arrowfill@\\relrelbar\\relrelbar\\rightrightarrows
+  }
+  \\providecommand*{\\leftleftarrowsfill@}{%
+    \\arrowfill@\\leftleftarrows\\relrelbar\\relrelbar
+  }
+  \\providecommand*{\\xrightrightarrows}[2][]{%
+    \\ext@arrow 0359\\rightrightarrowsfill@{#1}{#2}%
+  }
+  \\providecommand*{\\xleftleftarrows}[2][]{%
+    \\ext@arrow 3095\\leftleftarrowsfill@{#1}{#2}%
+  }
+  \\makeatother
   "
 
          ("\\section{%s}" . "\\section*{%s}")

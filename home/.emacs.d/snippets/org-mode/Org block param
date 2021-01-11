@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: Org block param
+# key: <begin_param
+# --
+
+#+ATTR_LATEX: :options $3
+#+begin_$1 ${2:org}
+$0
+#+end_$1

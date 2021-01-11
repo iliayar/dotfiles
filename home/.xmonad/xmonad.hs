@@ -423,6 +423,7 @@ myKeys = \conf -> let
     ]
   keymap =
     [ ("M-."         , sendMessage (IncMasterN (-1))             , "Decrease Master N")
+    , ("M-\\"        , spawn "xkb-switch -n"                     , "Switch keyboard layout")
     , ("M-,"         , sendMessage (IncMasterN 1)                , "Increase Master N")
     , ("M-a"         , sendMessage MirrorShrink                  , "Mirror shrink")
     , ("M-z"         , sendMessage MirrorExpand                  , "Mirror expand")
