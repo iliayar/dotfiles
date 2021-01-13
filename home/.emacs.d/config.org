@@ -478,129 +478,136 @@ Reveal.js presentations
 Org mode to LaTeX and pdf
 Setting packages
 #+BEGIN_SRC emacs-lisp
-    (setq org-latex-packages-alist '(
-        ("T1, T2A" "fontenc" t)
-        ("lutf8" "luainputenc" t)
-        ("russian, english" "babel" t)
-        ("" "minted" t)
-        ("" "graphicx" t)
-        ("" "longtable" t)
-        ("" "hyperref" t)
-        ("" "xcolor" t)
-        ("" "natbib" t)
-        ("" "amssymb" t)
-        ("" "amsmath" t)
-        ("" "caption" t)
-        ("" "mathtools" t)
-        ("" "amsthm" t)
-        ("" "tikz" t)
-        ("" "grffile" t)
-        ("" "extarrows" t)
-        ("" "wrapfig" t)
-        ("" "rotating" t)
-        ("" "placeins" t)
-        ("normalem" "ulem" t)
-        ("" "amsmath" t)
-        ("" "textcomp" t)
-        ("" "capt-of" t)))
-    ;; Reset default value. For debugging
-  ;;  (custom-reevaluate-setting 'org-latex-classes)
-    (with-eval-after-load 'ox-latex
-      (add-to-list 'org-latex-classes
-        '("general"
-         "\\documentclass{article}
-  [NO-DEFAULT-PACKAGES]
-  [PACKAGES]
-  [EXTRA]
-  \\usepackage{geometry}
-  \\geometry{a4paper,left=2.5cm,top=2cm,right=2.5cm,bottom=2cm,marginparsep=7pt, marginparwidth=.6in}
+  (setq org-latex-packages-alist '(
+      ("T1, T2A" "fontenc" t)
+      ("lutf8" "luainputenc" t)
+      ("english,russian" "babel" t)
+      ("" "minted" t)
+      ("" "graphicx" t)
+      ("" "longtable" t)
+      ("" "hyperref" t)
+      ("" "xcolor" t)
+      ("" "natbib" t)
+      ("" "amssymb" t)
+      ("" "amsmath" t)
+      ("" "caption" t)
+      ("" "mathtools" t)
+      ("" "amsthm" t)
+      ("" "tikz" t)
+      ("" "grffile" t)
+      ("" "extarrows" t)
+      ("" "wrapfig" t)
+      ("" "rotating" t)
+      ("" "placeins" t)
+      ("normalem" "ulem" t)
+      ("" "amsmath" t)
+      ("" "textcomp" t)
+      ("" "capt-of" t)))
+  ;; Reset default value. For debugging
+;;  (custom-reevaluate-setting 'org-latex-classes)
+  (with-eval-after-load 'ox-latex
+    (add-to-list 'org-latex-classes
+      '("general"
+       "\\documentclass[english]{article}
+[NO-DEFAULT-PACKAGES]
+[PACKAGES]
+[EXTRA]
+\\usepackage{geometry}
+\\geometry{a4paper,left=2.5cm,top=2cm,right=2.5cm,bottom=2cm,marginparsep=7pt, marginparwidth=.6in}
 
-  \\usetikzlibrary{decorations.markings}
-  \\usetikzlibrary{cd}
+ \\usepackage{hyperref}
+ \\hypersetup{
+     colorlinks=true,
+     linkcolor=blue,
+     filecolor=orange,
+     citecolor=black,      
+     urlcolor=cyan,
+     }
 
-  \\newcommand\\addtag{\\refstepcounter{equation}\\tag{\\theequation}}
+\\usetikzlibrary{decorations.markings}
+\\usetikzlibrary{cd}
+\\usetikzlibrary{patterns}
 
-  \\newcommand{\\R}{\\mathbb{R}}
-  \\renewcommand{\\C}{\\mathbb{C}}
-  \\newcommand{\\N}{\\mathbb{N}}
-  \\newcommand{\\rank}{\\text{rank}}
-  \\newcommand{\\const}{\\text{const}}
-  \\newcommand{\\grad}{\\text{grad}}
+\\newcommand\\addtag{\\refstepcounter{equation}\\tag{\\theequation}}
 
-  \\providetoggle{useproofs}
-  \\settoggle{useproofs}{false}
+\\newcommand{\\R}{\\mathbb{R}}
+\\renewcommand{\\C}{\\mathbb{C}}
+\\newcommand{\\N}{\\mathbb{N}}
+\\newcommand{\\rank}{\\text{rank}}
+\\newcommand{\\const}{\\text{const}}
+\\newcommand{\\grad}{\\text{grad}}
 
-  \\theoremstyle{plain}
-  \\newtheorem{axiom}{Аксиома}
-  \\newtheorem{lemma}{Лемма}
-  \\newtheorem{manuallemmainner}{Лемма}
-  \\newenvironment{manuallemma}[1]{%
-    \\renewcommand\\themanuallemmainner{#1}%
-    \\manuallemmainner
-  }{\\endmanuallemmainner}
+\\theoremstyle{plain}
+\\newtheorem{axiom}{Аксиома}
+\\newtheorem{lemma}{Лемма}
+\\newtheorem{manuallemmainner}{Лемма}
+\\newenvironment{manuallemma}[1]{%
+  \\renewcommand\\themanuallemmainner{#1}%
+  \\manuallemmainner
+}{\\endmanuallemmainner}
 
-  \\theoremstyle{remark}
-  \\newtheorem*{remark}{Примечание}
-  \\newtheorem*{exercise}{Упражнение}
-  \\newtheorem{corollary}{Следствие}
-  \\newtheorem*{examp}{Пример}
-  \\newtheorem*{observation}{Наблюдение}
+\\theoremstyle{remark}
+\\newtheorem*{remark}{Примечание}
+\\newtheorem*{exercise}{Упражнение}
+\\newtheorem{corollary}{Следствие}[theorem]
+\\newtheorem*{examp}{Пример}
+\\newtheorem*{observation}{Наблюдение}
 
-  \\theoremstyle{definition}
-  \\newtheorem{theorem}{Теорема}
-  \\newtheorem*{definition}{Определение}
-  \\newtheorem*{symb}{Обозначение}
-  \\newtheorem{manualtheoreminner}{Теорема}
-  \\newenvironment{manualtheorem}[1]{%
-    \\renewcommand\\themanualtheoreminner{#1}%
-    \\manualtheoreminner
-  }{\\endmanualtheoreminner}
-  \\captionsetup{justification=centering,margin=2cm}
-  \\newenvironment{colored}[1]{\\color{#1}}{}
+\\theoremstyle{definition}
+\\newtheorem{theorem}{Теорема}[section]
+\\newtheorem*{definition}{Определение}
+\\newtheorem*{symb}{Обозначение}
+\\newtheorem{manualtheoreminner}{Теорема}
+\\newenvironment{manualtheorem}[1]{%
+  \\renewcommand\\themanualtheoreminner{#1}%
+  \\manualtheoreminner
+}{\\endmanualtheoreminner}
+\\captionsetup{justification=centering,margin=2cm}
+\\newenvironment{colored}[1]{\\color{#1}}{}
 
-  \\tikzset{->-/.style={decoration={
-    markings,
-    mark=at position .5 with {\\arrow{>}}},postaction={decorate}}}
-  \\makeatletter
-  \\newcommand*{\\relrelbarsep}{.386ex}
-  \\newcommand*{\\relrelbar}{%
-    \\mathrel{%
-      \\mathpalette\\@relrelbar\\relrelbarsep
-    }%
-  }
-  \\newcommand*{\\@relrelbar}[2]{%
-    \\raise#2\\hbox to 0pt{$\\m@th#1\\relbar$\\hss}%
-    \\lower#2\\hbox{$\\m@th#1\\relbar$}%
-  }
-  \\providecommand*{\\rightrightarrowsfill@}{%
-    \\arrowfill@\\relrelbar\\relrelbar\\rightrightarrows
-  }
-  \\providecommand*{\\leftleftarrowsfill@}{%
-    \\arrowfill@\\leftleftarrows\\relrelbar\\relrelbar
-  }
-  \\providecommand*{\\xrightrightarrows}[2][]{%
-    \\ext@arrow 0359\\rightrightarrowsfill@{#1}{#2}%
-  }
-  \\providecommand*{\\xleftleftarrows}[2][]{%
-    \\ext@arrow 3095\\leftleftarrowsfill@{#1}{#2}%
-  }
-  \\makeatother
-  "
+\\tikzset{->-/.style={decoration={
+  markings,
+  mark=at position .5 with {\\arrow{>}}},postaction={decorate}}}
+\\makeatletter
+\\newcommand*{\\relrelbarsep}{.386ex}
+\\newcommand*{\\relrelbar}{%
+  \\mathrel{%
+    \\mathpalette\\@relrelbar\\relrelbarsep
+  }%
+}
+\\newcommand*{\\@relrelbar}[2]{%
+  \\raise#2\\hbox to 0pt{$\\m@th#1\\relbar$\\hss}%
+  \\lower#2\\hbox{$\\m@th#1\\relbar$}%
+}
+\\providecommand*{\\rightrightarrowsfill@}{%
+  \\arrowfill@\\relrelbar\\relrelbar\\rightrightarrows
+}
+\\providecommand*{\\leftleftarrowsfill@}{%
+  \\arrowfill@\\leftleftarrows\\relrelbar\\relrelbar
+}
+\\providecommand*{\\xrightrightarrows}[2][]{%
+  \\ext@arrow 0359\\rightrightarrowsfill@{#1}{#2}%
+}
+\\providecommand*{\\xleftleftarrows}[2][]{%
+  \\ext@arrow 3095\\leftleftarrowsfill@{#1}{#2}%
+}
+\\makeatother
+"
 
-         ("\\section{%s}" . "\\section*{%s}")
-         ("\\subsection{%s}" . "\\subsection*{%s}")
-         ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-         ("\\paragraph{%s}" . "\\paragraph*{%s}")
-         ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
-  )))
-  (setq org-latex-listings 'minted
-        org-latex-pdf-process
-        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-  (setq org-latex-minted-options
-     '(("frame" "lines") ("linenos=true") ("mathescape")))
-  (add-to-list 'org-latex-minted-langs '(ipython "python"))
+       ("\\section{%s}" . "\\section*{%s}")
+       ("\\subsection{%s}" . "\\subsection*{%s}")
+       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+       ("\\paragraph{%s}" . "\\paragraph*{%s}")
+       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
+)))
+(setq org-latex-listings 'minted
+      org-latex-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+(setq org-latex-minted-options
+   '(("frame" "lines") ("linenos=true") ("mathescape")))
+(add-to-list 'org-latex-minted-langs '(ipython "python"))
 #+END_SRC
 
 *** Functions
@@ -821,7 +828,6 @@ Bindings using /general/ package
     "si" 'latex-insert-block
     )
 #+end_src
-
 Hydra
 #+begin_src emacs-lisp
 (defhydra hydra-window-resize-menu (:color red

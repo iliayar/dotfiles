@@ -12,3 +12,4 @@ config.el
 request
 eln-cache
 tramp
+.org-id-locations
