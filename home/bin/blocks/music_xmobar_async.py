@@ -14,7 +14,7 @@ FIFO = '/tmp/.music_xmobar'
 PLAYER = 'spotify'
 ANIMATE = True
 DELAY = 0.7
-META_LENGTH = 30
+META_LENGTH = 100
 
 def parse_xresources():
     xrdb = subprocess.run(['xrdb', '-query'], capture_output=True).stdout.decode()

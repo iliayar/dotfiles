@@ -6,21 +6,19 @@ import qualified Theme
 config :: Config
 config = defaultConfig { 
 
-   -- appearance
-     --font            = font'
-     font            = "xft:Hack:size=8:bold:antialias=true"
+     font            = font'
    , bgColor         = Theme.background
    , additionalFonts = additionalFonts'
    , fgColor         = Theme.foreground
-   , alpha           = 255
+   , alpha           = 200
    , position        = OnScreen 0 $ Top
---    , position    =  Static {xpos = 0, ypos = 0, width = 1920, height = 15}
+--    , position    =  Static {xpos = 0, ypos = 1060, width = 1364, height = 20}
    , borderColor     = "#646464"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = (setColor Theme.color1 "TEST") ++ " }{ <fc=#ff0000,#00ff00>TEST</fc><fn=0><fc=#00ff00,#ff0000>\xe0b0</fc></fn>"
+   , template = " %pomodoro% }{ %music_pipe% | %updates% "
 
    -- general behavior
    , lowerOnStart     = True    -- send to bottom of window stack on start
@@ -32,8 +30,10 @@ config = defaultConfig {
    , iconRoot         = "/home/iliayar/.xmonad/xpm/"  -- default: "."
 
    , commands = 
-
         [
+          Run $ CommandReader "pymodoro" "pomodoro"
+        , Run $ PipeReader "/tmp/.music_xmobar" "music_pipe"
+        , Run $ PipeReader "/tmp/.updates_data" "updates"
         ]
    }
 main :: IO ()

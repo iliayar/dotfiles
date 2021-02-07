@@ -16,7 +16,7 @@ set expandtab
 set list listchars=tab:\ ,eol:\ 
 
 set foldmethod=indent
-
+set nofoldenable
 
 " Plugins here
 call plug#begin()

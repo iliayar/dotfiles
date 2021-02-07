@@ -353,6 +353,7 @@ tsSystem =
    ]
 tsCommands =
    [ Node (TS.TSNode "XMonad config" "Open xmonad.hs in Emacs" (spawn "emacsclient -c -a emacs -e '(find-file \"~/.xmonad/xmonad.hs\")'")) []
+   , Node (TS.TSNode "Pomodoro start" "Run pomodoro timer in bar" (spawn "touch ~/.cache/pomodoro_session")) []
    , Node (TS.TSNode "Close all dzen" "Kill broken dzen" (spawn "killall dzen2")) []
    , Node (TS.TSNode "Pacman update" "Get updates from pacman" (termSpawn termite "sudo pacman -Syyu")) []
    , Node (TS.TSNode "AUR update" "Get updates from AUR" (termSpawn termite "yay -Syyu")) []
@@ -414,7 +415,7 @@ myKeys = \conf -> let
     [ "cd ~/.xmonad"
     , "stack ghc -- --make ~/.xmonad/xmonadctl.hs"
     , "stack ghc -- --make ~/.config/xmobar/xmobar.hs  -i$HOME/.config/xmobar/"
-    -- , "stack ghc -- --make ~/.config/xmobar/xmobar_top.hs  -i$HOME/.config/xmobar/"
+    , "stack ghc -- --make ~/.config/xmobar/xmobar_top.hs  -i$HOME/.config/xmobar/"
     -- , "stack ghc -- --make ~/.config/xmobar/xmobar_mon2.hs  -i$HOME/.config/xmobar/"
     , "xmonad --recompile"
     , "xmonad --restart"
@@ -771,7 +772,7 @@ main = do
         homeDir <- getHomeDirectory
         xmproc0 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar"
         -- xmproc1 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_mon2"
-        -- xmproc2 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_top"
+        xmproc2 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_top"
         xmonad $ ewmh def {
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
@@ -793,7 +794,7 @@ main = do
                   -- >> hPutStrLn xmproc1 encX
                   -- >> appendFile "/tmp/.xmonad_data" (deodeString x)
                 , ppCurrent = xmobarColor Theme.color2 "" -- . wrap "[" "]"
-                , ppVisible = xmobarColor Theme.color2 ""
+                , ppVisible = xmobarColor Theme.color3 ""
                 , ppTitle   = xmobarColor Theme.color9 "" . shorten 25
                 , ppLayout  = (\x -> "<action=~/.xmonad/xmonadctl 12>" ++ x ++ "</action>")
                 , ppExtras  = []
