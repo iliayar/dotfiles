@@ -286,15 +286,20 @@ In /build/ directory run =cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=YES ..=
 
 Python lsp
 #+begin_src emacs-lisp
-(use-package lsp-python-ms
-  :ensure t
-  :init (setq lsp-python-ms-auto-install-server t)
-  :hook (python-mode . (lambda ()
-                          (require 'lsp-python-ms))))
-(use-package anaconda-mode
-  :ensure t)
-(use-package company-anaconda
-  :ensure t)
+  ;; (use-package lsp-python-ms
+  ;;   :ensure t
+  ;;   :init (setq lsp-python-ms-auto-install-server t)
+  ;;   :hook (python-mode . (lambda ()
+  ;;                           (require 'lsp-python-ms))))
+  (use-package lsp-pyright
+    :ensure t
+    :hook (python-mode . (lambda ()
+                            (require 'lsp-pyright)
+                            (lsp))))  ; or lsp-deferred
+  (use-package anaconda-mode
+    :ensure t)
+  (use-package company-anaconda
+    :ensure t)
 #+end_src
 Lsp for latex
 #+begin_src emacs-lisp
@@ -335,6 +340,12 @@ C settings
 #+BEGIN_SRC emacs-lisp
 (setq c-default-style "linux")
 #+END_SRC
+Java lsp
+#+BEGIN_SRC emacs-lisp
+  (use-package lsp-java
+    :ensure t)
+#+END_SRC
+
 *** Themes
 /Doom-modeline/ as modeline
 #+begin_src emacs-lisp
@@ -516,7 +527,7 @@ Setting packages
         ("" "textcomp" t)
         ("" "capt-of" t)))
     ;; Reset default value. For debugging
-  ;;  (custom-reevaluate-setting 'org-latex-classes)
+    (custom-reevaluate-setting 'org-latex-classes)
     (with-eval-after-load 'ox-latex
       (add-to-list 'org-latex-classes
         '("general"
@@ -562,12 +573,13 @@ Setting packages
 
   \\theoremstyle{remark}
   \\newtheorem*{remark}{Примечание}
-  \\newtheorem*{exercise}{Упражнение}
+  \\newtheorem*{solution}{Решение}
   \\newtheorem{corollary}{Следствие}[theorem]
   \\newtheorem*{examp}{Пример}
   \\newtheorem*{observation}{Наблюдение}
 
   \\theoremstyle{definition}
+  \\newtheorem{task}{Задача}
   \\newtheorem{theorem}{Теорема}[section]
   \\newtheorem*{definition}{Определение}
   \\newtheorem*{symb}{Обозначение}
@@ -826,6 +838,7 @@ Bindings using /general/ package
     "cf" 'counsel-grep-or-swiper
     "op" 'treemacs
     "om" 'magit
+    "oa" 'org-agenda
     "tt" 'treemacs-select-window)
 
   (general-define-key

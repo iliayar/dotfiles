@@ -291,6 +291,7 @@ myScratchPads = [ termApp termiteScratchpad "terminal" Nothing manageQuake
                 , termApp termiteScratchpad "ghci" (Just "ghci") manageQuake
                 , termApp termiteScratchpad "spotify" (Just "spt") manageNotes
                 , termApp termiteScratchpad "htop" (Just "htop") manageNotes
+                , NS "drawing" spawnDrawing findDrawing manageNotes
                 ]
   where
     termApp term name cmd manage = NS name (termSpawnCmd $ term (name ++ "-scratchpad") cmd) (role =? (name ++ "-scratchpad")) manage
@@ -299,7 +300,9 @@ myScratchPads = [ termApp termiteScratchpad "terminal" Nothing manageQuake
     termiteScratchpadHold r = Termite Nothing (Just r) True [] 
 
     spawnNotes = "emacsclient -c -a emacs -F '(quote (name . \"emacs-notes\"))' -e '(find-file \"~/Dropbox/org/Notes.org\")'"
+    spawnDrawing = "drawing"
     findNotes  = title =? "emacs-notes"
+    findDrawing = className =? "Drawing"
 
     manageNotes = customFloating $ W.RationalRect 0.05 0.05 0.9 0.9
     manageWeather = customFloating $ W.RationalRect 0.05 0.05 0.53 0.64
@@ -454,6 +457,7 @@ myKeys = \conf -> let
       , ("g", namedScratchpadAction myScratchPads "ghci"    , "Haskell intercative shell")
       , ("m", namedScratchpadAction myScratchPads "spotify" , "Spotify TUI client")
       , ("h", namedScratchpadAction myScratchPads "htop"    , "System monitoring scratchpad")
+      , ("d", namedScratchpadAction myScratchPads "drawing" , "Drawing")
       ] "Sratchpads"
     , prefix "M-S-e"
        [ ("r"  , spawn "reboot"                                     , "Reboot")

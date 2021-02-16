@@ -13,3 +13,6 @@ request
 eln-cache
 tramp
 .org-id-locations
+workspace
+eclipse.jdt.ls
+.dap-breakpoints
