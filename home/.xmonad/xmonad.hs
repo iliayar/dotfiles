@@ -230,7 +230,7 @@ myBorderWidth   = 1
 
 myModMask       = mod4Mask
 
-myWorkspaces = [afIcon "\xf001", afIcon "\xf120", afIcon "\xf1c9", afIcon "\xf03d", afIcon "\xf3f6", "5", "6", afIcon "\xf468", afIcon "\xf268", afIcon "\xf3fe"]
+myWorkspaces = [afIcon "\xf001", afIcon "\xf120", afIcon "\xf1c9", afIcon "\xf03d", afIcon "\xf3f6", afIcon "\xf305", "6", afIcon "\xf468", afIcon "\xf268", afIcon "\xf3fe"]
 myWorkspacesClickable    = clickable myWorkspaces
 -- myWorkspacesClickable    = clickable . (map xmobarEscape) $ myWorkspaces
     where

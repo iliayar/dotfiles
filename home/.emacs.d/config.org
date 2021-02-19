@@ -496,6 +496,12 @@ Reveal.js presentations
 #+BEGIN_SRC emacs-lisp
   (setq org-reveal-root (expand-file-name "~/.local/share/reveal.js-4.1.0"))
 #+END_SRC
+Export settings
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-html-htmlize-output-type 'css)
+  (setq org-html-head-include-default-style nil)
+#+END_SRC
 
 **** LaTeX
 Org mode to LaTeX and pdf
