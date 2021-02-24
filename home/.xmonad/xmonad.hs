@@ -520,9 +520,9 @@ myKeys = \conf -> let
     , ("<XF86AudioMute>"        , spawn "pactl set-sink-mute '@DEFAULT_SINK@' toggle", "Mute/Unmute"    )
     ]
     ++
-    [ (    "<Print>", scrot "" 0, "Screenshot"                      )
-    , (  "M-<Print>", scrot "-u" 0, "Screenshot of active window"   )
-    , ("M-S-<Print>", scrot "-s" 0.1, "Screenshot interactive"      )
+    [ (    "<Print>", scrot ""                              0, "Screenshot"                 )
+    , (  "M-<Print>", scrot "-u"                            0, "Screenshot of active window")
+    , ("M-S-<Print>", scrot "-a $(slop -f '%x,%y,%w,%h')" 0.1, "Screenshot interactive"     )
     , ("<XF86AudioNext>", playerctl "next", "Music next"            )
     , ("<XF86AudioPrev>", playerctl "previous", "Music prev"        )
     , ("<XF86AudioPlay>", playerctl "play-pause", "Music play/pause")
