@@ -283,6 +283,11 @@ In /build/ directory run =cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=YES ..=
              '(:compilationDatabaseDirectory "build"
                :cache (:directory "build/.ccls-cache"))))
 #+END_SRC
+Haskell lsp
+#+begin_src emacs-lisp
+  (use-package haskell-lsp
+    :ensure t)
+#+end_src
 
 Python lsp
 #+begin_src emacs-lisp
@@ -499,7 +504,7 @@ Reveal.js presentations
 Export settings
 
 #+BEGIN_SRC emacs-lisp
-  (setq org-html-htmlize-output-type 'css)
+  (setq org-html-htmlize-output-type 'inline-css)
   (setq org-html-head-include-default-style nil)
 #+END_SRC
 
@@ -694,6 +699,7 @@ Executable path
 #+BEGIN_SRC  emacs-lisp
   (add-to-list 'exec-path "~/.local/bin")
 #+END_SRC
+
 
 - Visual/behaviour
 - Dashboard

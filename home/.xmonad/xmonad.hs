@@ -720,11 +720,9 @@ instance Eq a => Eq (PairFirst a b) where
 appPrompt :: XPConfig -> X ()
 appPrompt c = do
   userHome <- io $ getHomeDirectory
-  li <- fmap (nubPairs . filterWithArgs . catMaybes) $ io $ foldM (\acc -> fmap (acc++) . getApplications) []
+  li <- fmap (nubPairs . filterWithArgs . catMaybes) $ io $ getApplications
          [ "/usr/share/applications"
          , userHome ++ "/.local/share/applications"
-         , userHome ++ "/.local/share/applications/wine"
-         , userHome ++ "/.local/share/applications/wine/Programs/IDA Pro"
          ]
   let compl = \s -> fst <$> filter (fuzzyMatch s . fst) li
   mkXPrompt App c (return . compl) (spawn . (M.fromList li M.!))
@@ -732,18 +730,24 @@ appPrompt c = do
     filterWithArgs = filter (\ (_, c) -> not $ '%' `elem` c)
     nubPairs = map getPairFirst . nub . map PairFirst
 
+getApplications :: [FilePath] -> IO [Maybe (String, String)]
+getApplications dirs = do
+  entries <- foldM (\acc dir -> do
+                       ents <- listDirectory dir
+                       return $ acc ++ (map (dir </>) ents)) [] dirs
+  fileEntries <- filterM doesFileExist entries
+  dirEntries <- filterM doesDirectoryExist entries
+  filesData <- foldM (\acc -> fmap (acc++) . getApplicationData) [] fileEntries
+  if dirEntries == []
+    then return filesData
+    else fmap (filesData ++) $ getApplications dirEntries
 
-getApplications :: FilePath -> IO [Maybe (String, String)]
-getApplications dir = do
-  l <- listDirectory dir
-  foldM (\acc -> fmap (acc++) . getApplicationData dir) [] l
-
-getApplicationData :: FilePath -> FilePath -> IO [Maybe (String, String)]
-getApplicationData dir file = do
-  f <- doesFileExist $ dir </> file
+getApplicationData :: FilePath -> IO [Maybe (String, String)]
+getApplicationData file = do
+  f <- doesFileExist file
   if f
     then do
-      t <- readFile $ dir </> file
+      t <- readFile file
       let
         names = filter (isPrefixOf "Name=") $ lines t
         cmds = filter (isPrefixOf "Exec=") $ lines t
