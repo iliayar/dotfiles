@@ -45,6 +45,7 @@ import           XMonad.Prompt.Shell (shellPrompt)
 import           XMonad.Prompt.FuzzyMatch (fuzzyMatch, fuzzySort)
 import           XMonad.Prompt.AppLauncher as AL
 
+import           XMonad.Layout.Simplest
 import           XMonad.Layout.SubLayouts
 import           XMonad.Layout.LayoutBuilder
 import           XMonad.Layout.NoBorders
@@ -438,10 +439,11 @@ myKeys = \conf -> let
     , ("M-f"         , makeFullscreenNoDock                      , "Fullscreen Toggle")
     , ("M-<Space>"   , sendMessage NextLayout                    , "Cicle layouts")
     , ("M-<Return>"  , spawn $ XMonad.terminal conf              , "Launch terminal")
-    -- , ("M1-S-c"         , spawn "termite"                     , "Switch to next layout")
     , ("M-S-/"       , termShowKeybindings $ getHelp keymap      , "Show this help")
     , ("M-S-c"       , termSpawn tempTermite restartRecompile    , "Recompile, restart XMonad")
-    , ("M-C-c"       , spawn restartRecompile                    , "Recompile, restart XMonad quite")
+    , ("M-C-m"       , withFocused (sendMessage . MergeAll)      , "Merge all windows to one groups")
+    , ("M-C-S-m"     , withFocused (sendMessage . UnMergeAll)    , "Unmerge all window in group")
+    , ("M-C-u"       , withFocused (sendMessage . UnMerge)       , "Pull window from group")
     , ("M-S-j"       , windows W.swapDown                        , "Swap window with prev")
     , ("M-S-k"       , windows W.swapUp                          , "Swap window with next")
     , ("M-S-q"       , kill                                      , "Close window")
@@ -574,6 +576,7 @@ myLayout = avoidStruts
          ||| floats
          ||| noBorders tabs
          ||| magnify
+         ||| tallTabbed
          -- ||| noBorders monocle
          -- ||| spirals
          ||| grid
@@ -585,6 +588,9 @@ myLayout = avoidStruts
             $ mySpacing' 4
             $ mkToggle (single MIRROR)
             $ ResizableTall 1 (3/100) (1/2) []
+    tallTabbed =
+            renamed [Replace "tall tabbed"]
+            $ addTabs shrinkText tabbedConf $ subLayout [] Simplest tall
     floats  = renamed [Replace "floats"]
             $ limitWindows 20 simplestFloat
     magnify = renamed [Replace "magnify"]
@@ -613,7 +619,8 @@ myLayout = avoidStruts
             $ limitWindows 12
             $ ResizableTall 1 (5/100) (1/3) []
     tabs    = renamed [Replace "tabs"]
-            $ tabbed shrinkText $ def
+            $ tabbed shrinkText tabbedConf
+    tabbedConf = def
                    { fontName            = myFont
                    , activeColor         = Theme.color0
                    , inactiveColor       = Theme.background
