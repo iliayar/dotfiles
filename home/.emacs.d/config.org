@@ -523,6 +523,7 @@ Setting packages
         ("" "xcolor" t)
         ("" "natbib" t)
         ("" "amssymb" t)
+        ("" "stmaryrd" t)
         ("" "amsmath" t)
         ("" "caption" t)
         ("" "mathtools" t)

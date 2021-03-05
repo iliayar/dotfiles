@@ -36,6 +36,7 @@ import           XMonad.Util.EZConfig
 import           XMonad.Util.NamedScratchpad
 import           XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
 import           XMonad.Util.SpawnOnce
+import           XMonad.Util.Types
 
 import           XMonad.Prompt
 import           XMonad.Prompt.Pass
@@ -441,8 +442,8 @@ myKeys = \conf -> let
     , ("M-<Return>"  , spawn $ XMonad.terminal conf              , "Launch terminal")
     , ("M-S-/"       , termShowKeybindings $ getHelp keymap      , "Show this help")
     , ("M-S-c"       , termSpawn tempTermite restartRecompile    , "Recompile, restart XMonad")
-    , ("M-C-m"       , withFocused (sendMessage . MergeAll)      , "Merge all windows to one groups")
-    , ("M-C-S-m"     , withFocused (sendMessage . UnMergeAll)    , "Unmerge all window in group")
+    , ("M-C-S-m"     , withFocused (sendMessage . MergeAll)      , "Merge all windows to one groups")
+    , ("M-C-S-u"     , withFocused (sendMessage . UnMergeAll)    , "Unmerge all window in group")
     , ("M-C-u"       , withFocused (sendMessage . UnMerge)       , "Pull window from group")
     , ("M-S-j"       , windows W.swapDown                        , "Swap window with prev")
     , ("M-S-k"       , windows W.swapUp                          , "Swap window with next")
@@ -484,7 +485,7 @@ myKeys = \conf -> let
       , ("a", appPrompt myXPConfig  , "Applications prompt")
       , ("h", hooglePrompt myXPConfig  , "Hoogle search prompt")
       , ("g", anonGooglePrompt myXPConfig  , "Anonymous Google search prompt")
-      , ("e", unicodePrompt "/home/iliayar/Themes/emoji" emojiXPConfig, "Unicode prompt")
+      , ("e", typeUnicodePrompt "/home/iliayar/Themes/emoji" emojiXPConfig, "Unicode prompt")
       , prefix "p"
         [ ("p", passPrompt myXPConfig, "Get password")
         , ("g", passGeneratePrompt myXPConfig, "Generate password")
@@ -686,7 +687,26 @@ myStartupHook = do
 -------------------------------------------------
 
 emojiXPConfig :: XPConfig
-emojiXPConfig = def { font = "" }
+emojiXPConfig = def
+      { font                = "xft:Symbola:regular:size=10"
+      , bgColor             = Theme.background
+      , fgColor             = Theme.foreground
+      , bgHLight            = Theme.color0
+      , fgHLight            = Theme.color1
+      , borderColor         = Theme.color8
+      , promptBorderWidth   = 2
+      , promptKeymap        = defaultXPKeymap
+      , position            = Top
+      , height              = 25
+      , historySize         = 256
+      , historyFilter       = id
+      , defaultText         = []
+      , autoComplete        = Nothing
+      , showCompletionOnTab = False
+      , searchPredicate     = fuzzyMatch
+      , sorter              = fuzzySort
+      , maxComplRows        = Nothing
+      }
 
 
 myXPConfig :: XPConfig
