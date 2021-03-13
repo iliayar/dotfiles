@@ -404,6 +404,16 @@ theromes in LaTeX with org syntax
 (use-package org-special-block-extras
   :ensure t)
 #+end_src
+
+Notifications for org mode scheduled tasks
+#+begin_src emacs-lisp
+  (use-package org-alert
+    :ensure t
+    :config
+    (setq alert-default-style 'libnotify)
+    (setq org-alert-notification-title "Org agenda"))
+#+end_src
+
 ** Variables and functions
 *** Snippets
 Add snippets to company backends
@@ -562,6 +572,7 @@ Setting packages
   \\usetikzlibrary{decorations.markings}
   \\usetikzlibrary{cd}
   \\usetikzlibrary{patterns}
+  \\usetikzlibrary{automata, arrows}
 
   \\newcommand\\addtag{\\refstepcounter{equation}\\tag{\\theequation}}
   \\newcommand{\\eqrefoffset}[1]{\\addtocounter{equation}{-#1}(\\arabic{equation}\\addtocounter{equation}{#1})}

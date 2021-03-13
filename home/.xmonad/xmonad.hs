@@ -294,6 +294,7 @@ myScratchPads = [ termApp termiteScratchpad "terminal" Nothing manageQuake
                 , termApp termiteScratchpad "spotify" (Just "spt") manageNotes
                 , termApp termiteScratchpad "htop" (Just "htop") manageNotes
                 , NS "drawing" spawnDrawing findDrawing manageNotes
+                , NS "qutebrowser" spawnQutebrowser findQutebrowser manageNotes
                 ]
   where
     termApp term name cmd manage = NS name (termSpawnCmd $ term (name ++ "-scratchpad") cmd) (role =? (name ++ "-scratchpad")) manage
@@ -301,16 +302,19 @@ myScratchPads = [ termApp termiteScratchpad "terminal" Nothing manageQuake
     termiteScratchpad r = Termite Nothing (Just r) False [] 
     termiteScratchpadHold r = Termite Nothing (Just r) True [] 
 
+    spawnQutebrowser = "qutebrowser --qt-arg name qutebrowser-scratchpad"
     spawnNotes = "emacsclient -c -a emacs -F '(quote (name . \"emacs-notes\"))' -e '(find-file \"~/Dropbox/org/Notes.org\")'"
-    spawnDrawing = "drawing"
+    spawnDrawing = "drawing --name=drawing-scratchpad"
+    findQutebrowser = appName =? "qutebrowser-scratchpad"
     findNotes  = title =? "emacs-notes"
-    findDrawing = className =? "Drawing"
+    findDrawing = className =? "Drawing-scratchpad"
 
     manageNotes = customFloating $ W.RationalRect 0.05 0.05 0.9 0.9
     manageWeather = customFloating $ W.RationalRect 0.05 0.05 0.53 0.64
     manageQuake = customFloating $ W.RationalRect 0 0 1 0.5
 
     role = stringProperty "WM_WINDOW_ROLE"
+    name = stringProperty "WM_NAME"
 
 -------------------------------------------------
 ---------------- TreeSelect ---------------------
@@ -461,6 +465,7 @@ myKeys = \conf -> let
       , ("m", namedScratchpadAction myScratchPads "spotify" , "Spotify TUI client")
       , ("h", namedScratchpadAction myScratchPads "htop"    , "System monitoring scratchpad")
       , ("d", namedScratchpadAction myScratchPads "drawing" , "Drawing")
+      , ("q", namedScratchpadAction myScratchPads "qutebrowser" , "Qutebrowser")
       ] "Sratchpads"
     , prefix "M-S-e"
        [ ("r"  , spawn "reboot"                                     , "Reboot")

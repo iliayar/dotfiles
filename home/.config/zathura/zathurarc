@@ -1,2 +1,5 @@
 set recolor
+set recolor-keephue true
+set recolor-darkcolor "#d5c4a1"
+set recolor-lightcolor "#1d2021"
 set sandbox none
