@@ -20,7 +20,11 @@ class AgendaParser:
                 i += 1
         
                 time = line[i].strip('.')
-                i += 1
+                if 'Scheduled' in time or 'Deadline' in time:
+                    time = 'Whole day'
+                else:
+                    i += 1
+
                 if time.endswith('-'):
                     time += line[i]
                     i += 1

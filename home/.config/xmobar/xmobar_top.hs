@@ -18,7 +18,7 @@ config = defaultConfig {
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = " %pomodoro% }{ %music_pipe% | %updates% "
+   , template = " %pomodoro% | %agenda% }{ %music_pipe% | %updates% "
 
    -- general behavior
    , lowerOnStart     = True    -- send to bottom of window stack on start
@@ -34,6 +34,7 @@ config = defaultConfig {
           Run $ CommandReader "pymodoro" "pomodoro"
         , Run $ PipeReader "/tmp/.music_xmobar" "music_pipe"
         , Run $ PipeReader "/tmp/.updates_data" "updates"
+        , Run $ PipeReader "/tmp/agenda.io" "agenda"
         ]
    }
 main :: IO ()
