@@ -407,11 +407,11 @@ theromes in LaTeX with org syntax
 
 Notifications for org mode scheduled tasks
 #+begin_src emacs-lisp
-  (use-package org-alert
-    :ensure t
-    :config
-    (setq alert-default-style 'libnotify)
-    (setq org-alert-notification-title "Org agenda"))
+  ;; (use-package org-alert
+  ;;   :ensure t
+  ;;   :config
+  ;;   (setq alert-default-style 'libnotify)
+  ;;   (setq org-alert-notification-title "Org agenda"))
 #+end_src
 
 ** Variables and functions

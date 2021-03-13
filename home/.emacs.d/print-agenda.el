@@ -1,6 +1,5 @@
 (org-eval-in-environment (org-make-parameter-alist
-			  `(org-agenda-span
-			    'week
+			  `(org-agenda-span 2
 			    org-agenda-use-time-grid t
 			    org-agenda-remove-tags t
 			    org-agenda-window-setup 'nope))
@@ -12,5 +11,5 @@
 	 (pop-to-buffer (current-buffer))
 	 (org-agenda nil "a")
         (let ((result (buffer-string)))
-	  (with-temp-file "~/.agenda" (insert result)))))
+	  (with-temp-file "/tmp/agenda.txt" (insert result)))))
      (set-window-configuration wins)))

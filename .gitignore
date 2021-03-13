@@ -27,3 +27,4 @@ recentf
 *.log
 *.lock
 /home/bin/ics-to-org
+/home/bin/__pycache__/

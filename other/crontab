@@ -19,3 +19,4 @@ DISPLAY=:0
 # 25 04 1 * * /usr/bin/dnf -y update
 
 */30 * * * * /home/iliayar/bin/blocks/pacman_xmobar_async.sh
+*/5  * * * * /home/iliayar/bin/execute_cron.sh notify-agenda.py
