@@ -1,44 +1,48 @@
 #!/usr/bin/env python
 
 import subprocess
+import io
+import csv
+
+class AgendaEntry:
+
+    def __init__(self, row):
+        self.file = row[0]
+        self.text = row[1]
+        self.type = row[2]
+        self.status = row[3]
+        self.date = row[5]
+        self.time = row[6].strip('.')
+        self.priority = row[9]
+
 
 class AgendaParser:
     
     def __init__(self):
+    
+        if AgendaParser.data != None:
+            return
 
-        with open('/home/iliayar/.emacs.d/print-agenda.el', 'r') as f:
-            print_agenda_script = f.read()
-        
-        
-        subprocess.run(['emacsclient', '-e', print_agenda_script])
-        
-        with open('/tmp/agenda.txt', 'r') as f:
-            def parse_line(line):
-                line = line.split()
-                i = 0
-                file = line[i][:-1]
-                i += 1
-        
-                time = line[i].strip('.')
-                if 'Scheduled' in time or 'Deadline' in time:
-                    time = 'Whole day'
-                else:
-                    i += 1
+        script = '(progn (require (quote org)) (setq org-agenda-files (quote ("/home/iliayar/Dropbox/org"))) (org-batch-agenda-csv "a"))'
+        proc = subprocess.Popen(['/usr/bin/emacs', '-batch', '--eval', script], stdout=subprocess.PIPE)
 
-                if time.endswith('-'):
-                    time += line[i]
-                    i += 1
-            
-                category = line[i][:-1]
-                i += 1
+        reader = csv.reader(io.TextIOWrapper(proc.stdout, 'utf-8'))
+        data = []
+        for row in reader:
+            entry = AgendaEntry(row)
+            if entry.status == 'DONE' or not (entry.type in ['deadline', 'scheduled']):
+                continue
+            data += [entry]
+
+        AgendaParser.data = data
         
-                name = ' '.join(line[i:])
-                return (file, time, category, name)
-            predicate = lambda line: ('Scheduled' in line or 'Deadline' in line) and 'DONE' not in line
-            self.agenda = map(parse_line, filter(predicate, f.read().split('\n')))
+    def get_iter(self):
+        return iter(AgendaParser.data)
     def list(self):
-        return list(self.agenda)
+        return AgendaParser.data
+        
 
+AgendaParser.data = None
 AgendaParser.FILE     = 0
 AgendaParser.TIME     = 1
 AgendaParser.CATEGORY = 2

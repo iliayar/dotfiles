@@ -501,6 +501,7 @@ Org mode file associations
  '((dot . t)
   (gnuplot . t)
   (python . t)
+  (shell . t)
   (ipython . t)))
 (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
 (setq org-confirm-babel-evaluate nil)
@@ -519,47 +520,9 @@ Export settings
 #+END_SRC
 
 **** LaTeX
-Org mode to LaTeX and pdf
-Setting packages
+Setting up LaTeX additional commands and properties
 #+BEGIN_SRC emacs-lisp
-    (setq org-latex-packages-alist '(
-        ("T1, T2A" "fontenc" t)
-        ("lutf8" "luainputenc" t)
-        ("english,russian" "babel" t)
-        ("" "minted" t)
-        ("" "graphicx" t)
-        ("" "longtable" t)
-        ("" "hyperref" t)
-        ("" "xcolor" t)
-        ("" "natbib" t)
-        ("" "amssymb" t)
-        ("" "stmaryrd" t)
-        ("" "amsmath" t)
-        ("" "caption" t)
-        ("" "mathtools" t)
-        ("" "amsthm" t)
-        ("" "tikz" t)
-        ("" "grffile" t)
-        ("" "extarrows" t)
-        ("" "wrapfig" t)
-        ("" "rotating" t)
-        ("" "placeins" t)
-        ("normalem" "ulem" t)
-        ("" "amsmath" t)
-        ("" "textcomp" t)
-        ("" "capt-of" t)))
-    ;; Reset default value. For debugging
-    (custom-reevaluate-setting 'org-latex-classes)
-    (with-eval-after-load 'ox-latex
-      (add-to-list 'org-latex-classes
-        '("general"
-         "\\documentclass[english]{article}
-  [NO-DEFAULT-PACKAGES]
-  [PACKAGES]
-  [EXTRA]
-  \\usepackage{geometry}
-  \\geometry{a4paper,left=2.5cm,top=2cm,right=2.5cm,bottom=2cm,marginparsep=7pt, marginparwidth=.6in}
-
+  (setq org-latex-header "
    \\usepackage{hyperref}
    \\hypersetup{
        colorlinks=true,
@@ -641,21 +604,81 @@ Setting packages
     \\ext@arrow 3095\\leftleftarrowsfill@{#1}{#2}%
   }
   \\makeatother
-  "
+  ")
+#+END_SRC
 
-         ("\\section{%s}" . "\\section*{%s}")
-         ("\\subsection{%s}" . "\\subsection*{%s}")
-         ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-         ("\\paragraph{%s}" . "\\paragraph*{%s}")
-         ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
-  )))
+  Org mode to LaTeX and pdf
+  Setting packages
+#+BEGIN_SRC emacs-lisp
+  (setq org-latex-packages-alist '(
+                                   ("T1, T2A" "fontenc" t)
+                                   ("lutf8" "luainputenc" t)
+                                   ("english,russian" "babel" t)
+                                   ("" "minted" t)
+                                   ("" "graphicx" t)
+                                   ("" "longtable" t)
+                                   ("" "hyperref" t)
+                                   ("" "xcolor" t)
+                                   ("" "natbib" t)
+                                   ("" "amssymb" t)
+                                   ("" "stmaryrd" t)
+                                   ("" "amsmath" t)
+                                   ("" "caption" t)
+                                   ("" "mathtools" t)
+                                   ("" "amsthm" t)
+                                   ("" "tikz" t)
+                                   ("" "grffile" t)
+                                   ("" "extarrows" t)
+                                   ("" "wrapfig" t)
+                                   ("" "rotating" t)
+                                   ("" "placeins" t)
+                                   ("normalem" "ulem" t)
+                                   ("" "amsmath" t)
+                                   ("" "textcomp" t)
+                                   ("" "capt-of" t)))
+  ;; Reset default value. For debugging
+  (custom-reevaluate-setting 'org-latex-classes)
+  (with-eval-after-load 'ox-latex
+    (progn 
+    (add-to-list 'org-latex-classes
+                 (list "general"
+                       (concat "
+  \\documentclass[english]{article}
+  [NO-DEFAULT-PACKAGES]
+  [PACKAGES]
+  [EXTRA]
+  \\usepackage{geometry}
+  \\geometry{a4paper,left=2.5cm,top=2cm,right=2.5cm,bottom=2cm,marginparsep=7pt, marginparwidth=.6in}
+  " org-latex-header)
+                       '("\\section{%s}" . "\\section*{%s}")
+                       '("\\subsection{%s}" . "\\subsection*{%s}")
+                       '("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                       '("\\paragraph{%s}" . "\\paragraph*{%s}")
+                       '("\\subparagraph{%s}" . "\\subparagraph*{%s}")
+                       ))
+    (add-to-list 'org-latex-classes
+                 (list "lectures"
+                       (concat "
+  \\documentclass[oneside]{book}
+  [NO-DEFAULT-PACKAGES]
+  [PACKAGES]
+  [EXTRA]
+  \\addto\\captionsrussian{\\renewcommand{\\chaptername}{Лекция}}
+  " org-latex-header)
+                       '("\\chapter{%s}" . "\\chapter*{%s}")
+                       '("\\section{%s}" . "\\section*{%s}")
+                       '("\\subsection{%s}" . "\\subsection*{%s}")
+                       '("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                       '("\\paragraph{%s}" . "\\paragraph*{%s}")
+                       '("\\subparagraph{%s}" . "\\subparagraph*{%s}")
+                       ))))
   (setq org-latex-listings 'minted
         org-latex-pdf-process
         '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
           "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
           "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
   (setq org-latex-minted-options
-     '(("frame" "lines") ("linenos=true") ("mathescape")))
+        '(("frame" "lines") ("linenos=true") ("mathescape")))
   (add-to-list 'org-latex-minted-langs '(ipython "python"))
 #+END_SRC
 
