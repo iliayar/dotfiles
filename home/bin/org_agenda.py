@@ -60,7 +60,6 @@ class AgendaParser:
             if entry.status == 'DONE' or not (entry.type in ['deadline', 'scheduled']):
                 continue
             data += [entry]
-
         AgendaParser.data = data
         
     def get_iter(self):

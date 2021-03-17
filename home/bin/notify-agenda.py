@@ -66,6 +66,7 @@ def bar_work():
     event = None
     for e in agenda:
         if e.file == 'Study':
+            event = e
             break
     if event == None:
         data = 'Chill'
