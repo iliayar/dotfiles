@@ -717,6 +717,22 @@ Compilation window behaviour
 ;; (remove-hook 'compilation-mode-hook 'my-compilation-hook t)
 
 #+end_src
+
+Marking headline as done in Study file
+#+BEGIN_SRC emacs-lisp
+  (defun mark--done (s file)
+    (org-map-entries
+     (lambda ()
+       (let* ((h (org-element-at-point))
+              (title (org-element-property :raw-value h)))
+         (if (string= title s) (org-todo 'done)))) nil (list (format "~/Dropbox/org/%s.org" file))))
+  (defun mark-done (s file)
+    (with-current-buffer (find-buffer-visiting (format "~/Dropbox/org/%s.org" file))
+      (progn
+        (mark--done s file)
+        (save-buffer))))
+#+END_SRC
+
 *** Other variables
 Code::stats
 #+BEGIN_SRC emacs-lisp
