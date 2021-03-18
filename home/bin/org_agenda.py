@@ -5,12 +5,13 @@ import io
 import csv
 import re
 
-def mark_done(file, title):
-    proc = subprocess.Popen(['/usr/bin/emacsclient', '--eval', '(mark-done "{}" "{}")'.format(title, file)])
 
 def call_lisp(cmd):
     proc = subprocess.Popen(['/usr/bin/emacs', '-batch', '-l', '~/bin/lisp/load-org', '-Q', '--eval', cmd], stdout=subprocess.PIPE)
     return io.TextIOWrapper(proc.stdout, 'utf-8')
+
+def mark_done(file, title):
+    call_lisp('(mark-done "{}" "{}")'.format(title, file)).close()
 
 class HeadlineParser:
 
@@ -21,6 +22,7 @@ class HeadlineParser:
     
         line = reader.readline()
         while not line.startswith('**'):
+            line = reader.readline()
             if line == '':
                 break
         line = reader.readline()

@@ -20,15 +20,15 @@
         (if (string= title s)
           (princ (org-element-interpret-data parent)))))))
 
-(defun study-mark-done (s)
-  (parse-study-with
-    (lambda (h) 
-      (let ((title (org-element-property :raw-value h)))
-        (if (string= title s)
-          (org-todo 'done))) h)))
-; (defun study-mark-done (s)
-;   (org-map-entries
-;     (lambda ()
-;       (let* ((h (org-element-at-point))
-;              (title (org-element-property :raw-value h)))
-;       (if (string= title s) (org-todo 'done)))) nil '("~/Dropbox/org/Study.org")))
+(defun mark--done (s file)
+  (org-map-entries
+    (lambda ()
+      (let* ((h (org-element-at-point))
+             (title (org-element-property :raw-value h)))
+        (if (string= title s) (org-todo 'done)))) nil (list (format "~/Dropbox/org/%s.org" file))))
+(defun mark-done (s file)
+  (progn (find-file (format "~/Dropbox/org/%s.org" file))
+         (with-current-buffer (find-buffer-visiting (format "~/Dropbox/org/%s.org" file))
+                              (progn
+                                (mark--done s file)
+                                (save-buffer)))))

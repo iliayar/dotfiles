@@ -10,6 +10,11 @@ import stat
 import io
 
 FIFO = '/tmp/agenda.io'
+NOTIFICATION_ID = str(0xd057)
+
+def notification_id_inc():
+    global NOTIFICATION_ID
+    NOTIFICATION_ID = str(int(NOTIFICATION_ID) + 1)
 
 def make_fifo():
     global FIFO
@@ -21,7 +26,8 @@ def wait_action(proc, event):
         mark_done(event.file, event.text)
 
 def notify(event, expired = None):
-    expire_time = str(5*60*1000)
+    global NOTIFICATION_ID
+    expire_time = str(1*60*1000)
     app_name = 'Org Agenda'
     title = event.type
     body = '<b>' + event.time + '</b> ' + event.text + '\n' + HeadlineParser(event.text).get_content()
@@ -31,6 +37,7 @@ def notify(event, expired = None):
         title, body, 
         '-a', app_name, 
         '-t', expire_time, 
+        '-r', NOTIFICATION_ID,
         '-A', 'default,Mark DONE'], stdout=subprocess.PIPE)
     Thread(target = wait_action, args=(proc, event)).start()
 
@@ -54,6 +61,7 @@ def notify_work():
             if diff < 0:
                 print(date)
                 notify(e, diff)
+            notification_id_inc()
 
 def bar_work():
     agenda = AgendaParser().get_iter()
@@ -81,5 +89,8 @@ def bar_work():
 
 
 if __name__ == '__main__':
+    for i in range(10):
+        proc = subprocess.Popen(['dunstify', '-C', NOTIFICATION_ID])
+        notification_id_inc()
     bar_work()
     notify_work()
