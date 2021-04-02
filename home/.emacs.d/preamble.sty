@@ -1,0 +1,93 @@
+ \usepackage{hyperref}
+ \hypersetup{
+     colorlinks=true,
+     linkcolor=blue,
+     filecolor=orange,
+     citecolor=black,      
+     urlcolor=cyan,
+     }
+
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{cd}
+\usetikzlibrary{patterns}
+\usetikzlibrary{automata, arrows}
+
+\newcommand\addtag{\refstepcounter{equation}\tag{\theequation}}
+\newcommand{\eqrefoffset}[1]{\addtocounter{equation}{-#1}(\arabic{equation}\addtocounter{equation}{#1})}
+
+
+\newcommand{\R}{\mathbb{R}}
+\renewcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\rank}{\text{rank}}
+\newcommand{\const}{\text{const}}
+\newcommand{\grad}{\text{grad}}
+
+\newcommand{\todo}{{\color{red}\fbox{\text{Доделать}}}}
+\newcommand{\fixme}{{\color{red}\fbox{\text{Исправить}}}}
+
+\newcounter{propertycnt}
+\setcounter{propertycnt}{1}
+\newcommand{\beginproperty}{\setcounter{propertycnt}{1}}
+
+\theoremstyle{plain}
+\newtheorem{propertyinner}{Свойство}
+\newenvironment{property}{
+  \renewcommand\thepropertyinner{\arabic{propertycnt}}
+  \propertyinner
+}{\endpropertyinner\stepcounter{propertycnt}}
+\newtheorem{axiom}{Аксиома}
+\newtheorem{lemma}{Лемма}
+\newtheorem{manuallemmainner}{Лемма}
+\newenvironment{manuallemma}[1]{%
+  \renewcommand\themanuallemmainner{#1}%
+  \manuallemmainner
+}{\endmanuallemmainner}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Примечание}
+\newtheorem*{solution}{Решение}
+\newtheorem{corollary}{Следствие}[theorem]
+\newtheorem*{examp}{Пример}
+\newtheorem*{observation}{Наблюдение}
+
+\theoremstyle{definition}
+\newtheorem{task}{Задача}
+\newtheorem{theorem}{Теорема}[section]
+\newtheorem*{definition}{Определение}
+\newtheorem*{symb}{Обозначение}
+\newtheorem{manualtheoreminner}{Теорема}
+\newenvironment{manualtheorem}[1]{%
+  \renewcommand\themanualtheoreminner{#1}%
+  \manualtheoreminner
+}{\endmanualtheoreminner}
+\captionsetup{justification=centering,margin=2cm}
+\newenvironment{colored}[1]{\color{#1}}{}
+
+\tikzset{->-/.style={decoration={
+  markings,
+  mark=at position .5 with {\arrow{>}}},postaction={decorate}}}
+\makeatletter
+\newcommand*{\relrelbarsep}{.386ex}
+\newcommand*{\relrelbar}{%
+  \mathrel{%
+    \mathpalette\@relrelbar\relrelbarsep
+  }%
+}
+\newcommand*{\@relrelbar}[2]{%
+  \raise#2\hbox to 0pt{$\m@th#1\relbar$\hss}%
+  \lower#2\hbox{$\m@th#1\relbar$}%
+}
+\providecommand*{\rightrightarrowsfill@}{%
+  \arrowfill@\relrelbar\relrelbar\rightrightarrows
+}
+\providecommand*{\leftleftarrowsfill@}{%
+  \arrowfill@\leftleftarrows\relrelbar\relrelbar
+}
+\providecommand*{\xrightrightarrows}[2][]{%
+  \ext@arrow 0359\rightrightarrowsfill@{#1}{#2}%
+}
+\providecommand*{\xleftleftarrows}[2][]{%
+  \ext@arrow 3095\leftleftarrowsfill@{#1}{#2}%
+}
+\makeatother

@@ -15,6 +15,9 @@ NOTIFICATION_ID = str(0xd057)
 def notification_id_inc():
     global NOTIFICATION_ID
     NOTIFICATION_ID = str(int(NOTIFICATION_ID) + 1)
+def notification_id_reset():
+    global NOTIFICATION_ID
+    NOTIFICATION_ID = str(0xd057)
 
 def make_fifo():
     global FIFO
@@ -92,5 +95,6 @@ if __name__ == '__main__':
     for i in range(10):
         proc = subprocess.Popen(['dunstify', '-C', NOTIFICATION_ID])
         notification_id_inc()
+    notification_id_reset()
     bar_work()
     notify_work()

@@ -5,7 +5,7 @@
 
 (load-org) ; Loading org options on load
 
-(defun batch-all-agenda () (eval '(org-batch-agenda-csv "a")))
+(defun batch-all-agenda () (eval '(org-batch-agenda-csv "a" org-agenda-span 'day)))
 
 (defun parse-study-with (f)
   (progn

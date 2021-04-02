@@ -133,6 +133,7 @@ common() {
         .config/zathura
         .Xresources
         .bashrc
+        .xprofile
     )
 }
 

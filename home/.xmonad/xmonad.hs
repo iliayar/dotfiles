@@ -490,7 +490,7 @@ myKeys = \conf -> let
       , ("a", appPrompt myXPConfig  , "Applications prompt")
       , ("h", hooglePrompt myXPConfig  , "Hoogle search prompt")
       , ("g", anonGooglePrompt myXPConfig  , "Anonymous Google search prompt")
-      , ("e", typeUnicodePrompt "/home/iliayar/Themes/emoji" emojiXPConfig, "Unicode prompt")
+      , ("e", withFixingClipboard $ unicodePrompt "/home/iliayar/Themes/unicode" emojiXPConfig, "Unicode prompt")
       , prefix "p"
         [ ("p", passPrompt myXPConfig, "Get password")
         , ("g", passGeneratePrompt myXPConfig, "Generate password")
@@ -554,6 +554,10 @@ myKeys = \conf -> let
                       , ("a", archwiki, "Arch Wiki")
                       , ("t", googleTranslate, "Google Translate")
                       ]
+      withFixingClipboard f = do
+        f
+        spawn $ wrapBash "xclip -o -selection primary | xclip -selection clipboard"
+        return()
 
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w

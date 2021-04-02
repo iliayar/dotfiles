@@ -16,7 +16,7 @@
  '(jdee-db-spec-breakpoint-face-colors (cons "#151818" "#282b2c"))
  '(objed-cursor-color "#ee4531")
  '(package-selected-packages
-   '(org-alert tramp-hdfs gnuplot atom-one-dark-theme lsp-haskell presentation highlight-doxygen lsp-java lsp-pyright cmake-mode cpputils-cmake cmake-ide org-pomodoro org-special-block-extras company-ctags ox-reveal org-super-agenda code-stats lsp-intellij dockerfile-mode docker ob-ipython graphviz-dot-mode highlight-indentation vterm latex-pretty-symbols pretty-symbols web-mode zzz-to-char dtrt-indent anaconda-mode company-anaconda unicode-fonts gradle-mode kotlin-mode origami ewal-doom-themes ewal xresources-theme company-fuzzy impatient-mode lsp-python-ms company-lsp company-box format-all yaml-mode ox-md hl-todo evil-multiedit treemacs-all-the-icons evil-collection use-package))
+   '(rustic rust-mode org-alert tramp-hdfs gnuplot atom-one-dark-theme lsp-haskell presentation highlight-doxygen lsp-java lsp-pyright cmake-mode cpputils-cmake cmake-ide org-pomodoro org-special-block-extras company-ctags ox-reveal org-super-agenda code-stats lsp-intellij dockerfile-mode docker ob-ipython graphviz-dot-mode highlight-indentation vterm latex-pretty-symbols pretty-symbols web-mode zzz-to-char dtrt-indent anaconda-mode company-anaconda unicode-fonts gradle-mode kotlin-mode origami ewal-doom-themes ewal xresources-theme company-fuzzy impatient-mode lsp-python-ms company-lsp company-box format-all yaml-mode ox-md hl-todo evil-multiedit treemacs-all-the-icons evil-collection use-package))
  '(pdf-view-midnight-colors (cons "#d5c4a1" "#1d2021"))
  '(rustic-ansi-faces
    ["#1d2021" "#ee4531" "#aeb124" "#edb32c" "#83a598" "#d3869b" "#8ec07c" "#d5c4a1"])
@@ -50,7 +50,8 @@
     (cons 320 "#59312d")
     (cons 340 "#665c54")
     (cons 360 "#665c54")))
- '(vc-annotate-very-old-color nil))
+ '(vc-annotate-very-old-color nil)
+ '(warning-suppress-types '((comp) (comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -254,11 +254,12 @@ Dockerfile support
 **** Languages and lsp
 lsp client
 #+begin_src emacs-lisp
-(use-package  lsp-mode
-  :hook (
-        (lsp-mode . lsp-enable-which-key-integration) 
-        )
-  :ensure t)
+  (use-package  lsp-mode
+    :hook (
+          (lsp-mode . lsp-enable-which-key-integration) 
+          (c++-mode . lsp)
+          )
+    :ensure t)
 #+end_src
 Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/ \\
 Lsp integration with several plugins
@@ -288,7 +289,6 @@ Haskell lsp
   (use-package haskell-lsp
     :ensure t)
 #+end_src
-
 Python lsp
 #+begin_src emacs-lisp
   ;; (use-package lsp-python-ms
@@ -308,28 +308,34 @@ Python lsp
 #+end_src
 Lsp for latex
 #+begin_src emacs-lisp
-(use-package lsp-latex
-  :ensure t)
+  (use-package lsp-latex
+    :ensure t)
 #+end_src
+Rust mode
+#+begin_src emacs-lisp
+  (use-package rustic
+    :ensure t)
+#+end_src
+
 Go mode
 #+begin_src emacs-lisp
-(use-package go-mode
-  :ensure t)
+  (use-package go-mode
+    :ensure t)
 #+end_src
 Haskell mode
 #+begin_src emacs-lisp
-(use-package haskell-mode
-  :ensure t)
+  (use-package haskell-mode
+    :ensure t)
 #+end_src
 Yaml files
 #+begin_src emacs-lisp
-(use-package yaml-mode
-  :ensure t)
+  (use-package yaml-mode
+    :ensure t)
 #+end_src
 Kotlin
 #+BEGIN_SRC emacs-lisp
-(use-package kotlin-mode
-  :ensure t)
+  (use-package kotlin-mode
+    :ensure t)
 #+END_SRC
 Graphviz
 #+BEGIN_SRC emacs-lisp
@@ -338,8 +344,8 @@ Graphviz
 #+END_SRC
 Ipython for org babel
 #+BEGIN_SRC emacs-lisp
-(use-package ob-ipython
-  :ensure t)
+  (use-package ob-ipython
+    :ensure t)
 #+END_SRC
 C settings
 #+BEGIN_SRC emacs-lisp
@@ -522,89 +528,10 @@ Export settings
 **** LaTeX
 Setting up LaTeX additional commands and properties
 #+BEGIN_SRC emacs-lisp
-  (setq org-latex-header "
-   \\usepackage{hyperref}
-   \\hypersetup{
-       colorlinks=true,
-       linkcolor=blue,
-       filecolor=orange,
-       citecolor=black,      
-       urlcolor=cyan,
-       }
-
-  \\usetikzlibrary{decorations.markings}
-  \\usetikzlibrary{cd}
-  \\usetikzlibrary{patterns}
-  \\usetikzlibrary{automata, arrows}
-
-  \\newcommand\\addtag{\\refstepcounter{equation}\\tag{\\theequation}}
-  \\newcommand{\\eqrefoffset}[1]{\\addtocounter{equation}{-#1}(\\arabic{equation}\\addtocounter{equation}{#1})}
-
-
-  \\newcommand{\\R}{\\mathbb{R}}
-  \\renewcommand{\\C}{\\mathbb{C}}
-  \\newcommand{\\N}{\\mathbb{N}}
-  \\newcommand{\\rank}{\\text{rank}}
-  \\newcommand{\\const}{\\text{const}}
-  \\newcommand{\\grad}{\\text{grad}}
-
-  \\theoremstyle{plain}
-  \\newtheorem{axiom}{Аксиома}
-  \\newtheorem{lemma}{Лемма}
-  \\newtheorem{manuallemmainner}{Лемма}
-  \\newenvironment{manuallemma}[1]{%
-    \\renewcommand\\themanuallemmainner{#1}%
-    \\manuallemmainner
-  }{\\endmanuallemmainner}
-
-  \\theoremstyle{remark}
-  \\newtheorem*{remark}{Примечание}
-  \\newtheorem*{solution}{Решение}
-  \\newtheorem{corollary}{Следствие}[theorem]
-  \\newtheorem*{examp}{Пример}
-  \\newtheorem*{observation}{Наблюдение}
-
-  \\theoremstyle{definition}
-  \\newtheorem{task}{Задача}
-  \\newtheorem{theorem}{Теорема}[section]
-  \\newtheorem*{definition}{Определение}
-  \\newtheorem*{symb}{Обозначение}
-  \\newtheorem{manualtheoreminner}{Теорема}
-  \\newenvironment{manualtheorem}[1]{%
-    \\renewcommand\\themanualtheoreminner{#1}%
-    \\manualtheoreminner
-  }{\\endmanualtheoreminner}
-  \\captionsetup{justification=centering,margin=2cm}
-  \\newenvironment{colored}[1]{\\color{#1}}{}
-
-  \\tikzset{->-/.style={decoration={
-    markings,
-    mark=at position .5 with {\\arrow{>}}},postaction={decorate}}}
-  \\makeatletter
-  \\newcommand*{\\relrelbarsep}{.386ex}
-  \\newcommand*{\\relrelbar}{%
-    \\mathrel{%
-      \\mathpalette\\@relrelbar\\relrelbarsep
-    }%
-  }
-  \\newcommand*{\\@relrelbar}[2]{%
-    \\raise#2\\hbox to 0pt{$\\m@th#1\\relbar$\\hss}%
-    \\lower#2\\hbox{$\\m@th#1\\relbar$}%
-  }
-  \\providecommand*{\\rightrightarrowsfill@}{%
-    \\arrowfill@\\relrelbar\\relrelbar\\rightrightarrows
-  }
-  \\providecommand*{\\leftleftarrowsfill@}{%
-    \\arrowfill@\\leftleftarrows\\relrelbar\\relrelbar
-  }
-  \\providecommand*{\\xrightrightarrows}[2][]{%
-    \\ext@arrow 0359\\rightrightarrowsfill@{#1}{#2}%
-  }
-  \\providecommand*{\\xleftleftarrows}[2][]{%
-    \\ext@arrow 3095\\leftleftarrowsfill@{#1}{#2}%
-  }
-  \\makeatother
-  ")
+  (setq org-latex-header
+        (with-temp-buffer
+          (insert-file-contents "~/.emacs.d/preamble.sty")
+          (buffer-string)))
 #+END_SRC
 
   Org mode to LaTeX and pdf
