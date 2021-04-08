@@ -41,7 +41,7 @@ def notify(event, expired = None):
         '-a', app_name, 
         '-t', expire_time, 
         '-r', NOTIFICATION_ID,
-        '-A', 'default,Mark DONE'], stdout=subprocess.PIPE)
+        '-A', 'default,Mark DONE '+event.text], stdout=subprocess.PIPE)
     Thread(target = wait_action, args=(proc, event)).start()
 
 def notify_work():

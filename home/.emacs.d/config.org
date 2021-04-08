@@ -557,6 +557,9 @@ Setting up LaTeX additional commands and properties
                                    ("" "grffile" t)
                                    ("" "extarrows" t)
                                    ("" "wrapfig" t)
+                                   ("" "algorithm" t)
+                                   ("" "algorithmic" t)
+                                   ("" "lipsum" t)
                                    ("" "rotating" t)
                                    ("" "placeins" t)
                                    ("normalem" "ulem" t)
@@ -788,14 +791,13 @@ Disabling arrow keys for *nothing?*
 #+END_SRC
 
 #+begin_src emacs-lisp
+  (general-define-key
+    :keymaps 'company-active-map
+    "<tab>"     'yas-expand
+    "<backtab>" 'company-complete-selection)
 
-(general-define-key
-  :keymaps 'company-active-map
-  "<tab>"     'yas-expand
-  "<backtab>" 'company-complete-selection)
-
-(general-define-key
-  "M-x" 'counsel-M-x)
+  (general-define-key
+    "M-x" 'counsel-M-x)
 #+end_src
 
 Bindings using /general/ package
@@ -806,30 +808,31 @@ Bindings using /general/ package
     :non-normal-prefix "M-SPC"
     :keymaps 'override
     "bb" 'ibuffer
-    "cd" 'kill-compilation-buffer
-    "cc" 'compile
-    "cr" 'lsp-rename
     "ca" 'lsp-execute-code-action
-    "sl" 'lsp
-    "ss" 'lsp-workspace-shutdown
-    "sr" 'lsp-workspace-restart
-    "wk" 'kill-buffer-and-window
-    "wd" 'delete-window
-    "ww" 'ace-window
-    "gs" 'avy-goto-char-timer
+    "cc" 'compile
+    "cd" 'kill-compilation-buffer
+    "cf" 'counsel-grep-or-swiper
+    "cl" 'comment-or-uncomment-region
+    "cr" 'lsp-rename
+    "ff" 'counsel-find-file
     "gl" 'avy-goto-line
     "gr" 'revert-buffer
-    "wr" 'hydra-window-resize-menu/body
-    "pp" 'projectile-switch-project
-    "pf" 'counsel-projectile-find-file
-    "pc" 'projectile-compile-project
-    "ff" 'counsel-find-file
-    "cl" 'comment-or-uncomment-region
-    "cf" 'counsel-grep-or-swiper
-    "op" 'treemacs
-    "om" 'magit
+    "gs" 'avy-goto-char-timer
     "oa" 'org-agenda
-    "tt" 'treemacs-select-window)
+    "om" 'magit
+    "op" 'treemacs
+    "pc" 'projectile-compile-project
+    "pf" 'counsel-projectile-find-file
+    "pp" 'projectile-switch-project
+    "rr" 'rustic-cargo-run
+    "sl" 'lsp
+    "sr" 'lsp-workspace-restart
+    "ss" 'lsp-workspace-shutdown
+    "tt" 'treemacs-select-window
+    "wd" 'delete-window
+    "wk" 'kill-buffer-and-window
+    "wr" 'hydra-window-resize-menu/body
+    "ww" 'ace-window)
 
   (general-define-key
     :states '(visual)
