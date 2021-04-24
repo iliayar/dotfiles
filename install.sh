@@ -300,6 +300,17 @@ themes() {
     CONFIGS+=(
         Themes
     )
+    OPERATIONS+=(
+        install_themes
+    )
+}
+
+install_themes() {
+    cd "home/Themes" || exit
+    wget "https://imgur.com/a/eptG3El/zip" -O wallpapers.zip
+    unzip wallpapers.zip
+    rm wallpapers.zip
+    cd "$DIR" || exit
 }
 
 ## i3

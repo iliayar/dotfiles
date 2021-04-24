@@ -536,7 +536,7 @@ Publishing for:
 	("org-mainsite"
 	 :base-directory "~/Documents/MainSite/public/notes"
 	 :base-extension "org"
-	 :exclude "level-1.org"
+	 :exclude "level-*.org"
 	 :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes"
 	 :recursive t
 	 :publishing-function org-html-publish-to-html
