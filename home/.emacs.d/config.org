@@ -527,6 +527,18 @@ Export settings
   (setq org-html-htmlize-output-type 'inline-css)
   (setq org-html-head-include-default-style nil)
 #+END_SRC
+
+Setting up spell checking. Working for both laguages, but only one in one buffer.
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load "ispell"
+  (setq ispell-program-name "hunspell")
+  (setq ispell-dictionary "hunspell-ru,en_US")
+  ;; ispell-set-spellchecker-params has to be called
+  ;; before ispell-hunspell-add-multi-dic will work
+  (ispell-set-spellchecker-params)
+  (ispell-hunspell-add-multi-dic "hunspell-ru,en_US"))
+#+END_SRC
+
 **** Publishing
 Publishing for:
 - Main site
