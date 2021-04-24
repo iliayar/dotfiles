@@ -13,19 +13,22 @@ Package config -- see https://melpa.org/#/getting-started
  t)
 #+end_src
 #+begin_src emacs-lisp
-(package-initialize)
+  (package-initialize)
 
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+
 #+end_src
 
 #+begin_src emacs-lisp
-(add-to-list 'load-path "~/.emacs.d/lisp/")
+  (add-to-list 'load-path "~/.emacs.d/lisp/")
 
-(setq evil-want-keybinding nil)
+  (setq evil-want-keybinding nil)
 
-;(setq evil-search-module 'evil-search)
+  (setq comp-deferred-compilation t)
+
+                                          ;(setq evil-search-module 'evil-search)
 #+end_src
 ** Packages
 *** Auto completion
@@ -279,7 +282,7 @@ In /build/ directory run =cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=YES ..=
      (use-package ccls
        :ensure t
        :config
-       (setq ccls-executable "ccls")
+       (setq ccls-executable "/usr/bin/ccls")
        (setq ccls-initialization-options
              '(:compilationDatabaseDirectory "build"
                :cache (:directory "build/.ccls-cache"))))
@@ -524,7 +527,32 @@ Export settings
   (setq org-html-htmlize-output-type 'inline-css)
   (setq org-html-head-include-default-style nil)
 #+END_SRC
-
+**** Publishing
+Publishing for:
+- Main site
+#+BEGIN_SRC emacs-lisp
+(setq org-publish-project-alist
+      '(
+	("org-mainsite"
+	 :base-directory "~/Documents/MainSite/public/notes"
+	 :base-extension "org"
+	 :exclude "level-1.org"
+	 :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes"
+	 :recursive t
+	 :publishing-function org-html-publish-to-html
+	 :headline-levels 4             ; Just the default for this project.
+	 :auto-preamble t
+	 )
+	("static-mainsite"
+	 :base-directory "~/Documents/MainSite/public/notes"
+	 :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+	 :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes"
+	 :recursive t
+	 :publishing-function org-publish-attachment
+	 )
+	("mainsite" :components ("org-mainsite" "static-mainsite"))
+	))
+#+END_SRC
 **** LaTeX
 Setting up LaTeX additional commands and properties
 #+BEGIN_SRC emacs-lisp

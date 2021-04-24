@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Latex Block  
+# key: begin
+# --
+
+\begin{$1} $0 \begin{$1}

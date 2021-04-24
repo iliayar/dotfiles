@@ -14,12 +14,15 @@
 
 \newcommand\addtag{\refstepcounter{equation}\tag{\theequation}}
 \newcommand{\eqrefoffset}[1]{\addtocounter{equation}{-#1}(\arabic{equation}\addtocounter{equation}{#1})}
+\newcommand{\llb}{\llbracket}
+\newcommand{\rrb}{\rrbracket}
 
 
 \newcommand{\R}{\mathbb{R}}
 \renewcommand{\C}{\mathbb{C}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\A}{\mathfrak{A}}
+\newcommand{\B}{\mathfrak{B}}
 \newcommand{\rank}{\mathop{\rm rank}\nolimits}
 \newcommand{\const}{\var{const}}
 \newcommand{\grad}{\mathop{\rm grad}\nolimits}
@@ -111,8 +114,9 @@
      \renewcommand{\algorithmicnot}{{\color{blue}\textbf{не}}}%
      \renewcommand{\algorithmicand}{{\color{blue}\textbf{и}}}%
      \renewcommand{\algorithmicor}{{\color{blue}\textbf{или}}}%
-     \renewcommand{\algorithmicrequire}{{\color{blue}\textbf{Предусловие}}}%
-     \renewcommand{\algorithmicrensure}{{\color{blue}\textbf{Постусловие}}}%
+     \renewcommand{\algorithmicrequire}{{\color{blue}\textbf{Ввод}}}%
+     \renewcommand{\algorithmicensure}{{\color{blue}\textbf{Вывод}}}%
+     \renewcommand{\algorithmicreturn}{{\color{red}\textbf{Вернуть}}}%
      \renewcommand{\algorithmicrtrue}{{\color{blue}\textbf{истинна}}}%
      \renewcommand{\algorithmicrfalse}{{\color{blue}\textbf{ложь}}}%
      % Set other language requirements
