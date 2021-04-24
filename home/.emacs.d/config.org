@@ -539,7 +539,7 @@ Setting up spell checking. Working for both laguages, but only one in one buffer
   (ispell-hunspell-add-multi-dic "hunspell-ru,en_US"))
 #+END_SRC
 
-**** Publishing
+**** COMMENT Publishing
 Publishing for:
 - Main site
 #+BEGIN_SRC emacs-lisp
@@ -568,7 +568,6 @@ Publishing for:
            :base-directory "~/Documents/ITMO"
            :exclude ".*[^E].org"
            :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes/conspects"
-           ;; :publishing-directory "~/Documents/public-ITMO"
            :recursive t
            :publishing-function org-html-publish-to-html
            :headline-levels 4             ; Just the default for this project.
@@ -576,11 +575,11 @@ Publishing for:
            )
           ("pdfs-conspects"
            :base-directory "~/Documents/ITMO"
-           :base-extension "pdf"
+           :base-extension "org"
+           :exclude "README.org\\|level-*.org"
            :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes/conspects"
-           ;; :publishing-directory "~/Documents/public-ITMO"
            :recursive t
-           :publishing-function org-publish-attachment
+           :publishing-function org-latex-publish-to-pdf
            )
           ("conspects" :components ("org-conspects" "pdfs-conspects"))
           ))
