@@ -3,4 +3,4 @@
 # key: begin
 # --
 
-\begin{$1} $0 \begin{$1}
+\begin{$1} $0 \end{$1}

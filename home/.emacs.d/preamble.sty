@@ -26,6 +26,10 @@
 \newcommand{\rank}{\mathop{\rm rank}\nolimits}
 \newcommand{\const}{\var{const}}
 \newcommand{\grad}{\mathop{\rm grad}\nolimits}
+\newcommand{\custombracket}[3]{\left#1 #3 \right#2}
+\newcommand{\custombracketsame}[2]{\custombracket{#1}{#1}{#2}}
+\newcommand{\pair}[1]{\custombracket{\langle}{\rangle}{#1}}
+\newcommand{\eval}[1]{\custombracket{\llbracket}{\rrbracket}{#1}}
 
 \newcommand{\todo}{{\color{red}\fbox{\text{Доделать}}}}
 \newcommand{\fixme}{{\color{red}\fbox{\text{Исправить}}}}
@@ -122,3 +126,37 @@
      % Set other language requirements
   }
   {\end{algorithm}}
+
+\newenvironment{enalgo}[1][]
+  {\begin{algorithm}[#1]
+     \selectlanguage{english}%
+     \floatname{algorithm}{Program}%
+     \renewcommand{\algorithmicif}{{\color{red}\textbf{if}}}%
+     \renewcommand{\algorithmicthen}{{\color{red}\textbf{then}}}%
+     \renewcommand{\algorithmicelse}{{\color{red}\textbf{else}}}%
+     \renewcommand{\algorithmicend}{{\color{red}\textbf{end}}}%
+     \renewcommand{\algorithmicfor}{{\color{red}\textbf{for}}}%
+     \renewcommand{\algorithmicto}{{\color{red}\textbf{to}}}%
+     \renewcommand{\algorithmicdo}{{\color{red}\textbf{do}}}%
+     \renewcommand{\algorithmicwhile}{{\color{red}\textbf{while}}}%
+     \renewcommand{\algorithmicrepeat}{{\color{red}\textbf{repeat}}}%
+     \renewcommand{\algorithmicuntil}{{\color{red}\textbf{until}}}%
+     \renewcommand{\algorithmicloop}{{\color{red}\textbf{loop}}}%
+     \renewcommand{\algorithmicnot}{{\color{blue}\textbf{not}}}%
+     \renewcommand{\algorithmicand}{{\color{blue}\textbf{and}}}%
+     \renewcommand{\algorithmicor}{{\color{blue}\textbf{or}}}%
+     \renewcommand{\algorithmicrequire}{{\color{blue}\textbf{Input}}}%
+     \renewcommand{\algorithmicensure}{{\color{blue}\textbf{Output}}}%
+     \renewcommand{\algorithmicreturn}{{\color{red}\textbf{return}}}%
+     \renewcommand{\algorithmicrtrue}{{\color{blue}\textbf{true}}}%
+     \renewcommand{\algorithmicrfalse}{{\color{blue}\textbf{false}}}%
+     % Set other language requirements
+  }
+  {\end{algorithm}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\thetitle}
+\fancyfoot[L]{ITMO y2019}
+\fancyfoot[C]{Page \thepage \hspace{1pt} of \pageref*{LastPage}}
+\renewcommand{\footrulewidth}{0.4pt}

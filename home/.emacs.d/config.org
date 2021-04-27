@@ -510,6 +510,7 @@ Org mode file associations
  '((dot . t)
   (gnuplot . t)
   (python . t)
+  (js . t)
   (shell . t)
   (ipython . t)))
 (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
@@ -539,7 +540,7 @@ Setting up spell checking. Working for both laguages, but only one in one buffer
   (ispell-hunspell-add-multi-dic "hunspell-ru,en_US"))
 #+END_SRC
 
-**** COMMENT Publishing
+**** Publishing
 Publishing for:
 - Main site
 #+BEGIN_SRC emacs-lisp
@@ -613,6 +614,9 @@ Setting up LaTeX additional commands and properties
                                    ("" "mathtools" t)
                                    ("" "amsthm" t)
                                    ("" "tikz" t)
+                                   ("" "fancyhdr" t)
+                                   ("" "lastpage" t)
+                                   ("" "titling" t)
                                    ("" "grffile" t)
                                    ("" "extarrows" t)
                                    ("" "wrapfig" t)
@@ -653,8 +657,10 @@ Setting up LaTeX additional commands and properties
   [PACKAGES]
   [EXTRA]
   \\addto\\captionsrussian{\\renewcommand{\\chaptername}{Лекция}}
-  " org-latex-header)
-                       '("\\chapter{%s}" . "\\chapter*{%s}")
+  \\renewcommand{\\leftmark}{}
+  \\usepackage[a4paper, total={6in, 8in}]{geometry}
+  " org-latex-header "\\fancyhead[L]{\\leftmark}")
+                       '("\\chapter*{%1$s}\\renewcommand{\\leftmark}{%1$s}\\addcontentsline{toc}{chapter}{%1$s}\\stepcounter{chapter}" . "\\chapter{%s}")
                        '("\\section{%s}" . "\\section*{%s}")
                        '("\\subsection{%s}" . "\\subsection*{%s}")
                        '("\\subsubsection{%s}" . "\\subsubsection*{%s}")
