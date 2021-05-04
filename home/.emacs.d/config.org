@@ -204,6 +204,12 @@ Org headers icons
 (use-package org-bullets
   :ensure t)
 #+end_src
+Emai client
+#+begin_src emacs-lisp
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
+(require 'mu4e)
+#+end_src
+
 *** Programming
 Code::stats
 #+BEGIN_SRC emacs-lisp

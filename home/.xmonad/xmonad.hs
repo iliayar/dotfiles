@@ -47,6 +47,7 @@ import           XMonad.Prompt.FuzzyMatch (fuzzyMatch, fuzzySort)
 import           XMonad.Prompt.AppLauncher as AL
 
 import           XMonad.Layout.Simplest
+import           XMonad.Layout.PerWorkspace
 import           XMonad.Layout.SubLayouts
 import           XMonad.Layout.LayoutBuilder
 import           XMonad.Layout.NoBorders
@@ -68,6 +69,7 @@ import qualified XMonad.Layout.ToggleLayouts as T (toggleLayouts, ToggleLayout(T
 import qualified XMonad.Layout.MultiToggle as MT (Toggle(..))
 
 import           XMonad.Actions.Submap
+import           XMonad.Actions.SpawnOn
 import           XMonad.Actions.GridSelect
 import           XMonad.Actions.WithAll (sinkAll, killAll)
 import           XMonad.Actions.Commands (defaultCommands)
@@ -220,7 +222,7 @@ afIcon s = "<fn=1>" ++ s ++ "</fn>"
 
 myTerminal      = "termite"
 
-myFont = "xft:Hack:size=9"
+myFont = "xft:Fira Code:size=9"
 
 myFocusFollowsMouse :: Bool
 myFocusFollowsMouse = False
@@ -389,6 +391,13 @@ tsLayout =
 tsTools =
   [ Node (TS.TSNode "NetworkManager TUI" "Terminal Interface for NetworkManager" (termSpawn termite "nmtui")) []
   , Node (TS.TSNode "PulseMixer" "Pulse Audio Mixer" (termSpawn termite "pulsemixer")) []
+  , Node (TS.TSNode "Main Workflow" "Run Brace, Telegram on appropriate workspaces"
+          (do
+              spawnOn (myWorkspacesClickable !! 9) "telegram-desktop"
+              spawnOn (myWorkspacesClickable !! 8) "brave"
+              spawnOn (myWorkspacesClickable !! 1) "termite"
+              spawnOn (myWorkspacesClickable !! 9) "thunderbird"
+              spawnOn (myWorkspacesClickable !! 0) "spotify")) []
   ]
 
 
@@ -578,6 +587,7 @@ mySpacing' :: Integer -> l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spac
 mySpacing' i = spacingRaw True (Border i i i i) True (Border i i i i) True
 
 myLayout = avoidStruts
+         $ onWorkspace (myWorkspacesClickable !! 9) tabs
          $ windowArrange
          $ mkToggle (NBFULL ?? NOBORDERS ?? EOT)
          $ T.toggleLayouts floats
@@ -659,7 +669,7 @@ myManageHook = composeAll
   , title     =? "neofetch-term"       --> (customFloating $ W.RationalRect 0.5 0.05 0.45 0.45)
   , manageDocks
   , namedScratchpadManageHook myScratchPads
-  ]
+  ] <+> manageSpawn
 
 myCommands = [ ("XMonad config", (spawn "emacsclient -c -a emacs -e '(find-file \"~/.xmonad/xmonad.hs\")'")) -- 1 Action on bar icon
              ]

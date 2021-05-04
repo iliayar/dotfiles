@@ -12,6 +12,8 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 
+set guifont=Fira\ Code:h13
+
 " Display these characters
 set list listchars=tab:\ ,eol:\ 
 
@@ -87,13 +89,13 @@ let g:airline_section_x = airline#section#create_right(['tagbar', 'filetype', '%
 " autocmd VimEnter * colorscheme gruvbox
 
 " Monokai colorscheme
-"colorscheme monokai
+colorscheme monokai
 
 " Pywal
-colorscheme wal
+" colorscheme wal
 
 " Transparent background
-"autocmd VimEnter * hi Normal guibg=NONE ctermbg=NONE
+" autocmd VimEnter * hi Normal guibg=NONE ctermbg=NONE
 
 " Rainbow brackets
 au VimEnter * RainbowParenthesesToggle
