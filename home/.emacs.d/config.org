@@ -767,7 +767,7 @@ Executable path
 
   (set-face-attribute 'default nil
                       :family "Fira Code"
-                      :height 85)
+                      :height 100)
 
   (setq company-math-allow-latex-symbols-in-faces t)
 

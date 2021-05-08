@@ -121,7 +121,7 @@ dzen' m = "(echo " ++
                          ]
 
 termShowKeybindings :: String -> X () 
-termShowKeybindings m = termSpawn tempTermiteHold $ "echo '" ++ m ++ "'"
+termShowKeybindings m = termSpawn tempAlacrittyHold $ "echo '" ++ m ++ "'"
 
 data Terminal = Termite
                 { termiteTitle :: Maybe String
@@ -135,6 +135,13 @@ data Terminal = Termite
                 , urxvtHold  :: Bool
                 , urxvtArgs  :: [String]
                 , urxvtCmd   :: Maybe String
+                }
+              | Alacritty
+                { alacrittyTitle :: Maybe String
+                , alacrittyClass :: Maybe String
+                , alacrittyHold  :: Bool
+                , alacrittyArgs  :: [String]
+                , alacrittyCmd   :: Maybe String
                 }
 
 termSpawnCmd :: Terminal -> String
@@ -172,6 +179,25 @@ termSpawnCmd (URxvt t h a cmd) = unwords
     getTermCmd Nothing = ""
     getTermCmd (Just cmd) = "-e " ++ cmd
 
+termSpawnCmd (Alacritty t c h a cmd) = unwords
+                                   [ "alacritty"
+                                   , getTermTitle t
+                                   , getTermClass c
+                                   , getTermHold h
+                                   , unwords a
+                                   , getTermCmd cmd
+                                   ]
+  where
+    -- Sure there is a function that do this FIXME
+    getTermClass (Just s) = "--class " ++ s
+    getTermClass Nothing = ""
+    getTermTitle (Just s) = "-t " ++ s
+    getTermTitle Nothing = ""
+    getTermHold True = "--hold"
+    getTermHold False = ""
+    getTermCmd Nothing = ""
+    getTermCmd (Just cmd) = "-e " ++ cmd
+
 termSpawn :: (Maybe String -> Terminal) -> String -> X()
 termSpawn t c = spawn $ termSpawnCmd $ t $ Just c
   
@@ -182,6 +208,12 @@ tempTermiteQuake = Termite (Just "temp-term-quake") Nothing False []
 tempTermiteHold = Termite (Just "temp-term") Nothing True []
 termite = Termite Nothing Nothing False []
 tempTermite = Termite (Just "temp-term") Nothing False []
+
+tempAlacrittyQuake = Alacritty (Just "temp-term-quake") Nothing False []
+tempAlacrittyHold = Alacritty (Just "temp-term") Nothing True []
+alacritty = Alacritty Nothing Nothing False []
+tempAlacritty = Alacritty (Just "temp-term") Nothing False []
+
 tempURxvt   = URxvt (Just "temp-term") False []
 
 wrapBash c = "bash -c 'source ~/.bashrc; " ++ c ++ "'"
@@ -220,7 +252,7 @@ afIcon s = "<fn=1>" ++ s ++ "</fn>"
 ----------------- Variables ---------------------
 -------------------------------------------------
 
-myTerminal      = "termite"
+myTerminal      = "alacritty"
 
 myFont = "xft:Fira Code:size=9"
 
@@ -277,7 +309,7 @@ myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
             , ("Cutter", "Cutter")
             , ("File Manager", "pcmanfm")
             , ("Urxvt", "urxvt")
-            , ("Termite", "termite")
+            , ("Alacritty", "alacritty")
             , ("Spotify", "spotify")
             , ("Discord", "discord")
             , ("Steam", "steam")
@@ -288,21 +320,27 @@ myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
 -------------------------------------------------
 
 myScratchPads :: [NamedScratchpad]
-myScratchPads = [ termApp termiteScratchpad "terminal" Nothing manageQuake
+myScratchPads = [ termAppClass alacrittyScratchpad "terminal" Nothing manageQuake
                 , NS "notes" spawnNotes findNotes manageNotes
-                , termApp termiteScratchpad "weather" (Just $ wrapBash "curl wttr.in; cat") manageWeather
-                , termApp termiteScratchpad "ipython" (Just "ipython") manageQuake
-                , termApp termiteScratchpad "ghci" (Just "ghci") manageQuake
-                , termApp termiteScratchpad "spotify" (Just "spt") manageNotes
-                , termApp termiteScratchpad "htop" (Just "htop") manageNotes
+                , termAppClass alacrittyScratchpad "weather" (Just $ wrapBash "curl wttr.in; cat") manageWeather
+                , termAppClass alacrittyScratchpad "ipython" (Just "ipython") manageQuake
+                , termAppClass alacrittyScratchpad "ghci" (Just "ghci") manageQuake
+                , termAppClass alacrittyScratchpad "spotify" (Just "spt") manageNotes
+                , termAppClass alacrittyScratchpad "htop" (Just "htop") manageNotes
                 , NS "drawing" spawnDrawing findDrawing manageNotes
                 , NS "qutebrowser" spawnQutebrowser findQutebrowser manageNotes
                 ]
   where
-    termApp term name cmd manage = NS name (termSpawnCmd $ term (name ++ "-scratchpad") cmd) (role =? (name ++ "-scratchpad")) manage
+    termAppProp prop term name cmd manage = NS name (termSpawnCmd $ term (name ++ "-scratchpad") cmd) (prop =? (name ++ "-scratchpad")) manage
+    termApp = termAppProp role
+    termAppClass = termAppProp resource
+
 
     termiteScratchpad r = Termite Nothing (Just r) False [] 
     termiteScratchpadHold r = Termite Nothing (Just r) True [] 
+
+    alacrittyScratchpad c = Alacritty Nothing (Just c) False [] 
+    alacrittyScratchpadHold c = Alacritty Nothing (Just c) True [] 
 
     spawnQutebrowser = "qutebrowser --qt-arg name qutebrowser-scratchpad"
     spawnNotes = "emacsclient -c -a emacs -F '(quote (name . \"emacs-notes\"))' -e '(find-file \"~/Dropbox/org/Notes.org\")'"
@@ -311,6 +349,7 @@ myScratchPads = [ termApp termiteScratchpad "terminal" Nothing manageQuake
     findNotes  = title =? "emacs-notes"
     findDrawing = className =? "Drawing-scratchpad"
 
+    -- manageNotes = customFloating $ W.RationalRect 0.05 0.05 0.9 0.9
     manageNotes = customFloating $ W.RationalRect 0.05 0.05 0.9 0.9
     manageWeather = customFloating $ W.RationalRect 0.05 0.05 0.53 0.64
     manageQuake = customFloating $ W.RationalRect 0 0 1 0.5
@@ -332,6 +371,7 @@ tsAll =
        [ Node (TS.TSNode "IPython" "IPython interactive shell" (termSpawn termite "ipython")) []
        , Node (TS.TSNode "Emacs" "IDE/Text editor" (spawn "emacsclient -c -a emacs")) []
        , Node (TS.TSNode "Termite" "Terminal" (spawn "termite")) []
+       , Node (TS.TSNode "Alacritty" "Alacritty" (spawn "alacritty")) []
        , Node (TS.TSNode "Urxvt" "Rxvt Unicode" (spawn "urxvt")) []
        , Node (TS.TSNode "Restart Emacs" "Restart Emacs daemon" (spawn $ wrapBash"killall emacs; emacs --daemon")) []
        ]
@@ -374,7 +414,7 @@ tsCommands =
      ]
    ]
   where gitCmd s h =
-          (termSpawn tempTermiteQuake $ wrapBash $ (++ "; sleep 1")
+          (termSpawn tempAlacrittyQuake $ wrapBash $ (++ "; sleep 1")
             $ intercalate "; " $ map (\ x -> "echo " ++ x ++ "; pass git " ++ s ++  " " ++ x ++ " master") h)
   
 tsLayout =
@@ -454,7 +494,7 @@ myKeys = \conf -> let
     , ("M-<Space>"   , sendMessage NextLayout                    , "Cicle layouts")
     , ("M-<Return>"  , spawn $ XMonad.terminal conf              , "Launch terminal")
     , ("M-S-/"       , termShowKeybindings $ getHelp keymap      , "Show this help")
-    , ("M-S-c"       , termSpawn tempTermite restartRecompile    , "Recompile, restart XMonad")
+    , ("M-S-c"       , termSpawn tempAlacritty restartRecompile  , "Recompile, restart XMonad")
     , ("M-C-S-m"     , withFocused (sendMessage . MergeAll)      , "Merge all windows to one groups")
     , ("M-C-S-u"     , withFocused (sendMessage . UnMergeAll)    , "Unmerge all window in group")
     , ("M-C-u"       , withFocused (sendMessage . UnMerge)       , "Pull window from group")
@@ -808,7 +848,7 @@ getApplicationData file = do
   
 hooglePrompt c =
     inputPrompt c "Hoogle" ?+ \query ->
-        termSpawn tempTermiteHold ("hoogle " ++ query)
+        termSpawn tempAlacrittyHold ("hoogle " ++ query)
 
 anonGooglePrompt c =
     inputPrompt c "Anonymous google" ?+ \query ->
@@ -816,7 +856,7 @@ anonGooglePrompt c =
 
 passInsertPrompt c =
     inputPrompt c "Add password" ?+ \query ->
-         termSpawn tempTermite $ "pass insert " ++ query
+         termSpawn tempAlacritty $ "pass insert " ++ query
 
 -------------------------------------------------
 ------------------ Main -------------------------

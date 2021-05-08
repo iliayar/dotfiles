@@ -34,6 +34,9 @@ Plug 'vim-airline/vim-airline'
 " Surround text with brackets
 Plug 'tpope/vim-surround'
 
+" Nim language
+Plug 'alaviss/nim.nvim'
+
 " Folding
 " Plug 'tmhedberg/SimpylFold'
 
