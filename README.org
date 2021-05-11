@@ -6,16 +6,16 @@
 ** Main workflow
 *** Emacs
 Emacs config in one org file [[file:home/.emacs.d/config.org][Link]] \\
-*UPD:* Using /emacs-native-compile-git/ from AUR for better performance 
+Using /emacs-native-comp-git-enhanced/ from AUR for better performance (and broken GTK interface)
 *** XMonad
 [[file:home/.xmonad/xmonad.hs][Main config]]
-Xmonad and xmobar, compile form source because of arch haskell packages
+Xmonad and xmobar, compile form source because of arch's broken haskell packages
 **** Xmobar
 Several xmobar configs in [[file:home/.config/xmobar/][here]]
 
 *** Other utils
 - *zsh* as shell [[file:home/.zshrc][config]] with *oh-my-zsh*
-- *termite* as main terminal [[file:home/.config/termite/config][config]]
+- *alacritty* as main terminal [[file:home/.config/alacritty/alacritty.yml][config]]
 - *urxvt* as second terminal(support w3m images) 
 - *dunst* for notifications [[file:home/.config/dunst/dunstrc][config]]
 - *brave* as default browser
@@ -24,4 +24,5 @@ Several xmobar configs in [[file:home/.config/xmobar/][here]]
 - *pywal* for setting color
   - [[file:home/.config/wal/templates/Theme.hs][template]] for xmonad/xmobar
   - [[file:home/.config/wal/templates/termite.conf][template]] for termite
+  - [[file:home/.config/wal/templates/alacritty.yml][template]] for alacritty colors
 - *conky* flex [[file:home/.config/conky/conky.conf][config]]
