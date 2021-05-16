@@ -1,5 +1,12 @@
 * Emacs Configs
 Using /emacs-native-comp-git/ from AUR for improving performance
+
+Speeding up 🐌
+#+begin_src emacs-lisp
+(setq gc-cons-threshold 100000000)
+#+end_src
+
+
 ** Main config
 *** Repositories
 There is initializes package mangers and some other stuff \\
@@ -269,6 +276,10 @@ lsp client
           (c++-mode . lsp)
           )
     :ensure t)
+#+end_src
+Speeding up lps-mode
+#+begin_src emacs-lisp
+(setq read-process-output-max (* 4 (* 1024 1024)))
 #+end_src
 Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/ \\
 Lsp integration with several plugins

@@ -20,6 +20,8 @@ set list listchars=tab:\ ,eol:\
 set foldmethod=indent
 set nofoldenable
 
+filetype plugin on
+
 " Plugins here
 call plug#begin()
 
@@ -34,16 +36,6 @@ Plug 'vim-airline/vim-airline'
 " Surround text with brackets
 Plug 'tpope/vim-surround'
 
-" Nim language
-Plug 'alaviss/nim.nvim'
-
-" Folding
-" Plug 'tmhedberg/SimpylFold'
-
-
-" Syntax checking
-" Plug 'w0rp/ale'
-
 " Git marks
 Plug 'airblade/vim-gitgutter'
 
@@ -52,9 +44,6 @@ Plug 'editorconfig/editorconfig-vim'
 
 " File tree
 Plug 'scrooloose/nerdtree'
-
-" Folding plugin
-Plug 'pseewald/vim-anyfold'
 
 " Rainbow brackets yey
 Plug 'kien/rainbow_parentheses.vim'
@@ -71,14 +60,11 @@ Plug 'dylanaraps/wal.vim'
 " Improved search
 Plug 'easymotion/vim-easymotion'
 
-" Kotlin support
-Plug 'udalov/kotlin-vim'
-
-" Completion from VSCode
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
 " Code stats
 Plug 'https://gitlab.com/code-stats/code-stats-vim.git'
+
+" Rust
+Plug 'rust-lang/rust.vim'
 
 call plug#end()
 
@@ -87,6 +73,9 @@ let g:codestats_api_key = codestats_key
 
 " Airline code::stats
 let g:airline_section_x = airline#section#create_right(['tagbar', 'filetype', '%{CodeStatsXp()}'])
+
+" Comments
+let g:NERDSpaceDelims = 1
 
 " Gruvbox colorscheme
 " autocmd VimEnter * colorscheme gruvbox
@@ -101,6 +90,21 @@ colorscheme monokai
 " autocmd VimEnter * hi Normal guibg=NONE ctermbg=NONE
 
 " Rainbow brackets
+let g:rbpt_colorpairs = [
+    \ ['brown',       'RoyalBlue3'],
+    \ ['Darkblue',    'SeaGreen3'],
+    \ ['darkgray',    'DarkOrchid3'],
+    \ ['darkgreen',   'firebrick3'],
+    \ ['darkcyan',    'RoyalBlue3'],
+    \ ['darkred',     'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['Darkblue',    'firebrick3'],
+    \ ['darkgreen',   'RoyalBlue3'],
+    \ ['darkcyan',    'SeaGreen3'],
+    \ ['darkred',     'DarkOrchid3'],
+    \ ['red',         'firebrick3'],
+    \ ]
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 "au Syntax * RainbowParenthesesLoadSquare
