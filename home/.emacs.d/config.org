@@ -15,7 +15,6 @@ Package config -- see https://melpa.org/#/getting-started
 (require 'package)
 (add-to-list
  'package-archives
- ;; '("melpa" . "http://stable.melpa.org/packages/") ; many packages won't show if using stable
  '("melpa" . "https://melpa.org/packages/")
  t)
 #+end_src
@@ -25,17 +24,13 @@ Package config -- see https://melpa.org/#/getting-started
   (unless (package-installed-p 'use-package)
     (package-refresh-contents)
     (package-install 'use-package))
-
 #+end_src
-
 #+begin_src emacs-lisp
   (add-to-list 'load-path "~/.emacs.d/lisp/")
 
   (setq evil-want-keybinding nil)
 
   (setq comp-deferred-compilation t)
-
-                                          ;(setq evil-search-module 'evil-search)
 #+end_src
 ** Packages
 *** Auto completion
@@ -70,13 +65,6 @@ Pretty icons for /company/
     (:background "black"))) company-box-backends-colors))
 #+end_src
 Fuzzy match for /company/ \\
-*Too slow btw*
-#+begin_src emacs-lisp
-  ;; (use-package company-fuzzy
-  ;;   :ensure t
-  ;;   :config
-  ;;   (global-company-fuzzy-mode f))
-#+end_src
 Completion for commands
 #+begin_src emacs-lisp
 (use-package counsel
@@ -102,7 +90,6 @@ Cool web stuff
 (use-package web-mode
   :ensure t)
 #+END_SRC
-
 *** Projects
 Projects management with /counsel/ completion
 #+begin_src emacs-lisp
@@ -113,7 +100,7 @@ Projects management with /counsel/ completion
 (use-package counsel-projectile
   :ensure t)
 #+end_src
-Git tool
+Amazing git tool
 #+begin_src emacs-lisp
 (use-package magit
   :ensure t)
@@ -127,19 +114,13 @@ Project tree
 (use-package treemacs-projectile
   :ensure t)
 #+end_src
-Start buffer
+Start dashboard buffer
 #+begin_src emacs-lisp
 (use-package dashboard
   :ensure t
   :config
   (dashboard-setup-startup-hook))
 #+end_src
-Reveal.js for presentations
-#+BEGIN_SRC emacs-lisp
-  (use-package ox-reveal
-    :ensure t)
-#+END_SRC
-
 *** Evil mode
 Evil with dependecies
 #+begin_src emacs-lisp
@@ -281,6 +262,10 @@ Speeding up lps-mode
 #+begin_src emacs-lisp
 (setq read-process-output-max (* 4 (* 1024 1024)))
 #+end_src
+C style settings
+#+BEGIN_SRC emacs-lisp
+(setq c-default-style "linux")
+#+END_SRC
 Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/ \\
 Lsp integration with several plugins
 #+begin_src emacs-lisp
@@ -306,16 +291,11 @@ In /build/ directory run =cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=YES ..=
 #+END_SRC
 Haskell lsp
 #+begin_src emacs-lisp
-  (use-package haskell-lsp
+  (use-package lsp-haskell
     :ensure t)
 #+end_src
 Python lsp
 #+begin_src emacs-lisp
-  ;; (use-package lsp-python-ms
-  ;;   :ensure t
-  ;;   :init (setq lsp-python-ms-auto-install-server t)
-  ;;   :hook (python-mode . (lambda ()
-  ;;                           (require 'lsp-python-ms))))
   (use-package lsp-pyright
     :ensure t
     :hook (python-mode . (lambda ()
@@ -367,16 +347,11 @@ Ipython for org babel
   (use-package ob-ipython
     :ensure t)
 #+END_SRC
-C settings
-#+BEGIN_SRC emacs-lisp
-(setq c-default-style "linux")
-#+END_SRC
 Java lsp
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-java
     :ensure t)
 #+END_SRC
-
 *** Themes
 /Doom-modeline/ as modeline
 #+begin_src emacs-lisp
@@ -396,12 +371,6 @@ Colors from pywal
               ewal-built-in-palette "doom-gruvbox"))
 (use-package ewal-doom-themes
   :ensure t)
-  ;; :init (load-theme 'ewal-doom-one t))
-#+end_src
-*Or* Colors from xresources
-#+begin_src emacs-lisp
-  ;; (use-package xresources-theme
-  ;;   :ensure t)
 #+end_src
 *Or* doom theme
 #+begin_src emacs-lisp
@@ -430,20 +399,14 @@ theromes in LaTeX with org syntax
 (use-package org-special-block-extras
   :ensure t)
 #+end_src
-
-Notifications for org mode scheduled tasks
-#+begin_src emacs-lisp
-  ;; (use-package org-alert
-  ;;   :ensure t
-  ;;   :config
-  ;;   (setq alert-default-style 'libnotify)
-  ;;   (setq org-alert-notification-title "Org agenda"))
-#+end_src
-
+Reveal.js for presentations
+#+BEGIN_SRC emacs-lisp
+  (use-package ox-reveal
+    :ensure t)
+#+END_SRC
 ** Variables and functions
 *** Snippets
 Add snippets to company backends
-*For some reason doesn't execute on start*
 #+begin_src emacs-lisp
   (setq company-backends 
     '(company-capf 
@@ -534,18 +497,15 @@ Org mode file associations
 (setq org-confirm-babel-evaluate nil)
 (setq org-src-tab-acts-natively t)
 #+END_SRC
-
 Reveal.js presentations
 #+BEGIN_SRC emacs-lisp
   (setq org-reveal-root (expand-file-name "~/.local/share/reveal.js-4.1.0"))
 #+END_SRC
 Export settings
-
 #+BEGIN_SRC emacs-lisp
   (setq org-html-htmlize-output-type 'inline-css)
   (setq org-html-head-include-default-style nil)
 #+END_SRC
-
 Setting up spell checking. Working for both laguages, but only one in one buffer.
 #+BEGIN_SRC emacs-lisp
 (with-eval-after-load "ispell"
@@ -560,6 +520,7 @@ Setting up spell checking. Working for both laguages, but only one in one buffer
 **** Publishing
 Publishing for:
 - Main site
+- University consepcts (exporting to pdf and uploading on server)
 #+BEGIN_SRC emacs-lisp
   (setq org-publish-project-alist
         '(
@@ -610,9 +571,8 @@ Setting up LaTeX additional commands and properties
           (insert-file-contents "~/.emacs.d/preamble.sty")
           (buffer-string)))
 #+END_SRC
-
-  Org mode to LaTeX and pdf
-  Setting packages
+Org mode to LaTeX and pdf
+Setting packages
 #+BEGIN_SRC emacs-lisp
   (setq org-latex-packages-alist '(
                                    ("T1, T2A" "fontenc" t)
@@ -695,41 +655,6 @@ Setting up LaTeX additional commands and properties
 #+END_SRC
 
 *** Functions
-Compilation window behaviour
-#+begin_src emacs-lisp
-(defun kill-buffer-if-exists (buffer)
-  (when (not (eq nil (get-buffer buffer)))
-     (delete-windows-on buffer) (kill-buffer buffer)))
-
-(defun kill-compilation-buffer ()
-  (interactive)
-  (kill-buffer-if-exists "*compilation*"))
-  
-
-(defun my-compile ()
-      "Run compile and resize the compile window"
-      (interactive)
-      (progn
-        (call-interactively 'compile)
-        (setq cur (selected-window))
-        (setq w (get-buffer-window "*compilation*"))
-        (select-window w)
-        (setq h (window-height w))
-        ;; (shrink-window (- h 20))
-        (select-window cur)))
-
-(defun my-compilation-hook () 
-    "Make sure that the compile window is splitting vertically"
-    (progn
-      (if (not (get-buffer-window "*compilation*"))
-         (progn
-	    (split-window-vertically)))))
-
-;; (add-hook 'compilation-mode-hook 'my-compilation-hook)
-;; (remove-hook 'compilation-mode-hook 'my-compilation-hook t)
-
-#+end_src
-
 Marking headline as done in Study file
 #+BEGIN_SRC emacs-lisp
   (defun mark--done (s file)
@@ -744,7 +669,6 @@ Marking headline as done in Study file
         (mark--done s file)
         (save-buffer))))
 #+END_SRC
-
 *** Other variables
 Code::stats
 #+BEGIN_SRC emacs-lisp
@@ -754,7 +678,6 @@ Code::stats
   (run-with-idle-timer 30 t #'code-stats-sync)
   (add-hook 'kill-emacs-hook (lambda () (code-stats-sync :wait)))  
 #+END_SRC
-
 #+BEGIN_SRC emacs-lisp
 (setq compilation-scroll-output 'first-error)
 #+END_SRC
@@ -762,8 +685,6 @@ Executable path
 #+BEGIN_SRC  emacs-lisp
   (add-to-list 'exec-path "~/.local/bin")
 #+END_SRC
-
-
 - Visual/behaviour
 - Dashboard
 #+BEGIN_SRC  emacs-lisp
@@ -796,7 +717,6 @@ Executable path
 
   (add-hook 'after-init-hook 'init-hooks)
 #+END_SRC
-
 Some other
 #+begin_src emacs-lisp
 (add-hook 'shell-mode-hook (lambda () (company-mode nil)))
@@ -839,39 +759,6 @@ Some other
         ("FIXME"  . "#fb4934")))
 #+end_src
 ** Keybindings
-Disabling arrow keys for *nothing?*
-#+BEGIN_SRC emacs-lisp
-  ;; (define-minor-mode my-override-mode
-  ;;   "Overrides all major and minor mode keys" t)
-
-  ;; (defvar my-override-map (make-sparse-keymap "my-override-map")
-  ;;   "Override all major and minor mode keys")
-
-  ;; (add-to-list 'emulation-mode-map-alists
-  ;;   `((my-override-mode . ,my-override-map)))
-
-  ;; (define-key my-override-map (kbd "<left>")
-  ;;   (lambda ()
-  ;;     (interactive)
-  ;;     (message "Use Vim keys: h for Left")))
-
-  ;; (define-key my-override-map (kbd "<right>")
-  ;;   (lambda ()
-  ;;     (interactive)
-  ;;     (message "Use Vim keys: l for Right")))
-
-  ;; (define-key my-override-map (kbd "<up>")
-  ;;   (lambda ()
-  ;;     (interactive)
-  ;;     (message "Use Vim keys: k for Up")))
-
-  ;; (define-key my-override-map (kbd "<down>")
-  ;;   (lambda ()
-  ;;     (interactive)
-  ;;     (message "Use Vim keys: j for Down")))
-  ;; (evil-make-intercept-map my-override-map)
-#+END_SRC
-
 #+begin_src emacs-lisp
   (general-define-key
     :keymaps 'company-active-map
@@ -881,7 +768,6 @@ Disabling arrow keys for *nothing?*
   (general-define-key
     "M-x" 'counsel-M-x)
 #+end_src
-
 Bindings using /general/ package
 #+begin_src emacs-lisp
   (general-define-key
