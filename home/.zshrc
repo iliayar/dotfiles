@@ -92,6 +92,7 @@ alias emacs-tui="emacsclient -nw -c -a vim"
 alias emacs-git="emacsclient -nw -c -a vim -e '(progn (magit) (delete-other-windows))'"
 alias ls="exa"
 alias l="exa -lah"
+alias texc="pdflatex -interaction=nonstopmode -shell-escape"
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8

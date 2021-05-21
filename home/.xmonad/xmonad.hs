@@ -747,7 +747,7 @@ myStartupHook = do
 
 emojiXPConfig :: XPConfig
 emojiXPConfig = def
-      { font                = "xft:Symbola:regular:size=10"
+      { font                = "xft:Symbola:regular:size=12:antialise=true"
       , bgColor             = Theme.background
       , fgColor             = Theme.foreground
       , bgHLight            = Theme.color0
