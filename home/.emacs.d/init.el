@@ -21,7 +21,7 @@
  '(lsp-haskell-hlint-on t)
  '(objed-cursor-color "#ee4531")
  '(package-selected-packages
-    '(elfeed-goodies elfeed lsp-ivy gcmh haskell-lsp evil-mu4e list-packages-ext mu4e smooth-scroll smooth-scrolling rustic rust-mode org-alert tramp-hdfs gnuplot atom-one-dark-theme lsp-haskell presentation highlight-doxygen lsp-java lsp-pyright cmake-mode cpputils-cmake cmake-ide org-pomodoro org-special-block-extras company-ctags ox-reveal org-super-agenda code-stats lsp-intellij dockerfile-mode docker ob-ipython graphviz-dot-mode highlight-indentation vterm latex-pretty-symbols pretty-symbols web-mode zzz-to-char dtrt-indent anaconda-mode company-anaconda unicode-fonts gradle-mode kotlin-mode origami ewal-doom-themes ewal impatient-mode company-lsp format-all yaml-mode ox-md hl-todo evil-multiedit treemacs-all-the-icons evil-collection use-package))
+    '(elfeed-org elfeed-goodies elfeed lsp-ivy gcmh haskell-lsp evil-mu4e list-packages-ext mu4e smooth-scroll smooth-scrolling rustic rust-mode org-alert tramp-hdfs gnuplot atom-one-dark-theme lsp-haskell presentation highlight-doxygen lsp-java lsp-pyright cmake-mode cpputils-cmake cmake-ide org-pomodoro org-special-block-extras company-ctags ox-reveal org-super-agenda code-stats lsp-intellij dockerfile-mode docker ob-ipython graphviz-dot-mode highlight-indentation vterm latex-pretty-symbols pretty-symbols web-mode zzz-to-char dtrt-indent anaconda-mode company-anaconda unicode-fonts gradle-mode kotlin-mode origami ewal-doom-themes ewal impatient-mode company-lsp format-all yaml-mode ox-md hl-todo evil-multiedit treemacs-all-the-icons evil-collection use-package))
  '(pdf-view-midnight-colors (cons "#d5c4a1" "#1d2021"))
  '(resize-mini-windows nil)
  '(rustic-ansi-faces

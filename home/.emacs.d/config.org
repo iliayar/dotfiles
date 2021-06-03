@@ -98,26 +98,27 @@ RSS reader
   (use-package elfeed
     :ensure t)
   (use-package elfeed-goodies
-    :ensure t)
-  (setq elfeed-feeds
-        '(("https://archlinux.org/feeds/news/" arch linux news)
-          ("https://habr.com/en/rss/all/all/?fl=ru" news blog habr)
-          ("https://ctftime.org/event/list/upcoming/rss/" ctf events)
-          ("https://meduza.io/rss2/all" meduza news)))
-  (add-to-list 'elfeed-feeds (list github-rss-url 'new 'github))
-  (elfeed-goodies/setup)
+    :ensure t
+    :init (elfeed-goodies/setup))
+  (use-package elfeed-org
+    :ensure t
+    :init (elfeed-org))
+
   (defface unread-tag-face '((t :foreground "light grey")) "Marks unread")
-  (push '(unread unread-tag-face) elfeed-search-face-alist)
-  (defface ctf-tag-face '((t :foreground "light red")) "Mark CTF news")
-  (push '(ctf ctf-tag-face) elfeed-search-face-alist)
-  (defface habr-tag-face '((t :foreground "cyan")) "Mark Habr posts")
-  (push '(habr habr-tag-face) elfeed-search-face-alist)
-  (defface meduza-tag-face '((t :foreground "light yellow")) "Mark Habr posts")
-  (push '(meduza meduza-tag-face) elfeed-search-face-alist)
-  (defface github-tag-face '((t :foreground "orange")) "Mark Habr posts")
-  (push '(github github-tag-face) elfeed-search-face-alist)
-  (defface starred-tag-face '((t :foreground "yellow")) "Mark Habr posts")
-  (push '(starred starred-tag-face) elfeed-search-face-alist)
+  (defface news-tag-face '((t :foreground "light yellow")) "Mark news")
+  (defface ctf-tag-face '((t :foreground "light red")) "Mark CTF events")
+  (defface blog-tag-face '((t :foreground "cyan")) "Mark posts")
+  (defface github-tag-face '((t :foreground "orange")) "Mark Github feed")
+  (defface starred-tag-face '((t :foreground "yellow")) "Mark favourite posts")
+  (setq elfeed-search-face-alist
+        '(
+          (starred starred-tag-face)
+          (ctf ctf-tag-face)
+          (blog blog-tag-face)
+          (news news-tag-face)
+          (github github-tag-face)
+          (unread elfeed-search-unread-title-face)
+          ))
 
   (defalias 'elfeed-toggle-star
     (elfeed-expose #'elfeed-search-toggle-all 'starred))
