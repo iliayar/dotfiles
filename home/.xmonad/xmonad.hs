@@ -343,13 +343,12 @@ myScratchPads = [ termAppClass alacrittyScratchpad "terminal" Nothing manageQuak
     alacrittyScratchpadHold c = Alacritty Nothing (Just c) True [] 
 
     spawnQutebrowser = "qutebrowser --qt-arg name qutebrowser-scratchpad"
-    spawnNotes = "emacsclient -c -a emacs -F '(quote (name . \"emacs-notes\"))' -e '(find-file \"~/Dropbox/org/Notes.org\")'"
+    spawnNotes = "emacsclient -c -a emacs -F '(quote (name . \"emacs-notes\") (fullscreen . maximized))' -e '(find-file \"~/Dropbox/org/Notes.org\")'"
     spawnDrawing = "drawing --name=drawing-scratchpad"
     findQutebrowser = appName =? "qutebrowser-scratchpad"
     findNotes  = title =? "emacs-notes"
     findDrawing = className =? "Drawing-scratchpad"
 
-    -- manageNotes = customFloating $ W.RationalRect 0.05 0.05 0.9 0.9
     manageNotes = customFloating $ W.RationalRect 0.05 0.05 0.9 0.9
     manageWeather = customFloating $ W.RationalRect 0.05 0.05 0.53 0.64
     manageQuake = customFloating $ W.RationalRect 0 0 1 0.5

@@ -20,7 +20,7 @@ fi
 [[ -p "$SOCKET" ]] || mkfifo $SOCKET
 
 PACNUM="$(checkupdates | wc -l)"
-AURNUM="$(yay -Qum | wc -l)"
+AURNUM="$(paru -Qum | wc -l)"
 
 red="<fc=$(xrdb -query | grep *color1: | gawk '{ print $2 }')>"
 green="<fc=$(xrdb -query | grep *color2: | gawk '{ print $2 }')>"

@@ -87,7 +87,7 @@ colorscheme monokai
 " colorscheme wal
 
 " Transparent background
-" autocmd VimEnter * hi Normal guibg=NONE ctermbg=NONE
+autocmd VimEnter * hi Normal guibg=NONE ctermbg=NONE
 
 " Rainbow brackets
 let g:rbpt_colorpairs = [

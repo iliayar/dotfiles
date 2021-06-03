@@ -34,6 +34,7 @@ Package config -- see https://melpa.org/#/getting-started
   (setq evil-want-keybinding nil)
 
   (setq comp-deferred-compilation t)
+  (load "~/.emacs.d/private.el")
 #+end_src
 ** Packages
 
@@ -92,6 +93,36 @@ Cool web stuff
 (use-package web-mode
   :ensure t)
 #+END_SRC
+RSS reader
+#+begin_src emacs-lisp
+  (use-package elfeed
+    :ensure t)
+  (use-package elfeed-goodies
+    :ensure t)
+  (setq elfeed-feeds
+        '(("https://archlinux.org/feeds/news/" arch linux news)
+          ("https://habr.com/en/rss/all/all/?fl=ru" news blog habr)
+          ("https://ctftime.org/event/list/upcoming/rss/" ctf events)
+          ("https://meduza.io/rss2/all" meduza news)))
+  (add-to-list 'elfeed-feeds (list github-rss-url 'new 'github))
+  (elfeed-goodies/setup)
+  (defface unread-tag-face '((t :foreground "light grey")) "Marks unread")
+  (push '(unread unread-tag-face) elfeed-search-face-alist)
+  (defface ctf-tag-face '((t :foreground "light red")) "Mark CTF news")
+  (push '(ctf ctf-tag-face) elfeed-search-face-alist)
+  (defface habr-tag-face '((t :foreground "cyan")) "Mark Habr posts")
+  (push '(habr habr-tag-face) elfeed-search-face-alist)
+  (defface meduza-tag-face '((t :foreground "light yellow")) "Mark Habr posts")
+  (push '(meduza meduza-tag-face) elfeed-search-face-alist)
+  (defface github-tag-face '((t :foreground "orange")) "Mark Habr posts")
+  (push '(github github-tag-face) elfeed-search-face-alist)
+  (defface starred-tag-face '((t :foreground "yellow")) "Mark Habr posts")
+  (push '(starred starred-tag-face) elfeed-search-face-alist)
+
+  (defalias 'elfeed-toggle-star
+    (elfeed-expose #'elfeed-search-toggle-all 'starred))
+#+end_src
+
 *** Projects
 Projects management with /counsel/ completion
 #+begin_src emacs-lisp
@@ -676,9 +707,13 @@ Marking headline as done in Study file
         (save-buffer))))
 #+END_SRC
 *** Other variables
+Disable Evil mode for some modes
+#+begin_src emacs-lisp
+  (add-to-list 'evil-emacs-state-modes 'elfeed-search)
+#+end_src
+
 Code::stats
 #+BEGIN_SRC emacs-lisp
-  (load "~/.emacs.d/private.el")
   (add-hook 'prog-mode-hook #'code-stats-mode)
   (add-hook 'org-mode-hook #'code-stats-mode)
   (run-with-idle-timer 30 t #'code-stats-sync)
@@ -788,6 +823,14 @@ Some other
   (general-define-key
     "M-x" 'counsel-M-x)
 #+end_src
+Elfeed hydra binddings
+#+begin_src emacs-lisp
+  (defhydra elfeed-search-view-hydra (:color blue :hint t)
+    ("d" (elfeed-search-set-filter nil) "Default")
+    ("f" (elfeed-search-set-filter "+starred") "Favourite")
+    ("a" (elfeed-search-set-filter "-unread") "All"))
+#+end_src
+
 Bindings using /general/ package
 #+begin_src emacs-lisp
   (general-define-key
@@ -808,6 +851,7 @@ Bindings using /general/ package
     "gs" 'avy-goto-char-timer
     "oa" 'org-agenda
     "om" 'magit
+    "or" 'elfeed
     "op" 'treemacs
     "pc" 'projectile-compile-project
     "pf" 'counsel-projectile-find-file
@@ -835,25 +879,30 @@ Bindings using /general/ package
     :keymaps 'latex-mode-map
     "si" 'latex-insert-block
     )
+
+  (general-define-key
+   :keymaps 'elfeed-search-mode-map
+   "f" 'elfeed-toggle-star
+   "v" 'elfeed-search-view-hydra/body)
 #+end_src
 Hydra
 #+begin_src emacs-lisp
-(defhydra hydra-window-resize-menu (:color red
-                                    :hint nil)
-  "
-  Window Resize
-  -------------
-       /\\
-        _k_
-  < _h_     _l_ >
-        _j_
-        v
-  "
-  ("h" evil-window-decrease-width)
-  ("l" evil-window-increase-width)
-  ("k" evil-window-decrease-height)
-  ("j" evil-window-increase-height)
-  ("c" nil "Cancel"))
+  (defhydra hydra-window-resize-menu (:color red
+                                      :hint nil)
+    "
+    Window Resize
+    -------------
+         /\\
+          _k_
+    < _h_     _l_ >
+          _j_
+          v
+    "
+    ("h" evil-window-decrease-width)
+    ("l" evil-window-increase-width)
+    ("k" evil-window-decrease-height)
+    ("j" evil-window-increase-height)
+    ("c" nil "Cancel"))
 #+end_src
 
 I just leave it here
