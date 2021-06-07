@@ -1,4 +1,5 @@
 #!/bin/bash
 
-conky # Wow!
-conky -c ~/.config/conky/agenda-conky.conf
+conky # Wow! &
+# conky -c ~/.config/conky/agenda-conky.conf
+conky -c ~/.config/conky/conky_date.conf &

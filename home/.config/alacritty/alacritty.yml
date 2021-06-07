@@ -173,29 +173,29 @@ font:
 # Colors (Tomorrow Night Bright)
 colors:
   primary:
-    background: '#1d2021'
-    foreground: '#d5c4a1'
+    background: '#1c1e1f'
+    foreground: '#f8f8f2'
   cursor:
-    text:       '#1d2021'
-    cursor:     '#d5c4a1'
+    text:       '#272822'
+    cursor:     '#f8f8f2'
   normal:
-    black:      '#1d2021'
-    red:        '#fb4934'
-    green:      '#b8bb26'
-    yellow:     '#fabd2f'
-    blue:       '#83a598'
-    magenta:    '#d3869b'
-    cyan:       '#8ec07c'
-    white:      '#d5c4a1'
+    black:      '#272822'
+    red:        '#f92672'
+    green:      '#a6e22e'
+    yellow:     '#f4bf75'
+    blue:       '#66d9ef'
+    magenta:    '#ae81ff'
+    cyan:       '#a1efe4'
+    white:      '#f8f8f2'
   bright:
-    black:      '#665c54'
-    red:        '#fb4934'
-    green:      '#b8bb26'
-    yellow:     '#fabd2f'
-    blue:       '#83a598'
-    magenta:    '#d3869b'
-    cyan:       '#8ec07c'
-    white:      '#fbf1c7'
+    black:      '#75715e'
+    red:        '#f92672'
+    green:      '#a6e22e'
+    yellow:     '#f4bf75'
+    blue:       '#66d9ef'
+    magenta:    '#ae81ff'
+    cyan:       '#a1efe4'
+    white:      '#f9f8f5'
 
   # Dim colors
   #
@@ -251,7 +251,7 @@ colors:
 #
 # Window opacity as a floating point number from `0.0` to `1.0`.
 # The value `0.0` is completely transparent and `1.0` is opaque.
-background_opacity: 0.7
+background_opacity: 0.85
 
 #selection:
   #semantic_escape_chars: ",│`|:\"' ()[]{}<>\t"

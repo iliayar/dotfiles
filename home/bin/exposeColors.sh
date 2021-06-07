@@ -11,10 +11,11 @@ xrdb -query > ~/.Xresources
 # URxvt*letterSpace: -1
 
 cp ~/.cache/wal/termite.conf ~/.config/termite/config
+# cp ~/.cache/wal/alacritty.yml ~/.config/alacritty/alacritty.yml
 cp ~/.cache/wal/Theme.hs ~/.xmonad/Theme.hs
 cp ~/.cache/wal/Theme.hs ~/.config/xmobar/Theme.hs
 
 # Reloading emacs theme
-emacsclient -e "(load-theme 'ewal-doom-one t nil)"
+# emacsclient -e "(load-theme 'ewal-doom-one t nil)"
 # Reloading xmonad/xmobar theme
 xdotool key super+Shift_L+c

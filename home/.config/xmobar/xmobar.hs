@@ -11,7 +11,7 @@ config = defaultConfig {
    , bgColor         = Theme.background
    , additionalFonts = additionalFonts'
    , fgColor         = Theme.foreground
-   , alpha           = 200
+   , alpha           = 204
    , position        = OnScreen 0 $ Bottom
 --    , position    =  Static {xpos = 0, ypos = 1060, width = 1364, height = 20}
    , borderColor     = "#646464"
@@ -62,7 +62,7 @@ config = defaultConfig {
                              ] 10
 
         -- cpu activity monitor
-        , Run $ MultiCpu     [ "--template" , (icon "cpu") ++ " <total0>%|<total1>%"
+        , Run $ MultiCpu     [ "--template" , (afIcon "\xf2db") ++ " <total0>%|<total1>%"
                              , "--width"    , "2"
                              , "--Low"      , "50"         -- units: %
                              , "--High"     , "85"         -- units: %
@@ -72,7 +72,7 @@ config = defaultConfig {
                              ] 10
 
         -- cpu core temperature monitor
-        , Run $ MultiCoreTemp       [ "--template" , (afIcon "\xf2c9") ++ "<avg>°C"
+        , Run $ MultiCoreTemp       [ "--template" , (afIcon "\xf2c9") ++ " <avg>°C"
                              , "--Low"      , "70"        -- units: °C
                              , "--High"     , "80"        -- units: °C
                              , "--low"      , Theme.color2
@@ -116,7 +116,7 @@ config = defaultConfig {
 
         -- time and date indicator 
         --   (%F = y-m-d date, %a = day of week, %T = h:m:s time)
-        , Run $ Date           "%F (%a) %T" "date" 10
+        , Run $ Date           (afIcon "\xf783" ++ " %F (%a) %T") "date" 10
 
         -- keyboard layout indicator
         , Run $ Kbd          [ ("ru"         , setColor Theme.color1 "RU")

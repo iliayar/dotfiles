@@ -2,31 +2,31 @@ module Theme where
 
 import qualified GHC.Word
 
-color0     = "#1d2021"
-color1     = "#fb4934"
-color2     = "#b8bb26"
-color3     = "#fabd2f"
-color4     = "#83a598"
-color5     = "#d3869b"
-color6     = "#8ec07c"
-color7     = "#d5c4a1"
-color8     = "#665c54"
-color9     = "#fb4934"
-color10    = "#b8bb26"
-color11    = "#fabd2f"
-color12    = "#83a598"
-color13    = "#d3869b"
-color14    = "#8ec07c"
-color15    = "#fbf1c7"
-background = "#1d2021"
-foreground = "#d5c4a1"
-cursor     = "#d5c4a1"
+color0     = "#272822"
+color1     = "#f92672"
+color2     = "#a6e22e"
+color3     = "#f4bf75"
+color4     = "#66d9ef"
+color5     = "#ae81ff"
+color6     = "#a1efe4"
+color7     = "#f8f8f2"
+color8     = "#75715e"
+color9     = "#f92672"
+color10    = "#a6e22e"
+color11    = "#f4bf75"
+color12    = "#66d9ef"
+color13    = "#ae81ff"
+color14    = "#a1efe4"
+color15    = "#f9f8f5"
+background = "#1c1e1f"
+foreground = "#f8f8f2"
+cursor     = "#f92672"
 
 ts_background, ts_extra :: GHC.Word.Word64
 ts_node, ts_nodealt, ts_highlight :: (GHC.Word.Word64, GHC.Word.Word64)
-ts_background   = 0x001d2021
-ts_node         = (0xfffbf1c7, 0xff1d2021)
-ts_nodealt      = (0xfffbf1c7, 0xff1d2021)
-ts_highlight    = (0xfffbf1c7, 0xff665c54)
-ts_extra        = 0xffd5c4a1
+ts_background   = 0x00272822
+ts_node         = (0xfff9f8f5, 0xff1c1e1f)
+ts_nodealt      = (0xfff9f8f5, 0xff272822)
+ts_highlight    = (0xfff9f8f5, 0xff75715e)
+ts_extra        = 0xfff8f8f2
 

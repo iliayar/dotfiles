@@ -97,16 +97,16 @@ RSS reader
 #+begin_src emacs-lisp
   (use-package elfeed
     :ensure t)
-  (use-package elfeed-goodies
-    :ensure t
-    :init (elfeed-goodies/setup))
   (use-package elfeed-org
     :ensure t
     :init (elfeed-org))
+  (use-package elfeed-goodies
+    :ensure t
+    :init (elfeed-goodies/setup))
 
   (defface unread-tag-face '((t :foreground "light grey")) "Marks unread")
   (defface news-tag-face '((t :foreground "light yellow")) "Mark news")
-  (defface ctf-tag-face '((t :foreground "light red")) "Mark CTF events")
+  (defface ctf-tag-face '((t :foreground "red")) "Mark CTF events")
   (defface blog-tag-face '((t :foreground "cyan")) "Mark posts")
   (defface github-tag-face '((t :foreground "orange")) "Mark Github feed")
   (defface starred-tag-face '((t :foreground "yellow")) "Mark favourite posts")
@@ -343,6 +343,11 @@ Python lsp
   (use-package company-anaconda
     :ensure t)
 #+end_src
+emacs ipython notebook
+#+begin_src emacs-lisp
+  (use-package ein
+    :ensure t)
+#+end_src
 Lsp for latex
 #+begin_src emacs-lisp
   (use-package lsp-latex
@@ -417,7 +422,7 @@ Colors from pywal
     (setq doom-themes-treemacs-theme "doom-colors")
     (doom-themes-treemacs-config)
     (doom-themes-org-config)
-    :init (load-theme 'doom-monokai-classic t))
+    :init (load-theme 'doom-molokai t))
 #+end_src
 *** Keybingings
 Convenient keybindings
