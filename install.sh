@@ -47,15 +47,15 @@ config() {
 install_aur_deps() {
     echo "Installing AUR"
 
-    if [[ ! -e /bin/yay ]]; then
+    if [[ ! -e /bin/paru ]]; then
     cd /tmp || exit
-    git clone https://aur.archlinux.org/yay.git
-    cd yay || exit
+    git clone https://aur.archlinux.org/paru.git
+    cd paru || exit
     makepkg -si
     fi
 
     echo "Installing AUR Deps"
-    [[ -n "${AUR_DEPS[*]}" ]] && yay -S "${AUR_DEPS[@]}"
+    [[ -n "${AUR_DEPS[*]}" ]] && paru -S "${AUR_DEPS[@]}"
     cd "$DIR" || exit
 }
 

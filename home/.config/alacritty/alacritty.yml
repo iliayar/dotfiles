@@ -180,7 +180,7 @@ colors:
     cursor:     '#f8f8f2'
   normal:
     black:      '#272822'
-    red:        '#f92672'
+    red:        '#e3276b'
     green:      '#a6e22e'
     yellow:     '#f4bf75'
     blue:       '#66d9ef'
@@ -189,7 +189,7 @@ colors:
     white:      '#f8f8f2'
   bright:
     black:      '#75715e'
-    red:        '#f92672'
+    red:        '#e3276b'
     green:      '#a6e22e'
     yellow:     '#f4bf75'
     blue:       '#66d9ef'

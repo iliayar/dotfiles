@@ -11,7 +11,7 @@ config = defaultConfig {
    , bgColor         = Theme.background
    , additionalFonts = additionalFonts'
    , fgColor         = Theme.foreground
-   , alpha           = 204
+   , alpha           = 0
    , position        = OnScreen 0 $ Bottom
 --    , position    =  Static {xpos = 0, ypos = 1060, width = 1364, height = 20}
    , borderColor     = "#646464"
