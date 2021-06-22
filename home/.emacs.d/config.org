@@ -436,7 +436,7 @@ Cinstructing menus
   :ensure t)
 #+end_src
 *** Org-mode
-theromes in LaTeX with org syntax
+theoremes in LaTeX with org syntax
 #+begin_src emacs-lisp
 (use-package org-special-block-extras
   :ensure t)
@@ -607,13 +607,6 @@ Publishing for:
           ))
 #+END_SRC
 **** LaTeX
-Setting up LaTeX additional commands and properties
-#+BEGIN_SRC emacs-lisp
-  (setq org-latex-header
-        (with-temp-buffer
-          (insert-file-contents "~/.emacs.d/preamble.sty")
-          (buffer-string)))
-#+END_SRC
 Org mode to LaTeX and pdf
 Setting packages
 #+BEGIN_SRC emacs-lisp
@@ -655,14 +648,15 @@ Setting packages
     (progn 
     (add-to-list 'org-latex-classes
                  (list "general"
-                       (concat "
+  "
   \\documentclass[english]{article}
   [NO-DEFAULT-PACKAGES]
   [PACKAGES]
   [EXTRA]
   \\usepackage{geometry}
   \\geometry{a4paper,left=2.5cm,top=2cm,right=2.5cm,bottom=2cm,marginparsep=7pt, marginparwidth=.6in}
-  " org-latex-header)
+  \\input{~/.emacs.d/preamble.sty}
+  "
                        '("\\section{%s}" . "\\section*{%s}")
                        '("\\subsection{%s}" . "\\subsection*{%s}")
                        '("\\subsubsection{%s}" . "\\subsubsection*{%s}")
@@ -671,7 +665,7 @@ Setting packages
                        ))
     (add-to-list 'org-latex-classes
                  (list "lectures"
-                       (concat "
+  "
   \\documentclass[oneside]{book}
   [NO-DEFAULT-PACKAGES]
   [PACKAGES]
@@ -679,7 +673,9 @@ Setting packages
   \\addto\\captionsrussian{\\renewcommand{\\chaptername}{Лекция}}
   \\renewcommand{\\leftmark}{}
   \\usepackage[a4paper, total={6in, 8in}]{geometry}
-  " org-latex-header "\\fancyhead[L]{\\leftmark}")
+  \\input{~/.emacs.d/preamble.sty}
+  \\fancyhead[L]{\\leftmark}
+  "
                        '("\\chapter*{%1$s}\\renewcommand{\\leftmark}{%1$s}\\addcontentsline{toc}{chapter}{%1$s}\\stepcounter{chapter}" . "\\chapter{%s}")
                        '("\\section{%s}" . "\\section*{%s}")
                        '("\\subsection{%s}" . "\\subsection*{%s}")
@@ -780,44 +776,44 @@ Executable path
 #+END_SRC
 Some other
 #+begin_src emacs-lisp
-(add-hook 'shell-mode-hook (lambda () (company-mode nil)))
+  (add-hook 'shell-mode-hook (lambda () (company-mode nil)))
 
-;; (setq inhibit-startup-screen 1) ; no start screen
+  ;; (setq inhibit-startup-screen 1) ; no start screen
 
-(setq ivy-use-selectable-prompt t)
+  (setq ivy-use-selectable-prompt t)
 
-;; store all backups in a single directory 
-(setq backup-directory-alist
-      `(("." . ,(concat user-emacs-directory "backups"))))
+  ;; store all backups in a single directory 
+  (setq backup-directory-alist
+        `(("." . ,(concat user-emacs-directory "backups"))))
 
-;; y or n instead of yes-or no
-(fset 'yes-or-no-p 'y-or-n-p)
+  ;; y or n instead of yes-or no
+  (fset 'yes-or-no-p 'y-or-n-p)
 
-;; no annoying bell!
-(setq ring-bell-function 'ignore)
+  ;; no annoying bell!
+  (setq ring-bell-function 'ignore)
 
-;; isearch
-(define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance)
-(define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat)
-(setq case-fold-search t)
+  ;; isearch
+  (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance)
+  (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat)
+  (setq case-fold-search t)
 
-(setq projectile-completion-system 'ivy)
+  (setq projectile-completion-system 'ivy)
 
-(setq ivy-initial-inputs-alist nil)
+  (setq ivy-initial-inputs-alist nil)
 
-(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
 
-;; set my init filt to be this file
-(setq user-init-file "~/.emacs.d/init.el")
+  ;; set my init filt to be this file
+  (setq user-init-file "~/.emacs.d/init.el")
 
-;; Evil initial states
-(cl-loop for (mode . state) in '( (dired-mode . emacs))
-      do (evil-set-initial-state mode state))
+  ;; Evil initial states
+  (cl-loop for (mode . state) in '((dired-mode . emacs) (elfeed-search . emacs))
+        do (evil-set-initial-state mode state))
 
-;; Highlight TODO colors
-(setq hl-todo-keyword-faces
-      '(("TODO"   . "#fabd2f")
-        ("FIXME"  . "#fb4934")))
+  ;; Highlight TODO colors
+  (setq hl-todo-keyword-faces
+        '(("TODO"   . "#fabd2f")
+          ("FIXME"  . "#fb4934")))
 #+end_src
 ** Keybindings
 #+begin_src emacs-lisp

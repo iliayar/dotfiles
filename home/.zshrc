@@ -93,6 +93,7 @@ alias emacs-git="emacsclient -nw -c -a vim -e '(progn (magit) (delete-other-wind
 alias ls="exa"
 alias l="exa -lah"
 alias texc="pdflatex -interaction=nonstopmode -shell-escape"
+alias o="xdg-open"
 # alias ghc="stack ghc -- "
 
 # You may need to manually set your language environment
