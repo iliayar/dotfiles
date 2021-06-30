@@ -46,6 +46,7 @@
 }{\endpropertyinner\stepcounter{propertycnt}}
 \newtheorem{axiom}{Аксиома}
 \newtheorem{lemma}{Лемма}
+\newtheorem*{statement}{Утверждение}
 \newtheorem{manuallemmainner}{Лемма}
 \newenvironment{manuallemma}[1]{%
   \renewcommand\themanuallemmainner{#1}%
@@ -69,6 +70,19 @@
   \renewcommand\themanualtheoreminner{#1}%
   \manualtheoreminner
 }{\endmanualtheoreminner}
+
+\newtheoremstyle{colon}%
+{}
+{}
+{}%bodyfont
+{}%indent
+{\bfseries}%headfont
+{:}%head punctuation
+{ }%space after head
+{}
+\theoremstyle{colon}
+\newtheorem*{answer}{Ответ}
+
 \captionsetup{justification=centering,margin=2cm}
 \newenvironment{colored}[1]{\color{#1}}{}
 

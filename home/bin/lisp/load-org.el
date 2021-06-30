@@ -1,7 +1,7 @@
 (defun load-org ()
   (progn 
     (require 'org)
-    (setq org-agenda-files '("~/Dropbox/org"))))
+    (setq org-agenda-files '("~/org"))))
 
 (load-org) ; Loading org options on load
 
@@ -9,7 +9,7 @@
 
 (defun parse-study-with (f)
   (progn
-    (find-file "~/Dropbox/org/Study.org")
+    (find-file "~/org/Study.org")
     (org-element-map (org-element-parse-buffer) 'headline f)))
 
 (defun get-study-headline (s)
@@ -25,10 +25,10 @@
     (lambda ()
       (let* ((h (org-element-at-point))
              (title (org-element-property :raw-value h)))
-        (if (string= title s) (org-todo 'done)))) nil (list (format "~/Dropbox/org/%s.org" file))))
+        (if (string= title s) (org-todo 'done)))) nil (list (format "~/org/%s.org" file))))
 (defun mark-done (s file)
-  (progn (find-file (format "~/Dropbox/org/%s.org" file))
-         (with-current-buffer (find-buffer-visiting (format "~/Dropbox/org/%s.org" file))
+  (progn (find-file (format "~/org/%s.org" file))
+         (with-current-buffer (find-buffer-visiting (format "~/org/%s.org" file))
                               (progn
                                 (mark--done s file)
                                 (save-buffer)))))

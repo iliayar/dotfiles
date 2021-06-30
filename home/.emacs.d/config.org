@@ -496,8 +496,8 @@ Bullets, packages
                           '(("^ *\\([-]\\) "
                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
-  (setq org-directory "~/Dropbox/org")
-  (setq org-agenda-files '("~/Dropbox/org"))
+  (setq org-directory "~/org")
+  (setq org-agenda-files '("~/org"))
   (setq org-default-notes-file (concat org-directory "/Notes.org"))
 
   (eval-after-load "org"
@@ -565,6 +565,9 @@ Publishing for:
 - Main site
 - University consepcts (exporting to pdf and uploading on server)
 #+BEGIN_SRC emacs-lisp
+  (defun my-conspects-header (arg)
+       "<style>#forkongithub a{background:#000;color:#fff;text-decoration:none;font-family:arial,sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:1rem;line-height:2rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#c11;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:\"\";width:100%;display:block;position:absolute;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:fixed;display:block;top:0;right:0;width:200px;overflow:hidden;height:200px;z-index:9999;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);-moz-transform:rotate(45deg);-o-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.8);}}</style><span id=\"forkongithub\"><a href=\"https://github.com/iliayar/ITMO\">Fork me on GitHub</a></span>")
+
   (setq org-publish-project-alist
         '(
           ("org-mainsite"
@@ -593,7 +596,7 @@ Publishing for:
            :recursive t
            :publishing-function org-html-publish-to-html
            :headline-levels 4             ; Just the default for this project.
-           :auto-preamble t
+           :html-preamble my-conspects-header
            )
           ("pdfs-conspects"
            :base-directory "~/Documents/ITMO"
@@ -641,6 +644,7 @@ Setting packages
                                    ("normalem" "ulem" t)
                                    ("" "amsmath" t)
                                    ("" "textcomp" t)
+                                   ("" "svg" t)
                                    ("" "capt-of" t)))
   ;; Reset default value. For debugging
   (custom-reevaluate-setting 'org-latex-classes)
@@ -685,9 +689,9 @@ Setting packages
                        ))))
   (setq org-latex-listings 'minted
         org-latex-pdf-process
-        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+        '("pdflatex -shell-escape --synctex=1 -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape --synctex=1 -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape --synctex=1 -interaction nonstopmode -output-directory %o %f"))
   (setq org-latex-minted-options
         '(("frame" "lines") ("linenos=true") ("mathescape")))
   (add-to-list 'org-latex-minted-langs '(ipython "python"))
@@ -701,9 +705,9 @@ Marking headline as done in Study file
      (lambda ()
        (let* ((h (org-element-at-point))
               (title (org-element-property :raw-value h)))
-         (if (string= title s) (org-todo 'done)))) nil (list (format "~/Dropbox/org/%s.org" file))))
+         (if (string= title s) (org-todo 'done)))) nil (list (format "~/org/%s.org" file))))
   (defun mark-done (s file)
-    (with-current-buffer (find-buffer-visiting (format "~/Dropbox/org/%s.org" file))
+    (with-current-buffer (find-buffer-visiting (format "~/org/%s.org" file))
       (progn
         (mark--done s file)
         (save-buffer))))

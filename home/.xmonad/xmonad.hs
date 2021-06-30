@@ -343,7 +343,7 @@ myScratchPads = [ termAppClass alacrittyScratchpad "terminal" Nothing manageQuak
     alacrittyScratchpadHold c = Alacritty Nothing (Just c) True [] 
 
     spawnQutebrowser = "qutebrowser --qt-arg name qutebrowser-scratchpad"
-    spawnNotes = "emacsclient -c -a emacs -F '(quote (name . \"emacs-notes\") (fullscreen . maximized))' -e '(find-file \"~/Dropbox/org/Notes.org\")'"
+    spawnNotes = "emacsclient -c -a emacs -F '(quote (name . \"emacs-notes\") (fullscreen . maximized))' -e '(find-file \"~/org/Notes.org\")'"
     spawnDrawing = "drawing --name=drawing-scratchpad"
     findQutebrowser = appName =? "qutebrowser-scratchpad"
     findNotes  = title =? "emacs-notes"
@@ -430,6 +430,7 @@ tsLayout =
 tsTools =
   [ Node (TS.TSNode "NetworkManager TUI" "Terminal Interface for NetworkManager" (termSpawn termite "nmtui")) []
   , Node (TS.TSNode "PulseMixer" "Pulse Audio Mixer" (termSpawn termite "pulsemixer")) []
+  , Node (TS.TSNode "Syncthing GUI" "Open Syncthing GUI in browser" (spawn "xdg-open 'https://localhost:8384'")) []
   , Node (TS.TSNode "Main Workflow" "Run Brace, Telegram on appropriate workspaces"
           (do
               spawnOn (myWorkspacesClickable !! 9) "telegram-desktop"
@@ -728,7 +729,7 @@ myEventHook = serverModeEventHook' (return myCommands)
 myStartupHook = do
           -- spawnOnce "~/.cargo/bin/spotifyd"
           spawnOnce "~/.config/conky/run_conky.sh &"
-          spawnOnce "~/.dropbox-dist/dropboxd &"
+          spawnOnce "syncthing -no-browser -logfile='/tmp/syncthing.log'"
           spawnOnce "nitrogen --restore &"
           spawnOnce "picom --experimental-backends -b &"
           spawnOnce "lxpolkit &"

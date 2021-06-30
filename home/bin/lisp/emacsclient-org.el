@@ -3,4 +3,4 @@
     (lambda ()
       (let* ((h (org-element-at-point))
              (title (org-element-property :raw-value h)))
-      (if (string= title s) (org-todo 'done)))) nil '("~/Dropbox/org/Study.org")))
+      (if (string= title s) (org-todo 'done)))) nil '("~/org/Study.org")))
