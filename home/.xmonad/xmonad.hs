@@ -733,7 +733,7 @@ myStartupHook = do
           spawnOnce "nitrogen --restore &"
           spawnOnce "picom --experimental-backends -b &"
           spawnOnce "lxpolkit &"
-          spawnOnce "stalonetray &"
+          -- spawnOnce "stalonetray &"
           spawnOnce "xsetroot -cursor_name arrow &"
           spawnOnce "~/bin/blocks/music_xmobar_async.py 2>/dev/null &"
           spawnOnce "~/bin/blocks/pacman_xmobar_async.sh &"
