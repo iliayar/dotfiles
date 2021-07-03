@@ -747,7 +747,7 @@ Executable path
 
   (set-face-attribute 'default nil
                       :family "Fira Code"
-                      :height 100)
+                      :height 85)
   (dolist (face '(treemacs-root-face
                       treemacs-git-unmodified-face
                       treemacs-git-modified-face
@@ -760,7 +760,7 @@ Executable path
                       treemacs-directory-collapsed-face
                       treemacs-file-face
                       treemacs-tags-face))
-        (set-face-attribute face nil :family "Fira Code" :height 100))
+        (set-face-attribute face nil :family "Fira Code" :height 85))
 
   (setq company-math-allow-latex-symbols-in-faces t)
 
