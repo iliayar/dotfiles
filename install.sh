@@ -131,6 +131,7 @@ common() {
         .config/mimeapps.list
         .config/rofi/config.rasi
         .config/zathura
+        .config/fontconfig
         .Xresources
         .bashrc
         .xprofile

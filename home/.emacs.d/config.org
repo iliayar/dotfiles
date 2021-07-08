@@ -582,7 +582,7 @@ Publishing for:
            )
           ("static-mainsite"
            :base-directory "~/Documents/MainSite/public/notes"
-           :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+           :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|pdf"
            :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes"
            :recursive t
            :publishing-function org-publish-attachment
