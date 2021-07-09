@@ -122,6 +122,7 @@ RSS reader
 
   (defalias 'elfeed-toggle-star
     (elfeed-expose #'elfeed-search-toggle-all 'starred))
+  (setq rmh-elfeed-org-files (list "~/org/elfeed.org"))
 #+end_src
 
 *** Projects
@@ -482,33 +483,34 @@ Add snippets to company backends
 General Org mode setup
 Bullets, packages
 #+BEGIN_SRC emacs-lisp
-  ;; Org-mode
-  (setq org-hide-emphaisi-markers t)
-  (add-hook 'org-mode-hook 
-            (lambda () 
-              (org-bullets-mode 1)
-              (org-indent-mode nil)
-  ;; Uncomment for enabling auto preview LaTeX in org-mode
-  ;;            (add-hook 'post-command-hook 'cw/org-auto-toggle-fragment-display t)
-  ))
+;; Org-mode
+(setq org-hide-emphaisi-markers t)
+(add-hook 'org-mode-hook 
+          (lambda () 
+            (org-bullets-mode 1)
+            (org-indent-mode nil)
+            ;; Uncomment for enabling auto preview LaTeX in org-mode
+            ;;            (add-hook 'post-command-hook 'cw/org-auto-toggle-fragment-display t)
+            ))
 
-  (font-lock-add-keywords 'org-mode
-                          '(("^ *\\([-]\\) "
-                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+(font-lock-add-keywords 'org-mode
+                        '(("^ *\\([-]\\) "
+                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
-  (setq org-directory "~/org")
-  (setq org-agenda-files '("~/org"))
-  (setq org-default-notes-file (concat org-directory "/Notes.org"))
+(setq org-directory "~/org")
+(setq org-agenda-files '("~/org"))
+(setq org-default-notes-file (concat org-directory "/Notes.org"))
 
-  (eval-after-load "org"
+(eval-after-load "org"
   (progn
     '(setq org-highlight-latex-and-related '(latex script entities))
     '(require 'ox-md nil t)
     '(require 'ox-latex nil t)
     '(require 'ox-reveal nil t)))
 
-  (setq org-todo-keywords
-        '((sequence "TODO" "FIXME" "|" "DONE" )))
+(setq org-todo-keywords
+      '((sequence "TODO" "FIXME" "|" "DONE" )))
+(setq org-src-preserve-indentation t)
 #+END_SRC
 
 Increse readability of latex preview in org-mode
