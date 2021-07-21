@@ -11,11 +11,12 @@ set softtabstop=4
 set tabstop=4
 set shiftwidth=4
 set expandtab
+set termguicolors
 
 set guifont=Fira\ Code:h13
 
 " Display these characters
-set list listchars=tab:\ ,eol:\ 
+set list listchars=tab:→\ ,eol:\ 
 
 set foldmethod=indent
 set nofoldenable
@@ -65,6 +66,9 @@ Plug 'https://gitlab.com/code-stats/code-stats-vim.git'
 
 " Rust
 Plug 'rust-lang/rust.vim'
+
+" LSP
+" Plug 'w0rp/ale'
 
 call plug#end()
 

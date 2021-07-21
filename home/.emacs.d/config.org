@@ -293,6 +293,7 @@ Speeding up lps-mode. Adding folders to not track
   (setq lsp-file-watch-ignored
         '("build"
           "out"
+          "target"
           "release"
           ".git"
           ))
