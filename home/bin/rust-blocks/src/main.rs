@@ -3,6 +3,8 @@ use std::path::{Path};
 use std::io::{Write};
 use std::os::unix::fs::{FileTypeExt};
 
+use tokio;
+
 #[derive(Clone, Copy)]
 pub struct Color(pub u8, pub u8, pub u8);
 
@@ -74,8 +76,57 @@ pub fn get_fifo_with_prefix(name: &str, prefix: &str) -> File {
     unix_named_pipe::open_write(&filename).expect(&error("Cannot open existing FIFO"))
 }
 
-fn main() {
-    let mut music_fifo = get_fifo(".music_xmobar");
-    let mut write = |msg| music_fifo.write_all(format!("{}\n", msg).as_bytes()).unwrap();
-    write(format!("{} Test", xmobar_colorize("Red", Color::red())));
+pub trait Block {
+    fn info(&self) -> BlockInfo;
 }
+
+pub enum FIFO {
+    WithPrefix(String, String),
+    WithoutPrefix(String)
+}
+
+pub struct BlockInfo {
+    fifo: FIFO
+}
+
+struct BlockRunner {
+
+}
+
+impl BlockRunner {
+    fn new() -> Self { Self {  } }
+
+    fn run(block: BlockInfo) {
+    }
+}
+
+
+mod music;
+
+#[tokio::main]
+async fn main() {
+    {
+	use music::*;
+	let block = block();
+    }
+}
+
+// fn main() {
+//     // tokio::runtime::Runtime::new().unwrap().block_on(async_main());
+//     let th1 = std::thread::spawn( || loop {
+// 	std::thread::sleep(std::time::Duration::from_secs(1));
+// 	println!("Prints every 1 sec");
+//     });
+//     let th2 = std::thread::spawn( || loop {
+// 	std::thread::sleep(std::time::Duration::from_secs(5));
+// 	println!("Prints every 5 sec");
+//     });
+//     let th3 = std::thread::spawn( || loop {
+// 	std::thread::sleep(std::time::Duration::from_secs(10));
+// 	println!("Prints every 10 sec");
+//     });
+
+//     th1.join();
+//     th2.join();
+//     th3.join();
+// }
