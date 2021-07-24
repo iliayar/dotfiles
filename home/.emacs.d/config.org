@@ -506,6 +506,7 @@ Bullets, packages
   (progn
     '(setq org-highlight-latex-and-related '(latex script entities))
     '(require 'ox-md nil t)
+    '(require 'ox-rss nil t)
     '(require 'ox-latex nil t)
     '(require 'ox-reveal nil t)))
 
@@ -576,12 +577,29 @@ Publishing for:
           ("org-mainsite"
            :base-directory "~/Documents/MainSite/public/notes"
            :base-extension "org"
-           :exclude "level-*.org"
+           :exclude "level-[0-9]*.org"
            :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes"
+	   :html-html5-fancy t
+	   ;; :html-link-home "https://iliayar.ru/public-notes/index.html"
+	   :html-validation-link nil
+	   :html-postamble "<hr><a href=\"/public-notes/index.html\">Home Page</a>"
            :recursive t
            :publishing-function org-html-publish-to-html
            :headline-levels 4             ; Just the default for this project.
            :auto-preamble t
+           )
+          ("rss-mainsite"
+           :base-directory "~/Documents/MainSite/public/notes"
+           :base-extension "org"
+           :exclude ".*"
+	   :include ("blog.org")
+           :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes"
+	   :rss-extension "xml"
+	   :section-numbers nil
+	   :html-link-use-abs-url t
+	   :output-file "rss"
+           :recursive t
+           :publishing-function org-rss-publish-to-rss
            )
           ("static-mainsite"
            :base-directory "~/Documents/MainSite/public/notes"
@@ -590,7 +608,7 @@ Publishing for:
            :recursive t
            :publishing-function org-publish-attachment
            )
-          ("mainsite" :components ("org-mainsite" "static-mainsite"))
+          ("mainsite" :components ("org-mainsite" "rss-mainsite" "static-mainsite"))
 
           ("org-conspects"
            :base-directory "~/Documents/ITMO"
