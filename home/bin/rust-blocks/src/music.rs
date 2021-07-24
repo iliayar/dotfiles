@@ -13,12 +13,12 @@ impl Block for MusicBlock
     fn config(&self) -> BlockConfig {
 	BlockConfig {
 	    fifo: FIFO::WithoutPrefix(".music_xmobar".to_string()),
-	    interval: UpdateInterval::Once,
+	    interval: UpdateInterval::Interval(Duration::from_secs(1)),
 	}
     }
 
-    async fn update(&self) {
-        todo!()
+    async fn update(&mut self) {
+	println!("I'am alive");
     }
 }
 

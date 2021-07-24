@@ -80,7 +80,7 @@ pub fn get_fifo_with_prefix(name: &str, prefix: &str) -> File {
 #[async_trait]
 pub trait Block {
     fn config(&self) -> BlockConfig;
-    async fn update(&self);
+    async fn update(&mut self);
 }
 
 pub struct BlockConfig {
@@ -113,11 +113,25 @@ struct BlockRunner {
 impl BlockRunner {
     fn new() -> Self { Self {  } }
 
-    fn run<B: Block>(&self, block: B)
+    fn run<B: Block + Send + Sync + 'static>(&self, block: B)
     {
+	let mut block = block;
 	let config = block.config();
 
-	// match config.
+	let fifo = match config.fifo {
+	    FIFO::WithPrefix(file, prefix) => get_fifo_with_prefix(&file, &prefix),
+	    FIFO::WithoutPrefix(file) => get_fifo(&file),
+	};
+
+	match config.interval {
+	    UpdateInterval::Once => tokio::spawn(async move { block.update().await }),
+	    UpdateInterval::Interval(duration) => tokio::spawn(async move {
+		loop {
+		    block.update().await;
+		    sleep(duration).await;
+		}
+	    }),
+	};
     }
 }
 
@@ -127,14 +141,15 @@ mod music;
 fn main() {
     let rt = tokio::runtime::Builder::new_current_thread()
 	.enable_time()
-	.build()?;
+	.build()
+        .unwrap();
 
     rt.block_on(async {
 	let runner = BlockRunner::new();
 
 	runner.run(music::block());
 
-	loop { sleep(Duration::from_secs(60 * 60)); }
+	loop { sleep(Duration::from_secs(60 * 60)).await; }
     })
 }
 

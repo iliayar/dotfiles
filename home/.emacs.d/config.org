@@ -596,9 +596,11 @@ Publishing for:
            :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes"
 	   :rss-extension "xml"
 	   :section-numbers nil
+	   :html-link-home "https://iliayar.ru/public-notes/"
 	   :html-link-use-abs-url t
+	   :html-link-org-files-as-html t
 	   :output-file "rss"
-           :recursive t
+           :recursive nil
            :publishing-function org-rss-publish-to-rss
            )
           ("static-mainsite"
