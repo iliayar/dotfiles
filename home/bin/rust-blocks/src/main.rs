@@ -1,9 +1,10 @@
-use std::fs::{File};
-use std::path::{Path};
-use std::io::{Write};
-use std::os::unix::fs::{FileTypeExt};
-
-use tokio;
+use std::fs::File;
+use std::path::Path;
+use std::io::Write;
+use std::os::unix::fs::FileTypeExt;
+use std::future::Future;
+use tokio::time::{sleep, Duration};
+use async_trait::async_trait;
 
 #[derive(Clone, Copy)]
 pub struct Color(pub u8, pub u8, pub u8);
@@ -76,17 +77,33 @@ pub fn get_fifo_with_prefix(name: &str, prefix: &str) -> File {
     unix_named_pipe::open_write(&filename).expect(&error("Cannot open existing FIFO"))
 }
 
+#[async_trait]
 pub trait Block {
-    fn info(&self) -> BlockInfo;
+    fn config(&self) -> BlockConfig;
+    async fn update(&self);
+}
+
+pub struct BlockConfig {
+    fifo: FIFO,
+    interval: UpdateInterval,
 }
 
 pub enum FIFO {
     WithPrefix(String, String),
-    WithoutPrefix(String)
+    WithoutPrefix(String),
 }
 
-pub struct BlockInfo {
-    fifo: FIFO
+pub enum UpdateInterval {
+    Once,
+    Interval(Duration),
+}
+
+pub enum Update<Fun, Fut>
+where
+    Fut: Future<Output = ()>,
+    Fun: Fn() -> Fut {
+    Once(Fun),
+    Interval(Fun, Duration)
 }
 
 struct BlockRunner {
@@ -96,37 +113,56 @@ struct BlockRunner {
 impl BlockRunner {
     fn new() -> Self { Self {  } }
 
-    fn run(block: BlockInfo) {
+    fn run<B: Block>(&self, block: B)
+    {
+	let config = block.config();
+
+	// match config.
     }
 }
 
 
 mod music;
 
-#[tokio::main]
-async fn main() {
-    {
-	use music::*;
-	let block = block();
-    }
+fn main() {
+    let rt = tokio::runtime::Builder::new_current_thread()
+	.enable_time()
+	.build()?;
+
+    rt.block_on(async {
+	let runner = BlockRunner::new();
+
+	runner.run(music::block());
+
+	loop { sleep(Duration::from_secs(60 * 60)); }
+    })
 }
 
 // fn main() {
-//     // tokio::runtime::Runtime::new().unwrap().block_on(async_main());
-//     let th1 = std::thread::spawn( || loop {
-// 	std::thread::sleep(std::time::Duration::from_secs(1));
-// 	println!("Prints every 1 sec");
-//     });
-//     let th2 = std::thread::spawn( || loop {
-// 	std::thread::sleep(std::time::Duration::from_secs(5));
-// 	println!("Prints every 5 sec");
-//     });
-//     let th3 = std::thread::spawn( || loop {
-// 	std::thread::sleep(std::time::Duration::from_secs(10));
-// 	println!("Prints every 10 sec");
-//     });
+//     let rt = tokio::runtime::Builder::new_current_thread().enable_time().build().unwrap();
+//     rt.block_on(async {
+// 	let fut1 = async {
+// 	    loop {
+// 		sleep(Duration::from_secs(1)).await;
+// 		println!("Prints every 1 sec");
+// 	    }
+// 	};
+// 	let fut2 = async {
+// 	    loop {
+// 		sleep(Duration::from_secs(5)).await;
+// 		println!("Prints every 5 sec");
+// 	    }
+// 	};
+// 	let fut3 = async {
+// 	    loop {
+// 		sleep(Duration::from_secs(10)).await;
+// 		println!("Prints every 10 sec");
+// 	    }
+// 	};
+// 	rt.spawn(fut1);
+// 	rt.spawn(fut2);
+// 	rt.spawn(fut3);
 
-//     th1.join();
-//     th2.join();
-//     th3.join();
+// 	loop { sleep(Duration::from_secs(60 * 60)).await; }
+//     });
 // }
