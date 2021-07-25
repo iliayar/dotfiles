@@ -1,9 +1,12 @@
-use std::fs::File;
 use std::path::Path;
-use std::io::Write;
 use std::os::unix::fs::FileTypeExt;
 use std::future::Future;
 use tokio::time::{sleep, Duration};
+// use std::io::Write;
+// use std::fs::File;
+use tokio::io::AsyncWriteExt;
+use tokio::net::UnixStream;
+// use tokio::fs::File;
 use async_trait::async_trait;
 
 #[derive(Clone, Copy)]
@@ -53,11 +56,11 @@ pub fn xmobar_colorize(s: &str, c: Color) -> String {
     format!("<fc={}>{}</fc>", c, s)
 }
 
-pub fn get_fifo(name: &str) -> File {
-    get_fifo_with_prefix(name, "/tmp")
+pub async fn get_fifo(name: &str) -> UnixStream {
+    get_fifo_with_prefix(name, "/tmp").await
 }
 
-pub fn get_fifo_with_prefix(name: &str, prefix: &str) -> File {
+pub async fn get_fifo_with_prefix(name: &str, prefix: &str) -> UnixStream {
     let filename = Path::new(prefix).join(name);
     let error = |msg| format!("{}: {}", msg, filename.to_str().unwrap());
     let create = || unix_named_pipe::create(&filename, Some(0o666))
@@ -74,13 +77,16 @@ pub fn get_fifo_with_prefix(name: &str, prefix: &str) -> File {
     } else {
 	create();
     }
-    unix_named_pipe::open_write(&filename).expect(&error("Cannot open existing FIFO"))
+
+    UnixStream::connect(&filename).await.expect(&error("Cannot open existing FIFO"))
+    // unix_named_pipe::open_write(&filename).expect(&error("Cannot open existing FIFO"))
+    // File::open(&filename).await.expect(&error("Cannot open existing FIFO"))
 }
 
 #[async_trait]
 pub trait Block {
     fn config(&self) -> BlockConfig;
-    async fn update(&mut self);
+    async fn update(&mut self, fifo: &mut UnixStream);
 }
 
 pub struct BlockConfig {
@@ -113,21 +119,21 @@ struct BlockRunner {
 impl BlockRunner {
     fn new() -> Self { Self {  } }
 
-    fn run<B: Block + Send + Sync + 'static>(&self, block: B)
+    async fn run<B: Block + Send + Sync + 'static>(&self, block: B)
     {
 	let mut block = block;
 	let config = block.config();
 
-	let fifo = match config.fifo {
-	    FIFO::WithPrefix(file, prefix) => get_fifo_with_prefix(&file, &prefix),
-	    FIFO::WithoutPrefix(file) => get_fifo(&file),
+	let mut fifo = match config.fifo {
+	    FIFO::WithPrefix(file, prefix) => get_fifo_with_prefix(&file, &prefix).await,
+	    FIFO::WithoutPrefix(file) => get_fifo(&file).await,
 	};
 
 	match config.interval {
-	    UpdateInterval::Once => tokio::spawn(async move { block.update().await }),
+	    UpdateInterval::Once => tokio::spawn(async move { block.update(&mut fifo).await }),
 	    UpdateInterval::Interval(duration) => tokio::spawn(async move {
 		loop {
-		    block.update().await;
+		    block.update(&mut fifo).await;
 		    sleep(duration).await;
 		}
 	    }),
@@ -147,7 +153,7 @@ fn main() {
     rt.block_on(async {
 	let runner = BlockRunner::new();
 
-	runner.run(music::block());
+	runner.run(music::block()).await;
 
 	loop { sleep(Duration::from_secs(60 * 60)).await; }
     })
