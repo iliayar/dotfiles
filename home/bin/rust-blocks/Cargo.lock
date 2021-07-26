@@ -387,7 +387,7 @@ dependencies = [
  "async-trait",
  "dbus",
  "dbus-tokio",
- "futures-util",
+ "futures",
  "pris",
  "tokio",
  "unix-named-pipe",

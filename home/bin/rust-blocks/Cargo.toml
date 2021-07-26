@@ -9,7 +9,7 @@ edition = "2018"
 unix-named-pipe = "0.2.0"
 tokio = { version = "1.9.0", features = [ "full" ] }
 async-trait = "0.1.50"
-futures-util = "0.3.16"
+futures = "0.3.16"
 pris = "0.1.0"
 dbus = "0.9.3"
 dbus-tokio = "0.7.3"

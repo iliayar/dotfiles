@@ -1,10 +1,12 @@
 use super::*;
-use dbus::{message::MatchRule, strings::{self, Member}};
+use dbus::{Message, message::MatchRule, strings::{self, Member}};
 use dbus_tokio::connection;
-use futures_util::StreamExt;
+use futures::StreamExt;
 use pris::Player;
 use tokio::sync::Mutex;
 use std::sync::Arc;
+
+const PLAYER: &str = "spotify";
 
 pub struct MusicBlock {
 }
@@ -18,12 +20,21 @@ fn error(msg: &str) -> String {
     format!("Music block error: {}", msg)
 }
 
-fn new_rule(member: &str, path: &str) -> MatchRule<'static> {
+fn new_rule(member: &str, path: Option<&str>, sender: Option<&str>, eavesdrop: bool) -> MatchRule<'static> {
     let mut property_rule = MatchRule::new();
+    property_rule.eavesdrop = eavesdrop;
+    property_rule.msg_type = Some(dbus::MessageType::Signal);
     property_rule.member = Some(Member::new(member)
 				.expect(&error(&format!("No member {}", member))));
-    property_rule.path = Some(strings::Path::new(path)
-			      .expect(&error(&format!("No path {}", path))));
+    if let Some(path) = path {
+	property_rule.path = Some(strings::Path::new(path)
+				  .expect(&error(&format!("No path {}", path))));
+
+    }
+    if let Some(name) = sender {
+	property_rule.sender = Some(strings::BusName::new(name)
+				    .expect(&error(&format!("No name {}", name))));
+    }
     return property_rule;
 }
 
@@ -40,7 +51,9 @@ impl Block for MusicBlock
 
     async fn update(&mut self, fifo: &mut File) {
 
-	let (resource, conn) = connection::new_session_local()
+	let player_name = format!("org.mpris.MediaPlayer2.{}", PLAYER);
+
+	let (resource, conn) = connection::new_session_sync()
 	    .expect(&error("Cannot open dbus connection"));
 
 	tokio::spawn(async {
@@ -48,40 +61,45 @@ impl Block for MusicBlock
 	    panic!("{}", error(&format!("Lost connection to dbus: {}", err)))
 	});
 
-	// let mut property_rule = MatchRule::new();
-	// property_rule.member = Some(Member::new("PropertiesChanged")
-	// 		   .expect(&error("No member PropertiesChanged")));
-        // property_rule.path = Some(strings::Path::new("/org/mpris/MediaPlayer2")
-        //     .expect(&error("Not path /org/mpris/MediaPlayer2")));
-	let mut property_rule = new_rule("PropertiesChanged", "/org/mpris/MediaPlayer2");
-	let mut disappear_rule = new_rule("NameLost", "/org/freedesktop/DBus");
+	let state_rule = new_rule("NameOwnerChanged", None, Some("org.freedesktop.DBus"), true);
+	let playback_rule = new_rule("PropertiesChanged", None, Some("org.mpris.MediaPlayer2.spotify"), false);
+	// let disappear_rule = new_rule("NameLost", None, None, true);
 
 
-	let mut player: Option<Player> = None;
+	let player: Option<Player> = None;
 
-	let (incoming_signal, stream) = conn.add_match(property_rule).await
-	    .expect(&error("Canno set dbus callback"))
+	let (_playback_incoming_signal, playback_stream) = conn.add_match(playback_rule).await
+	    .expect(&error("Cannot set dbus playback callback"))
 	    .stream();
 
-	let stream = stream.for_each(|(_, (source,)): (_, (String,))| {
-	    async {
-		// if player.lock().await.is_none() {
-		    // if let Ok(new_player) = Player::try_new("spotify", conn.as_refg).await {
-		// println!("Property changed by {:?}", source);
-			// player.lock().await.insert(new_player);
-		    // }
-		// }
-	    }
-	});
+	let (_incoming_signal, state_stream) = conn.add_match(state_rule).await
+	    .expect(&error("Cannot set dbus state callback"))
+	    .stream();
 
-	tokio::join!(stream);
+	let state_stream = async {
+	    state_stream.for_each(|(msg, (name, old_owner, new_owner)): (Message, (String, String, String))| {
+		let player_name = &player_name;
+		async move {
+		    if &name == player_name {
+			if old_owner.is_empty() {
+			    println!("{} opened!", PLAYER);
+			} else {
+			    println!("{} closed!", PLAYER);
+			}
+		    }
+		}
+	    }).await;
+	};
 
-	// conn.remove_match(incoming_signal.token()).await.unwrap();
-	// loop { sleep(Duration::from_secs(60 * 60)).await; }
-	// println!("I'am alive");
-	// fifo.write_all(format!("{}\n", "Test Rust").as_bytes()).await.ok();
-	// fifo.flush().await.ok();
-	// writeln!(fifo, "Test async Rust");
+	let playback_stream = async {
+	    playback_stream.for_each(|(msg, ()): (Message, ())| {
+		async move {
+		    println!("Playback: {:?}", msg);
+		}
+	    }).await;
+	};
+
+	futures::join!(state_stream, playback_stream);
     }
 }
 
