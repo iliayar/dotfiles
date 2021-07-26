@@ -2,11 +2,8 @@ use std::path::Path;
 use std::os::unix::fs::FileTypeExt;
 use std::future::Future;
 use tokio::time::{sleep, Duration};
-// use std::io::Write;
-// use std::fs::File;
 use tokio::io::AsyncWriteExt;
-use tokio::net::UnixStream;
-// use tokio::fs::File;
+use tokio::fs::{OpenOptions, File};
 use async_trait::async_trait;
 
 #[derive(Clone, Copy)]
@@ -56,14 +53,14 @@ pub fn xmobar_colorize(s: &str, c: Color) -> String {
     format!("<fc={}>{}</fc>", c, s)
 }
 
-pub async fn get_fifo(name: &str) -> UnixStream {
+pub async fn get_fifo(name: &str) -> File {
     get_fifo_with_prefix(name, "/tmp").await
 }
 
-pub async fn get_fifo_with_prefix(name: &str, prefix: &str) -> UnixStream {
+pub async fn get_fifo_with_prefix(name: &str, prefix: &str) -> File {
     let filename = Path::new(prefix).join(name);
     let error = |msg| format!("{}: {}", msg, filename.to_str().unwrap());
-    let create = || unix_named_pipe::create(&filename, Some(0o666))
+    let create = || unix_named_pipe::create(&filename, Some(0o644))
 	.expect(&error("Failed to create FIFO"));
 
     if filename.exists() {
@@ -78,15 +75,19 @@ pub async fn get_fifo_with_prefix(name: &str, prefix: &str) -> UnixStream {
 	create();
     }
 
-    UnixStream::connect(&filename).await.expect(&error("Cannot open existing FIFO"))
     // unix_named_pipe::open_write(&filename).expect(&error("Cannot open existing FIFO"))
     // File::open(&filename).await.expect(&error("Cannot open existing FIFO"))
+    OpenOptions::new()
+        .write(true)
+        .append(true)
+        .open(&filename).await
+        .expect(&error("Cannot open existing FIFO"))
 }
 
 #[async_trait]
 pub trait Block {
     fn config(&self) -> BlockConfig;
-    async fn update(&mut self, fifo: &mut UnixStream);
+    async fn update(&mut self, fifo: &mut File);
 }
 
 pub struct BlockConfig {
@@ -143,10 +144,12 @@ impl BlockRunner {
 
 
 mod music;
+mod dummy;
 
 fn main() {
     let rt = tokio::runtime::Builder::new_current_thread()
 	.enable_time()
+        .enable_io()
 	.build()
         .unwrap();
 
@@ -154,6 +157,7 @@ fn main() {
 	let runner = BlockRunner::new();
 
 	runner.run(music::block()).await;
+	runner.run(dummy::block()).await;
 
 	loop { sleep(Duration::from_secs(60 * 60)).await; }
     })
