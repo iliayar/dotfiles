@@ -55,6 +55,95 @@ fn new_rule(member: &str, path: Option<&str>, sender: Option<&str>, eavesdrop: b
     return property_rule;
 }
 
+async fn process_playback(msg: Message, fifo: Arc<Mutex<&mut File>>) {
+    let mut playback: Option<PlaybackStatus> = None;
+    let mut artist: Option<String> = None;
+    let mut track: Option<String> = None;
+    
+    { //        vvvv is not Send
+	let mut iter = msg.iter_init();
+	iter.read::<String>().ok();
+	if let Ok(dict) = iter.read::<Dict<String, Variant<Iter>, _>>() {
+	    for (name, Variant(mut iter)) in dict {
+		match name.as_str() {
+		    "Metadata" => {
+			if let Ok(dict) = iter.read::<Dict<String, Variant<Iter>, _>>() {
+			    for (name, Variant(mut prop)) in dict {
+				match name.as_str() {
+				    "xesam:artist" => {
+					artist = prop.read::<Vec<String>>().ok().map(|v| v.join(", "));
+				    },
+				    "xesam:title" => {
+					track = prop.read::<String>().ok();
+				    },
+				    _ => ()
+				}
+			    }
+			}
+
+		    },
+		    "PlaybackStatus" => {
+			if let Ok(status) = iter.read::<String>() {
+			    if status == "Playing" {
+				playback.insert(PlaybackStatus::Playing);
+			    } else if status == "Paused" {
+				playback.insert(PlaybackStatus::Paused);
+			    }
+			}
+
+		    },
+		    _ => ()
+		}
+	    }
+	}
+    }
+    
+    if let Some(((artist, track), playback)) = artist.zip(track).zip(playback) {
+	if !artist.is_empty() && !track.is_empty() {
+	    fifo.lock().await.write_all(
+		format!("<action=~/.xmonad/xmonadctl 13>{} - {}</action> {}\n",
+			artist,
+			track,
+			playback.controls())
+		    .as_bytes()).await
+		.expect(&error("Failed to write to fifo in state_stream"));
+	}
+    }
+
+}
+
+async fn process_state(msg: Message, player_name: &str, fifo: Arc<Mutex<&mut File>>) {
+    let mut name = None;
+    let mut old_owner = None;
+    let mut _new_onwer = None;
+    {
+	let mut iter = msg.iter_init();
+	name = iter.read::<String>().ok();
+	old_owner = iter.read::<String>().ok();
+	_new_onwer = iter.read::<String>().ok();
+    }
+    if let Some(((name, old_owner), _new_owner)) = name.zip(old_owner).zip(_new_onwer) {
+	if &name == player_name {
+	    if old_owner.is_empty() {
+		fifo.lock().await.write_all(
+		    format!("{} {}\n",
+			    PLAYER,
+			    xclr("is running", Color::yellow()))
+			.as_bytes()).await
+		    .expect(&error("Failed to write to fifo in state_stream"));
+	    } else {
+		fifo.lock().await.write_all(
+		    format!("{} {}\n",
+			    PLAYER,
+			    xclr("is not running", Color::red()))
+			.as_bytes()).await
+		    .expect(&error("Failed to write to fifo in state_stream"));
+	    }
+	}
+    }
+}
+
+
 #[async_trait]
 impl Block for MusicBlock
 {
@@ -67,7 +156,9 @@ impl Block for MusicBlock
 
     async fn update(&mut self, fifo: &mut File) {
 
-	fifo.write_all(
+	let fifo = Arc::new(Mutex::new(fifo));
+
+	fifo.lock().await.write_all(
 	    format!("{} {}\n",
 		    PLAYER,
 		    xclr("is not running", Color::red()))
@@ -85,7 +176,7 @@ impl Block for MusicBlock
 	});
 
 	let state_rule = new_rule("NameOwnerChanged", None, Some("org.freedesktop.DBus"), true);
-	let playback_rule = new_rule("PropertiesChanged", None, Some("org.mpris.MediaPlayer2.spotify"), false);
+	let playback_rule = new_rule("PropertiesChanged", None, Some(&player_name), false);
 
 	let (_playback_incoming_signal, playback_stream) = conn.add_match(playback_rule).await
 	    .expect(&error("Cannot set dbus playback callback"))
@@ -95,96 +186,19 @@ impl Block for MusicBlock
 	    .expect(&error("Cannot set dbus state callback"))
 	    .stream();
 
-	let fifo = Arc::new(Mutex::new(fifo));
-
 	let state_stream = async {
-	    state_stream.for_each(|(msg, (name, old_owner, new_owner)): (Message, (String, String, String))| {
-		let player_name = &player_name;
-		let fifo = fifo.clone();
-		async move {
-		    if &name == player_name {
-			if old_owner.is_empty() {
-			    fifo.lock().await.write_all(
-				format!("{} {}\n",
-					PLAYER,
-					xclr("is running", Color::yellow()))
-				    .as_bytes()).await
-				.expect(&error("Failed to write to fifo in state_stream"));
-			} else {
-			    fifo.lock().await.write_all(
-				format!("{} {}\n",
-					PLAYER,
-					xclr("is not running", Color::red()))
-				    .as_bytes()).await
-				.expect(&error("Failed to write to fifo in state_stream"));
-			}
-		    }
-		}
+	    state_stream.for_each(|(msg, ()): (Message, ())| {
+		process_state(msg, &player_name, fifo.clone())
 	    }).await;
 	};
 
 	let playback_stream = async {
 	    playback_stream.for_each(|(msg, ()): (Message, ())| {
-		let fifo = fifo.clone();
-		async move {
-		    let mut playback: Option<PlaybackStatus> = None;
-		    let mut artist: Option<String> = None;
-		    let mut track: Option<String> = None;
-		    
-		    { //        vvvv is not Send
-			let mut iter = msg.iter_init();
-			iter.read::<String>().ok();
-			if let Ok(dict) = iter.read::<Dict<String, Variant<Iter>, _>>() {
-			    for (name, Variant(mut iter)) in dict {
-				match name.as_str() {
-				    "Metadata" => {
-					if let Ok(dict) = iter.read::<Dict<String, Variant<Iter>, _>>() {
-					    for (name, Variant(mut prop)) in dict {
-						match name.as_str() {
-						    "xesam:artist" => {
-							artist = prop.read::<Vec<String>>().ok().map(|v| v.join(", "));
-						    },
-						    "xesam:title" => {
-							track = prop.read::<String>().ok();
-						    },
-						    _ => ()
-						}
-					    }
-					}
-
-				    },
-				    "PlaybackStatus" => {
-					if let Ok(status) = iter.read::<String>() {
-					    if status == "Playing" {
-						playback.insert(PlaybackStatus::Playing);
-					    } else if status == "Paused" {
-						playback.insert(PlaybackStatus::Paused);
-					    }
-					}
-
-				    },
-				    _ => ()
-				}
-			    }
-			}
-		    }
-		    
-		    if let Some(((artist, track), playback)) = artist.zip(track).zip(playback) {
-			if !artist.is_empty() && !track.is_empty() {
-			    fifo.lock().await.write_all(
-				format!("<action=~/.xmonad/xmonadctl 13>{} - {}</action> {}\n",
-					artist,
-					track,
-					playback.controls())
-				    .as_bytes()).await
-				.expect(&error("Failed to write to fifo in state_stream"));
-			}
-		    }
-		}
+		process_playback(msg, fifo.clone())
 	    }).await;
 	};
 
-	futures::join!(state_stream, playback_stream);
+	tokio::join!(state_stream, playback_stream);
     }
 }
 
