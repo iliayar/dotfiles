@@ -79,8 +79,6 @@ pub async fn get_fifo_with_prefix(name: &str, prefix: &str) -> File {
 	create();
     }
 
-    // unix_named_pipe::open_write(&filename).expect(&error("Cannot open existing FIFO"))
-    // File::open(&filename).await.expect(&error("Cannot open existing FIFO"))
     OpenOptions::new()
         .write(true)
         .append(true)
@@ -91,7 +89,8 @@ pub async fn get_fifo_with_prefix(name: &str, prefix: &str) -> File {
 #[async_trait]
 pub trait Block {
     fn config(&self) -> BlockConfig;
-    async fn update(&mut self, fifo: &mut File);
+    async fn update(&mut self, _fifo: &mut File) { }
+    async fn update_no_fifo(&mut self) { }
 }
 
 pub struct BlockConfig {
@@ -102,6 +101,7 @@ pub struct BlockConfig {
 pub enum FIFO {
     WithPrefix(String, String),
     WithoutPrefix(String),
+    None,
 }
 
 pub enum UpdateInterval {
@@ -132,6 +132,7 @@ impl BlockRunner {
 	let mut fifo = match config.fifo {
 	    FIFO::WithPrefix(file, prefix) => get_fifo_with_prefix(&file, &prefix).await,
 	    FIFO::WithoutPrefix(file) => get_fifo(&file).await,
+	    FIFO::None => File::open("/dev/null").await.unwrap(),
 	};
 
 	match config.interval {
@@ -149,49 +150,28 @@ impl BlockRunner {
 
 mod music;
 mod dummy;
+mod updates;
 
 fn main() {
-    let rt = tokio::runtime::Builder::new_current_thread()
+    // let rt = tokio::runtime::Builder::new_current_thread()
+    // 	.enable_time()
+    //     .enable_io()
+    // 	.build()
+    //     .unwrap();
+    let rt = tokio::runtime::Builder::new_multi_thread()
+        .worker_threads(3)
 	.enable_time()
-        .enable_io()
+	.enable_io()
 	.build()
-        .unwrap();
+	.unwrap();
 
     rt.block_on(async {
 	let runner = BlockRunner::new();
 
 	runner.run(music::block()).await;
-	runner.run(dummy::block()).await;
+	// runner.run(dummy::block()).await;
+	runner.run(updates::block()).await;
 
 	loop { sleep(Duration::from_secs(60 * 60)).await; }
     })
 }
-
-// fn main() {
-//     let rt = tokio::runtime::Builder::new_current_thread().enable_time().build().unwrap();
-//     rt.block_on(async {
-// 	let fut1 = async {
-// 	    loop {
-// 		sleep(Duration::from_secs(1)).await;
-// 		println!("Prints every 1 sec");
-// 	    }
-// 	};
-// 	let fut2 = async {
-// 	    loop {
-// 		sleep(Duration::from_secs(5)).await;
-// 		println!("Prints every 5 sec");
-// 	    }
-// 	};
-// 	let fut3 = async {
-// 	    loop {
-// 		sleep(Duration::from_secs(10)).await;
-// 		println!("Prints every 10 sec");
-// 	    }
-// 	};
-// 	rt.spawn(fut1);
-// 	rt.spawn(fut2);
-// 	rt.spawn(fut3);
-
-// 	loop { sleep(Duration::from_secs(60 * 60)).await; }
-//     });
-// }
