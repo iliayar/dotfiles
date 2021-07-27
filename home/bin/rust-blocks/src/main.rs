@@ -1,6 +1,8 @@
 use std::path::Path;
 use std::os::unix::fs::FileTypeExt;
 use std::future::Future;
+use std::sync::Arc;
+use tokio::sync::Mutex;
 use tokio::time::{sleep, Duration};
 use tokio::io::AsyncWriteExt;
 use tokio::fs::{OpenOptions, File};
@@ -118,16 +120,16 @@ where
 }
 
 struct BlockRunner {
-
+    blocks: Vec<Arc<Mutex<dyn Block>>>
 }
 
 impl BlockRunner {
-    fn new() -> Self { Self {  } }
+    fn new() -> Self { Self { blocks: vec![] } }
 
-    async fn run<B: Block + Send + Sync + 'static>(&self, block: B)
+    async fn run<B: Block + Send + Sync + 'static>(&mut self, block: B)
     {
-	let mut block = block;
-	let config = block.config();
+	let block = Arc::new(Mutex::new(block));
+	let config = block.lock().await.config();
 
 	let mut fifo = match config.fifo {
 	    FIFO::WithPrefix(file, prefix) => get_fifo_with_prefix(&file, &prefix).await,
@@ -135,15 +137,17 @@ impl BlockRunner {
 	    FIFO::None => File::open("/dev/null").await.unwrap(),
 	};
 
+	let nblock = block.clone();
 	match config.interval {
-	    UpdateInterval::Once => tokio::spawn(async move { block.update(&mut fifo).await }),
+	    UpdateInterval::Once => tokio::spawn(async move { nblock.lock().await.update(&mut fifo).await }),
 	    UpdateInterval::Interval(duration) => tokio::spawn(async move {
 		loop {
-		    block.update(&mut fifo).await;
+		    nblock.lock().await.update(&mut fifo).await;
 		    sleep(duration).await;
 		}
 	    }),
 	};
+	self.blocks.push(block);
     }
 }
 
@@ -166,7 +170,7 @@ fn main() {
 	.unwrap();
 
     rt.block_on(async {
-	let runner = BlockRunner::new();
+	let mut runner = BlockRunner::new();
 
 	runner.run(music::block()).await;
 	// runner.run(dummy::block()).await;
