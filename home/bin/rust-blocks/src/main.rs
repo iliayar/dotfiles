@@ -49,8 +49,12 @@ impl std::fmt::Display for Color {
     }
 }
 
-pub fn xmobar_colorize(s: &str, c: Color) -> String {
+pub fn xclr(s: &str, c: Color) -> String {
     format!("<fc={}>{}</fc>", c, s)
+}
+
+pub fn xfa(s: &str) -> String {
+    format!("<fn=1>{}</fn>", s)
 }
 
 pub async fn get_fifo(name: &str) -> File {
