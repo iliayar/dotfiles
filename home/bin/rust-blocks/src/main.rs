@@ -6,6 +6,8 @@ use tokio::sync::Mutex;
 use tokio::time::{sleep, Duration};
 use tokio::io::AsyncWriteExt;
 use tokio::fs::{OpenOptions, File};
+use tokio::net::UnixListener;
+use futures::StreamExt;
 use async_trait::async_trait;
 
 #[derive(Clone, Copy)]
@@ -173,9 +175,14 @@ fn main() {
 	let mut runner = BlockRunner::new();
 
 	runner.run(music::block()).await;
-	// runner.run(dummy::block()).await;
+	runner.run(dummy::block()).await;
 	runner.run(updates::block()).await;
 
-	loop { sleep(Duration::from_secs(60 * 60)).await; }
+	let mut listener = UnixListener::bind("/tmp/rust-blocks.sock").unwrap();
+	while let Ok(stream) = listener.accept().await {
+	    println!("Connection");
+	}
+
+	// loop { sleep(Duration::from_secs(60 * 60)).await; }
     })
 }
