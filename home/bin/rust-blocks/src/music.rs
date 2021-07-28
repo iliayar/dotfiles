@@ -26,10 +26,11 @@ impl PlaybackStatus {
 }
 
 pub struct MusicBlock {
+    fifo: Option<Arc<Mutex<File>>>
 }
 
 impl MusicBlock {
-    fn new() -> Self { Self {  } }
+    fn new() -> Self { Self { fifo: None  } }
 }
 
 
@@ -55,7 +56,7 @@ fn new_rule(member: &str, path: Option<&str>, sender: Option<&str>, eavesdrop: b
     return property_rule;
 }
 
-async fn process_playback(msg: Message, fifo: Arc<Mutex<&mut File>>) {
+async fn process_playback(msg: Message, fifo: Arc<Mutex<File>>) {
     let mut playback: Option<PlaybackStatus> = None;
     let mut artist: Option<String> = None;
     let mut track: Option<String> = None;
@@ -112,7 +113,7 @@ async fn process_playback(msg: Message, fifo: Arc<Mutex<&mut File>>) {
 
 }
 
-async fn process_state(msg: Message, player_name: &str, fifo: Arc<Mutex<&mut File>>) {
+async fn process_state(msg: Message, player_name: &str, fifo: Arc<Mutex<File>>) {
     let mut name = None;
     let mut old_owner = None;
     let mut _new_onwer = None;
@@ -154,9 +155,9 @@ impl Block for MusicBlock
 	}
     }
 
-    async fn update(&mut self, fifo: &mut File) {
+    async fn update(&mut self) {
 
-	let fifo = Arc::new(Mutex::new(fifo));
+	let fifo = self.fifo.as_ref().unwrap().clone();
 
 	fifo.lock().await.write_all(
 	    format!("{} {}\n",
@@ -199,6 +200,10 @@ impl Block for MusicBlock
 	};
 
 	tokio::join!(state_stream, playback_stream);
+    }
+
+    fn set_fifo(&mut self, fifo: File) {
+	self.fifo.insert(Arc::new(Mutex::new(fifo)));
     }
 }
 

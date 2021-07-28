@@ -1,10 +1,15 @@
 use super::*;
 
 pub struct DummyBlock {
+    // fifo: Option<File>
 }
 
 impl DummyBlock {
-    fn new() -> Self { Self {  } }
+    fn new() -> Self {
+	Self {
+	    // fifo: None
+	}
+    }
 }
 
 #[async_trait]
@@ -19,9 +24,16 @@ impl Block for DummyBlock
 	}
     }
 
-    async fn update(&mut self, _fifo: &mut File) {
+    async fn update(&mut self) {
+	// let fifo = self.fifo.as_mut().unwrap();
 	println!("Prints every 2 secs");
     }
+
+    // fn set_fifo(&mut self, fifo: File) {
+    // 	self.fifo.insert(fifo);
+    // }
+
+    async fn command(&mut self, _cmd: &str) { }
 }
 
 pub fn block() -> DummyBlock {

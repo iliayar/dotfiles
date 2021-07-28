@@ -13,3 +13,11 @@ futures = "0.3.16"
 dbus = "0.9.3"
 dbus-tokio = "0.7.3"
 notify-rust = "4.5.2"
+
+[[bin]]
+name = "rust-blocks"
+path = "src/main.rs"
+
+[[bin]]
+name = "rust-blocks-client"
+path = "src/client.rs"
