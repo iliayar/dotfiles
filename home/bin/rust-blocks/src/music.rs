@@ -155,7 +155,7 @@ impl Block for MusicBlock
 	}
     }
 
-    async fn update(&mut self) {
+    async fn update(&self) {
 
 	let fifo = self.fifo.as_ref().unwrap().clone();
 
@@ -204,6 +204,10 @@ impl Block for MusicBlock
 
     fn set_fifo(&mut self, fifo: File) {
 	self.fifo.insert(Arc::new(Mutex::new(fifo)));
+    }
+
+    async fn command(&self, cmd: &str) {
+	println!("Music block command: {}", cmd);
     }
 }
 

@@ -24,7 +24,7 @@ impl Block for DummyBlock
 	}
     }
 
-    async fn update(&mut self) {
+    async fn update(&self) {
 	// let fifo = self.fifo.as_mut().unwrap();
 	println!("Prints every 2 secs");
     }
@@ -33,7 +33,7 @@ impl Block for DummyBlock
     // 	self.fifo.insert(fifo);
     // }
 
-    async fn command(&mut self, _cmd: &str) { }
+    async fn command(&self, _cmd: &str) { }
 }
 
 pub fn block() -> DummyBlock {

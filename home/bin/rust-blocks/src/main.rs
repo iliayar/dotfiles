@@ -94,8 +94,8 @@ pub async fn get_fifo_with_prefix(name: &str, prefix: &str) -> File {
 pub trait Block {
     fn config(&self) -> BlockConfig;
     fn set_fifo(&mut self, _fifo: File) { }
-    async fn update(&mut self) { }
-    async fn command(&mut self, _cmd: &str) { }
+    async fn update(&self) { }
+    async fn command(&self, _cmd: &str) { }
 }
 
 pub struct BlockConfig {
@@ -121,10 +121,10 @@ struct BlockRunner {
 impl BlockRunner {
     fn new() -> Self { Self {  } }
 
-    async fn run<B: Block + Send + Sync + 'static>(&mut self, block: B) -> Arc<Mutex<B>>
+    async fn run<B: Block + Send + Sync + 'static>(&mut self, block: B) -> Arc<B>
     {
-	let block = Arc::new(Mutex::new(block));
-	let config = block.lock().await.config();
+	let mut block = block;
+	let config = block.config();
 
 	if config.fifo != FIFO::None {
 	    let fifo = match config.fifo {
@@ -133,16 +133,17 @@ impl BlockRunner {
 		FIFO::None => unreachable!()
 	    };
 
-	    block.lock().await.set_fifo(fifo);
+	    block.set_fifo(fifo);
 	}
 
+	let block = Arc::new(block);
 	let nblock = block.clone();
 
 	match config.interval {
-	    UpdateInterval::Once => tokio::spawn(async move { nblock.lock().await.update().await }),
+	    UpdateInterval::Once => tokio::spawn(async move { nblock.update().await }),
 	    UpdateInterval::Interval(duration) => tokio::spawn(async move {
 		loop {
-		    nblock.lock().await.update().await;
+		    nblock.update().await;
 		    sleep(duration).await;
 		}
 	    }),
@@ -184,9 +185,9 @@ fn main() {
 		if let  Some((block, cmd)) = data.split_once(|c| c == '\n') {
 		    // FIXME: Generalising it would be pure hell
 		    match block {
-			"music" => _music_block.lock().await.command(cmd).await,
-			// "dummy" => _dummy_block.lock().await.command(cmd).await,
-			"updates" => _updates_block.lock().await.command(cmd).await,
+			"music" => _music_block.command(cmd).await,
+			// "dummy" => _dummy_block.command(cmd).await,
+			"updates" => _updates_block.command(cmd).await,
 			_ => (),
 		    };
 		}

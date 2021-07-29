@@ -9,7 +9,7 @@ const AUR_ALERT_THRESHOLD: usize = 10;
 const AUR_WARNING_THRESHOLD: usize = 5;
 
 pub struct UpdatesBlock {
-    fifo: Option<File>
+    fifo: Option<Mutex<File>>
 }
 
 impl UpdatesBlock {
@@ -55,8 +55,8 @@ impl Block for UpdatesBlock
 	}
     }
 
-    async fn update(&mut self) {
-	let fifo = self.fifo.as_mut().unwrap();
+    async fn update(&self) {
+	let mut fifo = self.fifo.as_ref().unwrap().lock().await;
 	Notification::new().summary("Updates")
 	    .body("Fetching pacman and AUR updates")
 	    .appname("rust-blocks")
@@ -89,12 +89,12 @@ impl Block for UpdatesBlock
 		       .as_bytes()).await.ok();
     }
 
-    async fn command(&mut self, cmd: &str) {
+    async fn command(&self, cmd: &str) {
 	println!("Running updates: {}", cmd);
     }
 
     fn set_fifo(&mut self, fifo: File) {
-	self.fifo.insert(fifo);
+	self.fifo.insert(Mutex::new(fifo));
     }
 }
 
