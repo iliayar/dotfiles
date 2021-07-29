@@ -738,7 +738,7 @@ myStartupHook = do
           spawnOnce "xsetroot -cursor_name arrow &"
           -- spawnOnce "~/bin/blocks/music_xmobar_async.py 2>/dev/null &"
           spawnOnce "~/bin/rust-blocks/target/release/rust-blocks &"
-          spawnOnce "~/bin/blocks/pacman_xmobar_async.sh &"
+          -- spawnOnce "~/bin/blocks/pacman_xmobar_async.sh &"
           spawnOnce "emacs --daemon &"
           spawn "xrdb ~/.Xresources &"
           setWMName "LG3D"

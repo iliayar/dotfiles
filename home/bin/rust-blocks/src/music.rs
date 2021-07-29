@@ -106,9 +106,8 @@ async fn process_playback(msg: Message, fifo: Arc<Mutex<File>>) {
     if let Some(((artist, track), playback)) = artist.zip(track).zip(playback) {
 	if !artist.is_empty() && !track.is_empty() {
 	    fifo.lock().await.write_all(
-		format!("<action=~/.xmonad/xmonadctl 13>{} - {}</action> {}\n",
-			artist,
-			track,
+		format!("{} {}\n",
+			xact(&format!("{} - {}", artist, track), "~/.xmonad/xmonadctl 13"),
 			playback.controls())
 		    .as_bytes()).await
 		.expect(&error("Failed to write to fifo in state_stream"));
@@ -120,30 +119,25 @@ async fn process_playback(msg: Message, fifo: Arc<Mutex<File>>) {
 async fn process_state(msg: Message, player_name: &str, fifo: Arc<Mutex<File>>) {
     let mut name = None;
     let mut old_owner = None;
-    let mut _new_onwer = None;
+    let mut new_onwer = None;
     {
 	let mut iter = msg.iter_init();
 	name = iter.read::<String>().ok();
 	old_owner = iter.read::<String>().ok();
-	_new_onwer = iter.read::<String>().ok();
+	new_onwer = iter.read::<String>().ok();
     }
-    if let Some(((name, old_owner), _new_owner)) = name.zip(old_owner).zip(_new_onwer) {
+    if let Some(((name, old_owner), _new_owner)) = name.zip(old_owner).zip(new_onwer) {
 	if &name == player_name {
-	    if old_owner.is_empty() {
-		fifo.lock().await.write_all(
-		    format!("{} {}\n",
-			    PLAYER,
-			    xclr("is running", Color::yellow()))
-			.as_bytes()).await
-		    .expect(&error("Failed to write to fifo in state_stream"));
-	    } else {
-		fifo.lock().await.write_all(
-		    format!("{} {}\n",
-			    PLAYER,
-			    xclr("is not running", Color::red()))
-			.as_bytes()).await
-		    .expect(&error("Failed to write to fifo in state_stream"));
-	    }
+	    fifo.lock().await.write_all(
+		format!("{} {}\n",
+			PLAYER,
+			if old_owner.is_empty() {
+			    xclr("is running", Color::yellow())
+			} else {
+			    xclr("is not running", Color::red())
+			})
+		    .as_bytes()).await
+		.expect(&error("Failed to write to fifo in state_stream"));
 	}
     }
 }

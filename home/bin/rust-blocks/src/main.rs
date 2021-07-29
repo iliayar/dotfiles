@@ -173,9 +173,9 @@ fn main() {
     rt.block_on(async {
 	let mut runner = BlockRunner::new();
 
-	let _music_block = runner.run(music::block()).await;
+	let music_block = runner.run(music::block()).await;
 	// let _dummy_block = runner.run(dummy::block()).await;
-	let _updates_block = runner.run(updates::block()).await;
+	let updates_block = runner.run(updates::block()).await;
 
 	let socket_path = Path::new(config::SOCKET);
 	if socket_path.exists() {
@@ -188,11 +188,21 @@ fn main() {
 	    if let Ok(_) = stream.0.read_to_string(&mut data).await {
 		if let  Some((block, cmd)) = data.split_once(|c| c == '\n') {
 		    // FIXME: Generalising it would be pure hell
+		    let cmd = cmd.to_owned();
 		    match block {
-			"music" => _music_block.command(cmd).await,
-			// "dummy" => _dummy_block.command(cmd).await,
-			"updates" => _updates_block.command(cmd).await,
-			_ => (),
+			"music" => {
+			    let nblock = music_block.clone();
+			    tokio::spawn(async move { nblock.command(&cmd).await })
+			},
+			"updates" => {
+			    let nblock = updates_block.clone();
+			    tokio::spawn(async move { nblock.command(&cmd).await })
+			},
+			// "dummy" => {
+			//     let nblock = dummy_block.clone();
+			//     tokio::spawn(async move { nblock.command(cmd).await })
+			// },
+			_ => continue,
 		    };
 		}
 	    }
