@@ -1,7 +1,7 @@
 use super::*;
 
 pub struct DummyBlock {
-    // fifo: Option<File>
+    // fifo: Option<Mutex<File>>
 }
 
 impl DummyBlock {
@@ -25,12 +25,13 @@ impl Block for DummyBlock
     }
 
     async fn update(&self) {
-	// let fifo = self.fifo.as_mut().unwrap();
+	// let fifo = self.fifo.as_ref().unwrap();
+	// fifo.lock().await.write_all(...);
 	println!("Prints every 2 secs");
     }
 
     // fn set_fifo(&mut self, fifo: File) {
-    // 	self.fifo.insert(fifo);
+    // 	self.fifo.insert(Mutex::new(fifo));
     // }
 
     async fn command(&self, _cmd: &str) { }

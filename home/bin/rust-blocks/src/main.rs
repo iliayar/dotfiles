@@ -61,6 +61,10 @@ pub fn xfa(s: &str) -> String {
     format!("<fn=1>{}</fn>", s)
 }
 
+pub fn xact(s: &str, action: &str) -> String {
+    format!("<action={}>{}</action>", action, s)
+}
+
 pub async fn get_fifo(name: &str) -> File {
     get_fifo_with_prefix(name, "/tmp").await
 }

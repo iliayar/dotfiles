@@ -9,11 +9,17 @@ const AUR_ALERT_THRESHOLD: usize = 10;
 const AUR_WARNING_THRESHOLD: usize = 5;
 
 pub struct UpdatesBlock {
-    fifo: Option<Mutex<File>>
+    fifo: Option<Mutex<File>>,
+    status: Mutex<UpdateStatus>,
 }
 
 impl UpdatesBlock {
-    fn new() -> Self { Self { fifo: None } }
+    fn new() -> Self {
+	Self {
+	    fifo: None,
+	    status: Mutex::new(UpdateStatus::None),
+	}
+    }
 }
 
 async fn update_info(cmd: &mut Command, text: &mut String, color: &mut Color, alert: usize, warning: usize) {
@@ -44,6 +50,24 @@ async fn update_info(cmd: &mut Command, text: &mut String, color: &mut Color, al
     }
 }
 
+#[derive(PartialEq)]
+enum UpdateStatus {
+    Updating,
+    None
+}
+
+async fn run_update(status: &Mutex<UpdateStatus>, args: &[&str]) -> Option<()> {
+    *status.lock().await = UpdateStatus::Updating;
+
+    Command::new("urxvt")
+	.arg("-e")
+	.args(args)
+	.spawn().ok()?
+	.wait().await.ok()?;
+
+    *status.lock().await = UpdateStatus::None;
+    Some(())
+}
 
 #[async_trait]
 impl Block for UpdatesBlock
@@ -56,6 +80,10 @@ impl Block for UpdatesBlock
     }
 
     async fn update(&self) {
+	if self.status.lock().await.eq(&UpdateStatus::Updating) {
+	    return;
+	}
+
 	let mut fifo = self.fifo.as_ref().unwrap().lock().await;
 	Notification::new().summary("Updates")
 	    .body("Fetching pacman and AUR updates")
@@ -83,14 +111,20 @@ impl Block for UpdatesBlock
 	    AUR_ALERT_THRESHOLD,
 	    AUR_WARNING_THRESHOLD).await;
 
+	fn update_cmd(man: &str) -> String { format!("{} updates {}", config::client(), man) }
+
 	fifo.write_all(format!("{} {}\n",
-			       xclr(&format!("Pacman: {}", pacman_text), pacman_color),
-			       xclr(&format!("AUR: {}", aur_text), aur_color))
+			       xclr(&xact(&format!("Pacman: {}", pacman_text), &update_cmd("pacman")), pacman_color),
+			       xclr(&xact(&format!("AUR: {}", aur_text), &update_cmd("aur")), aur_color))
 		       .as_bytes()).await.ok();
     }
 
     async fn command(&self, cmd: &str) {
-	println!("Running updates: {}", cmd);
+	if cmd == "pacman" {
+	    run_update(&self.status, &["sudo", "pacman", "-Syyu"]).await;
+	} else if cmd == "aur" {
+	    run_update(&self.status, &["paru", "-Syyu"]).await;
+	}
     }
 
     fn set_fifo(&mut self, fifo: File) {

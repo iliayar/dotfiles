@@ -20,8 +20,12 @@ impl PlaybackStatus {
 	    &PlaybackStatus::Playing => (Color::green(), ""),
 	    &PlaybackStatus::Paused => (Color::yellow(), ""),
 	};
-	xclr(&format!("<action=playerctl previous -p {}> {} </action><action=playerctl play-pause -p {}> {} </action><action=playerctl next -p {}> {} </action>",
-	PLAYER, xfa(""), PLAYER, xfa(icon), PLAYER, xfa("")), color)
+	let playerctl = |cmd| format!("playerctl {} -p {}", cmd, PLAYER);
+	xclr(&format!("{} {} {}",
+		      xact(&xfa(""), &playerctl("previous")),
+		      xact(&xfa(icon), &playerctl("play-pause")),
+		      xact(&xfa(""), &playerctl("next")),
+	), color)
     }
 }
 
@@ -204,10 +208,6 @@ impl Block for MusicBlock
 
     fn set_fifo(&mut self, fifo: File) {
 	self.fifo.insert(Arc::new(Mutex::new(fifo)));
-    }
-
-    async fn command(&self, cmd: &str) {
-	println!("Music block command: {}", cmd);
     }
 }
 
