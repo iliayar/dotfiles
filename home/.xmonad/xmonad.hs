@@ -580,9 +580,9 @@ myKeys = \conf -> let
     [ (    "<Print>", scrot ""                              0, "Screenshot"                 )
     , (  "M-<Print>", scrot "-u"                            0, "Screenshot of active window")
     , ("M-S-<Print>", scrot "-a $(slop -f '%x,%y,%w,%h')" 0.1, "Screenshot interactive"     )
-    , ("<XF86AudioNext>", playerctl "next", "Music next"            )
-    , ("<XF86AudioPrev>", playerctl "previous", "Music prev"        )
-    , ("<XF86AudioPlay>", playerctl "play-pause", "Music play/pause")
+    , ("<XF86AudioNext>", musicBlock "next", "Music next"            )
+    , ("<XF86AudioPrev>", musicBlock "prev", "Music prev"            )
+    , ("<XF86AudioPlay>", musicBlock "play-pause", "Music play/pause")
     ]
   in mkKeymap conf $ map dropRdTuple keymap
     where
@@ -592,6 +592,8 @@ myKeys = \conf -> let
                                 \mv $f ~/Pictures/screenshots/;\
                                 \notify-send -a 'XMonad' 'Scrot' \"Screenshot copied to clipboard\" -i \"~/Pictures/screenshots/$f\"'"
       playerctl a = spawn $ "playerctl " ++ a ++ " -p spotify"
+      rustBlocks block cmd = spawn $ "~/bin/rust-blocks/target/release/rust-blocks-client " ++ block ++ " " ++ cmd
+      musicBlock = rustBlocks "music"
       createSearchPrompt = map (\ (a, b, c) -> (a, S.promptSearch myXPConfig b, c))
       createSearchSelect = map (\ (a, b, c) -> (a, S.selectSearch b, c))
       archwiki = S.searchEngine "archwiki" "https://wiki.archlinux.org/index.php?search="

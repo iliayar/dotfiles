@@ -1,12 +1,31 @@
 use std::sync::Arc;
 
 use super::*;
-use dbus::{Message, arg::{Dict, Iter, Variant}, message::MatchRule, strings::{self, Member}};
+use dbus::{
+    Message,
+    arg::{
+	Dict,
+	Iter,
+	Variant
+    },
+    message::MatchRule,
+    nonblock::{
+	Proxy,
+	SyncConnection
+    }, strings::{
+	self,
+	Member
+    }
+};
 use dbus_tokio::connection;
 use futures::StreamExt;
 use tokio::sync::Mutex;
 
 const PLAYER: &str = "spotify";
+
+fn get_name(player: &str) -> String {
+    format!("org.mpris.MediaPlayer2.{}", player)
+}
 
 #[derive(Debug)]
 enum PlaybackStatus {
@@ -20,24 +39,14 @@ impl PlaybackStatus {
 	    &PlaybackStatus::Playing => (Color::green(), ""),
 	    &PlaybackStatus::Paused => (Color::yellow(), ""),
 	};
-	let playerctl = |cmd| format!("playerctl {} -p {}", cmd, PLAYER);
+	let client = |cmd| format!("{} music {}", config::client(), cmd);
 	xclr(&format!("{} {} {}",
-		      xact(&xfa(""), &playerctl("previous")),
-		      xact(&xfa(icon), &playerctl("play-pause")),
-		      xact(&xfa(""), &playerctl("next")),
+		      xact(&xfa(""), &client("prev")),
+		      xact(&xfa(icon), &client("play-pause")),
+		      xact(&xfa(""), &client("next")),
 	), color)
     }
 }
-
-pub struct MusicBlock {
-    fifo: Option<Arc<Mutex<File>>>
-}
-
-impl MusicBlock {
-    fn new() -> Self { Self { fifo: None  } }
-}
-
-
 fn error(msg: &str) -> String {
     format!("Music block error: {}", msg)
 }
@@ -143,6 +152,41 @@ async fn process_state(msg: Message, player_name: &str, fifo: Arc<Mutex<File>>) 
 }
 
 
+pub struct MusicBlock {
+    fifo: Option<Arc<Mutex<File>>>,
+    conn: Arc<SyncConnection>,
+    proxy: Proxy<'static, Arc<SyncConnection>>,
+}
+
+impl MusicBlock {
+    fn new() -> Self {
+	let (resource, conn) = connection::new_session_sync()
+	    .expect(&error("Cannot open dbus connection"));
+	
+	tokio::spawn(async move {
+	    let err = resource.await;
+	    panic!("{}", error(&format!("Lost connection to dbus: {}", err)))
+	});
+
+	let proxy = Proxy::new(
+	    get_name(PLAYER),
+	    "/org/mpris/MediaPlayer2",
+	    Duration::from_secs(5),
+	    conn.clone()
+	);
+
+	Self {
+	    fifo: None,
+	    conn,
+	    proxy
+	}
+    }
+
+    async fn method_call(&self, m: &str) -> Option<()>{
+	self.proxy.method_call(&get_name("Player"), m, ()).await.ok()
+    }
+}
+
 #[async_trait]
 impl Block for MusicBlock
 {
@@ -164,24 +208,16 @@ impl Block for MusicBlock
 		.as_bytes()).await
 	    .expect(&error("Failed to write to fifo"));
 
-	let player_name = format!("org.mpris.MediaPlayer2.{}", PLAYER);
-
-	let (resource, conn) = connection::new_session_sync()
-	    .expect(&error("Cannot open dbus connection"));
-
-	tokio::spawn(async {
-	    let err = resource.await;
-	    panic!("{}", error(&format!("Lost connection to dbus: {}", err)))
-	});
+	let player_name = get_name(PLAYER);
 
 	let state_rule = new_rule("NameOwnerChanged", None, Some("org.freedesktop.DBus"), true);
 	let playback_rule = new_rule("PropertiesChanged", None, Some(&player_name), false);
 
-	let (_playback_incoming_signal, playback_stream) = conn.add_match(playback_rule).await
+	let (_playback_incoming_signal, playback_stream) = self.conn.add_match(playback_rule).await
 	    .expect(&error("Cannot set dbus playback callback"))
 	    .stream();
 
-	let (_incoming_signal, state_stream) = conn.add_match(state_rule).await
+	let (_incoming_signal, state_stream) = self.conn.add_match(state_rule).await
 	    .expect(&error("Cannot set dbus state callback"))
 	    .stream();
 
@@ -202,6 +238,17 @@ impl Block for MusicBlock
 
     fn set_fifo(&mut self, fifo: File) {
 	self.fifo.insert(Arc::new(Mutex::new(fifo)));
+    }
+
+    async fn command(&self, cmd: &str) {
+	match cmd {
+	    "play" => self.method_call("Play").await,
+	    "next" => self.method_call("Next").await,
+	    "prev" => self.method_call("Previous").await,
+	    "pause" => self.method_call("Pause").await,
+	    "play-pause" => self.method_call("PlayPause").await,
+	    _ => return
+	};
     }
 }
 
