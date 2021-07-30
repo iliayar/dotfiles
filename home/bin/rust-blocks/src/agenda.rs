@@ -122,15 +122,16 @@ impl Block for AgendaBlock
     async fn update(&self) {
 	// let fifo = self.fifo.as_ref().unwrap();
 	// fifo.lock().await.write_all(...);
-	// println!("Prints every 2 secs");
-	if let Some(data) = elisp("(batch-all-agenda)").await {
-	    let mut rdr = Reader::from_reader(data.as_slice());
-	    for result in rdr.deserialize::<AgendaRecord>() {
-		println!("{:?}", result);
-	    }
-	    // for result in rdr.records() {
-	    // 	println!("{:?}", result);
-	    // }
+
+	// if let Some(data) = elisp("(batch-all-agenda)").await {
+	//     let mut rdr = Reader::from_reader(data.as_slice());
+	//     for result in rdr.deserialize::<AgendaRecord>() {
+	// 	println!("{:?}", result);
+	//     }
+	// }
+
+	if let Some(data) = elisp("()").await {
+	    println!("{}", String::from_utf8(data).unwrap());
 	}
     }
 

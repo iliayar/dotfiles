@@ -7,10 +7,34 @@
 
 (defun batch-all-agenda () (eval '(org-batch-agenda-csv "a" org-agenda-span 'week)))
 
-(defun parse-study-with (f)
+(defun with-file (file f)
   (progn
-    (find-file "~/org/Study.org")
+    (find-file (format "~/org/%s.org" file))
     (org-element-map (org-element-parse-buffer) 'headline f)))
+
+(defun with-study (f)
+  (with-file "Study" f))
+
+(defun find-headline (file s)
+  (car (with-file file
+    (lambda (h) 
+      (let ((title (org-element-property :raw-value h)))
+        (if (string= title s) h))))))
+
+;; (princ (with-current-buffer (org-html-export-as-html (find-headline "Notes" "Rust Agenda")) (buffer-string)))
+;; (find-headline "Notes" "Rust Agenda" (lambda (h) (princ (with-current-buffer (org-ascii-export-as-ascii) (buffer-string)))))
+(princ (progn
+	 (find-headline "Notes" "Rust Agenda")
+	 (org-html-export-as-html nil t nil t)
+	 (with-current-buffer (get-buffer "*Org HTML Export*") (buffer-string))))
+	 
+
+(defun get-headline (file s)
+  (parse-with file
+    (lambda (h) 
+      (let ((title (org-element-property :raw-value h)))
+        (if (string= title s)
+          (princ (org-element-interpret-data h)))))))
 
 (defun get-study-headline (s)
   (parse-study-with
