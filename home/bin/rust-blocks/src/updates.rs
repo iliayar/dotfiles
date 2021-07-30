@@ -114,17 +114,22 @@ impl Block for UpdatesBlock
 	fn update_cmd(man: &str) -> String { format!("{} updates {}", config::client(), man) }
 
 	fifo.write_all(format!("{} {}\n",
-			       xclr(&xact(&format!("Pacman: {}", pacman_text), &update_cmd("pacman")), pacman_color),
-			       xclr(&xact(&format!("AUR: {}", aur_text), &update_cmd("aur")), aur_color))
+			       xact(&format!("Pacman: {}", xclr(&pacman_text, pacman_color)), &update_cmd("pacman")),
+			       xact(&format!("AUR: {}", xclr(&aur_text, aur_color)), &update_cmd("aur")))
 		       .as_bytes()).await.ok();
     }
 
     async fn command(&self, cmd: &str) {
-	if cmd == "pacman" {
-	    run_update(&self.status, &["sudo", "pacman", "-Syyu"]).await;
-	} else if cmd == "aur" {
-	    run_update(&self.status, &["paru", "-Syyu"]).await;
-	}
+	run_update(
+	    &self.status,
+	    if cmd == "pacman" {
+		&["sudo", "pacman", "-Syyu"]
+	    } else if cmd == "aur" {
+		&["paru, -Syyu"]
+	    } else {
+		return
+	    }).await;
+	self.update().await;
     }
 
     fn set_fifo(&mut self, fifo: File) {

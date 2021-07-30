@@ -372,7 +372,7 @@ tsAll =
        , Node (TS.TSNode "Termite" "Terminal" (spawn "termite")) []
        , Node (TS.TSNode "Alacritty" "Alacritty" (spawn "alacritty")) []
        , Node (TS.TSNode "Urxvt" "Rxvt Unicode" (spawn "urxvt")) []
-       , Node (TS.TSNode "Restart Emacs" "Restart Emacs daemon" (spawn $ wrapBash"killall emacs; emacs --daemon")) []
+       , Node (TS.TSNode "Restart Emacs" "Restart Emacs daemon" (spawn $ wrapBash "killall -9 emacs; touch ~/.emacs.d/config.org; emacs --daemon")) []
        ]
    , Node (TS.TSNode "+ Tools" "Various tools" (return ()))
        tsTools
@@ -741,7 +741,7 @@ myStartupHook = do
           -- spawnOnce "~/bin/blocks/music_xmobar_async.py 2>/dev/null &"
           spawnOnce "~/bin/rust-blocks/target/release/rust-blocks &"
           -- spawnOnce "~/bin/blocks/pacman_xmobar_async.sh &"
-          spawnOnce "emacs --daemon &"
+          spawnOnce $ wrapBash "touch config.org; emacs --daemon &"
           spawn "xrdb ~/.Xresources &"
           setWMName "LG3D"
 

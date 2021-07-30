@@ -20,7 +20,7 @@ impl Block for DummyBlock
 	    // fifo: FIFO::WithoutPrefix(".dummy".to_string()),
 	    fifo: FIFO::None,
 	    // interval: UpdateInterval::Interval(Duration::from_secs(1)),
-	    interval: UpdateInterval::Interval(Duration::from_secs(1)),
+	    interval: UpdateInterval::Interval(Duration::from_secs(2)),
 	}
     }
 

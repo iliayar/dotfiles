@@ -126,4 +126,4 @@ map <S-Up> <Up>
 map <leader>gs <Plug>(easymotion-sn)
 
 " Copy to system clipboard whem exit
-autocmd VimLeave * call system("xsel -ib", getreg('+'))
+" autocmd VimLeave * call system("xsel -ib", getreg('+'))

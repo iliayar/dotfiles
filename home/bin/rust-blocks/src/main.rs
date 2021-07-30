@@ -161,6 +161,7 @@ impl BlockRunner {
 mod music;
 mod dummy;
 mod updates;
+mod agenda;
 
 fn main() {
     let rt = tokio::runtime::Builder::new_multi_thread()
@@ -173,9 +174,10 @@ fn main() {
     rt.block_on(async {
 	let mut runner = BlockRunner::new();
 
-	let music_block = runner.run(music::block()).await;
+	// let music_block = runner.run(music::block()).await;
 	// let _dummy_block = runner.run(dummy::block()).await;
-	let updates_block = runner.run(updates::block()).await;
+	// let updates_block = runner.run(updates::block()).await;
+	let agenda_block = runner.run(agenda::block()).await;
 
 	let socket_path = Path::new(config::SOCKET);
 	if socket_path.exists() {
@@ -190,18 +192,22 @@ fn main() {
 		    // FIXME: Generalising it would be pure hell
 		    let cmd = cmd.to_owned();
 		    match block {
-			"music" => {
-			    let nblock = music_block.clone();
-			    tokio::spawn(async move { nblock.command(&cmd).await })
-			},
-			"updates" => {
-			    let nblock = updates_block.clone();
-			    tokio::spawn(async move { nblock.command(&cmd).await })
-			},
+			// "music" => {
+			//     let nblock = music_block.clone();
+			//     tokio::spawn(async move { nblock.command(&cmd).await })
+			// },
+			// "updates" => {
+			//     let nblock = updates_block.clone();
+			//     tokio::spawn(async move { nblock.command(&cmd).await })
+			// },
 			// "dummy" => {
 			//     let nblock = dummy_block.clone();
-			//     tokio::spawn(async move { nblock.command(cmd).await })
+			//     tokio::spawn(async move { nblock.command(&cmd).await })
 			// },
+			"agenda" => {
+			    let nblock = agenda_block.clone();
+			    tokio::spawn(async move { nblock.command(&cmd).await })
+			},
 			_ => continue,
 		    };
 		}
