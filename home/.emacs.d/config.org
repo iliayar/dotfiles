@@ -448,6 +448,11 @@ Reveal.js for presentations
   (use-package ox-reveal
     :ensure t)
 #+END_SRC
+Export Org mode to Json
+#+BEGIN_SRC emacs-lisp
+  (use-package ox-json
+    :ensure t)
+#+END_SRC
 ** Variables and functions
 *** Snippets
 Add snippets to company backends
@@ -508,6 +513,7 @@ Bullets, packages
     '(require 'ox-md nil t)
     '(require 'ox-rss nil t)
     '(require 'ox-latex nil t)
+    '(require 'ox-json nil t)
     '(require 'ox-reveal nil t)))
 
 (setq org-todo-keywords
