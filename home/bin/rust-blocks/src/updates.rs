@@ -30,10 +30,10 @@ async fn update_info(cmd: &mut Command, text: &mut String, color: &mut Color, al
     };
     
     if let Ok(proc) = proc {
-	if proc.status.success() {
-	    let cnt = proc.stdout
-		.split(|c| c == &b'\n')
-		.count();
+	let cnt = proc.stdout
+	    .split(|c| c == &b'\n')
+	    .count() - 1;
+	if proc.status.success() || cnt == 0 {
 	    *color = if cnt >= alert {
 		Color::red()
 	    } else if cnt >= warning {
@@ -85,12 +85,14 @@ impl Block for UpdatesBlock
 	}
 
 	let mut fifo = self.fifo.as_ref().unwrap().lock().await;
-	Notification::new().summary("Updates")
+	let mut notifiaction = Notification::new()
+	    .summary("Updates")
 	    .body("Fetching pacman and AUR updates")
 	    .appname("rust-blocks")
 	    .icon("/usr/share/icons/Adwaita/96x96/emblems/emblem-synchronizing-symbolic.symbolic.png")
-            .show()
-            .unwrap();
+	    .finalize();
+
+	notifiaction.show().unwrap();
 
 	let mut pacman_text: String = "?".to_owned();
 	let mut aur_text: String = "?".to_owned();
@@ -117,6 +119,9 @@ impl Block for UpdatesBlock
 			       xact(&format!("Pacman: {}", xclr(&pacman_text, pacman_color)), &update_cmd("pacman")),
 			       xact(&format!("AUR: {}", xclr(&aur_text, aur_color)), &update_cmd("aur")))
 		       .as_bytes()).await.ok();
+
+	notifiaction.summary("Updates [Done]");
+	notifiaction.show().unwrap();
     }
 
     async fn command(&self, cmd: &str) {
@@ -125,7 +130,7 @@ impl Block for UpdatesBlock
 	    if cmd == "pacman" {
 		&["sudo", "pacman", "-Syyu"]
 	    } else if cmd == "aur" {
-		&["paru, -Syyu"]
+		&["paru", "-Syyu"]
 	    } else {
 		return
 	    }).await;

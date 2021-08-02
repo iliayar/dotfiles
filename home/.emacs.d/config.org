@@ -489,7 +489,6 @@ Add snippets to company backends
 General Org mode setup
 Bullets, packages
 #+BEGIN_SRC emacs-lisp
-;; Org-mode
 (setq org-hide-emphaisi-markers t)
 (add-hook 'org-mode-hook 
           (lambda () 
@@ -511,11 +510,11 @@ Bullets, packages
   (progn
     '(setq org-highlight-latex-and-related '(latex script entities))
     '(require 'ox-md nil t)
-    '(require 'ox-rss nil t)
+    '(require 'ox-rss)
     '(require 'ox-latex nil t)
     '(require 'ox-json nil t)
     '(require 'ox-reveal nil t)))
-
+;; (require 'ox-rss)
 (setq org-todo-keywords
       '((sequence "TODO" "FIXME" "|" "DONE" )))
 (setq org-src-preserve-indentation t)
@@ -588,7 +587,7 @@ Publishing for:
 	   :html-html5-fancy t
 	   ;; :html-link-home "https://iliayar.ru/public-notes/index.html"
 	   :html-validation-link nil
-	   :html-postamble "<hr><a href=\"/public-notes/index.html\">Home Page</a>"
+	   :html-postamble "<hr><a href=\"/public-notes/index.html\">Home Page</a><span style=\"float: right\"><a href=\"/public-notes/blog.xml\"><i class=\"fas fa-rss\"></i></a> <a href=\"https://github.com/iliayar/iliayar\"><i class=\"fab fa-github\"></i></a></span>"
            :recursive t
            :publishing-function org-html-publish-to-html
            :headline-levels 4             ; Just the default for this project.
@@ -623,14 +622,15 @@ Publishing for:
            :exclude ".*[^E].org"
            :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes/conspects"
            :recursive t
+	   :html-postamble "<hr><a href=\"/public-notes/index.html\">Home Page</a><span style=\"float: right\"><a href=\"https://t.me/iliayar\"><i class=\"fab fa-telegram-plane\"></i></a> <a href=\"https://github.com/iliayar/ITMO\"><i class=\"fab fa-github\"></i></a></span><br><a href=\"/public-notes/conspects/README.html\">Conspects Home Page</a>"
            :publishing-function org-html-publish-to-html
            :headline-levels 4             ; Just the default for this project.
-           :html-preamble my-conspects-header
+           ;; :html-preamble my-conspects-header
            )
           ("pdfs-conspects"
            :base-directory "~/Documents/ITMO"
            :base-extension "org"
-           :exclude "README.org\\|level-*.org"
+           :exclude "README.org\\|level-[0-9]*.org\\|level-subj.org"
            :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes/conspects"
            :recursive t
            :publishing-function org-latex-publish-to-pdf

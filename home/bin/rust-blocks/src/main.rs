@@ -163,6 +163,12 @@ mod dummy;
 mod updates;
 mod agenda;
 
+fn spawn_client<B: Block + Send + Sync + 'static>(block: &Arc<B>, cmd: &str) {
+    let cmd = cmd.to_owned();
+    let nblock = block.clone();
+    tokio::spawn(async move { nblock.command(&cmd).await });
+}
+
 fn main() {
     let rt = tokio::runtime::Builder::new_multi_thread()
         .worker_threads(3)
@@ -174,10 +180,10 @@ fn main() {
     rt.block_on(async {
 	let mut runner = BlockRunner::new();
 
-	let music_block = runner.run(music::block()).await;
+	// let music_block = runner.run(music::block()).await;
 	// let _dummy_block = runner.run(dummy::block()).await;
-	let updates_block = runner.run(updates::block()).await;
-	// let agenda_block = runner.run(agenda::block()).await;
+	// let updates_block = runner.run(updates::block()).await;
+	let agenda_block = runner.run(agenda::block()).await;
 
 	let socket_path = Path::new(config::SOCKET);
 	if socket_path.exists() {
@@ -189,26 +195,13 @@ fn main() {
 	    let mut data: String = String::new();
 	    if let Ok(_) = stream.0.read_to_string(&mut data).await {
 		if let  Some((block, cmd)) = data.split_once(|c| c == '\n') {
-		    // FIXME: Generalising it would be pure hell
-		    let cmd = cmd.to_owned();
+		    // FIXME: Generalising it would be pure hell. Block trait can't be ~dyn~.
 		    match block {
-			"music" => {
-			    let nblock = music_block.clone();
-			    tokio::spawn(async move { nblock.command(&cmd).await })
-			},
-			"updates" => {
-			    let nblock = updates_block.clone();
-			    tokio::spawn(async move { nblock.command(&cmd).await })
-			},
-			// "dummy" => {
-			//     let nblock = dummy_block.clone();
-			//     tokio::spawn(async move { nblock.command(&cmd).await })
-			// },
-			// "agenda" => {
-			//     let nblock = agenda_block.clone();
-			//     tokio::spawn(async move { nblock.command(&cmd).await })
-			// },
-			_ => continue,
+			// "music" => spawn_client(&music_block, &cmd),
+			// "updates" => spawn_client(&updates_block, &cmd),
+			// "dummy" => spawn_client(&_dummy_block, &cmd),
+			"agenda" => spawn_client(&agenda_block, &cmd),
+			_ => panic!("Invalid block name"),
 		    };
 		}
 	    }

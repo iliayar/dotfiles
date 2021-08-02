@@ -1,58 +1,62 @@
-(defun load-org ()
-  (progn 
-    (require 'org)
-    (setq org-agenda-files '("~/org"))))
+;; It takes time
+;; (require 'package)
+;; (package-initialize)
+;; (require 'ox-json)
+(require 'org)
+(require 'org-element)
+(setq org-agenda-files '("~/org"))
 
-(load-org) ; Loading org options on load
-
-(defun batch-all-agenda () (eval '(org-batch-agenda-csv "a" org-agenda-span 'week)))
-
-(defun with-file (file f)
+(defun batch-all-agenda () (eval '(org-batch-agenda-csv "a"
+							org-agenda-span 14
+							org-agenda-skip-scheduled-if-done t
+							org-agenda-skip-deadline-if-done t
+							org-agenda-skip-deadline-prewarning-if-scheduled t
+							org-agenda-entry-text-mode t)))
+(defun with-file (file fun)
   (progn
     (find-file (format "~/org/%s.org" file))
-    (org-element-map (org-element-parse-buffer) 'headline f)))
+    (org-element-map (org-element-parse-buffer) 'headline fun)))
 
-(defun with-study (f)
-  (with-file "Study" f))
+(defun with-study (fun)
+  (with-file "Study" fun))
 
-(defun find-headline (file s)
+(defun find-headline (file headline)
   (car (with-file file
-    (lambda (h) 
-      (let ((title (org-element-property :raw-value h)))
-        (if (string= title s) h))))))
+		  (lambda (h) 
+		    (let ((title (org-element-property :raw-value h)))
+		      (if (string= title headline) h))))))
 
-;; (princ (with-current-buffer (org-html-export-as-html (find-headline "Notes" "Rust Agenda")) (buffer-string)))
-;; (find-headline "Notes" "Rust Agenda" (lambda (h) (princ (with-current-buffer (org-ascii-export-as-ascii) (buffer-string)))))
-(princ (progn
-	 (find-headline "Notes" "Rust Agenda")
-	 (org-html-export-as-html nil t nil t)
-	 (with-current-buffer (get-buffer "*Org HTML Export*") (buffer-string))))
-	 
+(defun find-headline-parent (file headline)
+  (org-element-property :parent (find-headline file headline)))
 
-(defun get-headline (file s)
-  (parse-with file
-    (lambda (h) 
-      (let ((title (org-element-property :raw-value h)))
-        (if (string= title s)
-          (princ (org-element-interpret-data h)))))))
+(defun goto-element (elem)
+  (goto-char (org-element-property :begin elem)))
 
-(defun get-study-headline (s)
-  (parse-study-with
-    (lambda (h) 
-      (let ((title (org-element-property :raw-value h))
-            (parent (org-element-property :parent h)))
-        (if (string= title s)
-          (princ (org-element-interpret-data parent)))))))
+(defun export-element-with (elem exporter)
+  "
+EXPORTER - The org export function, e.g. (lambda () (org-html-export-as-html nil t nil t))
+"
+  (progn
+    (goto-element elem)
+    (with-current-buffer (funcall exporter) (buffer-string))))
 
-(defun mark--done (s file)
-  (org-map-entries
-    (lambda ()
-      (let* ((h (org-element-at-point))
-             (title (org-element-property :raw-value h)))
-        (if (string= title s) (org-todo 'done)))) nil (list (format "~/org/%s.org" file))))
-(defun mark-done (s file)
-  (progn (find-file (format "~/org/%s.org" file))
-         (with-current-buffer (find-buffer-visiting (format "~/org/%s.org" file))
-                              (progn
-                                (mark--done s file)
-                                (save-buffer)))))
+(defun export-headline-with (file headline exporter)
+    (export-element-with (find-headline file headline) exporter))
+
+(defun export-headline-parent-with (file headline exporter)
+    (export-element-with (find-headline-parent file headline) exporter))
+
+(defun princ-headline-with (file headline exporter)
+  (princ (export-headline-with file headline exporter)))
+
+(defun princ-headline-parent-with (file headline exporter)
+  (princ (export-headline-parent-with file headline exporter)))
+
+(defun get-study-headline (headline)
+  (princ-headline-parent-with "Study" headline 'org-org-export-as-org))
+
+(defun mark-done (file headline)
+  (progn
+    (goto-element (find-headline file headline))
+    (org-todo 'done)
+    (save-buffer)))
