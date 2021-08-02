@@ -8,8 +8,6 @@ This sets the garbage collector to invoke every 100Mb instead of default 800Kb
 #+begin_src emacs-lisp
 (setq gc-cons-threshold 100000000)
 #+end_src
-
-
 ** Main config
 *** Repositories
 There is initializes package mangers and some other stuff \\
@@ -441,7 +439,9 @@ Cinstructing menus
 theoremes in LaTeX with org syntax
 #+begin_src emacs-lisp
 (use-package org-special-block-extras
-  :ensure t)
+  :ensure t
+  ;; :hook (org-mode . org-special-block-extras-mode)
+  :config (org-special-block-extras-short-names))
 #+end_src
 Reveal.js for presentations
 #+BEGIN_SRC emacs-lisp
@@ -453,6 +453,28 @@ Export Org mode to Json
   (use-package ox-json
     :ensure t)
 #+END_SRC
+Org Roam
+#+BEGIN_SRC emacs-lisp
+(use-package org-roam
+  :ensure t
+  :init
+  (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-directory "~/org/roam")
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+	 ("C-c n f" . org-roam-node-find)
+	 ("C-c n i" . org-roam-node-insert)
+	 :map org-mode-map
+	 ("C-M-i" . completion-at-point))
+  :config
+  (org-roam-setup))
+(use-package websocket
+  :ensure t)
+
+;; (add-to-list 'load-path "~/.emacs.d/lisp/org-roam-ui")
+;; (load-library "org-roam-ui")
+#+END_SRC
+
 ** Variables and functions
 *** Snippets
 Add snippets to company backends
@@ -486,40 +508,53 @@ Add snippets to company backends
   (add-yas-in-company)
 #+end_src
 *** Org mode
-General Org mode setup
-Bullets, packages
+Loading Export backends
 #+BEGIN_SRC emacs-lisp
-(setq org-hide-emphaisi-markers t)
-(add-hook 'org-mode-hook 
-          (lambda () 
-            (org-bullets-mode 1)
-            (org-indent-mode nil)
-            ;; Uncomment for enabling auto preview LaTeX in org-mode
-            ;;            (add-hook 'post-command-hook 'cw/org-auto-toggle-fragment-display t)
-            ))
-
-(font-lock-add-keywords 'org-mode
-                        '(("^ *\\([-]\\) "
-                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-
-(setq org-directory "~/org")
-(setq org-agenda-files '("~/org"))
-(setq org-default-notes-file (concat org-directory "/Notes.org"))
-
 (eval-after-load "org"
   (progn
-    '(setq org-highlight-latex-and-related '(latex script entities))
     '(require 'ox-md nil t)
     '(require 'ox-rss)
     '(require 'ox-latex nil t)
     '(require 'ox-json nil t)
     '(require 'ox-reveal nil t)))
-;; (require 'ox-rss)
-(setq org-todo-keywords
-      '((sequence "TODO" "FIXME" "|" "DONE" )))
-(setq org-src-preserve-indentation t)
-#+END_SRC
+#+end_src
+Setting visual stuff
+#+begin_src emacs-lisp
+(setq-default prettify-symbols-alist '(("#+begin_src" . "↓")
+                                       ("#+end_src" . "↑")
+                                       ("#+BEGIN_SRC" . "↓")
+                                       ("#+END_SRC" . "↑")))
 
+(setq org-hide-emphasis-markers t
+      org-fontify-done-headline t
+      org-ellipsis "⤶"
+      org-pretty-entities t
+      prettify-symbols-unprettify-at-point 'right-edge
+      org-directory "~/org"
+      org-agenda-files '("~/org")
+      org-default-notes-file (concat org-directory "/Notes.org")
+
+      org-highlight-latex-and-related '(latex script entities)
+      org-todo-keywords '((sequence "TODO" "FIXME" "|" "DONE" ))
+      org-src-preserve-indentation t)
+#+end_src
+Defining action to execute at entering org-mode
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook 
+          (lambda () 
+            (org-bullets-mode 1)
+            (org-indent-mode nil)
+            (prettify-symbols-mode)
+            (set-fontset-font t 'symbol "Noto Color Emoji")
+            (progn
+              (setq left-margin-width 5)
+              (setq right-margin-width 5)
+              (set-window-buffer nil (current-buffer)))))
+
+(font-lock-add-keywords 'org-mode
+                        '(("^ *\\([-]\\) "
+                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+#+END_SRC
 Increse readability of latex preview in org-mode
 #+begin_src emacs-lisp
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
@@ -531,7 +566,6 @@ Org mode file associations
                 ("\\.pdf\\'" . "zathura %s")
                 ) org-file-apps ))
 #+END_SRC
-
 - Add /dot/ to org-babel
 - Enable redisplaying images after executing block
 - Auto confirm evaluating /dot/
@@ -563,12 +597,9 @@ Setting up spell checking. Working for both laguages, but only one in one buffer
 (with-eval-after-load "ispell"
   (setq ispell-program-name "hunspell")
   (setq ispell-dictionary "ru_RU,en_US")
-  ;; ispell-set-spellchecker-params has to be called
-  ;; before ispell-hunspell-add-multi-dic will work
   (ispell-set-spellchecker-params)
   (ispell-hunspell-add-multi-dic "ru_RU,en_US"))
 #+END_SRC
-
 **** Publishing
 Publishing for:
 - Main site
@@ -725,28 +756,11 @@ Setting packages
         '(("frame" "lines") ("linenos=true") ("mathescape")))
   (add-to-list 'org-latex-minted-langs '(ipython "python"))
 #+END_SRC
-
-*** Functions
-Marking headline as done in Study file
-#+BEGIN_SRC emacs-lisp
-  (defun mark--done (s file)
-    (org-map-entries
-     (lambda ()
-       (let* ((h (org-element-at-point))
-              (title (org-element-property :raw-value h)))
-         (if (string= title s) (org-todo 'done)))) nil (list (format "~/org/%s.org" file))))
-  (defun mark-done (s file)
-    (with-current-buffer (find-buffer-visiting (format "~/org/%s.org" file))
-      (progn
-        (mark--done s file)
-        (save-buffer))))
-#+END_SRC
 *** Other variables
 Disable Evil mode for some modes
 #+begin_src emacs-lisp
   (add-to-list 'evil-emacs-state-modes 'elfeed-search)
 #+end_src
-
 Code::stats
 #+BEGIN_SRC emacs-lisp
   (add-hook 'prog-mode-hook #'code-stats-mode)
@@ -763,10 +777,8 @@ Executable path
 #+END_SRC
 - Visual/behaviour
 - Dashboard
-- Fonts with emoji
 #+BEGIN_SRC  emacs-lisp
   (defun init-hooks () (global-display-line-numbers-mode 1))
-
   (scroll-bar-mode 0) ; no scroll bar
   (tool-bar-mode 0) ; no tool bar
   (menu-bar-mode 0) ; no menu bar
@@ -940,7 +952,3 @@ Hydra
     ("c" nil "Cancel"))
 #+end_src
 
-I just leave it here
-#+begin_src emacs-lisp
-  (set-fontset-font t 'symbol "Noto Color Emoji")
-#+end_src
