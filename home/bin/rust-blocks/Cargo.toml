@@ -12,10 +12,11 @@ async-trait = "0.1.50"
 futures = "0.3.16"
 dbus = "0.9.3"
 dbus-tokio = "0.7.3"
-notify-rust = "4.5.2"
 csv = "1.1.6"
-serde = "1.0.126"
+serde = { version = "1.0.126", features = [ "derive" ] }
 chrono = "0.4.19"
+log = "0.4.14"
+simple-logging = "2.0.2"
 
 [[bin]]
 name = "rust-blocks"

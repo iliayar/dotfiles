@@ -1,6 +1,5 @@
 use super::*;
 
-use notify_rust::Notification;
 use tokio::process::Command;
 
 const ALERT_THRESHOLD: usize = 100;
@@ -85,14 +84,12 @@ impl Block for UpdatesBlock
 	}
 
 	let mut fifo = self.fifo.as_ref().unwrap().lock().await;
-	let mut notifiaction = Notification::new()
-	    .summary("Updates")
+	let mut notifiaction_handler = dunstify::Notification::new("Updates")
 	    .body("Fetching pacman and AUR updates")
 	    .appname("rust-blocks")
 	    .icon("/usr/share/icons/Adwaita/96x96/emblems/emblem-synchronizing-symbolic.symbolic.png")
-	    .finalize();
+	    .show().await.unwrap();
 
-	notifiaction.show().unwrap();
 
 	let mut pacman_text: String = "?".to_owned();
 	let mut aur_text: String = "?".to_owned();
@@ -120,8 +117,9 @@ impl Block for UpdatesBlock
 			       xact(&format!("AUR: {}", xclr(&aur_text, aur_color)), &update_cmd("aur")))
 		       .as_bytes()).await.ok();
 
-	notifiaction.summary("Updates [Done]");
-	notifiaction.show().unwrap();
+	notifiaction_handler.update().await
+	    .summary("Updates [Done]")
+	    .show().await.unwrap();
     }
 
     async fn command(&self, cmd: &str) {

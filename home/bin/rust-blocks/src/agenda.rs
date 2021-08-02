@@ -4,7 +4,6 @@ use tokio::process::Command;
 use csv::Reader;
 use serde::{Deserialize, Deserializer};
 use chrono::{DateTime, Local, NaiveDate, NaiveTime, TimeZone};
-use notify_rust::Notification;
 
 pub struct AgendaBlock {
     fifo: Option<Mutex<File>>
@@ -27,7 +26,7 @@ enum AgendaTodo {
     NONE,
 }
 
-#[derive(Debug,Deserialize,Clone)]
+#[derive(Debug,Deserialize,Clone,PartialEq)]
 #[serde(rename_all = "lowercase")]
 enum EventType {
     Scheduled,
@@ -40,11 +39,13 @@ enum EventType {
 }
 
 impl EventType {
-    fn notification_type(&self) -> String {
+    fn notification_string(&self) -> String {
 	use EventType::*;
 	match self {
 	    Scheduled => "Scheduled".to_owned(),
 	    Deadline => "Deadline".to_owned(),
+	    PastScheduled => "😱 Scheduled".to_owned(),
+	    UpcomingDeadline => "😥 Deadline".to_owned(),
 	    _ => "NOT IMPLEMENTED".to_owned(),
 	}
     }
@@ -85,13 +86,13 @@ struct AgendaRecord {
     head: String,
     event_type: EventType,
     todo: AgendaTodo,
-    // unknown1: String,
+    tags: Vec<String>,
     date: AgendaTime,
-    // unknown2: String, // Time(combined in date field)
-    // unknown3: String,
-    // unknown4: String,
+    // time: String, // Time(combined in date field)
+    // unknown7: String,
+    // unknown8: String,
     priority: u32,
-    // unknown6: String,
+    // unknown10: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -103,22 +104,26 @@ impl<'de> Deserialize<'de> for AgendaRecord {
 	Deserialize::deserialize(deserializer)
 	    .map(|a: AgendaRecordHelper| {
 		let date = if let Some(date) = NaiveDate::parse_from_str(&a.5, "%Y-%m-%d").ok() {
-		    // println!("Time: {}", a.6);
 		    let times: Vec<DateTime<Local>> = a.6
 			.trim_end_matches(|c| c == '.')
 			.split("-")
 			.flat_map(|s| NaiveTime::parse_from_str(s, "%H:%M").into_iter())
-			.map(|time| Local.from_utc_datetime(&date.and_time(time)))
+			.map(|time| Local.from_local_datetime(&date.and_time(time)).unwrap())
 			.collect();
 		    match times.len() {
 			2 => AgendaTime::Interval(times[0], times[1]),
 			1 => AgendaTime::Exact(times[0]),
-			0 => AgendaTime::Day(Local.from_utc_date(&date).and_hms(23, 59, 59)),
+			0 => AgendaTime::Day(Local.from_local_datetime(&date.and_hms(23, 59, 59)).unwrap()),
 			_ => AgendaTime::None
 		    }
 		} else {
 		    AgendaTime::None
 		};
+
+		let mut tags: Vec<String> = a.4.split(|c| c == ':').map(|s| s.to_owned()).collect();
+		if tags.len() == 1 && tags[0].is_empty() {
+		    tags.clear();
+		}
 
 		AgendaRecord {
 		    category: a.0,
@@ -126,7 +131,8 @@ impl<'de> Deserialize<'de> for AgendaRecord {
 		    event_type: a.2,
 		    todo: a.3,
 		    date,
-		    priority: a.9
+		    priority: a.9,
+		    tags
 		}
 	    })
     }
@@ -136,6 +142,7 @@ enum OrgExporter {
     HTML,
     JSON,
     ASCII,
+    Pango,
     Org,
     Markdown,
 }
@@ -149,6 +156,7 @@ impl ToString for OrgExporter {
 	    ASCII => "org-ascii-export-as-ascii nil t nil t",
 	    Org => "org-org-export-as-org nil t nil t",
 	    Markdown => "org-md-export-as-markdown nil t nil",
+	    Pango => "org-pango-export-as-pango",
 	};
 	format!("(lambda () ({}))", inner)
     }
@@ -157,6 +165,7 @@ impl ToString for OrgExporter {
 enum LispFunction {
     GetAgenda,
     ExportHeadline(String, String, OrgExporter),
+    ExportHeadlineParent(String, String, OrgExporter),
     MarkDone(String, String),
 }
 
@@ -166,6 +175,7 @@ impl ToString for LispFunction {
         let inner = match self {
 	    GetAgenda => "batch-all-agenda".to_owned(),
 	    ExportHeadline(file, headline, exporter) => format!("princ-headline-with \"{}\" \"{}\" '{}", file, headline, exporter.to_string()),
+	    ExportHeadlineParent(file, headline, exporter) => format!("princ-headline-parent-with \"{}\" \"{}\" '{}", file, headline, exporter.to_string()),
 	    MarkDone(file, headline) => format!("mark-done \"{}\" \"{}\"", file, headline),
 	};
 	format!("({})", inner)
@@ -173,6 +183,7 @@ impl ToString for LispFunction {
 
 }
 
+#[derive(Debug)]
 struct ElispError {
     msg: String
 }
@@ -213,48 +224,46 @@ async fn elisp(fun: LispFunction) -> Result<String, ElispError> {
 }
 
 async fn notify(event: AgendaRecord, expired: Option<chrono::Duration>) {
-    // println!("Notifing {:?}", event);
-    if let Ok(text) = elisp(LispFunction::ExportHeadline(event.category.clone(), event.head.clone(), OrgExporter::HTML)).await {
-	let mut body = format!("<b>{}</b> {}\n{}", event.date.status_string().unwrap(), event.head, &text);
-	if let Some(expired) = expired {
-	    let hours = expired.num_hours();
-	    let minutes = expired.num_minutes() - hours * 60;
-	    body.push_str(&format!("EXPIRED FOR {}h {}m", hours, minutes));
-	}
-	// println!("Showing {:?}", event);
-	// FIXME: Rework with async process of ~dunstify~
-	let notification_handler = Notification::new()
-	    .summary(&event.event_type.notification_type())
-	    .body(&body)
-	    .appname("rust-blocks")
-	    .timeout(60 * 1000)
-	    .action("done", &format!("Mark DONE {}", event.head))
-	    .show().unwrap();
-	let res = tokio::task::spawn_blocking(|| {
-	    let mut res: Option<String> = None;
-	    notification_handler.wait_for_action(|action| {
-		match action {
-		    "done" => { res.insert(action.to_owned()); },
-		    _ => ()
+    let exporter = if event.tags.contains(&"notify_parent".to_owned()) {
+	LispFunction::ExportHeadlineParent
+    } else {
+	LispFunction::ExportHeadline
+    };
+    match elisp(exporter(event.category.clone(), event.head.clone(), OrgExporter::Pango)).await {
+	Ok(text) => {
+	    let mut body = format!("<b>{}</b> {}\n{}", event.date.status_string().unwrap(), event.head, &text);
+	    let mut summary = event.event_type.notification_string();
+	    if let Some(expired) = expired {
+		let hours = expired.num_hours();
+		let minutes = expired.num_minutes() - hours * 60;
+		body.push_str(&dclr(format!("\nEXPIRED FOR {}h {}m", hours, minutes)).fg(Color::red()).get());
+		if event.event_type == EventType::Deadline {
+		    summary = format!("⚰ {}", summary);
 		}
-	    });
-	    res
-	}).await.ok();
-	if let Some(Some(res)) = res {
-	    match res.as_str() {
-		"done" => {
-		    elisp(LispFunction::MarkDone(event.category, event.head)).await.ok();
-		},
-		_ => return,
 	    }
-	}
+	    let notification_handler = dunstify::Notification::new(summary)
+		.body(body)
+		.appname("rust-blocks")
+		.timeout(Duration::from_secs(60))
+		.action("done", &format!("Mark DONE {}", event.head))
+		.show().await
+		.unwrap();
+	    if let Some(action) = notification_handler.action().await {
+		match action.as_ref() {
+		    "done" => {
+			elisp(LispFunction::MarkDone(event.category, event.head)).await.ok();
+		    },
+		    _ => (),
+		}
+	    }
+	},
+	Err(err) => error!("Failed to call elisp export function: {}", err.to_string())
     }
 }
 
 async fn check_notify(event: AgendaRecord) {
     let now = Local::now();
     let date = event.date.status_time().unwrap().clone();
-    // println!("Date: {}, Now: {}", date, now);
     if date < now {
 	notify(event, Some(now.signed_duration_since(date))).await;
     } else {
@@ -272,7 +281,7 @@ async fn check_status(event: &AgendaRecord) -> Option<String> {
 	return None;
     }
     match event.event_type {
-	EventType::Deadline | EventType::Scheduled => (),
+	EventType::Deadline | EventType::Scheduled | EventType::Block => (),
 	_ => return None
     };
     let time = if let AgendaTime::Day(_) = event.date {
@@ -294,47 +303,34 @@ impl Block for AgendaBlock
     fn config(&self) -> BlockConfig {
 	BlockConfig {
 	    fifo: FIFO::WithoutPrefix("agenda.io".to_string()),
-	    // fifo: FIFO::None,
-	    // interval: UpdateInterval::Interval(Duration::from_secs(60 * 5)),
-	    interval: UpdateInterval::Once
+	    interval: UpdateInterval::Interval(Duration::from_secs(60 * 5)),
 	}
     }
 
     async fn update(&self) {
 	let fifo = self.fifo.as_ref().unwrap();
-	// fifo.lock().await.write_all(...);
 
 	match elisp(LispFunction::GetAgenda).await {
 	    Ok(data) => {
 		let mut rdr = Reader::from_reader(data.as_bytes());
 		let mut was_status = false;
 		for result in rdr.deserialize::<AgendaRecord>() {
-		    // println!("{:?}", result);
 		    if let Ok(result) = result {
+			debug!("Get record: {:?}", result);
 			tokio::spawn(check_notify(result.clone()));
 			if !was_status {
 			    if let Some(status) = check_status(&result).await {
 				fifo.lock().await.write_all(format!("{}\n", status).as_bytes()).await.ok();
 				was_status = true;
 			    }
+
 			}
 		    }
 
 		}
 	    },
-	    Err(err) => {
-		println!("Error!\n{}", err.to_string())
-	    }
+	    Err(err) => error!("Failed getting agenda: {}", err.to_string())
 	}
-
-	// match elisp(LispFunction::MarkDone("Notes".to_owned(), "Rust Agenda 4".to_owned())).await {
-	//     Ok(data) => {
-	// 	println!("{}", data);
-	//     },
-	//     Err(err) => {
-	// 	println!("Error!\n{}", err.to_string())
-	//     }
-	// }
     }
 
     fn set_fifo(&mut self, fifo: File) {

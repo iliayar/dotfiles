@@ -10,8 +10,8 @@
 							org-agenda-span 14
 							org-agenda-skip-scheduled-if-done t
 							org-agenda-skip-deadline-if-done t
-							org-agenda-skip-deadline-prewarning-if-scheduled t
-							org-agenda-entry-text-mode t)))
+							org-agenda-skip-deadline-prewarning-if-scheduled t)))
+
 (defun with-file (file fun)
   (progn
     (find-file (format "~/org/%s.org" file))
@@ -51,6 +51,24 @@ EXPORTER - The org export function, e.g. (lambda () (org-html-export-as-html nil
 
 (defun princ-headline-parent-with (file headline exporter)
   (princ (export-headline-parent-with file headline exporter)))
+
+(defun org-pango-export-as-pango ()
+  (progn
+    (setq org-export-with-toc nil)
+    (let ((buffer (org-html-export-as-html nil t t t)))
+      (progn
+	(while (re-search-forward "<del>\\(\\(.\\|\n\\)*\\)</del>" nil t)
+	  (replace-match "<s>\\1</s>"))
+	(beginning-of-buffer)
+	(while (re-search-forward "<span class=\"underline\">\\(\\(.\\|\n\\)*\\)</span>" nil t)
+	  (replace-match "<u>\\1</u>"))
+	(beginning-of-buffer)
+	(while (re-search-forward "</?\\(div.*\\|h[0-9]+.*\\|p\\)>[\n\t ]*" nil t)
+	  (replace-match ""))
+	buffer))))
+
+;; (princ-headline-with "Notes" "Rust Agenda 3" (lambda () (org-pango-export-as-pango)))
+;; (princ-headline-parent-with "Study" "Test" (lambda () (org-pango-export-as-pango)))
 
 (defun get-study-headline (headline)
   (princ-headline-parent-with "Study" headline 'org-org-export-as-org))
