@@ -328,6 +328,9 @@ impl Block for AgendaBlock
 		    }
 
 		}
+		if !was_status {
+		    fifo.lock().await.write_all("Chill\n".as_bytes()).await.ok();
+		}
 	    },
 	    Err(err) => error!("Failed getting agenda: {}", err.to_string())
 	}
