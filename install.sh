@@ -240,6 +240,7 @@ emacs() {
     if [[ $ans =~ ^[Yy]$ ]]; then
         AUR_DEPS+=(
             emacs-native-comp-git-enhanced
+            mu4e-git
         )
     else
         DEPS+=(

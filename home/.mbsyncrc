@@ -1,0 +1,54 @@
+IMAPAccount personal
+Host imap.gmail.com
+User iliayar3@gmail.com
+PassCmd "pass google.com/iliayar3@gmail.com"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore personal-remote
+Account personal
+
+MaildirStore personal-local
+SubFolders Verbatim
+Path ~/Mail/personal/
+Inbox ~/Mail/personal/Inbox
+
+Channel personal
+Far :personal-remote:
+Near :personal-local:
+Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Important" "[Gmail]/Drafts" "[Gmail]/Trash"
+# Patterns * ![Gmail]*
+Create Both
+SyncState *
+
+# Gmail mailboxes:
+# "All Mail"
+# "Drafts"
+# "Important"
+# "Sent Mail"
+# "Spam"
+# "Starred"
+# "Trash"
+
+IMAPAccount cock
+Host mail.cock.li
+User iliayar@cock.li
+PassCmd "pass cock.li/iliayar"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore cock-remote
+Account cock
+
+MaildirStore cock-local
+SubFolders Verbatim
+Path ~/Mail/cock/
+Inbox ~/Mail/cock/Inbox
+
+Channel cock
+Far :cock-remote:
+Near :cock-local:
+# Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Important" "[Gmail]/Drafts" "[Gmail]/Trash"
+Patterns *
+Create Both
+SyncState *

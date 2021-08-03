@@ -18,3 +18,5 @@ eclipse.jdt.ls
 .dap-breakpoints
 url
 elfeed.org
+*.db
+*.data

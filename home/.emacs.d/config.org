@@ -256,6 +256,11 @@ Colors from pywal
 (setq case-fold-search t)
 
 #+END_SRC
+Treat =_= as work(~vim~ variant)
+#+BEGIN_SRC emacs-lisp
+(modify-syntax-entry ?_ "w") 
+#+END_SRC
+
 ** Keybingings
 Convenient keybindings
 #+begin_src emacs-lisp
@@ -562,19 +567,27 @@ Org Roam
 	 ("C-M-i" . completion-at-point))
   :config
   (org-roam-setup))
-(use-package websocket
-  :ensure t)
+;; (use-package websocket
+;;   :ensure t)
 
 ;; (add-to-list 'load-path "~/.emacs.d/lisp/org-roam-ui")
 ;; (load-library "org-roam-ui")
 #+END_SRC
 *** Settings
 Setting visual stuff
+- [X] dasd
+- [-] Test
+- [ ] AYAY
 #+begin_src emacs-lisp
 (setq-default prettify-symbols-alist '(("#+begin_src" . "↓")
                                        ("#+end_src" . "↑")
                                        ("#+BEGIN_SRC" . "↓")
-                                       ("#+END_SRC" . "↑")))
+                                       ("#+END_SRC" . "↑")
+                                       ("#+end_proof" . "⬜")
+                                       ("[ ]" . "")
+                                       ("[X]" . "")
+                                       ("[-]" . "")
+                                       ))
 
 (setq org-hide-emphasis-markers t
       org-fontify-done-headline t
@@ -585,7 +598,7 @@ Setting visual stuff
       org-agenda-files '("~/org")
       org-default-notes-file (concat org-directory "/Notes.org")
 
-      org-highlight-latex-and-related '(latex script entities)
+      org-highlight-latex-and-related '(latex entities)
       org-todo-keywords '((sequence "TODO" "FIXME" "|" "DONE" ))
       org-src-preserve-indentation t)
 
@@ -630,6 +643,7 @@ Org mode file associations
  'org-babel-load-languages
  '((dot . t)
    (gnuplot . t)
+   (org . t)
    (python . t)
    (js . t)
    (shell . t)
@@ -654,6 +668,17 @@ Setting up spell checking. Working for both laguages, but only one in one buffer
   (setq ispell-dictionary "ru_RU,en_US")
   (ispell-set-spellchecker-params)
   (ispell-hunspell-add-multi-dic "ru_RU,en_US"))
+#+END_SRC
+Inserting last screenshot
+#+BEGIN_SRC emacs-lisp
+(defun my/org-insert-last-screenshot ()
+  (interactive)
+  (setq screenshots-dir "~/Pictures/screenshots/")
+  (let ((cur-dir (read-directory-name "Copy screenshot to: "))
+	(screenshot (car (last (directory-files screenshots-dir)))))
+    (copy-file (concat screenshots-dir screenshot) (concat cur-dir screenshot) t)
+    (org-insert-link nil (concat cur-dir screenshot)))
+  (org-redisplay-inline-images))
 #+END_SRC
 *** Publishing
 Publishing for:
@@ -849,7 +874,97 @@ Settings colors for each tag.
   (elfeed-expose #'elfeed-search-toggle-all 'starred))
 
 #+end_src
+Mail client
+#+BEGIN_SRC emacs-lisp
+(use-package mu4e
+  :ensure nil
+  :config
+  (setq user-full-name "Ilya Yaroshevskiy")
+  
+  (setq mu4e-change-filenames-when-moving t)
+  (setq mu4e-update-interval (* 10 60))
+  (setq mu4e-maildir "~/Mail")
+  (setq mu4e-headers-skip-duplicates t)
+  (setq mu4e-attachment-dir "~/Downloads")
+  (setq mu4e-sent-messages-behavior 'delete)
+  (setq message-send-mail-function 'smtpmail-send-it)
+
+  (setq mu4e-contexts
+	(list
+	 ;; Personal context
+	 (make-mu4e-context
+	  :name "personal"
+	  :match-func (lambda (msg) (when msg
+				      (string-prefix-p "/personal" (mu4e-message-field msg :maildir))))
+	  :vars '((mu4e-sent-folder . "/personal/[Gmail]/Sent Mail")
+		  (mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
+		  ;; (mu4e-refile-folder . "/personal/[Gmail]/All Mail")
+		  (mu4e-trash-folder . "/personal/[Gmail]/Trash")
+		  (user-mail-address . "iliayar3@gmail.com")
+		  (mu4e-get-mail-command . "mbsync personal")
+		  (smtpmail-smtp-server . "smtp.gmail.com")
+		  (smtpmail-smtp-service . 465)
+		  (smtpmail-stream-type . ssl)
+		  (smtpmail-smtp-user . "iliayar3@gmail.com")
+		  (mu4e-bookmarks . (("maildir:/personal/Inbox" "Inbox" ?i)
+				     ("maildir:/personal/[Gmail]/Important" "Important" ?!)))
+		  ))
+	 ;; Cock context
+	 (make-mu4e-context
+	  :name "cock"
+	  :match-func (lambda (msg) (when msg
+				      (string-prefix-p "/cock" (mu4e-message-field msg :maildir))))
+	  :vars '(
+		  (mu4e-sent-folder . "/cock/Sent")
+		  ;; (mu4e-drafts-folder . "/cock/Drafts")
+		  (mu4e-refile-folder . "/cock/Junk")
+		  (mu4e-trash-folder . "/cock/Trash")
+		  (user-mail-address . "iliayar@cock.li")
+		  (mu4e-get-mail-command . "mbsync cock")
+		  (smtpmail-smtp-server . "mail.cock.li")
+		  (smtpmail-smtp-service . 465)
+		  (smtpmail-stream-type . ssl)
+		  (smtpmail-smtp-user . "iliayar@cock.li")
+		  (mu4e-bookmarks . (("maildir:/cock/Inbox" "Inbox" ?i)
+				     ;; ("maildir:/personal/[Gmail]/Important" "Important" ?!)
+				     ))
+		  ))
+	 )))
+#+END_SRC
+
 * Keybindings
+Evil!
+#+BEGIN_SRC emacs-lisp
+ (define-minor-mode my-override-mode
+  "Overrides all major and minor mode keys" t)
+
+(defvar my-override-map (make-sparse-keymap "my-override-map")
+  "Override all major and minor mode keys")
+
+(add-to-list 'emulation-mode-map-alists
+  `((my-override-mode . ,my-override-map)))
+
+(define-key my-override-map (kbd "<left>")
+  (lambda ()
+    (interactive)
+    (message "Use Vim keys: h for Left")))
+
+(define-key my-override-map (kbd "<right>")
+  (lambda ()
+    (interactive)
+    (message "Use Vim keys: l for Right")))
+
+(define-key my-override-map (kbd "<up>")
+  (lambda ()
+    (interactive)
+    (message "Use Vim keys: k for Up")))
+
+(define-key my-override-map (kbd "<down>")
+  (lambda ()
+    (interactive)
+    (message "Use Vim keys: j for Down")))
+(evil-make-intercept-map my-override-map) 
+#+END_SRC
 #+begin_src emacs-lisp
 (general-define-key
  :keymaps 'company-active-map
@@ -858,6 +973,10 @@ Settings colors for each tag.
 
 (general-define-key
  "M-x" 'counsel-M-x)
+
+(general-define-key
+ :map 'org-mode-map
+ "C-c C-x i" 'my/org-insert-last-screenshot)
 #+end_src
 Elfeed hydra binddings
 #+begin_src emacs-lisp
