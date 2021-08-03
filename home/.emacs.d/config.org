@@ -1,16 +1,19 @@
-* Emacs Configs
-Using /emacs-native-comp-git/ from AUR for improving
+#+TITLE: Emacs Config
+
+Using ~emacs-native-comp-git~ from AUR for improving
 performance. Consider running in _daemon mode_, because the startup time
 stil not very good.
 
-Speeding up 🐌 \\
-This sets the garbage collector to invoke every 100Mb instead of default 800Kb
+Speeding up 🐌
+- Enabling native compilation
+- This sets the garbage collector to invoke every 100Mb instead of default 800Kb
 #+begin_src emacs-lisp
+(setq comp-deferred-compilation t)
 (setq gc-cons-threshold 100000000)
 #+end_src
-** Main config
-*** Repositories
-There is initializes package mangers and some other stuff \\
+* Main config
+** Repositories
+There is initializes package mangers and initializing ~use-package~ \\
 Package config -- see https://melpa.org/#/getting-started
 #+begin_src emacs-lisp
 (require 'package)
@@ -18,113 +21,35 @@ Package config -- see https://melpa.org/#/getting-started
  'package-archives
  '("melpa" . "https://melpa.org/packages/")
  t)
-#+end_src
-#+begin_src emacs-lisp
-  (package-initialize)
+(package-initialize)
 
-  (unless (package-installed-p 'use-package)
-    (package-refresh-contents)
-    (package-install 'use-package))
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 #+end_src
+Adding folder with manually added packages, loading file private variables
+- store all backups in a single directory
 #+begin_src emacs-lisp
-  (add-to-list 'load-path "~/.emacs.d/lisp/")
-
-  (setq evil-want-keybinding nil)
-
-  (setq comp-deferred-compilation t)
-  (load "~/.emacs.d/private.el")
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+(load "~/.emacs.d/private.el")
+(setq user-init-file "~/.emacs.d/init.el")
+(setq backup-directory-alist
+      `(("." . ,(concat user-emacs-directory "backups"))))
 #+end_src
-** Packages
-
-Speeding up
-#+begin_src emacs-lisp
-  (use-package gcmh
-         :ensure t
-         :init
-         (gcmh-mode 1))
-#+end_src
-
-*** Auto completion
-Use /company/ for autocompletion
-#+begin_src emacs-lisp
-(use-package company
-  :ensure t
-  :init
-  (add-hook 'after-init-hook 'global-company-mode)
-  :config
-  (setq company-dabbrev-downcase 0)
-  (setq company-idle-delay 0)
-  (setq company-minimum-prefix-length 2)
-  (setq company-tooltip-align-annotations t))
-#+end_src
-Lsp backend for /company/
-#+begin_src emacs-lisp
-(use-package company-lsp
-  :ensure t
-  :config
-  (push 'company-lsp company-backends)
-  (setq company-lsp-enable-snippet t)
-  (setq lsp-enable-snippet t))
-#+end_src
-Completion for commands
-#+begin_src emacs-lisp
-(use-package counsel
-  :ensure t
-  :init
-  (ivy-mode 1))
-#+end_src
-Keys hints
-#+begin_src emacs-lisp
-(use-package which-key
-  :ensure t
-  :config
-  (which-key-mode 1))
-#+end_src
-*** Web
-Package for html live view
-#+begin_src emacs-lisp
-(use-package impatient-mode
-  :ensure t)
-#+end_src
-Cool web stuff
-#+BEGIN_SRC emacs-lisp
-(use-package web-mode
-  :ensure t)
+Extending executable path
+#+BEGIN_SRC  emacs-lisp
+(add-to-list 'exec-path "~/.local/bin")
 #+END_SRC
-RSS reader
+* Packages
+Speeding up again 🦼
 #+begin_src emacs-lisp
-  (use-package elfeed
-    :ensure t)
-  (use-package elfeed-org
-    :ensure t
-    :init (elfeed-org))
-  (use-package elfeed-goodies
-    :ensure t
-    :init (elfeed-goodies/setup))
-
-  (defface unread-tag-face '((t :foreground "light grey")) "Marks unread")
-  (defface news-tag-face '((t :foreground "light yellow")) "Mark news")
-  (defface ctf-tag-face '((t :foreground "red")) "Mark CTF events")
-  (defface blog-tag-face '((t :foreground "cyan")) "Mark posts")
-  (defface github-tag-face '((t :foreground "orange")) "Mark Github feed")
-  (defface starred-tag-face '((t :foreground "yellow")) "Mark favourite posts")
-  (setq elfeed-search-face-alist
-        '(
-          (starred starred-tag-face)
-          (ctf ctf-tag-face)
-          (blog blog-tag-face)
-          (news news-tag-face)
-          (github github-tag-face)
-          (unread elfeed-search-unread-title-face)
-          ))
-
-  (defalias 'elfeed-toggle-star
-    (elfeed-expose #'elfeed-search-toggle-all 'starred))
-  (setq rmh-elfeed-org-files (list "~/org/elfeed.org"))
+(use-package gcmh
+  :ensure t
+  :init
+  (gcmh-mode 1))
 #+end_src
-
-*** Projects
-Projects management with /counsel/ completion
+** Projects
+Projects management with ~counsel~ completion
 #+begin_src emacs-lisp
 (use-package projectile
   :ensure t
@@ -143,20 +68,32 @@ Project tree
 (use-package treemacs
   :ensure t)
 (use-package treemacs-evil
+  :after evil
   :ensure t)
 (use-package treemacs-projectile
+  :after projectile
   :ensure t)
 #+end_src
-Start dashboard buffer
+Settings fonts for ~treemacs~
+#+BEGIN_SRC emacs-lisp
+(dolist (face '(treemacs-root-face
+                treemacs-git-unmodified-face
+                treemacs-git-modified-face
+                treemacs-git-renamed-face
+                treemacs-git-ignored-face
+                treemacs-git-untracked-face
+                treemacs-git-added-face
+                treemacs-git-conflict-face
+                treemacs-directory-face
+                treemacs-directory-collapsed-face
+                treemacs-file-face
+                treemacs-tags-face))
+  (set-face-attribute face nil :family "Fira Code" :height 85))
+#+END_SRC
+** Evil mode
+~Evil~ with dependecies
 #+begin_src emacs-lisp
-(use-package dashboard
-  :ensure t
-  :config
-  (dashboard-setup-startup-hook))
-#+end_src
-*** Evil mode
-Evil with dependecies
-#+begin_src emacs-lisp
+(setq evil-want-keybinding nil)
 (use-package undo-tree
   :ensure t)
 (use-package goto-chg
@@ -165,7 +102,6 @@ Evil with dependecies
   :ensure t
   :init
   (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
   :config
   (evil-mode 1))
 #+end_src
@@ -201,7 +137,14 @@ Multicursor
   :config
   (global-evil-mc-mode 1))
 #+end_src
-*** Visual
+*** Settings
+Disable Evil mode for some modes
+#+begin_src emacs-lisp
+(add-to-list 'evil-emacs-state-modes 'elfeed-search)
+(cl-loop for (mode . state) in '((dired-mode . emacs) (elfeed-search . emacs))
+         do (evil-set-initial-state mode state))
+#+end_src
+** Visual
 Icons
 #+begin_src emacs-lisp
 (use-package all-the-icons
@@ -220,18 +163,123 @@ Colorize parenthesis
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 #+end_src
-Org headers icons
+Searching
 #+begin_src emacs-lisp
-(use-package org-bullets
+(use-package avy
   :ensure t)
 #+end_src
-*** Programming
+Windows hoping
+#+begin_src emacs-lisp
+(use-package ace-window
+  :ensure t)
+#+end_src
+Dashboard showing on startup
+#+begin_src emacs-lisp
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook))
+#+end_src
+*** Themes
+~Doom-modeline~ as modeline
+#+begin_src emacs-lisp
+(use-package doom-modeline
+  :ensure t
+  :init 
+  (doom-modeline-mode 1)
+  :config
+  (setq doom-modeline-icon t))
+#+end_src
+Colors from pywal
+#+begin_src emacs-lisp
+(use-package ewal
+  :ensure t
+  :init (setq ewal-use-built-in-always nil
+              ewal-use-built-in-on-failure-p t
+              ewal-built-in-palette "doom-gruvbox"))
+(use-package ewal-doom-themes
+  :ensure t)
+#+end_src
+*Or* doom theme
+#+begin_src emacs-lisp
+(use-package doom-themes
+  :ensure t
+  :preface (defvar region-fg nil)
+  (setq doom-themes-treemacs-theme "doom-colors")
+  (doom-themes-treemacs-config)
+  (doom-themes-org-config)
+  :init (load-theme 'doom-molokai t))
+#+end_src
+*** Settings
+- Visual/behaviour
+- Dashboard
+#+BEGIN_SRC  emacs-lisp
+(defun init-hooks () (global-display-line-numbers-mode 1))
+(scroll-bar-mode 0) ; no scroll bar
+(tool-bar-mode 0) ; no tool bar
+(menu-bar-mode 0) ; no menu bar
+(show-paren-mode 1) ; visualize matching parenthesees
+(global-hl-line-mode 1) ; highlight current line
+(eldoc-mode 1) ; enable docs in minibuffer
+
+(set-face-attribute 'default nil
+		    :family "Fira Code"
+		    :height 85)
+
+(setq company-math-allow-latex-symbols-in-faces t)
+
+(setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+(setq dashboard-center-content t)
+(setq dashboard-startup-banner "~/Themes/Neofetch.png")
+(setq dashboard-set-heading-icons t)
+(setq dashboard-set-file-icons t)
+
+(setq dashboard-items '((recents  . 5)
+					;(bookmarks . 5)
+			(projects . 5)
+			(agenda . 5)
+			(registers . 5)))
+
+(add-hook 'after-init-hook 'init-hooks)
+#+end_src
+- y or n instead of yes-or no
+- no annoying bell!
+- setting ~ace-window~ keys
+- isearch
+#+begin_src emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p)
+(setq ring-bell-function 'ignore)
+(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+
+(define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance)
+(define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat)
+(setq case-fold-search t)
+
+#+END_SRC
+** Keybingings
+Convenient keybindings
+#+begin_src emacs-lisp
+(use-package general
+  :ensure t)
+#+end_src
+Constructing menus
+#+begin_src emacs-lisp
+(use-package hydra
+  :ensure t)
+#+end_src
+Keys hints
+#+begin_src emacs-lisp
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode 1))
+#+end_src
+** Programming
 Code::stats
 #+BEGIN_SRC emacs-lisp
-  (use-package code-stats
-    :ensure t)
+(use-package code-stats
+  :ensure t)
 #+END_SRC
-
 Auto parenthesis
 #+begin_src emacs-lisp
 (use-package smartparens
@@ -260,33 +308,90 @@ Code formatting
 (use-package format-all
   :ensure t)
 #+end_src
-Searching
-#+begin_src emacs-lisp
-(use-package avy
-  :ensure t)
-#+end_src
-Windows hoping
-#+begin_src emacs-lisp
-(use-package ace-window
-  :ensure t)
-#+end_src
 Dockerfile support
 #+BEGIN_SRC emacs-lisp
   (use-package dockerfile-mode
     :ensure t)
 #+END_SRC
-**** Languages and lsp
-lsp client
+Package for html live view
 #+begin_src emacs-lisp
-  (use-package  lsp-mode
-    :hook (
-          (lsp-mode . lsp-enable-which-key-integration) 
-          (c++-mode . lsp)
-          )
-    :ensure t)
+(use-package impatient-mode
+  :ensure t)
 #+end_src
-Speeding up lps-mode. Adding folders to not track
+Cool web stuff
+#+BEGIN_SRC emacs-lisp
+(use-package web-mode
+  :ensure t)
+#+END_SRC
+*** Auto completion
+Use ~company~ for autocompletion
 #+begin_src emacs-lisp
+(use-package company
+  :ensure t
+  :init
+  (add-hook 'after-init-hook 'global-company-mode)
+  :config
+  (setq company-dabbrev-downcase 0)
+  (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 2)
+  (setq company-tooltip-align-annotations t)
+  (setq company-backends 
+        '(company-capf 
+          ;; company-bbdb 
+          ;; company-clang 
+          ;; company-keywords 
+          company-yasnippet 
+          ;; company-lsp 
+          ;; company-files 
+          ;; company-ctags
+          ;; company-anaconda
+          )))
+#+end_src
+Add snippets to company backends
+#+begin_src emacs-lisp
+(defun mars/company-backend-with-yas (backends)
+  "Add :with company-yasnippet to company BACKENDS.
+  Taken from https://github.com/syl20bnr/spacemacs/pull/179."
+  (if (and (listp backends) (memq 'company-yasnippet backends))
+      backends
+    (append (if (consp backends)
+                backends
+              (list backends))
+            '(:with company-yasnippet))))
+
+(defun add-yas-in-company ()
+  (setq company-backends
+        (mapcar #'mars/company-backend-with-yas company-backends)))
+
+(add-yas-in-company)
+#+end_src
+Lsp ~backend~ for ~company~
+#+begin_src emacs-lisp
+(use-package company-lsp
+  :after lsp-mode
+  :ensure t
+  :config
+  (push 'company-lsp company-backends)
+  (setq company-lsp-enable-snippet t)
+  (setq lsp-enable-snippet t))
+#+end_src
+Completion for =M-x= commands
+#+begin_src emacs-lisp
+(use-package counsel
+  :ensure t
+  :init
+  (ivy-mode 1))
+#+end_src
+*** Languages and lsp
+Lsp client. Speeding up 🛹, adding folders to not track. \\
+Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/
+#+begin_src emacs-lisp
+(use-package  lsp-mode
+  :hook (
+         (lsp-mode . lsp-enable-which-key-integration) 
+         (c++-mode . lsp)
+         )
+  :config
   (setq read-process-output-max (* 4 (* 1024 1024)))
   (setq lsp-file-watch-ignored
         '("build"
@@ -297,87 +402,79 @@ Speeding up lps-mode. Adding folders to not track
           ))
   (setq lsp-log-io nil)
   (setq lsp-idle-delay 0.500)
-
+  :ensure t)
 #+end_src
-C style settings
-#+BEGIN_SRC emacs-lisp
-(setq c-default-style "linux")
-#+END_SRC
-Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/ \\
 Lsp integration with several plugins
 #+begin_src emacs-lisp
-  (use-package flycheck
-    :ensure t)
-  ;; (use-package lsp-ui
-  ;;   :ensure t)
-  (use-package lsp-treemacs
-    :ensure t)
-  (use-package lsp-ivy
-    :ensure t)
+(use-package flycheck
+  :ensure t)
+(use-package lsp-treemacs
+  :ensure t)
+(use-package lsp-ivy
+  :ensure t)
 #+end_src
 C++ lsp \\
 In /build/ directory run =cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=YES ..=
 #+BEGIN_SRC emacs-lisp
-     (use-package ccls
-       :ensure t
-       :config
-       (setq ccls-executable "/usr/bin/ccls")
-       (setq ccls-initialization-options
-             '(:compilationDatabaseDirectory "build"
-               :cache (:directory "build/.ccls-cache"))))
+(use-package ccls
+  :ensure t
+  :config
+  (setq ccls-executable "/usr/bin/ccls")
+  (setq ccls-initialization-options
+        '(:compilationDatabaseDirectory "build"
+                                        :cache (:directory "build/.ccls-cache"))))
 #+END_SRC
 Haskell lsp
 #+begin_src emacs-lisp
-  (use-package lsp-haskell
-    :ensure t)
+(use-package lsp-haskell
+  :ensure t)
 #+end_src
 Python lsp
 #+begin_src emacs-lisp
-  (use-package lsp-pyright
-    :ensure t
-    :hook (python-mode . (lambda ()
-                            (require 'lsp-pyright)
-                            (lsp))))  ; or lsp-deferred
-  (use-package anaconda-mode
-    :ensure t)
-  (use-package company-anaconda
-    :ensure t)
+(use-package lsp-pyright
+  :ensure t
+  :hook (python-mode . (lambda ()
+                         (require 'lsp-pyright)
+                         (lsp))))  ; or lsp-deferred
+(use-package anaconda-mode
+  :ensure t)
+(use-package company-anaconda
+  :ensure t)
 #+end_src
 emacs ipython notebook
 #+begin_src emacs-lisp
-  (use-package ein
-    :ensure t)
+(use-package ein
+  :ensure t)
 #+end_src
 Lsp for latex
 #+begin_src emacs-lisp
-  (use-package lsp-latex
-    :ensure t)
+(use-package lsp-latex
+  :ensure t)
 #+end_src
 Rust mode
 #+begin_src emacs-lisp
-  (use-package rustic
-    :ensure t)
+(use-package rustic
+  :ensure t)
 #+end_src
-
 Go mode
 #+begin_src emacs-lisp
-  (use-package go-mode
-    :ensure t)
-#+end_src
+(use-package go-mode
+  :ensure t)
+  #+end_src
 Haskell mode
 #+begin_src emacs-lisp
-  (use-package haskell-mode
-    :ensure t)
+(use-package haskell-mode
+  :ensure t)
 #+end_src
 Yaml files
 #+begin_src emacs-lisp
-  (use-package yaml-mode
-    :ensure t)
+(use-package yaml-mode
+  :ensure t)
 #+end_src
 Kotlin
 #+BEGIN_SRC emacs-lisp
-  (use-package kotlin-mode
-    :ensure t)
+(use-package kotlin-mode
+  :ensure t)
 #+END_SRC
 Graphviz
 #+BEGIN_SRC emacs-lisp
@@ -386,73 +483,70 @@ Graphviz
 #+END_SRC
 Ipython for org babel
 #+BEGIN_SRC emacs-lisp
-  (use-package ob-ipython
-    :ensure t)
+(use-package ob-ipython
+  :ensure t)
 #+END_SRC
 Java lsp
 #+BEGIN_SRC emacs-lisp
-  (use-package lsp-java
-    :ensure t)
+(use-package lsp-java
+  :ensure t)
 #+END_SRC
-*** Themes
-/Doom-modeline/ as modeline
-#+begin_src emacs-lisp
-(use-package doom-modeline
-  :ensure t
-  :init 
-  (doom-modeline-mode 1)
-  :config
-  (setq doom-modeline-icon t))
-#+end_src
-Colors from pywal
-#+begin_src emacs-lisp
-(use-package ewal
-  :ensure t
-  :init (setq ewal-use-built-in-always nil
-              ewal-use-built-in-on-failure-p t
-              ewal-built-in-palette "doom-gruvbox"))
-(use-package ewal-doom-themes
-  :ensure t)
-#+end_src
-*Or* doom theme
-#+begin_src emacs-lisp
-  (use-package doom-themes
-    :ensure t
-    :preface (defvar region-fg nil)
-    (setq doom-themes-treemacs-theme "doom-colors")
-    (doom-themes-treemacs-config)
-    (doom-themes-org-config)
-    :init (load-theme 'doom-molokai t))
-#+end_src
-*** Keybingings
-Convenient keybindings
-#+begin_src emacs-lisp
-(use-package general
-  :ensure t)
-#+end_src
-Cinstructing menus
-#+begin_src emacs-lisp
-(use-package hydra
-  :ensure t)
-#+end_src
-*** Org-mode
+*** Settings
+C style settings
+#+BEGIN_SRC emacs-lisp
+(setq c-default-style "linux")
+#+END_SRC
+Code::stats
+#+BEGIN_SRC emacs-lisp
+(add-hook 'prog-mode-hook #'code-stats-mode)
+(add-hook 'org-mode-hook #'code-stats-mode)
+(run-with-idle-timer 30 t #'code-stats-sync)
+(add-hook 'kill-emacs-hook (lambda () (code-stats-sync :wait)))  
+#+END_SRC
+Scrool compilation buffer to the first error instead of end.
+#+BEGIN_SRC emacs-lisp
+(setq compilation-scroll-output 'first-error)
+#+END_SRC
+Setting ~ivy~
+#+BEGIN_SRC emacs-lisp 
+(setq projectile-completion-system 'ivy)
+(setq ivy-use-selectable-prompt t)
+(setq ivy-initial-inputs-alist nil)
+#+END_SRC
+** Org-mode
 theoremes in LaTeX with org syntax
 #+begin_src emacs-lisp
 (use-package org-special-block-extras
   :ensure t
   ;; :hook (org-mode . org-special-block-extras-mode)
   :config (org-special-block-extras-short-names))
-#+end_src
+  #+end_src
 Reveal.js for presentations
 #+BEGIN_SRC emacs-lisp
-  (use-package ox-reveal
-    :ensure t)
+(use-package ox-reveal
+  :ensure t)
 #+END_SRC
 Export Org mode to Json
 #+BEGIN_SRC emacs-lisp
-  (use-package ox-json
-    :ensure t)
+(use-package ox-json
+  :ensure t)
 #+END_SRC
+Org headers icons
+#+begin_src emacs-lisp
+(use-package org-bullets
+  :ensure t)
+#+end_src
+Loading Export backends
+#+BEGIN_SRC emacs-lisp
+(require 'ox-rss)
+(eval-after-load "org"
+  (progn
+    '(require 'ox-md nil t)
+    '(require 'ox-rss nil t)
+    '(require 'ox-latex nil t)
+    '(require 'ox-json nil t)
+    '(require 'ox-reveal nil t)))
+#+end_src
 Org Roam
 #+BEGIN_SRC emacs-lisp
 (use-package org-roam
@@ -474,50 +568,7 @@ Org Roam
 ;; (add-to-list 'load-path "~/.emacs.d/lisp/org-roam-ui")
 ;; (load-library "org-roam-ui")
 #+END_SRC
-
-** Variables and functions
-*** Snippets
-Add snippets to company backends
-#+begin_src emacs-lisp
-  (setq company-backends 
-    '(company-capf 
-      ;; company-bbdb 
-      ;; company-clang 
-      ;; company-keywords 
-      company-yasnippet 
-      ;; company-lsp 
-      ;; company-files 
-      ;; company-ctags
-      ;; company-anaconda
-      ))
-
-  (defun mars/company-backend-with-yas (backends)
-    "Add :with company-yasnippet to company BACKENDS.
-  Taken from https://github.com/syl20bnr/spacemacs/pull/179."
-    (if (and (listp backends) (memq 'company-yasnippet backends))
-      backends
-      (append (if (consp backends)
-                backends
-                (list backends))
-        '(:with company-yasnippet))))
-
-  (defun add-yas-in-company ()
-    (setq company-backends
-      (mapcar #'mars/company-backend-with-yas company-backends)))
-
-  (add-yas-in-company)
-#+end_src
-*** Org mode
-Loading Export backends
-#+BEGIN_SRC emacs-lisp
-(eval-after-load "org"
-  (progn
-    '(require 'ox-md nil t)
-    '(require 'ox-rss)
-    '(require 'ox-latex nil t)
-    '(require 'ox-json nil t)
-    '(require 'ox-reveal nil t)))
-#+end_src
+*** Settings
 Setting visual stuff
 #+begin_src emacs-lisp
 (setq-default prettify-symbols-alist '(("#+begin_src" . "↓")
@@ -537,6 +588,14 @@ Setting visual stuff
       org-highlight-latex-and-related '(latex script entities)
       org-todo-keywords '((sequence "TODO" "FIXME" "|" "DONE" ))
       org-src-preserve-indentation t)
+
+(setq hl-todo-keyword-faces
+      '(("TODO"   . "#fabd2f")
+        ("FIXME"  . "#fb4934")))
+
+(font-lock-add-keywords 'org-mode
+                        '(("^ *\\([-]\\) "
+                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 #+end_src
 Defining action to execute at entering org-mode
 #+begin_src emacs-lisp
@@ -550,10 +609,6 @@ Defining action to execute at entering org-mode
               (setq left-margin-width 5)
               (setq right-margin-width 5)
               (set-window-buffer nil (current-buffer)))))
-
-(font-lock-add-keywords 'org-mode
-                        '(("^ *\\([-]\\) "
-                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 #+END_SRC
 Increse readability of latex preview in org-mode
 #+begin_src emacs-lisp
@@ -574,23 +629,23 @@ Org mode file associations
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((dot . t)
-  (gnuplot . t)
-  (python . t)
-  (js . t)
-  (shell . t)
-  (ipython . t)))
+   (gnuplot . t)
+   (python . t)
+   (js . t)
+   (shell . t)
+   (ipython . t)))
 (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
 (setq org-confirm-babel-evaluate nil)
 (setq org-src-tab-acts-natively t)
 #+END_SRC
 Reveal.js presentations
 #+BEGIN_SRC emacs-lisp
-  (setq org-reveal-root (expand-file-name "~/.local/share/reveal.js-4.1.0"))
+(setq org-reveal-root (expand-file-name "~/.local/share/reveal.js-4.1.0"))
 #+END_SRC
 Export settings
 #+BEGIN_SRC emacs-lisp
-  (setq org-html-htmlize-output-type 'inline-css)
-  (setq org-html-head-include-default-style nil)
+(setq org-html-htmlize-output-type 'inline-css)
+(setq org-html-head-include-default-style nil)
 #+END_SRC
 Setting up spell checking. Working for both laguages, but only one in one buffer.
 #+BEGIN_SRC emacs-lisp
@@ -600,119 +655,119 @@ Setting up spell checking. Working for both laguages, but only one in one buffer
   (ispell-set-spellchecker-params)
   (ispell-hunspell-add-multi-dic "ru_RU,en_US"))
 #+END_SRC
-**** Publishing
+*** Publishing
 Publishing for:
 - Main site
 - University consepcts (exporting to pdf and uploading on server)
 #+BEGIN_SRC emacs-lisp
-  (defun my-conspects-header (arg)
-       "<style>#forkongithub a{background:#000;color:#fff;text-decoration:none;font-family:arial,sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:1rem;line-height:2rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#c11;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:\"\";width:100%;display:block;position:absolute;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:fixed;display:block;top:0;right:0;width:200px;overflow:hidden;height:200px;z-index:9999;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);-moz-transform:rotate(45deg);-o-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.8);}}</style><span id=\"forkongithub\"><a href=\"https://github.com/iliayar/ITMO\">Fork me on GitHub</a></span>")
+(defun my-conspects-header (arg)
+  "<style>#forkongithub a{background:#000;color:#fff;text-decoration:none;font-family:arial,sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:1rem;line-height:2rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#c11;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:\"\";width:100%;display:block;position:absolute;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:fixed;display:block;top:0;right:0;width:200px;overflow:hidden;height:200px;z-index:9999;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);-moz-transform:rotate(45deg);-o-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.8);}}</style><span id=\"forkongithub\"><a href=\"https://github.com/iliayar/ITMO\">Fork me on GitHub</a></span>")
 
-  (setq org-publish-project-alist
-        '(
-          ("org-mainsite"
-           :base-directory "~/Documents/MainSite/public/notes"
-           :base-extension "org"
-           :exclude "level-[0-9]*.org"
-           :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes"
-	   :html-html5-fancy t
-	   ;; :html-link-home "https://iliayar.ru/public-notes/index.html"
-	   :html-validation-link nil
-	   :html-postamble "<hr><a href=\"/public-notes/index.html\">Home Page</a><span style=\"float: right\"><a href=\"/public-notes/blog.xml\"><i class=\"fas fa-rss\"></i></a> <a href=\"https://github.com/iliayar/iliayar\"><i class=\"fab fa-github\"></i></a></span>"
-           :recursive t
-           :publishing-function org-html-publish-to-html
-           :headline-levels 4             ; Just the default for this project.
-           :auto-preamble t
-           )
-          ("rss-mainsite"
-           :base-directory "~/Documents/MainSite/public/notes"
-           :base-extension "org"
-           :exclude ".*"
-	   :include ("blog.org")
-           :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes"
-	   :rss-extension "xml"
-	   :section-numbers nil
-	   :html-link-home "https://iliayar.ru/public-notes/"
-	   :html-link-use-abs-url t
-	   :html-link-org-files-as-html t
-	   :output-file "rss"
-           :recursive nil
-           :publishing-function org-rss-publish-to-rss
-           )
-          ("static-mainsite"
-           :base-directory "~/Documents/MainSite/public/notes"
-           :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|pdf"
-           :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes"
-           :recursive t
-           :publishing-function org-publish-attachment
-           )
-          ("mainsite" :components ("org-mainsite" "rss-mainsite" "static-mainsite"))
+(setq org-publish-project-alist
+      '(
+        ("org-mainsite"
+         :base-directory "~/Documents/MainSite/public/notes"
+         :base-extension "org"
+         :exclude "level-[0-9]*.org"
+         :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes"
+         :html-html5-fancy t
+         ;; :html-link-home "https://iliayar.ru/public-notes/index.html"
+         :html-validation-link nil
+         :html-postamble "<hr><a href=\"/public-notes/index.html\">Home Page</a><span style=\"float: right\"><a href=\"/public-notes/blog.xml\"><i class=\"fas fa-rss\"></i></a> <a href=\"https://github.com/iliayar/iliayar\"><i class=\"fab fa-github\"></i></a></span>"
+         :recursive t
+         :publishing-function org-html-publish-to-html
+         :headline-levels 4             ; Just the default for this project.
+         :auto-preamble t
+         )
+        ("rss-mainsite"
+         :base-directory "~/Documents/MainSite/public/notes"
+         :base-extension "org"
+         :exclude ".*"
+         :include ("blog.org")
+         :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes"
+         :rss-extension "xml"
+         :section-numbers nil
+         :html-link-home "https://iliayar.ru/public-notes/"
+         :html-link-use-abs-url t
+         :html-link-org-files-as-html t
+         :output-file "rss"
+         :recursive nil
+         :publishing-function org-rss-publish-to-rss
+         )
+        ("static-mainsite"
+         :base-directory "~/Documents/MainSite/public/notes"
+         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|pdf"
+         :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes"
+         :recursive t
+         :publishing-function org-publish-attachment
+         )
+        ("mainsite" :components ("org-mainsite" "rss-mainsite" "static-mainsite"))
 
-          ("org-conspects"
-           :base-directory "~/Documents/ITMO"
-           :exclude ".*[^E].org"
-           :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes/conspects"
-           :recursive t
-	   :html-postamble "<hr><a href=\"/public-notes/index.html\">Home Page</a><span style=\"float: right\"><a href=\"https://t.me/iliayar\"><i class=\"fab fa-telegram-plane\"></i></a> <a href=\"https://github.com/iliayar/ITMO\"><i class=\"fab fa-github\"></i></a></span><br><a href=\"/public-notes/conspects/README.html\">Conspects Home Page</a>"
-           :publishing-function org-html-publish-to-html
-           :headline-levels 4             ; Just the default for this project.
-           ;; :html-preamble my-conspects-header
-           )
-          ("pdfs-conspects"
-           :base-directory "~/Documents/ITMO"
-           :base-extension "org"
-           :exclude "README.org\\|level-[0-9]*.org\\|level-subj.org"
-           :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes/conspects"
-           :recursive t
-           :publishing-function org-latex-publish-to-pdf
-           )
-          ("conspects" :components ("org-conspects" "pdfs-conspects"))
-          ))
+        ("org-conspects"
+         :base-directory "~/Documents/ITMO"
+         :exclude ".*[^E].org"
+         :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes/conspects"
+         :recursive t
+         :html-postamble "<hr><a href=\"/public-notes/index.html\">Home Page</a><span style=\"float: right\"><a href=\"https://t.me/iliayar\"><i class=\"fab fa-telegram-plane\"></i></a> <a href=\"https://github.com/iliayar/ITMO\"><i class=\"fab fa-github\"></i></a></span><br><a href=\"/public-notes/conspects/README.html\">Conspects Home Page</a>"
+         :publishing-function org-html-publish-to-html
+         :headline-levels 4             ; Just the default for this project.
+         ;; :html-preamble my-conspects-header
+         )
+        ("pdfs-conspects"
+         :base-directory "~/Documents/ITMO"
+         :base-extension "org"
+         :exclude "README.org\\|level-[0-9]*.org\\|level-subj.org"
+         :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes/conspects"
+         :recursive t
+         :publishing-function org-latex-publish-to-pdf
+         )
+        ("conspects" :components ("org-conspects" "pdfs-conspects"))
+        ))
 #+END_SRC
-**** LaTeX
+*** LaTeX
 Org mode to LaTeX and pdf
 Setting packages
 #+BEGIN_SRC emacs-lisp
-  (setq org-latex-packages-alist '(
-                                   ("T1, T2A" "fontenc" t)
-                                   ("lutf8" "luainputenc" t)
-                                   ("english,russian" "babel" t)
-                                   ("" "minted" t)
-                                   ("" "graphicx" t)
-                                   ("" "longtable" t)
-                                   ("" "hyperref" t)
-                                   ("" "xcolor" t)
-                                   ("" "natbib" t)
-                                   ("" "amssymb" t)
-                                   ("" "stmaryrd" t)
-                                   ("" "amsmath" t)
-                                   ("" "caption" t)
-                                   ("" "mathtools" t)
-                                   ("" "amsthm" t)
-                                   ("" "tikz" t)
-                                   ("" "fancyhdr" t)
-                                   ("" "lastpage" t)
-                                   ("" "titling" t)
-                                   ("" "grffile" t)
-                                   ("" "extarrows" t)
-                                   ("" "wrapfig" t)
-                                   ("" "algorithm" t)
-                                   ("" "algorithmic" t)
-                                   ("" "lipsum" t)
-                                   ("" "rotating" t)
-                                   ("" "placeins" t)
-                                   ("normalem" "ulem" t)
-                                   ("" "amsmath" t)
-                                   ("" "textcomp" t)
-                                   ("" "svg" t)
-                                   ("" "capt-of" t)))
-  ;; Reset default value. For debugging
-  (custom-reevaluate-setting 'org-latex-classes)
-  (with-eval-after-load 'ox-latex
-    (progn 
+(setq org-latex-packages-alist '(
+                                 ("T1, T2A" "fontenc" t)
+                                 ("lutf8" "luainputenc" t)
+                                 ("english,russian" "babel" t)
+                                 ("" "minted" t)
+                                 ("" "graphicx" t)
+                                 ("" "longtable" t)
+                                 ("" "hyperref" t)
+                                 ("" "xcolor" t)
+                                 ("" "natbib" t)
+                                 ("" "amssymb" t)
+                                 ("" "stmaryrd" t)
+                                 ("" "amsmath" t)
+                                 ("" "caption" t)
+                                 ("" "mathtools" t)
+                                 ("" "amsthm" t)
+                                 ("" "tikz" t)
+                                 ("" "fancyhdr" t)
+                                 ("" "lastpage" t)
+                                 ("" "titling" t)
+                                 ("" "grffile" t)
+                                 ("" "extarrows" t)
+                                 ("" "wrapfig" t)
+                                 ("" "algorithm" t)
+                                 ("" "algorithmic" t)
+                                 ("" "lipsum" t)
+                                 ("" "rotating" t)
+                                 ("" "placeins" t)
+                                 ("normalem" "ulem" t)
+                                 ("" "amsmath" t)
+                                 ("" "textcomp" t)
+                                 ("" "svg" t)
+                                 ("" "capt-of" t)))
+;; Reset default value. For debugging
+(custom-reevaluate-setting 'org-latex-classes)
+(with-eval-after-load 'ox-latex
+  (progn 
     (add-to-list 'org-latex-classes
                  (list "general"
-  "
+                       "
   \\documentclass[english]{article}
   [NO-DEFAULT-PACKAGES]
   [PACKAGES]
@@ -729,7 +784,7 @@ Setting packages
                        ))
     (add-to-list 'org-latex-classes
                  (list "lectures"
-  "
+                       "
   \\documentclass[oneside]{book}
   [NO-DEFAULT-PACKAGES]
   [PACKAGES]
@@ -747,196 +802,129 @@ Setting packages
                        '("\\paragraph{%s}" . "\\paragraph*{%s}")
                        '("\\subparagraph{%s}" . "\\subparagraph*{%s}")
                        ))))
-  (setq org-latex-listings 'minted
-        org-latex-pdf-process
-        '("pdflatex -shell-escape --synctex=1 -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape --synctex=1 -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape --synctex=1 -interaction nonstopmode -output-directory %o %f"))
-  (setq org-latex-minted-options
-        '(("frame" "lines") ("linenos=true") ("mathescape")))
-  (add-to-list 'org-latex-minted-langs '(ipython "python"))
+(setq org-latex-listings 'minted
+      org-latex-pdf-process
+      '("pdflatex -shell-escape --synctex=1 -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape --synctex=1 -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape --synctex=1 -interaction nonstopmode -output-directory %o %f"))
+(setq org-latex-minted-options
+      '(("frame" "lines") ("linenos=true") ("mathescape")))
+(add-to-list 'org-latex-minted-langs '(ipython "python"))
 #+END_SRC
-*** Other variables
-Disable Evil mode for some modes
+** Common
+RSS reader
 #+begin_src emacs-lisp
-  (add-to-list 'evil-emacs-state-modes 'elfeed-search)
+(use-package elfeed
+  :ensure t
+  :custom
+  (rmh-elfeed-org-files (list "~/org/elfeed.org")))
+(use-package elfeed-org
+  :ensure t
+  :init
+  (elfeed-org))
+(use-package elfeed-goodies
+  :ensure t
+  :init
+  (elfeed-goodies/setup))
 #+end_src
-Code::stats
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'prog-mode-hook #'code-stats-mode)
-  (add-hook 'org-mode-hook #'code-stats-mode)
-  (run-with-idle-timer 30 t #'code-stats-sync)
-  (add-hook 'kill-emacs-hook (lambda () (code-stats-sync :wait)))  
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
-(setq compilation-scroll-output 'first-error)
-#+END_SRC
-Executable path
-#+BEGIN_SRC  emacs-lisp
-  (add-to-list 'exec-path "~/.local/bin")
-#+END_SRC
-- Visual/behaviour
-- Dashboard
-#+BEGIN_SRC  emacs-lisp
-  (defun init-hooks () (global-display-line-numbers-mode 1))
-  (scroll-bar-mode 0) ; no scroll bar
-  (tool-bar-mode 0) ; no tool bar
-  (menu-bar-mode 0) ; no menu bar
-  (show-paren-mode 1) ; visualize matching parenthesees
-  (global-hl-line-mode 1) ; highlight current line
-  (eldoc-mode 1) ; enable docs in minibuffer
-
-  (set-face-attribute 'default nil
-                      :family "Fira Code"
-                      :height 85)
-  (dolist (face '(treemacs-root-face
-                      treemacs-git-unmodified-face
-                      treemacs-git-modified-face
-                      treemacs-git-renamed-face
-                      treemacs-git-ignored-face
-                      treemacs-git-untracked-face
-                      treemacs-git-added-face
-                      treemacs-git-conflict-face
-                      treemacs-directory-face
-                      treemacs-directory-collapsed-face
-                      treemacs-file-face
-                      treemacs-tags-face))
-        (set-face-attribute face nil :family "Fira Code" :height 85))
-
-  (setq company-math-allow-latex-symbols-in-faces t)
-
-  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
-  (setq dashboard-center-content t)
-  (setq dashboard-startup-banner "~/Themes/Neofetch.png")
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
-
-  (setq dashboard-items '((recents  . 5)
-                                          ;(bookmarks . 5)
-                          (projects . 5)
-                          (agenda . 5)
-                          (registers . 5)))
-
-  (add-hook 'after-init-hook 'init-hooks)
-#+END_SRC
-Some other
+Settings colors for each tag.
 #+begin_src emacs-lisp
-  (add-hook 'shell-mode-hook (lambda () (company-mode nil)))
+(defface unread-tag-face '((t :foreground "light grey")) "Marks unread")
+(defface news-tag-face '((t :foreground "light yellow")) "Mark news")
+(defface ctf-tag-face '((t :foreground "red")) "Mark CTF events")
+(defface blog-tag-face '((t :foreground "cyan")) "Mark posts")
+(defface github-tag-face '((t :foreground "orange")) "Mark Github feed")
+(defface starred-tag-face '((t :foreground "yellow")) "Mark favourite posts")
+(setq elfeed-search-face-alist
+      '(
+        (starred starred-tag-face)
+        (ctf ctf-tag-face)
+        (blog blog-tag-face)
+        (news news-tag-face)
+        (github github-tag-face)
+        (unread elfeed-search-unread-title-face)
+        ))
 
-  ;; (setq inhibit-startup-screen 1) ; no start screen
+(defalias 'elfeed-toggle-star
+  (elfeed-expose #'elfeed-search-toggle-all 'starred))
 
-  (setq ivy-use-selectable-prompt t)
-
-  ;; store all backups in a single directory 
-  (setq backup-directory-alist
-        `(("." . ,(concat user-emacs-directory "backups"))))
-
-  ;; y or n instead of yes-or no
-  (fset 'yes-or-no-p 'y-or-n-p)
-
-  ;; no annoying bell!
-  (setq ring-bell-function 'ignore)
-
-  ;; isearch
-  (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance)
-  (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat)
-  (setq case-fold-search t)
-
-  (setq projectile-completion-system 'ivy)
-
-  (setq ivy-initial-inputs-alist nil)
-
-  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-
-  ;; set my init filt to be this file
-  (setq user-init-file "~/.emacs.d/init.el")
-
-  ;; Evil initial states
-  (cl-loop for (mode . state) in '((dired-mode . emacs) (elfeed-search . emacs))
-        do (evil-set-initial-state mode state))
-
-  ;; Highlight TODO colors
-  (setq hl-todo-keyword-faces
-        '(("TODO"   . "#fabd2f")
-          ("FIXME"  . "#fb4934")))
 #+end_src
-** Keybindings
+* Keybindings
 #+begin_src emacs-lisp
-  (general-define-key
-    :keymaps 'company-active-map
-    "<tab>"     'yas-expand
-    "<backtab>" 'company-complete-selection)
+(general-define-key
+ :keymaps 'company-active-map
+ "<tab>"     'yas-expand
+ "<backtab>" 'company-complete-selection)
 
-  (general-define-key
-    "M-x" 'counsel-M-x)
+(general-define-key
+ "M-x" 'counsel-M-x)
 #+end_src
 Elfeed hydra binddings
 #+begin_src emacs-lisp
-  (defhydra elfeed-search-view-hydra (:color blue :hint t)
-    ("d" (elfeed-search-set-filter nil) "Default")
-    ("f" (elfeed-search-set-filter "+starred") "Favourite")
-    ("a" (elfeed-search-set-filter "-unread") "All"))
+(defhydra elfeed-search-view-hydra (:color blue :hint t)
+  ("d" (elfeed-search-set-filter nil) "Default")
+  ("f" (elfeed-search-set-filter "+starred") "Favourite")
+  ("a" (elfeed-search-set-filter "-unread") "All"))
 #+end_src
-
-Bindings using /general/ package
+Bindings using ~general~ package
 #+begin_src emacs-lisp
-  (general-define-key
-    :states '(normal visual emacs insert treemacs)
-    :prefix "SPC"
-    :non-normal-prefix "M-SPC"
-    :keymaps 'override
-    "bb" 'ibuffer
-    "ca" 'lsp-execute-code-action
-    "cc" 'compile
-    "cd" 'kill-compilation-buffer
-    "cf" 'counsel-grep-or-swiper
-    "cl" 'comment-or-uncomment-region
-    "cr" 'lsp-rename
-    "ff" 'counsel-find-file
-    "gl" 'avy-goto-line
-    "gr" 'revert-buffer
-    "gs" 'avy-goto-char-timer
-    "oa" 'org-agenda
-    "om" 'magit
-    "or" 'elfeed
-    "op" 'treemacs
-    "pc" 'projectile-compile-project
-    "pf" 'counsel-projectile-find-file
-    "pp" 'projectile-switch-project
-    "rr" 'rustic-cargo-run
-    "sl" 'lsp
-    "sr" 'lsp-workspace-restart
-    "ss" 'lsp-workspace-shutdown
-    "tt" 'treemacs-select-window
-    "wd" 'delete-window
-    "wk" 'kill-buffer-and-window
-    "wr" 'hydra-window-resize-menu/body
-    "ww" 'ace-window)
+(general-define-key
+ :states '(normal visual emacs insert treemacs)
+ :prefix "SPC"
+ :non-normal-prefix "M-SPC"
+ :keymaps 'override
+ "bb" 'ibuffer
+ "ca" 'lsp-execute-code-action
+ "cc" 'compile
+ "cd" 'kill-compilation-buffer
+ "cf" 'counsel-grep-or-swiper
+ "cl" 'comment-or-uncomment-region
+ "cr" 'lsp-rename
+ "ff" 'counsel-find-file
+ "gl" 'avy-goto-line
+ "gr" 'revert-buffer
+ "gs" 'avy-goto-char-timer
+ "oa" 'org-agenda
+ "om" 'magit
+ "or" 'elfeed
+ "op" 'treemacs
+ "pc" 'projectile-compile-project
+ "pf" 'counsel-projectile-find-file
+ "pp" 'projectile-switch-project
+ "rr" 'rustic-cargo-run
+ "sl" 'lsp
+ "sr" 'lsp-workspace-restart
+ "ss" 'lsp-workspace-shutdown
+ "tt" 'treemacs-select-window
+ "wd" 'delete-window
+ "wk" 'kill-buffer-and-window
+ "wr" 'hydra-window-resize-menu/body
+ "ww" 'ace-window)
 
-  (general-define-key
-    :states '(visual)
-    :keymaps 'override
-    "R"  'evil-multiedit-match-all
-    )
+(general-define-key
+ :states '(visual)
+ :keymaps 'override
+ "R"  'evil-multiedit-match-all
+ )
 
-  (general-define-key
-    :states '(normal visual insert)
-    :prefix "SPC"
-    :non-normal-prefix "M-SPC"
-    :keymaps 'latex-mode-map
-    "si" 'latex-insert-block
-    )
+(general-define-key
+ :states '(normal visual insert)
+ :prefix "SPC"
+ :non-normal-prefix "M-SPC"
+ :keymaps 'latex-mode-map
+ "si" 'latex-insert-block
+ )
 
-  (general-define-key
-   :keymaps 'elfeed-search-mode-map
-   "f" 'elfeed-toggle-star
-   "v" 'elfeed-search-view-hydra/body)
+(general-define-key
+ :keymaps 'elfeed-search-mode-map
+ "f" 'elfeed-toggle-star
+ "v" 'elfeed-search-view-hydra/body)
 #+end_src
 Hydra
 #+begin_src emacs-lisp
-  (defhydra hydra-window-resize-menu (:color red
-                                      :hint nil)
-    "
+(defhydra hydra-window-resize-menu (:color red
+                                           :hint nil)
+  "
     Window Resize
     -------------
          /\\
@@ -945,10 +933,10 @@ Hydra
           _j_
           v
     "
-    ("h" evil-window-decrease-width)
-    ("l" evil-window-increase-width)
-    ("k" evil-window-decrease-height)
-    ("j" evil-window-increase-height)
-    ("c" nil "Cancel"))
+  ("h" evil-window-decrease-width)
+  ("l" evil-window-increase-width)
+  ("k" evil-window-decrease-height)
+  ("j" evil-window-increase-height)
+  ("c" nil "Cancel"))
 #+end_src
 
