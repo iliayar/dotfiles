@@ -116,6 +116,7 @@ common() {
         ttf-hack
     )
     AUR_DEPS+=(
+        mbsync-git
         picom-jonaburg-git
         ly-git
         brave-bin
@@ -132,6 +133,7 @@ common() {
         .config/rofi/config.rasi
         .config/zathura
         .config/fontconfig
+        .mbsyncrc
         .Xresources
         .bashrc
         .xprofile
@@ -240,7 +242,7 @@ emacs() {
     if [[ $ans =~ ^[Yy]$ ]]; then
         AUR_DEPS+=(
             emacs-native-comp-git-enhanced
-            mu4e-git
+            mu-git
         )
     else
         DEPS+=(
@@ -293,6 +295,9 @@ echo "Installing bins"
     make
     make install
     rm -Rf /tmp/colorMgr
+
+    cd "$HOME/bin/rust-blocks" || exit
+    cargo build --release
 
     cd "$DIR" || exit
 }
@@ -357,6 +362,9 @@ xmonad() {
         stalonetray
         python-pywal
         dzen2
+    )
+    AUR_DEPS+=(
+        xkb-switch
     )
     CONFIGS+=(
         .xmonad
