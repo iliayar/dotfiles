@@ -575,9 +575,6 @@ Org Roam
 #+END_SRC
 *** Settings
 Setting visual stuff
-- [X] dasd
-- [-] Test
-- [ ] AYAY
 #+begin_src emacs-lisp
 (setq-default prettify-symbols-alist '(("#+begin_src" . "↓")
                                        ("#+end_src" . "↑")
@@ -887,6 +884,7 @@ Mail client
   (setq mu4e-headers-skip-duplicates t)
   (setq mu4e-attachment-dir "~/Downloads")
   (setq mu4e-sent-messages-behavior 'delete)
+  (setq mu4e-use-fancy-chars t)
   (setq message-send-mail-function 'smtpmail-send-it)
 
   (setq mu4e-contexts
@@ -1004,9 +1002,10 @@ Bindings using ~general~ package
  "gr" 'revert-buffer
  "gs" 'avy-goto-char-timer
  "oa" 'org-agenda
- "om" 'magit
+ "og" 'magit
  "or" 'elfeed
  "op" 'treemacs
+ "om" 'mu4e
  "pc" 'projectile-compile-project
  "pf" 'counsel-projectile-find-file
  "pp" 'projectile-switch-project

@@ -313,6 +313,7 @@ myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
             , ("Spotify", "spotify")
             , ("Discord", "discord")
             , ("Steam", "steam")
+            , ("Emacs Instance", "/usr/bin/emacs")
             ]
 
 -------------------------------------------------
@@ -734,6 +735,7 @@ myStartupHook = do
           spawnOnce "syncthing -no-browser -logfile='/tmp/syncthing.log' &"
           spawnOnce "nitrogen --restore &"
           spawnOnce "picom --experimental-backends -b &"
+          spawnOnce "xautolock -time 15 -locker ~/bin/lock.sh &"
           spawnOnce "lxpolkit &"
           spawnOnce "udiskie &"
           -- spawnOnce "stalonetray &"

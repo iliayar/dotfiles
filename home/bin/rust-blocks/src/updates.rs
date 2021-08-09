@@ -7,6 +7,9 @@ const WARNING_THRESHOLD: usize = 50;
 const AUR_ALERT_THRESHOLD: usize = 10;
 const AUR_WARNING_THRESHOLD: usize = 5;
 
+const NOTIFICATION_ICON: &str = "/usr/share/icons/Adwaita/96x96/emblems/emblem-synchronizing-symbolic.symbolic.png";
+const NOTIFICATION_APPNAME: &str = "rust-blocks";
+
 pub struct UpdatesBlock {
     fifo: Option<Mutex<File>>,
     status: Mutex<UpdateStatus>,
@@ -52,7 +55,8 @@ async fn update_info(cmd: &mut Command, text: &mut String, color: &mut Color, al
 #[derive(PartialEq)]
 enum UpdateStatus {
     Updating,
-    None
+    None,
+    Downloading,
 }
 
 async fn run_update(status: &Mutex<UpdateStatus>, args: &[&str]) -> Option<()> {
@@ -79,15 +83,16 @@ impl Block for UpdatesBlock
     }
 
     async fn update(&self) {
-	if self.status.lock().await.eq(&UpdateStatus::Updating) {
+	if self.status.lock().await.ne(&UpdateStatus::None) {
 	    return;
 	}
 
 	let mut fifo = self.fifo.as_ref().unwrap().lock().await;
-	let mut notifiaction_handler = dunstify::Notification::new("Updates")
+	let notifiaction_handler = dunstify::Notification::new("Updates")
 	    .body("Fetching pacman and AUR updates")
-	    .appname("rust-blocks")
-	    .icon("/usr/share/icons/Adwaita/96x96/emblems/emblem-synchronizing-symbolic.symbolic.png")
+	    .appname(NOTIFICATION_APPNAME)
+	    .icon(NOTIFICATION_ICON)
+	    .timeout(Duration::from_secs(10))
 	    .show().await.unwrap();
 
 
@@ -112,17 +117,37 @@ impl Block for UpdatesBlock
 
 	fn update_cmd(man: &str) -> String { format!("{} updates {}", config::client(), man) }
 
-	fifo.write_all(format!("{} {}\n",
-			       xact(&format!("Pacman: {}", xclr(&pacman_text, pacman_color)), &update_cmd("pacman")),
-			       xact(&format!("AUR: {}", xclr(&aur_text, aur_color)), &update_cmd("aur")))
-		       .as_bytes()).await.ok();
+	let xmb_status = format!("{} {}\n",
+				 xact(&format!("Pacman: {}", xclr(&pacman_text, pacman_color)), &update_cmd("pacman")),
+				 xact(&format!("AUR: {}", xclr(&aur_text, aur_color)), &update_cmd("aur")));
+	fifo.write_all(xmb_status.as_bytes()).await.ok();
 
-	notifiaction_handler.update().await
+	if let Some(action) = notifiaction_handler.update().await
 	    .summary("Updates [Done]")
-	    .show().await.unwrap();
+	    .action("download", "Download pacman updates")
+	    .show().await.unwrap()
+	    .action().await {
+		if action == "download" {
+		    fifo.write_all(format!("{} {}", xfa(""), xmb_status).as_bytes()).await.ok();
+		    *self.status.lock().await = UpdateStatus::Downloading;
+		    Command::new("gksudo")
+			.arg("pacman -Syyuw --noconfirm")
+			.status().await.ok();
+		    dunstify::Notification::new("Updates")
+			.body("Updates downloaded")
+			.appname(NOTIFICATION_APPNAME)
+			.icon(NOTIFICATION_ICON)
+			.show().await.ok();
+		    *self.status.lock().await = UpdateStatus::None;
+		    fifo.write_all(xmb_status.as_bytes()).await.ok();
+		}
+	    }
     }
 
     async fn command(&self, cmd: &str) {
+	if self.status.lock().await.ne(&UpdateStatus::None) {
+	    return;
+	}
 	run_update(
 	    &self.status,
 	    if cmd == "pacman" {
