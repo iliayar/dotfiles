@@ -6,6 +6,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ein:output-area-inlined-images t)
+ '(mu4e-completing-read-function 'ivy-completing-read)
  '(org-capture-bookmark nil)
  '(org-display-remote-inline-images 'cache)
  '(org-export-backends '(ascii html icalendar latex md odt))
@@ -32,4 +33,5 @@
  '(org-level-2 ((t (:inherit outline-2 :extend t :height 1.1))))
  '(org-link ((t (:foreground "deep sky blue" :inherit link))))
  '(org-tag ((t (:foreground "#e2c770" :slant italic :weight normal :family "Hack"))))
- '(org-verbatim ((t (:foreground "#b6e63e" :box (:line-width (2 . 2) :color "dim gray" :style released-button))))))
+ '(org-verbatim ((t (:foreground "#b6e63e" :box (:line-width (2 . 2) :color "dim gray" :style released-button)))))
+ '(outline-1 ((t (:extend t :foreground "#fb2874" :weight bold)))))
