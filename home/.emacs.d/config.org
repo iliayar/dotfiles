@@ -148,7 +148,7 @@ Disable Evil mode for some modes
 Icons
 #+begin_src emacs-lisp
 (use-package all-the-icons
- :ensure t)
+  :ensure t)
 #+end_src
 HIghlight todo keywords
 #+begin_src emacs-lisp
@@ -223,8 +223,8 @@ Colors from pywal
 (eldoc-mode 1) ; enable docs in minibuffer
 
 (set-face-attribute 'default nil
-		    :family "Fira Code"
-		    :height 85)
+                    :family "Fira Code"
+                    :height 85)
 
 (setq company-math-allow-latex-symbols-in-faces t)
 
@@ -235,10 +235,10 @@ Colors from pywal
 (setq dashboard-set-file-icons t)
 
 (setq dashboard-items '((recents  . 5)
-					;(bookmarks . 5)
-			(projects . 5)
-			(agenda . 5)
-			(registers . 5)))
+                                        ;(bookmarks . 5)
+                        (projects . 5)
+                        (agenda . 5)
+                        (registers . 5)))
 
 (add-hook 'after-init-hook 'init-hooks)
 #+end_src
@@ -315,8 +315,8 @@ Code formatting
 #+end_src
 Dockerfile support
 #+BEGIN_SRC emacs-lisp
-  (use-package dockerfile-mode
-    :ensure t)
+(use-package dockerfile-mode
+  :ensure t)
 #+END_SRC
 Package for html live view
 #+begin_src emacs-lisp
@@ -329,7 +329,7 @@ Cool web stuff
   :ensure t)
 #+END_SRC
 *** Auto completion
-Use ~company~ for autocompletion
+Use ~company~ for autocompletion. Add snippets to company backends
 #+begin_src emacs-lisp
 (use-package company
   :ensure t
@@ -340,35 +340,44 @@ Use ~company~ for autocompletion
   (setq company-idle-delay 0)
   (setq company-minimum-prefix-length 2)
   (setq company-tooltip-align-annotations t)
+
+  (defun iliayar/company-complete-selection ()
+  "Insert the selected candidate or the first if none are selected."
+  (interactive)
+  (if company-selection
+      (company-complete-selection)
+    (company-complete-number 1)))
+  ;; (setq company-frontends '(company-pseudo-tooltip-frontend
+  ;; 			    company-echo-metadata-frontend))
   (setq company-backends 
-        '(company-capf 
-          ;; company-bbdb 
-          ;; company-clang 
-          ;; company-keywords 
-          company-yasnippet 
-          ;; company-lsp 
-          ;; company-files 
-          ;; company-ctags
-          ;; company-anaconda
-          )))
-#+end_src
-Add snippets to company backends
-#+begin_src emacs-lisp
-(defun mars/company-backend-with-yas (backends)
-  "Add :with company-yasnippet to company BACKENDS.
+	'(company-capf 
+	  ;; company-bbdb 
+	  ;; company-clang 
+	  ;; company-keywords 
+	  company-yasnippet 
+	  ;; company-lsp 
+	  ;; company-files 
+	  ;; company-ctags
+	  ;; company-anaconda
+	  ))
+
+  (defun mars/company-backend-with-yas (backends)
+    "Add :with company-yasnippet to company BACKENDS.
   Taken from https://github.com/syl20bnr/spacemacs/pull/179."
-  (if (and (listp backends) (memq 'company-yasnippet backends))
-      backends
-    (append (if (consp backends)
-                backends
-              (list backends))
-            '(:with company-yasnippet))))
+    (if (and (listp backends) (memq 'company-yasnippet backends))
+	backends
+      (append (if (consp backends)
+		  backends
+		(list backends))
+	      '(:with company-yasnippet))))
 
-(defun add-yas-in-company ()
-  (setq company-backends
-        (mapcar #'mars/company-backend-with-yas company-backends)))
+  (defun add-yas-in-company ()
+    (setq company-backends
+	  (mapcar #'mars/company-backend-with-yas company-backends)))
 
-(add-yas-in-company)
+  (add-yas-in-company)
+
+  )
 #+end_src
 Lsp ~backend~ for ~company~
 #+begin_src emacs-lisp
@@ -380,12 +389,23 @@ Lsp ~backend~ for ~company~
   (setq company-lsp-enable-snippet t)
   (setq lsp-enable-snippet t))
 #+end_src
-Completion for =M-x= commands
+Display completion in child buffer, quite slow 😞
+#+BEGIN_SRC emacs-lisp
+;; (use-package company-posframe
+;;   :ensure t
+;;   :config
+;;   (company-posframe-mode 1))
+#+END_SRC
+
+Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
 #+begin_src emacs-lisp
 (use-package counsel
   :ensure t
   :init
-  (ivy-mode 1))
+  (ivy-mode 1)
+  :config
+  (require 'facemenu)
+  )
 #+end_src
 *** Languages and lsp
 Lsp client. Speeding up 🛹, adding folders to not track. \\
@@ -409,10 +429,16 @@ Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/
   (setq lsp-idle-delay 0.500)
   :ensure t)
 #+end_src
-Lsp integration with several plugins
-#+begin_src emacs-lisp
+Syntax checking and lsp related errors/warnings. Posfrmae stil sucks
+#+BEGIN_SRC emacs-lisp
 (use-package flycheck
   :ensure t)
+;; (use-package flycheck-posframe
+;;   :ensure t
+;;   :hook (flycheck-mode . flycheck-posframe-mode))
+#+END_SRC
+Lsp integration with several plugins
+#+begin_src emacs-lisp
 (use-package lsp-treemacs
   :ensure t)
 (use-package lsp-ivy
@@ -465,7 +491,7 @@ Go mode
 #+begin_src emacs-lisp
 (use-package go-mode
   :ensure t)
-  #+end_src
+#+end_src
 Haskell mode
 #+begin_src emacs-lisp
 (use-package haskell-mode
@@ -525,7 +551,7 @@ theoremes in LaTeX with org syntax
   :ensure t
   ;; :hook (org-mode . org-special-block-extras-mode)
   :config (org-special-block-extras-short-names))
-  #+end_src
+#+end_src
 Reveal.js for presentations
 #+BEGIN_SRC emacs-lisp
 (use-package ox-reveal
@@ -561,17 +587,17 @@ Org Roam
   :custom
   (org-roam-directory "~/org/roam")
   :bind (("C-c n l" . org-roam-buffer-toggle)
-	 ("C-c n f" . org-roam-node-find)
-	 ("C-c n i" . org-roam-node-insert)
-	 :map org-mode-map
-	 ("C-M-i" . completion-at-point))
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert)
+         :map org-mode-map
+         ("C-M-i" . completion-at-point))
   :config
   (org-roam-setup))
-;; (use-package websocket
-;;   :ensure t)
+(use-package websocket
+  :ensure t)
 
-;; (add-to-list 'load-path "~/.emacs.d/lisp/org-roam-ui")
-;; (load-library "org-roam-ui")
+(add-to-list 'load-path "~/.emacs.d/lisp/org-roam-ui")
+(load-library "org-roam-ui")
 #+END_SRC
 *** Settings
 Setting visual stuff
@@ -672,7 +698,7 @@ Inserting last screenshot
   (interactive)
   (setq screenshots-dir "~/Pictures/screenshots/")
   (let ((cur-dir (read-directory-name "Copy screenshot to: "))
-	(screenshot (car (last (directory-files screenshots-dir)))))
+        (screenshot (car (last (directory-files screenshots-dir)))))
     (copy-file (concat screenshots-dir screenshot) (concat cur-dir screenshot) t)
     (org-insert-link nil (concat cur-dir screenshot)))
   (org-redisplay-inline-images))
@@ -834,12 +860,34 @@ Setting packages
 (add-to-list 'org-latex-minted-langs '(ipython "python"))
 #+END_SRC
 ** Common
-RSS reader
+RSS reader. Settings colors for each tag.
 #+begin_src emacs-lisp
 (use-package elfeed
   :ensure t
   :custom
-  (rmh-elfeed-org-files (list "~/org/elfeed.org")))
+  (rmh-elfeed-org-files (list "~/org/elfeed.org"))
+  :config
+  (defface unread-tag-face '((t :foreground "light grey")) "Marks unread")
+  (defface news-tag-face '((t :foreground "light yellow")) "Mark news")
+  (defface ctf-tag-face '((t :foreground "red")) "Mark CTF events")
+  (defface blog-tag-face '((t :foreground "cyan")) "Mark posts")
+  (defface github-tag-face '((t :foreground "orange")) "Mark Github feed")
+  (defface starred-tag-face '((t :foreground "yellow")) "Mark favourite posts")
+  (defface videos-tag-face '((t :foreground "tomato")) "Mark favourite posts")
+  (setq elfeed-search-face-alist
+	'(
+	  (starred starred-tag-face)
+	  (ctf ctf-tag-face)
+	  (blog blog-tag-face)
+	  (news news-tag-face)
+	  (github github-tag-face)
+	  (videos videos-tag-face)
+	  (unread elfeed-search-unread-title-face)
+	  ))
+
+  (defalias 'elfeed-toggle-star
+    (elfeed-expose #'elfeed-search-toggle-all 'starred))
+  )
 (use-package elfeed-org
   :ensure t
   :init
@@ -848,28 +896,6 @@ RSS reader
   :ensure t
   :init
   (elfeed-goodies/setup))
-#+end_src
-Settings colors for each tag.
-#+begin_src emacs-lisp
-(defface unread-tag-face '((t :foreground "light grey")) "Marks unread")
-(defface news-tag-face '((t :foreground "light yellow")) "Mark news")
-(defface ctf-tag-face '((t :foreground "red")) "Mark CTF events")
-(defface blog-tag-face '((t :foreground "cyan")) "Mark posts")
-(defface github-tag-face '((t :foreground "orange")) "Mark Github feed")
-(defface starred-tag-face '((t :foreground "yellow")) "Mark favourite posts")
-(setq elfeed-search-face-alist
-      '(
-        (starred starred-tag-face)
-        (ctf ctf-tag-face)
-        (blog blog-tag-face)
-        (news news-tag-face)
-        (github github-tag-face)
-        (unread elfeed-search-unread-title-face)
-        ))
-
-(defalias 'elfeed-toggle-star
-  (elfeed-expose #'elfeed-search-toggle-all 'starred))
-
 #+end_src
 Mail client
 #+BEGIN_SRC emacs-lisp
@@ -888,59 +914,59 @@ Mail client
   (setq message-send-mail-function 'smtpmail-send-it)
 
   (setq mu4e-contexts
-	(list
-	 ;; Personal context
-	 (make-mu4e-context
-	  :name "personal"
-	  :match-func (lambda (msg) (when msg
-				      (string-prefix-p "/personal" (mu4e-message-field msg :maildir))))
-	  :vars '((mu4e-sent-folder . "/personal/[Gmail]/Sent Mail")
-		  (mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
-		  ;; (mu4e-refile-folder . "/personal/[Gmail]/All Mail")
-		  (mu4e-trash-folder . "/personal/[Gmail]/Trash")
-		  (user-mail-address . "iliayar3@gmail.com")
-		  (mu4e-get-mail-command . "mbsync personal")
-		  (smtpmail-smtp-server . "smtp.gmail.com")
-		  (smtpmail-smtp-service . 465)
-		  (smtpmail-stream-type . ssl)
-		  (smtpmail-smtp-user . "iliayar3@gmail.com")
-		  (mu4e-bookmarks . (("maildir:/personal/Inbox" "Inbox" ?i)
-				     ("maildir:/personal/[Gmail]/Important" "Important" ?!)))
-		  ))
-	 ;; Cock context
-	 (make-mu4e-context
-	  :name "cock"
-	  :match-func (lambda (msg) (when msg
-				      (string-prefix-p "/cock" (mu4e-message-field msg :maildir))))
-	  :vars '(
-		  (mu4e-sent-folder . "/cock/Sent")
-		  ;; (mu4e-drafts-folder . "/cock/Drafts")
-		  (mu4e-refile-folder . "/cock/Junk")
-		  (mu4e-trash-folder . "/cock/Trash")
-		  (user-mail-address . "iliayar@cock.li")
-		  (mu4e-get-mail-command . "mbsync cock")
-		  (smtpmail-smtp-server . "mail.cock.li")
-		  (smtpmail-smtp-service . 465)
-		  (smtpmail-stream-type . ssl)
-		  (smtpmail-smtp-user . "iliayar@cock.li")
-		  (mu4e-bookmarks . (("maildir:/cock/Inbox" "Inbox" ?i)
-				     ;; ("maildir:/personal/[Gmail]/Important" "Important" ?!)
-				     ))
-		  ))
-	 )))
+        (list
+         ;; Personal context
+         (make-mu4e-context
+          :name "personal"
+          :match-func (lambda (msg) (when msg
+                                      (string-prefix-p "/personal" (mu4e-message-field msg :maildir))))
+          :vars '((mu4e-sent-folder . "/personal/[Gmail]/Sent Mail")
+                  (mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
+                  ;; (mu4e-refile-folder . "/personal/[Gmail]/All Mail")
+                  (mu4e-trash-folder . "/personal/[Gmail]/Trash")
+                  (user-mail-address . "iliayar3@gmail.com")
+                  (mu4e-get-mail-command . "mbsync personal")
+                  (smtpmail-smtp-server . "smtp.gmail.com")
+                  (smtpmail-smtp-service . 465)
+                  (smtpmail-stream-type . ssl)
+                  (smtpmail-smtp-user . "iliayar3@gmail.com")
+                  (mu4e-bookmarks . (("maildir:/personal/Inbox" "Inbox" ?i)
+                                     ("maildir:/personal/[Gmail]/Important" "Important" ?!)))
+                  ))
+         ;; Cock context
+         (make-mu4e-context
+          :name "cock"
+          :match-func (lambda (msg) (when msg
+                                      (string-prefix-p "/cock" (mu4e-message-field msg :maildir))))
+          :vars '(
+                  (mu4e-sent-folder . "/cock/Sent")
+                  ;; (mu4e-drafts-folder . "/cock/Drafts")
+                  (mu4e-refile-folder . "/cock/Junk")
+                  (mu4e-trash-folder . "/cock/Trash")
+                  (user-mail-address . "iliayar@cock.li")
+                  (mu4e-get-mail-command . "mbsync cock")
+                  (smtpmail-smtp-server . "mail.cock.li")
+                  (smtpmail-smtp-service . 465)
+                  (smtpmail-stream-type . ssl)
+                  (smtpmail-smtp-user . "iliayar@cock.li")
+                  (mu4e-bookmarks . (("maildir:/cock/Inbox" "Inbox" ?i)
+                                     ;; ("maildir:/personal/[Gmail]/Important" "Important" ?!)
+                                     ))
+                  ))
+         )))
 #+END_SRC
 
 * Keybindings
 Evil!
 #+BEGIN_SRC emacs-lisp
- (define-minor-mode my-override-mode
+(define-minor-mode my-override-mode
   "Overrides all major and minor mode keys" t)
 
 (defvar my-override-map (make-sparse-keymap "my-override-map")
   "Override all major and minor mode keys")
 
 (add-to-list 'emulation-mode-map-alists
-  `((my-override-mode . ,my-override-map)))
+             `((my-override-mode . ,my-override-map)))
 
 (define-key my-override-map (kbd "<left>")
   (lambda ()
@@ -967,7 +993,7 @@ Evil!
 (general-define-key
  :keymaps 'company-active-map
  "<tab>"     'yas-expand
- "<backtab>" 'company-complete-selection)
+ "<backtab>" 'iliayar/company-complete-selection)
 
 (general-define-key
  "M-x" 'counsel-M-x)
@@ -981,7 +1007,7 @@ Elfeed hydra binddings
 (defhydra elfeed-search-view-hydra (:color blue :hint t)
   ("d" (elfeed-search-set-filter nil) "Default")
   ("f" (elfeed-search-set-filter "+starred") "Favourite")
-  ("a" (elfeed-search-set-filter "-unread") "All"))
+  ("a" (elfeed-search-set-filter "") "All"))
 #+end_src
 Bindings using ~general~ package
 #+begin_src emacs-lisp

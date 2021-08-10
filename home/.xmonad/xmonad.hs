@@ -390,6 +390,10 @@ tsSystem =
        [ Node (TS.TSNode "off" "Switch off compositor" (spawn "killall picom")) []
        , Node (TS.TSNode "on" "Switch on compositor" (spawn "picom --experimental-backends -b")) []
        ]
+   , Node (TS.TSNode "+ Auto lock" "xautolock switch on/off" (return ()))
+       [ Node (TS.TSNode "off" "Switch off xautolock" (spawn "xautolock -disable")) []
+       , Node (TS.TSNode "on" "Switch on xautolock" (spawn "xautolock -enable")) []
+       ]
    , Node (TS.TSNode "+ Brightness" "Set Brightness" (return ()))
        [ Node (TS.TSNode "Max Brightness" "Set Brightness to 100" (spawn "light -S 100")) []
        , Node (TS.TSNode "Norm Brightness" "Set Brightness to 50" (spawn "light -S 50")) []
@@ -437,7 +441,6 @@ tsTools =
               spawnOn (myWorkspacesClickable !! 9) "telegram-desktop"
               spawnOn (myWorkspacesClickable !! 8) "brave"
               spawnOn (myWorkspacesClickable !! 1) "termite"
-              spawnOn (myWorkspacesClickable !! 9) "thunderbird"
               spawnOn (myWorkspacesClickable !! 0) "spotify")) []
   ]
 
@@ -735,7 +738,7 @@ myStartupHook = do
           spawnOnce "syncthing -no-browser -logfile='/tmp/syncthing.log' &"
           spawnOnce "nitrogen --restore &"
           spawnOnce "picom --experimental-backends -b &"
-          spawnOnce "xautolock -time 15 -locker ~/bin/lock.sh &"
+          spawnOnce "xautolock -time 5 -locker ~/bin/lock.sh &"
           spawnOnce "lxpolkit &"
           spawnOnce "udiskie &"
           -- spawnOnce "stalonetray &"

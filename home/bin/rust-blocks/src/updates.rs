@@ -121,6 +121,7 @@ impl Block for UpdatesBlock
 				 xact(&format!("Pacman: {}", xclr(&pacman_text, pacman_color)), &update_cmd("pacman")),
 				 xact(&format!("AUR: {}", xclr(&aur_text, aur_color)), &update_cmd("aur")));
 	fifo.write_all(xmb_status.as_bytes()).await.ok();
+	fifo.flush().await.ok();
 
 	if let Some(action) = notifiaction_handler.update().await
 	    .summary("Updates [Done]")
@@ -133,13 +134,13 @@ impl Block for UpdatesBlock
 		    Command::new("gksudo")
 			.arg("pacman -Syyuw --noconfirm")
 			.status().await.ok();
+		    *self.status.lock().await = UpdateStatus::None;
+		    fifo.write_all(xmb_status.as_bytes()).await.ok();
 		    dunstify::Notification::new("Updates")
 			.body("Updates downloaded")
 			.appname(NOTIFICATION_APPNAME)
 			.icon(NOTIFICATION_ICON)
 			.show().await.ok();
-		    *self.status.lock().await = UpdateStatus::None;
-		    fifo.write_all(xmb_status.as_bytes()).await.ok();
 		}
 	    }
     }
