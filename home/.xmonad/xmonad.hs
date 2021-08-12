@@ -436,7 +436,7 @@ tsTools =
   [ Node (TS.TSNode "NetworkManager TUI" "Terminal Interface for NetworkManager" (termSpawn termite "nmtui")) []
   , Node (TS.TSNode "PulseMixer" "Pulse Audio Mixer" (termSpawn termite "pulsemixer")) []
   , Node (TS.TSNode "Syncthing GUI" "Open Syncthing GUI in browser" (spawn "xdg-open 'https://localhost:8384'")) []
-  , Node (TS.TSNode "Main Workflow" "Run Brace, Telegram on appropriate workspaces"
+  , Node (TS.TSNode "Main Workflow 🤘" "Run Brace, Telegram on appropriate workspaces"
           (do
               spawnOn (myWorkspacesClickable !! 9) "telegram-desktop"
               spawnOn (myWorkspacesClickable !! 8) "brave"
@@ -451,7 +451,8 @@ makeFullscreenNoDock = sendMessage (MT.Toggle NBFULL) >> sendMessage ToggleStrut
 tsDefaultConfig :: TS.TSConfig a
 tsDefaultConfig = TS.TSConfig { TS.ts_hidechildren = True
                               , TS.ts_background   = Theme.ts_background
-                              , TS.ts_font         = myFont
+                              , TS.ts_font         = myFont ++ ",Noto Color Emoji:style=Regular"
+                              -- , TS.ts_font         = myFont
                               , TS.ts_node         = Theme.ts_node
                               , TS.ts_nodealt      = Theme.ts_nodealt
                               , TS.ts_highlight    = Theme.ts_highlight
@@ -756,7 +757,7 @@ myStartupHook = do
 
 emojiXPConfig :: XPConfig
 emojiXPConfig = def
-      { font                = "xft:Symbola:regular:size=12:antialise=true"
+      { font                = myFont ++ ",Noto Color Emoji:size=12:antialise=true,Symbola:regular:size=12:antialise=true"
       , bgColor             = Theme.background
       , fgColor             = Theme.foreground
       , bgHLight            = Theme.color0
@@ -891,11 +892,10 @@ main = do
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
         logHook            = dynamicLogWithPP xmobarPP
-                { ppOutput  = \x -> let encX = decodeString x
-                  in
-                     hPutStrLn xmproc0 encX
+                { ppOutput  = \x ->
+                    hPutStrLn xmproc0 x
                   -- >> hPutStrLn xmproc1 encX
-                  -- >> appendFile "/tmp/.xmonad_data" (deodeString x)
+                  -- >> appendFile "/tmp/.xmonad_data" x
                 , ppCurrent = xmobarColor Theme.color2 "" -- . wrap "[" "]"
                 , ppVisible = xmobarColor Theme.color3 ""
                 , ppTitle   = xmobarColor Theme.color9 "" . shorten 25
@@ -903,8 +903,5 @@ main = do
                 , ppExtras  = []
                 , ppOrder   = \(ws:l:t:ex) -> [ws,l]++ex++[t]
                 },
-        -- logHook = io (do
-        --               hPutStrLn xmproc0 "Тест"
-        --           ),
         startupHook        = myStartupHook
-    } -- `additionalKeys` [ ("M1-S", spawn "xkb-switch -n") ]
+    }

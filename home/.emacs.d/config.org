@@ -340,6 +340,7 @@ Use ~company~ for autocompletion. Add snippets to company backends
   (setq company-idle-delay 0)
   (setq company-minimum-prefix-length 2)
   (setq company-tooltip-align-annotations t)
+  (setq company-auto-commit 'company-auto-commit-p)
 
   (defun iliayar/company-complete-selection ()
   "Insert the selected candidate or the first if none are selected."
@@ -1016,6 +1017,7 @@ Bindings using ~general~ package
  :prefix "SPC"
  :non-normal-prefix "M-SPC"
  :keymaps 'override
+ "bf" 'counsel-switch-buffer
  "bb" 'ibuffer
  "ca" 'lsp-execute-code-action
  "cc" 'compile
