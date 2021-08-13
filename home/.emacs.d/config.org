@@ -63,10 +63,25 @@ Amazing git tool
 (use-package magit
   :ensure t)
 #+end_src
-Project tree
+Project tree. Settings fonts for ~treemacs~
 #+begin_src emacs-lisp
 (use-package treemacs
-  :ensure t)
+  :ensure t
+  :config
+  (dolist (face '(treemacs-root-face
+		  treemacs-git-unmodified-face
+		  treemacs-git-modified-face
+		  treemacs-git-renamed-face
+		  treemacs-git-ignored-face
+		  treemacs-git-untracked-face
+		  treemacs-git-added-face
+		  treemacs-git-conflict-face
+		  treemacs-directory-face
+		  treemacs-directory-collapsed-face
+		  treemacs-file-face
+		  treemacs-tags-face))
+    (set-face-attribute face nil :family "Fira Code" :height 85))
+  )
 (use-package treemacs-evil
   :after evil
   :ensure t)
@@ -74,24 +89,8 @@ Project tree
   :after projectile
   :ensure t)
 #+end_src
-Settings fonts for ~treemacs~
-#+BEGIN_SRC emacs-lisp
-(dolist (face '(treemacs-root-face
-                treemacs-git-unmodified-face
-                treemacs-git-modified-face
-                treemacs-git-renamed-face
-                treemacs-git-ignored-face
-                treemacs-git-untracked-face
-                treemacs-git-added-face
-                treemacs-git-conflict-face
-                treemacs-directory-face
-                treemacs-directory-collapsed-face
-                treemacs-file-face
-                treemacs-tags-face))
-  (set-face-attribute face nil :family "Fira Code" :height 85))
-#+END_SRC
 ** Evil mode
-~Evil~ with dependecies
+~Evil~ with dependecies. Disable Evil mode for some modes
 #+begin_src emacs-lisp
 (setq evil-want-keybinding nil)
 (use-package undo-tree
@@ -103,7 +102,11 @@ Settings fonts for ~treemacs~
   :init
   (setq evil-want-integration t)
   :config
-  (evil-mode 1))
+  (evil-mode 1)
+  (add-to-list 'evil-emacs-state-modes 'elfeed-search)
+  (cl-loop for (mode . state) in '((dired-mode . emacs) (elfeed-search . emacs))
+	   do (evil-set-initial-state mode state))
+  )
 #+end_src
 Collection of evil keybindings
 #+begin_src emacs-lisp
@@ -137,18 +140,13 @@ Multicursor
   :config
   (global-evil-mc-mode 1))
 #+end_src
-*** Settings
-Disable Evil mode for some modes
-#+begin_src emacs-lisp
-(add-to-list 'evil-emacs-state-modes 'elfeed-search)
-(cl-loop for (mode . state) in '((dired-mode . emacs) (elfeed-search . emacs))
-         do (evil-set-initial-state mode state))
-#+end_src
 ** Visual
 Icons
 #+begin_src emacs-lisp
 (use-package all-the-icons
-  :ensure t)
+  :ensure t
+  :config
+  (setq all-the-icons-scale-factor 1.0))
 #+end_src
 HIghlight todo keywords
 #+begin_src emacs-lisp
@@ -171,14 +169,30 @@ Searching
 Windows hoping
 #+begin_src emacs-lisp
 (use-package ace-window
-  :ensure t)
+  :ensure t
+  :config
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+  )
 #+end_src
 Dashboard showing on startup
 #+begin_src emacs-lisp
 (use-package dashboard
   :ensure t
   :config
-  (dashboard-setup-startup-hook))
+  (dashboard-setup-startup-hook)
+  :config
+  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+  (setq dashboard-center-content t)
+  (setq dashboard-startup-banner "~/Themes/Neofetch.png")
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  (setq dashboard-items '((recents  . 5)
+					;(bookmarks . 5)
+			  (projects . 5)
+			  (agenda . 5)
+			  (registers . 5)))
+
+  )
 #+end_src
 *** Themes
 ~Doom-modeline~ as modeline
@@ -213,54 +227,28 @@ Colors from pywal
 *** Settings
 - Visual/behaviour
 - Dashboard
+- y or n instead of yes-or no
+- no annoying bell!
+- setting ~ace-window~ keys
+- isearch
+- Treat =_= as work(~vim~ variant)
 #+BEGIN_SRC  emacs-lisp
 (defun init-hooks () (global-display-line-numbers-mode 1))
+(add-hook 'after-init-hook 'init-hooks)
 (scroll-bar-mode 0) ; no scroll bar
 (tool-bar-mode 0) ; no tool bar
 (menu-bar-mode 0) ; no menu bar
 (show-paren-mode 1) ; visualize matching parenthesees
 (global-hl-line-mode 1) ; highlight current line
 (eldoc-mode 1) ; enable docs in minibuffer
-
 (set-face-attribute 'default nil
                     :family "Fira Code"
                     :height 85)
-
-(setq company-math-allow-latex-symbols-in-faces t)
-
-(setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
-(setq dashboard-center-content t)
-(setq dashboard-startup-banner "~/Themes/Neofetch.png")
-(setq dashboard-set-heading-icons t)
-(setq dashboard-set-file-icons t)
-
-(setq dashboard-items '((recents  . 5)
-                                        ;(bookmarks . 5)
-                        (projects . 5)
-                        (agenda . 5)
-                        (registers . 5)))
-
-(add-hook 'after-init-hook 'init-hooks)
-#+end_src
-- y or n instead of yes-or no
-- no annoying bell!
-- setting ~ace-window~ keys
-- isearch
-#+begin_src emacs-lisp
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq ring-bell-function 'ignore)
-(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-
-(define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance)
-(define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat)
 (setq case-fold-search t)
-
-#+END_SRC
-Treat =_= as work(~vim~ variant)
-#+BEGIN_SRC emacs-lisp
 (modify-syntax-entry ?_ "w") 
-#+END_SRC
-
+#+end_src
 ** Keybingings
 Convenient keybindings
 #+begin_src emacs-lisp
@@ -283,7 +271,13 @@ Keys hints
 Code::stats
 #+BEGIN_SRC emacs-lisp
 (use-package code-stats
-  :ensure t)
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook #'code-stats-mode)
+  (add-hook 'org-mode-hook #'code-stats-mode)
+  (run-with-idle-timer 30 t #'code-stats-sync)
+  (add-hook 'kill-emacs-hook (lambda () (code-stats-sync :wait)))  
+  )
 #+END_SRC
 Auto parenthesis
 #+begin_src emacs-lisp
@@ -343,11 +337,11 @@ Use ~company~ for autocompletion. Add snippets to company backends
   (setq company-auto-commit 'company-auto-commit-p)
 
   (defun iliayar/company-complete-selection ()
-  "Insert the selected candidate or the first if none are selected."
-  (interactive)
-  (if company-selection
-      (company-complete-selection)
-    (company-complete-number 1)))
+    "Insert the selected candidate or the first if none are selected."
+    (interactive)
+    (if company-selection
+	(company-complete-selection)
+      (company-complete-number 1)))
   ;; (setq company-frontends '(company-pseudo-tooltip-frontend
   ;; 			    company-echo-metadata-frontend))
   (setq company-backends 
@@ -378,6 +372,7 @@ Use ~company~ for autocompletion. Add snippets to company backends
 
   (add-yas-in-company)
 
+  (setq company-math-allow-latex-symbols-in-faces t)
   )
 #+end_src
 Lsp ~backend~ for ~company~
@@ -397,7 +392,6 @@ Display completion in child buffer, quite slow 😞
 ;;   :config
 ;;   (company-posframe-mode 1))
 #+END_SRC
-
 Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
 #+begin_src emacs-lisp
 (use-package counsel
@@ -406,6 +400,10 @@ Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
   (ivy-mode 1)
   :config
   (require 'facemenu)
+  :config
+  (setq projectile-completion-system 'ivy)
+  (setq ivy-use-selectable-prompt t)
+  (setq ivy-initial-inputs-alist nil)
   )
 #+end_src
 *** Languages and lsp
@@ -524,26 +522,11 @@ Java lsp
   :ensure t)
 #+END_SRC
 *** Settings
-C style settings
+- C style settings
+- Scrool compilation buffer to the first error instead of end.
 #+BEGIN_SRC emacs-lisp
 (setq c-default-style "linux")
-#+END_SRC
-Code::stats
-#+BEGIN_SRC emacs-lisp
-(add-hook 'prog-mode-hook #'code-stats-mode)
-(add-hook 'org-mode-hook #'code-stats-mode)
-(run-with-idle-timer 30 t #'code-stats-sync)
-(add-hook 'kill-emacs-hook (lambda () (code-stats-sync :wait)))  
-#+END_SRC
-Scrool compilation buffer to the first error instead of end.
-#+BEGIN_SRC emacs-lisp
 (setq compilation-scroll-output 'first-error)
-#+END_SRC
-Setting ~ivy~
-#+BEGIN_SRC emacs-lisp 
-(setq projectile-completion-system 'ivy)
-(setq ivy-use-selectable-prompt t)
-(setq ivy-initial-inputs-alist nil)
 #+END_SRC
 ** Org-mode
 theoremes in LaTeX with org syntax
@@ -556,7 +539,10 @@ theoremes in LaTeX with org syntax
 Reveal.js for presentations
 #+BEGIN_SRC emacs-lisp
 (use-package ox-reveal
-  :ensure t)
+  :ensure t
+  :config
+  (setq org-reveal-root (expand-file-name "~/.local/share/reveal.js-4.1.0"))
+  )
 #+END_SRC
 Export Org mode to Json
 #+BEGIN_SRC emacs-lisp
@@ -593,6 +579,7 @@ Org Roam
          :map org-mode-map
          ("C-M-i" . completion-at-point))
   :config
+  (setq org-roam-completion-everywhere t)
   (org-roam-setup))
 (use-package websocket
   :ensure t)
@@ -604,14 +591,14 @@ Org Roam
 Setting visual stuff
 #+begin_src emacs-lisp
 (setq-default prettify-symbols-alist '(("#+begin_src" . "↓")
-                                       ("#+end_src" . "↑")
-                                       ("#+BEGIN_SRC" . "↓")
-                                       ("#+END_SRC" . "↑")
-                                       ("#+end_proof" . "⬜")
-                                       ("[ ]" . "")
-                                       ("[X]" . "")
-                                       ("[-]" . "")
-                                       ))
+				       ("#+end_src" . "↑")
+				       ("#+BEGIN_SRC" . "↓")
+				       ("#+END_SRC" . "↑")
+				       ("#+end_proof" . "⬜")
+				       ("[ ]" . "")
+				       ("[X]" . "")
+				       ("[-]" . "")
+				       ))
 
 (setq org-hide-emphasis-markers t
       org-fontify-done-headline t
@@ -621,20 +608,22 @@ Setting visual stuff
       org-directory "~/org"
       org-agenda-files '("~/org")
       org-default-notes-file (concat org-directory "/Notes.org")
-
       org-highlight-latex-and-related '(latex entities)
-      org-todo-keywords '((sequence "TODO" "FIXME" "|" "DONE" ))
+      org-todo-keywords '((sequence "DRIFTED" "TODO" "FIXME" "|" "DONE" "CANCELED" ))
       org-src-preserve-indentation t)
 
-(setq hl-todo-keyword-faces
-      '(("TODO"   . "#fabd2f")
-        ("FIXME"  . "#fb4934")))
+(setq org-todo-keyword-faces
+      '(("TODO"     . "magenta")
+	("FIXME"    . "red")
+	("DONE"     . "LawnGreen")
+	("DRIFTED"  . "DeepSkyBlue1")
+	("CANCELED" . "yellow2")))
 
 (font-lock-add-keywords 'org-mode
-                        '(("^ *\\([-]\\) "
-                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+			'(("^ *\\([-]\\) "
+			   (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 #+end_src
-Defining action to execute at entering org-mode
+Defining action to execute at entering org-mode, disable marking capture entry as bookmark
 #+begin_src emacs-lisp
 (add-hook 'org-mode-hook 
           (lambda () 
@@ -646,6 +635,8 @@ Defining action to execute at entering org-mode
               (setq left-margin-width 5)
               (setq right-margin-width 5)
               (set-window-buffer nil (current-buffer)))))
+
+(setq org-capture-bookmark nil)
 #+END_SRC
 Increse readability of latex preview in org-mode
 #+begin_src emacs-lisp
@@ -676,10 +667,6 @@ Org mode file associations
 (setq org-confirm-babel-evaluate nil)
 (setq org-src-tab-acts-natively t)
 #+END_SRC
-Reveal.js presentations
-#+BEGIN_SRC emacs-lisp
-(setq org-reveal-root (expand-file-name "~/.local/share/reveal.js-4.1.0"))
-#+END_SRC
 Export settings
 #+BEGIN_SRC emacs-lisp
 (setq org-html-htmlize-output-type 'inline-css)
@@ -703,6 +690,10 @@ Inserting last screenshot
     (copy-file (concat screenshots-dir screenshot) (concat cur-dir screenshot) t)
     (org-insert-link nil (concat cur-dir screenshot)))
   (org-redisplay-inline-images))
+#+END_SRC
+Set Org-mode exporting backends
+#+BEGIN_SRC emacs-lisp
+(setq org-export-backends '(ascii html icalendar latex md odt))
 #+END_SRC
 *** Publishing
 Publishing for:
@@ -913,6 +904,7 @@ Mail client
   (setq mu4e-sent-messages-behavior 'delete)
   (setq mu4e-use-fancy-chars t)
   (setq message-send-mail-function 'smtpmail-send-it)
+  (setq mu4e-completing-read-function 'ivy-completing-read)
 
   (setq mu4e-contexts
         (list
@@ -1002,6 +994,9 @@ Evil!
 (general-define-key
  :map 'org-mode-map
  "C-c C-x i" 'my/org-insert-last-screenshot)
+
+(define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance)
+(define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat)
 #+end_src
 Elfeed hydra binddings
 #+begin_src emacs-lisp

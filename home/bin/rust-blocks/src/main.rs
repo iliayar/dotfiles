@@ -90,7 +90,7 @@ pub async fn get_fifo_with_prefix(name: &str, prefix: &str) -> File {
 
     OpenOptions::new()
         .write(true)
-        .append(true)
+        // .append(true)
         .open(&filename).await
         .expect(&error("Cannot open existing FIFO"))
 }
