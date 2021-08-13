@@ -70,6 +70,7 @@ fn new_rule(member: &str, path: Option<&str>, sender: Option<&str>, eavesdrop: b
 }
 
 async fn process_playback(msg: Message, fifo: Arc<Mutex<File>>) {
+    debug!("Music: Get playback message: {:?} ", msg);
     let mut playback: Option<PlaybackStatus> = None;
     let mut artist: Option<String> = None;
     let mut track: Option<String> = None;
@@ -126,6 +127,7 @@ async fn process_playback(msg: Message, fifo: Arc<Mutex<File>>) {
 }
 
 async fn process_state(msg: Message, player_name: &str, fifo: Arc<Mutex<File>>) {
+    debug!("Music: Get state message: {:?} ", msg);
     let mut name = None;
     let mut old_owner = None;
     let mut new_onwer = None;
@@ -136,7 +138,9 @@ async fn process_state(msg: Message, player_name: &str, fifo: Arc<Mutex<File>>) 
 	new_onwer = iter.read::<String>().ok();
     }
     if let Some(((name, old_owner), _new_owner)) = name.zip(old_owner).zip(new_onwer) {
+	debug!("Music: process_state: Get message from {}", name);
 	if &name == player_name {
+	    debug!("Music: Writig to fifo...");
 	    fifo.lock().await.write_all(
 		format!("{} {}\n",
 			PLAYER,
@@ -147,7 +151,10 @@ async fn process_state(msg: Message, player_name: &str, fifo: Arc<Mutex<File>>) 
 			})
 		    .as_bytes()).await
 		.expect(&error("Failed to write to fifo in state_stream"));
+	    debug!("Music: Writig to fifo DONE");
 	}
+    } else {
+	warn!("Music: process_state: Invalid DBus message format");
     }
 }
 
