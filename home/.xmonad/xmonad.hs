@@ -115,7 +115,7 @@ dzen' :: String -> String
 dzen' m = "(echo " ++
   dzenEscape m ++
   " | column; cat) | " ++ unwords [ "dzen2"
-                         , "-fn 'Hack 9'"
+                         , "-fn 'Fira Code'"
                          , "-fg '" ++ Theme.color7 ++ "'"
                          , "-bg '" ++ Theme.color0 ++ "'"
                          ]
@@ -303,7 +303,7 @@ spawnSelected' :: [(String, String)] -> X()
 spawnSelected' = runSelectedAction (mygridConfig orange) . map (\(a, b) -> (a, spawn b))
 
 myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
-            , ("Brave", "brave")
+            , ("Brave", "brave-bin")
             , ("Telegram", "telegram-desktop")
             , ("Qutebrowser", "qutebrowser")
             , ("Cutter", "Cutter")
@@ -364,7 +364,7 @@ myScratchPads = [ termAppClass alacrittyScratchpad "terminal" Nothing manageQuak
 tsAll =
    [ Node (TS.TSNode "+ General" "General purpose applications" (return ()))
        [ Node (TS.TSNode "Caja" "File Manager" (spawn "caja")) []
-       , Node (TS.TSNode "Brave" "Browser" (spawn "brave")) []
+       , Node (TS.TSNode "Brave" "Browser" (spawn "brave-bin")) []
        , Node (TS.TSNode "Neofetch" "Show off" (termSpawn' $ URxvt (Just "neofetch-term") True [] $ Just "neofetch --w3m --source ~/Themes/Neofetch.png --image_size 360")) []
        ]
    , Node (TS.TSNode "+ Programming" "programming" (return ()))
@@ -436,10 +436,10 @@ tsTools =
   [ Node (TS.TSNode "NetworkManager TUI" "Terminal Interface for NetworkManager" (termSpawn termite "nmtui")) []
   , Node (TS.TSNode "PulseMixer" "Pulse Audio Mixer" (termSpawn termite "pulsemixer")) []
   , Node (TS.TSNode "Syncthing GUI" "Open Syncthing GUI in browser" (spawn "xdg-open 'https://localhost:8384'")) []
-  , Node (TS.TSNode "Main Workflow 🤘" "Run Brace, Telegram on appropriate workspaces"
+  , Node (TS.TSNode "Main Workflow" "Run Brace, Telegram on appropriate workspaces"
           (do
               spawnOn (myWorkspacesClickable !! 9) "telegram-desktop"
-              spawnOn (myWorkspacesClickable !! 8) "brave"
+              spawnOn (myWorkspacesClickable !! 8) "brave-bin"
               spawnOn (myWorkspacesClickable !! 1) "termite"
               spawnOn (myWorkspacesClickable !! 0) "spotify")) []
   ]
@@ -451,8 +451,7 @@ makeFullscreenNoDock = sendMessage (MT.Toggle NBFULL) >> sendMessage ToggleStrut
 tsDefaultConfig :: TS.TSConfig a
 tsDefaultConfig = TS.TSConfig { TS.ts_hidechildren = True
                               , TS.ts_background   = Theme.ts_background
-                              , TS.ts_font         = myFont ++ ",Noto Color Emoji:style=Regular"
-                              -- , TS.ts_font         = myFont
+                              , TS.ts_font         = myFont
                               , TS.ts_node         = Theme.ts_node
                               , TS.ts_nodealt      = Theme.ts_nodealt
                               , TS.ts_highlight    = Theme.ts_highlight
@@ -476,9 +475,9 @@ myKeys = \conf -> let
   dzenAllBindings = withDzenKeymapsPipe "Keybindings" keymap $ createSubmap []
   restartRecompile = wrapBash $ (++" || (echo \x1b[31mFailed\x1b[m; killall xmessage; echo Press Enter; read)") $ wrap "(" ")" $ intercalate " && "
     [ "cd ~/.xmonad"
-    , "stack ghc -- --make ~/.xmonad/xmonadctl.hs"
-    , "stack ghc -- --make ~/.config/xmobar/xmobar.hs  -i$HOME/.config/xmobar/"
-    , "stack ghc -- --make ~/.config/xmobar/xmobar_top.hs  -i$HOME/.config/xmobar/"
+    , "ghc --make -threaded ~/.xmonad/xmonadctl.hs"
+    , "ghc --make -threaded ~/.config/xmobar/xmobar.hs  -i$HOME/.config/xmobar/"
+    , "ghc --make -threaded ~/.config/xmobar/xmobar_top.hs  -i$HOME/.config/xmobar/"
     -- , "stack ghc -- --make ~/.config/xmobar/xmobar_mon2.hs  -i$HOME/.config/xmobar/"
     , "xmonad --recompile"
     , "xmonad --restart"
@@ -757,7 +756,7 @@ myStartupHook = do
 
 emojiXPConfig :: XPConfig
 emojiXPConfig = def
-      { font                = myFont ++ ",Noto Color Emoji:size=12:antialise=true,Symbola:regular:size=12:antialise=true"
+      { font                = myFont
       , bgColor             = Theme.background
       , fgColor             = Theme.foreground
       , bgHLight            = Theme.color0
@@ -862,7 +861,7 @@ hooglePrompt c =
 
 anonGooglePrompt c =
     inputPrompt c "Anonymous google" ?+ \query ->
-        spawn $ "brave 'https://google.com/search?q=" ++ query ++ "' --incognito"
+        spawn $ "brave-bin 'https://google.com/search?q=" ++ query ++ "' --incognito"
 
 passInsertPrompt c =
     inputPrompt c "Add password" ?+ \query ->

@@ -1,0 +1,7 @@
+sys-kernel/linux-firmware @BINARY-REDISTRIBUTABLE
+# required by x11-base/xorg-x11-7.4-r3::gentoo[fonts]
+# required by xorg-x11 (argument)
+>=media-fonts/font-bh-ttf-1.0.3-r2 bh-luxi
+# required by x11-base/xorg-x11-7.4-r3::gentoo[fonts]
+# required by xorg-x11 (argument)
+>=media-fonts/font-bh-type1-1.0.3-r2 bh-luxi

@@ -31,7 +31,7 @@ Adding folder with manually added packages, loading file private variables
 - store all backups in a single directory
 #+begin_src emacs-lisp
 (add-to-list 'load-path "~/.emacs.d/lisp/")
-(load "~/.emacs.d/private.el")
+;; (load "~/.emacs.d/private.el")
 (setq user-init-file "~/.emacs.d/init.el")
 (setq backup-directory-alist
       `(("." . ,(concat user-emacs-directory "backups"))))
@@ -88,7 +88,7 @@ Settings fonts for ~treemacs~
                 treemacs-directory-collapsed-face
                 treemacs-file-face
                 treemacs-tags-face))
-  (set-face-attribute face nil :family "Fira Code" :height 85))
+  (set-face-attribute face nil :family "Fira Code" :height 100))
 #+END_SRC
 ** Evil mode
 ~Evil~ with dependecies
@@ -224,7 +224,7 @@ Colors from pywal
 
 (set-face-attribute 'default nil
                     :family "Fira Code"
-                    :height 85)
+                    :height 100)
 
 (setq company-math-allow-latex-symbols-in-faces t)
 
@@ -380,15 +380,15 @@ Use ~company~ for autocompletion. Add snippets to company backends
 
   )
 #+end_src
-Lsp ~backend~ for ~company~
+Lsp ~backend~ for ~company~. Seems no longer avaliable.
 #+begin_src emacs-lisp
-(use-package company-lsp
-  :after lsp-mode
-  :ensure t
-  :config
-  (push 'company-lsp company-backends)
-  (setq company-lsp-enable-snippet t)
-  (setq lsp-enable-snippet t))
+;; (use-package company-lsp
+;;   :after lsp-mode
+;;   :ensure t
+;;   :config
+;;   (push 'company-lsp company-backends)
+;;   (setq company-lsp-enable-snippet t)
+;;   (setq lsp-enable-snippet t))
 #+end_src
 Display completion in child buffer, quite slow 😞
 #+BEGIN_SRC emacs-lisp
@@ -475,6 +475,8 @@ Python lsp
 #+end_src
 emacs ipython notebook
 #+begin_src emacs-lisp
+(use-package jupyter
+  :ensure t)
 (use-package ein
   :ensure t)
 #+end_src

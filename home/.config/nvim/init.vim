@@ -72,8 +72,8 @@ Plug 'rust-lang/rust.vim'
 
 call plug#end()
 
-source ~/.config/nvim/private.vim
-let g:codestats_api_key = codestats_key
+" source ~/.config/nvim/private.vim
+" let g:codestats_api_key = codestats_key
 
 " Airline code::stats
 let g:airline_section_x = airline#section#create_right(['tagbar', 'filetype', '%{CodeStatsXp()}'])

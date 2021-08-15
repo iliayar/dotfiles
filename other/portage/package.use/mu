@@ -1,0 +1,22 @@
+net-mail/mu emacs
+# required by dev-python/pyzmq-20.0.0::gentoo[-test]
+# required by dev-python/notebook-6.4.0::gentoo
+# required by dev-python/widgetsnbextension-3.5.1-r1::gentoo
+# required by dev-python/ipywidgets-7.6.3::gentoo
+# required by dev-python/jupyter-1.0.0-r3::gentoo
+# required by jupyter (argument)
+>=net-libs/zeromq-4.3.4-r1 drafts
+# required by dev-python/qtconsole-5.1.1::gentoo
+# required by dev-python/ipython-7.25.0::gentoo[qt5]
+# required by dev-python/jupyter_console-6.4.0::gentoo
+# required by dev-python/jupyter-1.0.0-r3::gentoo
+# required by jupyter (argument)
+>=dev-python/QtPy-1.9.0-r5 printsupport
+# required by dev-python/PyQt5-5.15.4-r1::gentoo[multimedia]
+# required by dev-python/QtPy-1.9.0-r5::gentoo[pyqt5]
+# required by dev-python/qtconsole-5.1.1::gentoo
+# required by dev-python/ipython-7.25.0::gentoo[qt5]
+# required by dev-python/jupyter_console-6.4.0::gentoo
+# required by dev-python/jupyter-1.0.0-r3::gentoo
+# required by jupyter (argument)
+>=dev-qt/qtmultimedia-5.15.2 widgets

@@ -1,0 +1,10 @@
+app-portage/layman sync-plugin-portage git
+# required by app-editors/emacs-28.0.9999::han[jit]
+# required by app-emacs/emacs-common-1.8::gentoo
+>=sys-devel/gcc-10.3.0-r2 jit
+# required by net-im/telegram-desktop-2.8.11-r2::gentoo
+# required by telegram-desktop (argument)
+>=media-video/ffmpeg-4.4-r1 opus
+# required by net-im/telegram-desktop-2.8.11-r2::gentoo
+# required by telegram-desktop (argument)
+>=sys-libs/zlib-1.2.11-r4 minizip

@@ -1,0 +1,3 @@
+app-editors/vim -X
+net-misc/networkmanager iwd wifi -dhclient -dhcpcd
+x11-misc/xmobar xft

@@ -113,8 +113,8 @@ export EDITOR=nvim
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
-source .zshrc.private
-source ~/.local/share/codestats.zsh
+# source .zshrc.private
+# source ~/.local/share/codestats.zsh
 
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
@@ -138,5 +138,5 @@ source ~/.local/share/codestats.zsh
 # PERL_MB_OPT="--install_base \"$HOME/perl5\""; export PERL_MB_OPT;
 # PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"; export PERL_MM_OPT;
 
-eval "$(starship init zsh)"
+# eval "$(starship init zsh)"
 

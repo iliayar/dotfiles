@@ -45,23 +45,24 @@ config() {
 }
 
 install_aur_deps() {
-    echo "Installing AUR"
+    # echo "Installing AUR"
 
-    if [[ ! -e /bin/paru ]]; then
-    cd /tmp || exit
-    git clone https://aur.archlinux.org/paru.git
-    cd paru || exit
-    makepkg -si
-    fi
+    # if [[ ! -e /bin/paru ]]; then
+    # cd /tmp || exit
+    # git clone https://aur.archlinux.org/paru.git
+    # cd paru || exit
+    # makepkg -si
+    # fi
 
     echo "Installing AUR Deps"
-    [[ -n "${AUR_DEPS[*]}" ]] && paru -S "${AUR_DEPS[@]}"
-    cd "$DIR" || exit
+    # [[ -n "${AUR_DEPS[*]}" ]] && emerge --ask --autounmask "${AUR_DEPS[@]}"
+    # cd "$DIR" || exit
 }
 
 install_deps() {
     echo "Installing Deps"
-    [[ -n "${DEPS[*]}" ]] && sudo pacman -S  --needed "${DEPS[@]}"
+    # FIXME: Maybe add some flags or make own overlay with all dependecies.
+    # [[ -n "${DEPS[*]}" ]] && sudo emerge --ask --autounmask "${DEPS[@]}"
 }
 
 install_configs() {
@@ -180,6 +181,7 @@ termite() {
 zsh() {
     DEPS+=(
         zsh
+        exa
     )
     CONFIGS+=(
         .zshrc
