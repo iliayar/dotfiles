@@ -7,9 +7,9 @@
     home-manager.url = "github:nix-community/home-manager";
   };
 
-  outputs = { home-manager, nixpkgs, ...}: {
+  outputs = { home-manager, nixpkgs, ... }: {
     nixosConfigurations = {
-      hostname = nixpkgs.lib.nixosSystem {
+      nixos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
           ./host/configuration.nix

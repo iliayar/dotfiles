@@ -2,7 +2,7 @@
 [[file:rice.png]]
 [[https://github.com/iliayar/dotfiles/workflows/Shellcheck/badge.svg]]
 ** Installation
-[[file:install.sh][Script]] links configs, installs dependecies
+[[file:install.sh][Script]] installs systemwide flake.
 ** Main workflow
 *** Emacs
 Emacs config in one org file [[file:home/.emacs.d/config.org][Link]] \\
