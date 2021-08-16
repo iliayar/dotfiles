@@ -1,8 +1,8 @@
 { config, pkgs, ... }:
 
 {
-  programs.bash = {
+  programs.ssh = {
     enable = true;
-    profileExtra = "exec zsh";
   };
+
 }
