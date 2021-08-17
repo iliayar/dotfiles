@@ -48,6 +48,11 @@ Speeding up again 🦼
   :init
   (gcmh-mode 1))
 #+end_src
+SQLite library for windows
+#+begin_src emacs-lisp
+(use-package emacsql-sqlite3
+  :ensure t)
+#+end_src
 ** Projects
 Projects management with ~counsel~ completion
 #+begin_src emacs-lisp
@@ -384,13 +389,13 @@ Use ~company~ for autocompletion. Add snippets to company backends
 #+end_src
 Lsp ~backend~ for ~company~
 #+begin_src emacs-lisp
-(use-package company-lsp
-  :after lsp-mode
-  :ensure t
-  :config
-  (push 'company-lsp company-backends)
-  (setq company-lsp-enable-snippet t)
-  (setq lsp-enable-snippet t))
+;; (use-package company-lsp
+;;  :after lsp-mode
+;;  :ensure t
+;;  :config
+;;  (push 'company-lsp company-backends)
+;;  (setq company-lsp-enable-snippet t)
+;;  (setq lsp-enable-snippet t))
 #+end_src
 Display completion in child buffer, quite slow 😞
 #+BEGIN_SRC emacs-lisp
@@ -480,8 +485,8 @@ Python lsp
 #+end_src
 emacs ipython notebook
 #+begin_src emacs-lisp
-(use-package ein
-  :ensure t)
+;; (use-package ein
+;;   :ensure t)
 #+end_src
 Lsp for latex
 #+begin_src emacs-lisp
@@ -520,8 +525,8 @@ Graphviz
 #+END_SRC
 Ipython for org babel
 #+BEGIN_SRC emacs-lisp
-(use-package ob-ipython
-  :ensure t)
+;; (use-package ob-ipython
+;;  :ensure t)
 #+END_SRC
 Java lsp
 #+BEGIN_SRC emacs-lisp
@@ -637,7 +642,7 @@ Defining action to execute at entering org-mode, disable marking capture entry a
             (org-bullets-mode 1)
             (org-indent-mode nil)
             (prettify-symbols-mode)
-            (set-fontset-font t 'symbol "Noto Color Emoji")
+            (set-fontset-font t 'symbol "Segoe UI Emoji")
             (progn
               (setq left-margin-width 5)
               (setq right-margin-width 5)
@@ -669,7 +674,8 @@ Org mode file associations
    (python . t)
    (js . t)
    (shell . t)
-   (ipython . t)))
+   ;; (ipython . t)
+   ))
 (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
 (setq org-confirm-babel-evaluate nil)
 (setq org-src-tab-acts-natively t)
@@ -681,11 +687,11 @@ Export settings
 #+END_SRC
 Setting up spell checking. Working for both laguages, but only one in one buffer.
 #+BEGIN_SRC emacs-lisp
-(with-eval-after-load "ispell"
-  (setq ispell-program-name "hunspell")
-  (setq ispell-dictionary "ru_RU,en_US")
-  (ispell-set-spellchecker-params)
-  (ispell-hunspell-add-multi-dic "ru_RU,en_US"))
+;; (with-eval-after-load "ispell"
+;;   (setq ispell-program-name "hunspell")
+;;   (setq ispell-dictionary "ru_RU,en_US")
+;;   ( ispell-set-spellchecker-params)
+;;   (ispell-hunspell-add-multi-dic "ru_RU,en_US"))
 #+END_SRC
 Inserting last screenshot
 #+BEGIN_SRC emacs-lisp
@@ -856,7 +862,7 @@ Setting packages
         "pdflatex -shell-escape --synctex=1 -interaction nonstopmode -output-directory %o %f"))
 (setq org-latex-minted-options
       '(("frame" "lines") ("linenos=true") ("mathescape")))
-(add-to-list 'org-latex-minted-langs '(ipython "python"))
+;; (add-to-list 'org-latex-minted-langs '(ipython "python"))
 #+END_SRC
 ** Common
 RSS reader. Settings colors for each tag.
@@ -898,62 +904,62 @@ RSS reader. Settings colors for each tag.
 #+end_src
 Mail client
 #+BEGIN_SRC emacs-lisp
-(use-package mu4e
-  :ensure nil
-  :config
-  (setq user-full-name "Ilya Yaroshevskiy")
+;; (use-package mu4e
+;;   :ensure nil
+;;   :config
+;;   (setq user-full-name "Ilya Yaroshevskiy")
   
-  (setq mu4e-change-filenames-when-moving t)
-  (setq mu4e-update-interval (* 10 60))
-  (setq mu4e-maildir "~/Mail")
-  (setq mu4e-headers-skip-duplicates t)
-  (setq mu4e-attachment-dir "~/Downloads")
-  (setq mu4e-sent-messages-behavior 'delete)
-  (setq mu4e-use-fancy-chars t)
-  (setq message-send-mail-function 'smtpmail-send-it)
-  (setq mu4e-completing-read-function 'ivy-completing-read)
+;;   (setq mu4e-change-filenames-when-moving t)
+;;   (setq mu4e-update-interval (* 10 60))
+;;   (setq mu4e-maildir "~/Mail")
+;;   (setq mu4e-headers-skip-duplicates t)
+;;   (setq mu4e-attachment-dir "~/Downloads")
+;;   (setq mu4e-sent-messages-behavior 'delete)
+;;   (setq mu4e-use-fancy-chars t)
+;;   (setq message-send-mail-function 'smtpmail-send-it)
+;;   (setq mu4e-completing-read-function 'ivy-completing-read)
 
-  (setq mu4e-contexts
-        (list
-         ;; Personal context
-         (make-mu4e-context
-          :name "personal"
-          :match-func (lambda (msg) (when msg
-                                      (string-prefix-p "/personal" (mu4e-message-field msg :maildir))))
-          :vars '((mu4e-sent-folder . "/personal/[Gmail]/Sent Mail")
-                  (mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
-                  ;; (mu4e-refile-folder . "/personal/[Gmail]/All Mail")
-                  (mu4e-trash-folder . "/personal/[Gmail]/Trash")
-                  (user-mail-address . "iliayar3@gmail.com")
-                  (mu4e-get-mail-command . "mbsync personal")
-                  (smtpmail-smtp-server . "smtp.gmail.com")
-                  (smtpmail-smtp-service . 465)
-                  (smtpmail-stream-type . ssl)
-                  (smtpmail-smtp-user . "iliayar3@gmail.com")
-                  (mu4e-bookmarks . (("maildir:/personal/Inbox" "Inbox" ?i)
-                                     ("maildir:/personal/[Gmail]/Important" "Important" ?!)))
-                  ))
-         ;; Cock context
-         (make-mu4e-context
-          :name "cock"
-          :match-func (lambda (msg) (when msg
-                                      (string-prefix-p "/cock" (mu4e-message-field msg :maildir))))
-          :vars '(
-                  (mu4e-sent-folder . "/cock/Sent")
-                  ;; (mu4e-drafts-folder . "/cock/Drafts")
-                  (mu4e-refile-folder . "/cock/Junk")
-                  (mu4e-trash-folder . "/cock/Trash")
-                  (user-mail-address . "iliayar@cock.li")
-                  (mu4e-get-mail-command . "mbsync cock")
-                  (smtpmail-smtp-server . "mail.cock.li")
-                  (smtpmail-smtp-service . 465)
-                  (smtpmail-stream-type . ssl)
-                  (smtpmail-smtp-user . "iliayar@cock.li")
-                  (mu4e-bookmarks . (("maildir:/cock/Inbox" "Inbox" ?i)
-                                     ;; ("maildir:/personal/[Gmail]/Important" "Important" ?!)
-                                     ))
-                  ))
-         )))
+;;   (setq mu4e-contexts
+;;         (list
+;;          ;; Personal context
+;;          (make-mu4e-context
+;;           :name "personal"
+;;           :match-func (lambda (msg) (when msg
+;;                                       (string-prefix-p "/personal" (mu4e-message-field msg :maildir))))
+;;           :vars '((mu4e-sent-folder . "/personal/[Gmail]/Sent Mail")
+;;                   (mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
+;;                   ;; (mu4e-refile-folder . "/personal/[Gmail]/All Mail")
+;;                   (mu4e-trash-folder . "/personal/[Gmail]/Trash")
+;;                   (user-mail-address . "iliayar3@gmail.com")
+;;                   (mu4e-get-mail-command . "mbsync personal")
+;;                   (smtpmail-smtp-server . "smtp.gmail.com")
+;;                   (smtpmail-smtp-service . 465)
+;;                   (smtpmail-stream-type . ssl)
+;;                   (smtpmail-smtp-user . "iliayar3@gmail.com")
+;;                   (mu4e-bookmarks . (("maildir:/personal/Inbox" "Inbox" ?i)
+;;                                      ("maildir:/personal/[Gmail]/Important" "Important" ?!)))
+;;                   ))
+;;          ;; Cock context
+;;          (make-mu4e-context
+;;           :name "cock"
+;;           :match-func (lambda (msg) (when msg
+;;                                       (string-prefix-p "/cock" (mu4e-message-field msg :maildir))))
+;;           :vars '(
+;;                   (mu4e-sent-folder . "/cock/Sent")
+;;                   ;; (mu4e-drafts-folder . "/cock/Drafts")
+;;                   (mu4e-refile-folder . "/cock/Junk")
+;;                   (mu4e-trash-folder . "/cock/Trash")
+;;                   (user-mail-address . "iliayar@cock.li")
+;;                   (mu4e-get-mail-command . "mbsync cock")
+;;                   (smtpmail-smtp-server . "mail.cock.li")
+;;                   (smtpmail-smtp-service . 465)
+;;                   (smtpmail-stream-type . ssl)
+;;                   (smtpmail-smtp-user . "iliayar@cock.li")
+;;                   (mu4e-bookmarks . (("maildir:/cock/Inbox" "Inbox" ?i)
+;;                                      ;; ("maildir:/personal/[Gmail]/Important" "Important" ?!)
+;;                                      ))
+;;                   ))
+;;          )))
 #+END_SRC
 
 * Keybindings
