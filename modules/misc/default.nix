@@ -7,4 +7,8 @@
     ./gpg.nix
     ./password-store.nix
   ];
+
+  home.packages = with pkgs; [
+    killall
+  ];
 }
