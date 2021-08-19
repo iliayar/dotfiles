@@ -15,6 +15,9 @@ transient
 *.eld
 */.xmonad/build
 
+# Nix
+result
+
 # Temp
 *~
 prompt-history

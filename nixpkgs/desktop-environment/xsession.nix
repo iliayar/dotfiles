@@ -2,7 +2,8 @@
 
 {
   xsession = {
-    enable = true;
+    # FIXME:
+    enable = false;
   };
 
 }

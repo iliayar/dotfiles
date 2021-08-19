@@ -268,9 +268,11 @@ myModMask       = mod4Mask
 
 myWorkspaces = [afIcon "\xf001", afIcon "\xf120", afIcon "\xf1c9", afIcon "\xf03d", afIcon "\xf3f6", afIcon "\xf305", "6", afIcon "\xf468", afIcon "\xf268", afIcon "\xf3fe"]
 myWorkspacesClickable    = clickable myWorkspaces
--- myWorkspacesClickable    = clickable . (map xmobarEscape) $ myWorkspaces
+    -- TODO: Fix xmonadctl
     where
-        clickable l = [ "<action=~/.xmonad/xmonadctl " ++ i ++ ">" ++ ws ++ "</action>" |
+        -- clickable l = [ "<action=~/.xmonad/xmonadctl " ++ i ++ ">" ++ ws ++ "</action>" |
+        --               (i,ws) <- zip (map show [2..11]) l]
+        clickable l = [ ws |
                       (i,ws) <- zip (map show [2..11]) l]
 
 myNormalBorderColor  = Theme.color8
@@ -451,8 +453,7 @@ makeFullscreenNoDock = sendMessage (MT.Toggle NBFULL) >> sendMessage ToggleStrut
 tsDefaultConfig :: TS.TSConfig a
 tsDefaultConfig = TS.TSConfig { TS.ts_hidechildren = True
                               , TS.ts_background   = Theme.ts_background
-                              , TS.ts_font         = myFont ++ ",Noto Color Emoji:style=Regular"
-                              -- , TS.ts_font         = myFont
+                              , TS.ts_font         = myFont
                               , TS.ts_node         = Theme.ts_node
                               , TS.ts_nodealt      = Theme.ts_nodealt
                               , TS.ts_highlight    = Theme.ts_highlight
@@ -476,9 +477,9 @@ myKeys = \conf -> let
   dzenAllBindings = withDzenKeymapsPipe "Keybindings" keymap $ createSubmap []
   restartRecompile = wrapBash $ (++" || (echo \x1b[31mFailed\x1b[m; killall xmessage; echo Press Enter; read)") $ wrap "(" ")" $ intercalate " && "
     [ "cd ~/.xmonad"
-    , "stack ghc -- --make ~/.xmonad/xmonadctl.hs"
-    , "stack ghc -- --make ~/.config/xmobar/xmobar.hs  -i$HOME/.config/xmobar/"
-    , "stack ghc -- --make ~/.config/xmobar/xmobar_top.hs  -i$HOME/.config/xmobar/"
+    -- , "stack ghc -- --make ~/.xmonad/xmonadctl.hs"
+    -- , "stack ghc -- --make ~/.config/xmobar/xmobar.hs  -i$HOME/.config/xmobar/"
+    -- , "stack ghc -- --make ~/.config/xmobar/xmobar_top.hs  -i$HOME/.config/xmobar/"
     -- , "stack ghc -- --make ~/.config/xmobar/xmobar_mon2.hs  -i$HOME/.config/xmobar/"
     , "xmonad --recompile"
     , "xmonad --restart"
@@ -544,7 +545,7 @@ myKeys = \conf -> let
       , ("a", appPrompt myXPConfig  , "Applications prompt")
       , ("h", hooglePrompt myXPConfig  , "Hoogle search prompt")
       , ("g", anonGooglePrompt myXPConfig  , "Anonymous Google search prompt")
-      , ("e", withFixingClipboard $ unicodePrompt "/home/iliayar/Themes/unicode" emojiXPConfig, "Unicode prompt")
+      -- , ("e", withFixingClipboard $ unicodePrompt "/home/iliayar/Themes/unicode" emojiXPConfig, "Unicode prompt")
       , prefix "p"
         [ ("p", passPrompt myXPConfig, "Get password")
         , ("g", passGeneratePrompt myXPConfig, "Generate password")
@@ -735,20 +736,20 @@ myEventHook = serverModeEventHook' (return myCommands)
 
 myStartupHook = do
           -- spawnOnce "~/.cargo/bin/spotifyd"
-          spawnOnce "~/.config/conky/run_conky.sh &"
-          spawnOnce "syncthing -no-browser -logfile='/tmp/syncthing.log' &"
-          spawnOnce "nitrogen --restore &"
-          spawnOnce "picom --experimental-backends -b &"
-          spawnOnce "xautolock -time 5 -locker ~/bin/lock.sh &"
-          spawnOnce "lxpolkit &"
-          spawnOnce "udiskie &"
+          -- spawnOnce "~/.config/conky/run_conky.sh &"
+          -- spawnOnce "syncthing -no-browser -logfile='/tmp/syncthing.log' &"
+          -- spawnOnce "nitrogen --restore &"
+          -- spawnOnce "picom --experimental-backends -b &"
+          -- spawnOnce "xautolock -time 5 -locker ~/bin/lock.sh &"
+          -- spawnOnce "lxpolkit &"
+          -- spawnOnce "udiskie &"
           -- spawnOnce "stalonetray &"
-          spawnOnce "xsetroot -cursor_name arrow &"
+          -- spawnOnce "xsetroot -cursor_name arrow &"
           -- spawnOnce "~/bin/blocks/music_xmobar_async.py 2>/dev/null &"
-          spawnOnce "~/bin/rust-blocks/target/release/rust-blocks &"
+          -- spawnOnce "~/bin/rust-blocks/target/release/rust-blocks &"
           -- spawnOnce "~/bin/blocks/pacman_xmobar_async.sh &"
-          spawnOnce $ wrapBash "touch ~/.emacs.d/config.org; emacs --daemon &"
-          spawn "xrdb ~/.Xresources &"
+          -- spawnOnce $ wrapBash "touch ~/.emacs.d/config.org; emacs --daemon &"
+          -- spawn "xrdb ~/.Xresources &"
           setWMName "LG3D"
 
 -------------------------------------------------
@@ -757,7 +758,7 @@ myStartupHook = do
 
 emojiXPConfig :: XPConfig
 emojiXPConfig = def
-      { font                = myFont ++ ",Noto Color Emoji:size=12:antialise=true,Symbola:regular:size=12:antialise=true"
+      { font                = "xft:Symbola:regular:size=12:antialise=true"
       , bgColor             = Theme.background
       , fgColor             = Theme.foreground
       , bgHLight            = Theme.color0
@@ -874,9 +875,9 @@ passInsertPrompt c =
 
 main = do
         homeDir <- getHomeDirectory
-        xmproc0 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar"
+        -- xmproc0 <- spawnPipe $ "xmobar " ++ homeDir ++ "/.config/xmobar/xmobar"
         -- xmproc1 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_mon2"
-        xmproc2 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_top"
+        -- xmproc2 <- spawnPipe $ "xmobar " ++ homeDir ++ "/.config/xmobar/xmobar_top"
         xmonad $ ewmh def {
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
@@ -893,13 +894,15 @@ main = do
         handleEventHook    = myEventHook,
         logHook            = dynamicLogWithPP xmobarPP
                 { ppOutput  = \x ->
-                    hPutStrLn xmproc0 x
+                    appendFile "/tmp/.xmonad_data" x
+                    -- hPutStrLn xmproc0 x
                   -- >> hPutStrLn xmproc1 encX
-                  -- >> appendFile "/tmp/.xmonad_data" x
                 , ppCurrent = xmobarColor Theme.color2 "" -- . wrap "[" "]"
                 , ppVisible = xmobarColor Theme.color3 ""
                 , ppTitle   = xmobarColor Theme.color9 "" . shorten 25
-                , ppLayout  = (\x -> "<action=~/.xmonad/xmonadctl 12>" ++ x ++ "</action>")
+		-- TODO: Fixm xmonadctl
+                -- , ppLayout  = (\x -> "<action=~/.xmonad/xmonadctl 12>" ++ x ++ "</action>")
+                , ppLayout  = (\x -> x)
                 , ppExtras  = []
                 , ppOrder   = \(ws:l:t:ex) -> [ws,l]++ex++[t]
                 },

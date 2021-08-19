@@ -44,7 +44,11 @@
   services.xserver = {
     enable = true;
     displayManager.lightdm.enable = true;
-    desktopManager.xterm.enable = true;
+    # FIXME: Move to nixpkgs folder somehow
+    windowManager.xmonad = {
+      enable = true;
+      enableContribAndExtras = true;
+    };
     synaptics.enable = true;
   }; 
 
@@ -75,6 +79,10 @@
     home = "/home/iliayar";
     extraGroups = [ "wheel" "networkmanager" ];
   };
+
+  systemd.services."home-manager-iliayar".preStart = ''
+    ${pkgs.nix}/bin/nix-env -i -E
+  '';
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
