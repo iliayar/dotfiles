@@ -54,6 +54,7 @@
 
   nix = {
     package = pkgs.nixUnstable;
+    trustedUsers = [ "root" ];
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
@@ -77,6 +78,7 @@
   users.users.iliayar = {
     isNormalUser = true;
     home = "/home/iliayar";
+    shell = pkgs.zsh;
     extraGroups = [ "wheel" "networkmanager" ];
   };
 

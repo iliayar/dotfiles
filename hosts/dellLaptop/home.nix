@@ -2,10 +2,10 @@
 
 {
   imports = [
-    ./editors.nix
-    ./misc.nix
-    ./shell.nix
-    ./desktop-environment.nix
+    ../../modules/editors
+    ../../modules/misc
+    ../../modules/shell
+    ../../modules/desktop-environment
   ];
 
   # Let Home Manager install and manage itself.

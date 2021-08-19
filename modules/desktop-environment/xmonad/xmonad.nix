@@ -5,14 +5,20 @@ let
 in
 {
   home.file.".xmonad" = {
-    source = "${dotfiles}/.xmonad";
+    source = ./.xmonad;
     recursive = true;
   };
 
-  # FIXME: Defined in host/configuraion.nix
+  # home.file.".local/bin"
+
   xsession.windowManager.xmonad = {
     enable = false;
     enableContribAndExtras = true;
   };
+
+  home.packages = with pkgs; [
+    dzen2 
+    gawk
+  ];
 
 }
