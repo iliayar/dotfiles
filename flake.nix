@@ -14,6 +14,9 @@
       url = "gitlab:code-stats/code-stats-vim";
       flake = false;
     };
+
+    secrets.url = "path:./modules/secrets";
+
     # theme = {
     #   background = "#1c1e1f";
     #   foreground = "#f8f8f2";
@@ -23,13 +26,13 @@
     # };
   };
 
-  outputs = { self, home-manager, nixpkgs, code-stats-vim, ... }: 
+  outputs = { self, home-manager, nixpkgs, code-stats-vim, secrets, ... }: 
   let
     specialArgs = {
       inherit home-manager
-        code-stats-vim;
+      code-stats-vim;
 
-      secrets = import ./secrets;
+      secrets = import secrets;
     };
 
     homeConfigurations = {

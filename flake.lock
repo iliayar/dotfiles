@@ -57,7 +57,20 @@
       "inputs": {
         "code-stats-vim": "code-stats-vim",
         "home-manager": "home-manager",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "secrets": "secrets"
+      }
+    },
+    "secrets": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-p2Xn/PNQu6qLVzOU/syPcusmjj2WTJfoDDdJdkcR6cw=",
+        "path": "./modules/secrets",
+        "type": "path"
+      },
+      "original": {
+        "path": "./modules/secrets",
+        "type": "path"
       }
     }
   },

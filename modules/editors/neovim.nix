@@ -51,7 +51,7 @@
 
       filetype plugin on
 
-      let g:codestats_api_key = ${secrets.code-stats-api-key}
+      let g:codestats_api_key = "${secrets.code-stats-api-key}"
 
       " Airline code::stats
       let g:airline_section_x = airline#section#create_right(['tagbar', 'filetype', '%{CodeStatsXp()}'])

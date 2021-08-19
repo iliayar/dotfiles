@@ -2,5 +2,5 @@
 	path = home/.emacs.d/lisp/org-roam-ui
 	url = git@github.com:org-roam/org-roam-ui.git
 [submodule "secrets"]
-	path = secrets
+	path = modules/secrets
 	url = git@github.com:iliayar/dotfiles-secrets.git
