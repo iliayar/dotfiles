@@ -7,4 +7,8 @@
     ./browsers
     ./terminal-emulators
   ];
+
+  home.packages = with pkgs; [
+    tdesktop # Telegram
+  ];
 }

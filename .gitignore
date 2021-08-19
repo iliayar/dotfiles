@@ -17,6 +17,7 @@ transient
 
 # Nix
 result
+bin-tmp
 
 # Temp
 *~

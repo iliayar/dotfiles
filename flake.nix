@@ -5,7 +5,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     home-manager = {
-      url = "github:nix-community/home-manager/release-21.05";
+      url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # theme = {
@@ -23,24 +23,36 @@
       inherit home-manager;
     };
 
+    homeConfigurations = {
+      iliayar = home-manager.lib.homeManagerConfiguration rec {
+        system = "x86_64-linux";
+        extraSpecialArgs = specialArgs;
+        pkgs = import nixpkgs {
+          inherit system;
+        };
+        homeDirectory = "/home/iliayar";
+        username = "iliayar";
+        configuration = { pkgs, config, ... }: {
+          imports = [
+            ./hosts/dellLaptop/home.nix
+          ];
+
+          nixpkgs.config = {
+            allowUnfree = true;
+          };
+        };
+      };
+    };
+
     dellLaptop = 
       let
         system = "x86_64-linux";
 
         modules = [
           ./hosts/dellLaptop/configuration.nix
-          home-manager.nixosModules.home-manager
           {
             nixpkgs.config = {
               allowUnfree = true;
-            };
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.iliayar = ./hosts/dellLaptop/home.nix;
-              extraSpecialArgs = specialArgs;
-
-              verbose = true;
             };
           }
         ];
@@ -48,5 +60,6 @@
         nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
   in {
     nixosConfigurations.nixos = dellLaptop;
+    inherit homeConfigurations;
   };
 }

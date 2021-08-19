@@ -10,6 +10,11 @@
     extraConfig = {
       core.editor = "vim";
     };
+
+    signing = {
+      signByDefault = true;
+      key = "0x3FE87CB13CB3AC4E";
+    };
   };
 
 }

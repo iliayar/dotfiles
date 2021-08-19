@@ -1,8 +1,5 @@
 { config, pkgs, ... }:
 
-let
-  dotfiles = (import ../config.nix).dotfiles;
-in
 {
   programs.zsh = {
     enable = true;
@@ -15,8 +12,7 @@ in
         "git"
       ];
 
-      custom = "${dotfiles}/home/.oh-my-zsh/themes";
-      # custom = "\$HOME/Repos/dotfiles/home/.oh-my-zsh/themes";
+      custom = "${./.oh-my-zsh/themes}";
       theme = "l";
     };
   };
