@@ -4,9 +4,15 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    code-stats-vim = {
+      url = "gitlab:code-stats/code-stats-vim";
+      flake = false;
     };
     # theme = {
     #   background = "#1c1e1f";
@@ -17,10 +23,13 @@
     # };
   };
 
-  outputs = { self, home-manager, nixpkgs, ... }: 
+  outputs = { self, home-manager, nixpkgs, code-stats-vim, ... }: 
   let
     specialArgs = {
-      inherit home-manager;
+      inherit home-manager
+        code-stats-vim;
+
+      secrets = import ./secrets;
     };
 
     homeConfigurations = {

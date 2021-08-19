@@ -6,6 +6,7 @@
     ./xmonad
     ./browsers
     ./terminal-emulators
+    ./fonts.nix
   ];
 
   home.packages = with pkgs; [

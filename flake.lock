@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "code-stats-vim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1588849519,
+        "narHash": "sha256-Ab1AZoAn0Bp7GD+DQwHTf2n+G88jK+0eF9V0By7vFos=",
+        "owner": "code-stats",
+        "repo": "code-stats-vim",
+        "rev": "fb545a1814dc0d001e185c8f1dde564f2f0ea358",
+        "type": "gitlab"
+      },
+      "original": {
+        "owner": "code-stats",
+        "repo": "code-stats-vim",
+        "type": "gitlab"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -39,6 +55,7 @@
     },
     "root": {
       "inputs": {
+        "code-stats-vim": "code-stats-vim",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs"
       }
