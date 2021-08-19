@@ -1,8 +1,5 @@
 { config, pkgs, ...}:
 
-let
-  dotfiles = (import ../config.nix).dotfiles;
-in
 {
   home.file.".xmonad" = {
     source = ./.xmonad;

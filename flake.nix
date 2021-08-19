@@ -39,6 +39,8 @@
               useUserPackages = true;
               users.iliayar = ./hosts/dellLaptop/home.nix;
               extraSpecialArgs = specialArgs;
+
+              verbose = true;
             };
           }
         ];
