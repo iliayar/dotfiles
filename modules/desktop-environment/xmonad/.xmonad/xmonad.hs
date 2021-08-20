@@ -316,7 +316,7 @@ myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
             , ("Spotify", "spotify")
             , ("Discord", "discord")
             , ("Steam", "steam")
-            , ("Emacs Instance", "/usr/bin/emacs")
+            , ("Emacs Instance", "emacs")
             ]
 
 -------------------------------------------------
@@ -347,7 +347,7 @@ myScratchPads = [ termAppClass alacrittyScratchpad "terminal" Nothing manageQuak
     alacrittyScratchpadHold c = Alacritty Nothing (Just c) True [] 
 
     spawnQutebrowser = "qutebrowser --qt-arg name qutebrowser-scratchpad"
-    spawnNotes = "emacsclient -c -a emacs -F '(quote (name . \"emacs-notes\") (fullscreen . maximized))' -e '(find-file \"~/org/Notes.org\")'"
+    spawnNotes = "emacsclient -c -a emacs -F '(quote (name . \"emacs-notes\"))' -e '(find-file \"~/org/Notes.org\")'"
     spawnDrawing = "drawing --name=drawing-scratchpad"
     findQutebrowser = appName =? "qutebrowser-scratchpad"
     findNotes  = title =? "emacs-notes"
@@ -376,7 +376,7 @@ tsAll =
        , Node (TS.TSNode "Termite" "Terminal" (spawn "termite")) []
        , Node (TS.TSNode "Alacritty" "Alacritty" (spawn "alacritty")) []
        , Node (TS.TSNode "Urxvt" "Rxvt Unicode" (spawn "urxvt")) []
-       , Node (TS.TSNode "Restart Emacs" "Restart Emacs daemon" (spawn $ wrapBash "killall -9 emacs; touch ~/.emacs.d/config.org; emacs --daemon")) []
+       -- , Node (TS.TSNode "Restart Emacs" "Restart Emacs daemon" (spawn $ wrapBash "killall -9 emacs; touch ~/.emacs.d/config.org; emacs --daemon")) []
        ]
    , Node (TS.TSNode "+ Tools" "Various tools" (return ()))
        tsTools
@@ -477,7 +477,7 @@ myKeys = \conf -> let
                   "+ " ++ d ++ "\n" ++ getHelp m)
   dzenAllBindings = withDzenKeymapsPipe "Keybindings" keymap $ createSubmap []
   restartRecompile = wrapBash $ (++" || (echo \x1b[31mFailed\x1b[m; killall xmessage; echo Press Enter; read)") $ wrap "(" ")" $ intercalate " && "
-    [ "home-manager switch"
+    [ "home-manager switch -j 8"
     , "xmonad --recompile"
     , "xmonad --restart"
     , "echo \x1b[32mSucceed\x1b[m"

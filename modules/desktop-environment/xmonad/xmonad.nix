@@ -32,9 +32,9 @@
 
       background="${themes.background}"
       foreground="${themes.foreground}"
-      red="${themes.color1}"
-      green="${themes.color2}"
-      yellow="${themes.color3}"
+      red="${themes.red}"
+      green="${themes.green}"
+      yellow="${themes.yellow}"
 
       INFO=$(awk -v cols=$COLS -v label="$KEYMAP" -v keycol="$yellow" -v labelcol="$red" -v fg="$foreground" \
            '/END/ {exit}

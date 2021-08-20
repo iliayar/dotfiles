@@ -6,9 +6,12 @@
     ./ssh.nix
     ./gpg.nix
     ./password-store.nix
+    ./mail.nix
   ];
 
   home.packages = with pkgs; [
     killall
   ];
+
+  services.syncthing.enable = true;
 }

@@ -13,6 +13,8 @@
 
   time.timeZone = "Europe/Moscow";
 
+  hardware.pulseaudio.enable = true;
+
   networking = {
     hostName = "NixLaptop";
     useDHCP = false;

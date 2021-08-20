@@ -8,6 +8,7 @@
     ./browsers
     ./terminal-emulators
     ./fonts.nix
+    ./sound.nix
   ];
 
   home.packages = with pkgs; [

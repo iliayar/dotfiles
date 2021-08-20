@@ -7,6 +7,7 @@
     ./misc
     ./shell
     ./desktop-environment
+    ./dev
   ];
 
   home.sessionVariables = {

@@ -9,23 +9,25 @@ Speeding up 🐌
 - This sets the garbage collector to invoke every 100Mb instead of default 800Kb
 #+begin_src emacs-lisp
 (setq comp-deferred-compilation t)
+(setq byte-compile-warnings '(cl-functions))
 (setq gc-cons-threshold 100000000)
 #+end_src
 * Main config
 ** Repositories
 There is initializes package mangers and initializing ~use-package~ \\
-Package config -- see https://melpa.org/#/getting-started
+Package config -- see https://melpa.org/#/getting-started. No more
+needed because of managing packages using Nix's home-manager.
 #+begin_src emacs-lisp
-(require 'package)
-(add-to-list
- 'package-archives
- '("melpa" . "https://melpa.org/packages/")
- t)
-(package-initialize)
-
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+;; (require 'package)
+;; (add-to-list
+;;  'package-archives
+;;  '("melpa" . "https://melpa.org/packages/")
+;;  t)
+;; (package-initialize)
+;; 
+;; (unless (package-installed-p 'use-package)
+;;   (package-refresh-contents)
+;;   (package-install 'use-package))
 #+end_src
 Adding folder with manually added packages, loading file private variables
 - store all backups in a single directory
@@ -38,13 +40,13 @@ Adding folder with manually added packages, loading file private variables
 #+end_src
 Extending executable path
 #+BEGIN_SRC  emacs-lisp
-(add-to-list 'exec-path "~/.local/bin")
+;; (add-to-list 'exec-path "~/.local/bin")
 #+END_SRC
 * Packages
 Speeding up again 🦼
 #+begin_src emacs-lisp
 (use-package gcmh
-  :ensure t
+  ;;   :ensure t
   :init
   (gcmh-mode 1))
 #+end_src
@@ -52,74 +54,80 @@ Speeding up again 🦼
 Projects management with ~counsel~ completion
 #+begin_src emacs-lisp
 (use-package projectile
-  :ensure t
+  ;;   :ensure t
   :config
   (projectile-mode))
 (use-package counsel-projectile
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 Amazing git tool
 #+begin_src emacs-lisp
 (use-package magit
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 Project tree. Settings fonts for ~treemacs~
 #+begin_src emacs-lisp
 (use-package treemacs
-  :ensure t
+  ;;   :ensure t
   :config
   (dolist (face '(treemacs-root-face
-		  treemacs-git-unmodified-face
-		  treemacs-git-modified-face
-		  treemacs-git-renamed-face
-		  treemacs-git-ignored-face
-		  treemacs-git-untracked-face
-		  treemacs-git-added-face
-		  treemacs-git-conflict-face
-		  treemacs-directory-face
-		  treemacs-directory-collapsed-face
-		  treemacs-file-face
-		  treemacs-tags-face))
-    (set-face-attribute face nil :family "Fira Code" :height 85))
+                  treemacs-git-unmodified-face
+                  treemacs-git-modified-face
+                  treemacs-git-renamed-face
+                  treemacs-git-ignored-face
+                  treemacs-git-untracked-face
+                  treemacs-git-added-face
+                  treemacs-git-conflict-face
+                  treemacs-directory-face
+                  treemacs-directory-collapsed-face
+                  treemacs-file-face
+                  treemacs-tags-face))
+    (set-face-attribute face nil :family "Fira Code" :height 100))
   )
 (use-package treemacs-evil
   :after evil
-  :ensure t)
+  ;;   :ensure t
+  )
 (use-package treemacs-projectile
   :after projectile
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 ** Evil mode
 ~Evil~ with dependecies. Disable Evil mode for some modes
 #+begin_src emacs-lisp
 (setq evil-want-keybinding nil)
 (use-package undo-tree
-  :ensure t)
+  ;;   :ensure t
+  )
 (use-package goto-chg
-  :ensure t)
+  ;;   :ensure t
+  )
 (use-package evil
-  :ensure t
+  ;;   :ensure t
   :init
   (setq evil-want-integration t)
   :config
   (evil-mode 1)
   (add-to-list 'evil-emacs-state-modes 'elfeed-search)
   (cl-loop for (mode . state) in '((dired-mode . emacs) (elfeed-search . emacs))
-	   do (evil-set-initial-state mode state))
+           do (evil-set-initial-state mode state))
   )
 #+end_src
 Collection of evil keybindings
 #+begin_src emacs-lisp
 (use-package evil-collection
   :after evil
-  :ensure t
+  ;;   :ensure t
   :config
   (evil-collection-init))
 #+end_src
 Fast search
 #+begin_src emacs-lisp
 (use-package evil-snipe
-  :ensure t
+  ;;   :ensure t
   :config
   (evil-snipe-mode +1)
   (evil-snipe-override-mode +1))
@@ -127,16 +135,17 @@ Fast search
 Change brakets in evil mode
 #+begin_src emacs-lisp
 (use-package evil-surround
-  :ensure t
+  ;;   :ensure t
   :config
   (global-evil-surround-mode 1))
 #+end_src
 Multicursor
 #+begin_src emacs-lisp
 (use-package evil-multiedit
-  :ensure t)
+  ;;   :ensure t
+  )
 (use-package evil-mc
-  :ensure t
+  ;;   :ensure t
   :config
   (global-evil-mc-mode 1))
 #+end_src
@@ -144,32 +153,33 @@ Multicursor
 Icons
 #+begin_src emacs-lisp
 (use-package all-the-icons
-  :ensure t
+  ;;   :ensure t
   :config
   (setq all-the-icons-scale-factor 1.0))
 #+end_src
 HIghlight todo keywords
 #+begin_src emacs-lisp
 (use-package hl-todo
-  :ensure t
+  ;;   :ensure t
   :config
   (global-hl-todo-mode t))
 #+end_src
 Colorize parenthesis
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
-  :ensure t
+  ;;   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 #+end_src
 Searching
 #+begin_src emacs-lisp
 (use-package avy
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 Windows hoping
 #+begin_src emacs-lisp
 (use-package ace-window
-  :ensure t
+  ;;   :ensure t
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
   )
@@ -177,7 +187,7 @@ Windows hoping
 Dashboard showing on startup
 #+begin_src emacs-lisp
 (use-package dashboard
-  :ensure t
+  ;;   :ensure t
   :config
   (dashboard-setup-startup-hook)
   :config
@@ -187,17 +197,17 @@ Dashboard showing on startup
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   (setq dashboard-items '((recents  . 5)
-					;(bookmarks . 5)
-			  (projects . 5)
-			  (agenda . 5)
-			  (registers . 5)))
+                                        ;(bookmarks . 5)
+                          (projects . 5)
+                          (agenda . 5)
+                          (registers . 5)))
 
   )
 #+end_src
 Highlight lines chaned according to ~git~
 #+BEGIN_SRC emacs-lisp
 (use-package diff-hl
-  :ensure t
+  ;;   :ensure t
   :config
   (global-diff-hl-mode)) 
 #+END_SRC
@@ -205,7 +215,7 @@ Highlight lines chaned according to ~git~
 ~Doom-modeline~ as modeline
 #+begin_src emacs-lisp
 (use-package doom-modeline
-  :ensure t
+  ;;   :ensure t
   :init 
   (doom-modeline-mode 1)
   :config
@@ -214,17 +224,18 @@ Highlight lines chaned according to ~git~
 Colors from pywal
 #+begin_src emacs-lisp
 (use-package ewal
-  :ensure t
+  ;;   :ensure t
   :init (setq ewal-use-built-in-always nil
               ewal-use-built-in-on-failure-p t
               ewal-built-in-palette "doom-gruvbox"))
 (use-package ewal-doom-themes
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 *Or* doom theme
 #+begin_src emacs-lisp
 (use-package doom-themes
-  :ensure t
+  ;;   :ensure t
   :preface (defvar region-fg nil)
   (setq doom-themes-treemacs-theme "doom-colors")
   (doom-themes-treemacs-config)
@@ -250,7 +261,7 @@ Colors from pywal
 (eldoc-mode 1) ; enable docs in minibuffer
 (set-face-attribute 'default nil
                     :family "Fira Code"
-                    :height 85)
+                    :height 100)
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq ring-bell-function 'ignore)
 (setq case-fold-search t)
@@ -260,17 +271,19 @@ Colors from pywal
 Convenient keybindings
 #+begin_src emacs-lisp
 (use-package general
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 Constructing menus
 #+begin_src emacs-lisp
 (use-package hydra
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 Keys hints
 #+begin_src emacs-lisp
 (use-package which-key
-  :ensure t
+  ;;   :ensure t
   :config
   (which-key-mode 1))
 #+end_src
@@ -278,7 +291,7 @@ Keys hints
 Code::stats
 #+BEGIN_SRC emacs-lisp
 (use-package code-stats
-  :ensure t
+  ;;   :ensure t
   :config
   (add-hook 'prog-mode-hook #'code-stats-mode)
   (add-hook 'org-mode-hook #'code-stats-mode)
@@ -289,51 +302,56 @@ Code::stats
 Auto parenthesis
 #+begin_src emacs-lisp
 (use-package smartparens
-  :ensure t
+  ;;   :ensure t
   :init
   (smartparens-global-mode))
 #+end_src
 Editconfig support
 #+begin_src emacs-lisp
 (use-package editorconfig
-  :ensure t
+  ;;   :ensure t
   :config
   (editorconfig-mode 1))
 #+end_src
 Snippets
 #+begin_src emacs-lisp
 (use-package yasnippet
-  :ensure t
+  ;;   :ensure t
   :init
   (yas-global-mode 1))
 (use-package yasnippet-snippets
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 Code formatting
 #+begin_src emacs-lisp
 (use-package format-all
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 Dockerfile support
 #+BEGIN_SRC emacs-lisp
 (use-package dockerfile-mode
-  :ensure t)
+  ;;   :ensure t
+  )
 #+END_SRC
 Package for html live view
 #+begin_src emacs-lisp
 (use-package impatient-mode
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 Cool web stuff
 #+BEGIN_SRC emacs-lisp
 (use-package web-mode
-  :ensure t)
+  ;;   :ensure t
+  )
 #+END_SRC
 *** Auto completion
 Use ~company~ for autocompletion. Add snippets to company backends
 #+begin_src emacs-lisp
 (use-package company
-  :ensure t
+  ;;   :ensure t
   :init
   (add-hook 'after-init-hook 'global-company-mode)
   :config
@@ -347,35 +365,35 @@ Use ~company~ for autocompletion. Add snippets to company backends
     "Insert the selected candidate or the first if none are selected."
     (interactive)
     (if company-selection
-	(company-complete-selection)
+        (company-complete-selection)
       (company-complete-number 1)))
   ;; (setq company-frontends '(company-pseudo-tooltip-frontend
   ;; 			    company-echo-metadata-frontend))
   (setq company-backends 
-	'(company-capf 
-	  ;; company-bbdb 
-	  ;; company-clang 
-	  ;; company-keywords 
-	  company-yasnippet 
-	  ;; company-lsp 
-	  ;; company-files 
-	  ;; company-ctags
-	  ;; company-anaconda
-	  ))
+        '(company-capf 
+          ;; company-bbdb 
+          ;; company-clang 
+          ;; company-keywords 
+          company-yasnippet 
+          ;; company-lsp 
+          ;; company-files 
+          ;; company-ctags
+          ;; company-anaconda
+          ))
 
   (defun mars/company-backend-with-yas (backends)
     "Add :with company-yasnippet to company BACKENDS.
   Taken from https://github.com/syl20bnr/spacemacs/pull/179."
     (if (and (listp backends) (memq 'company-yasnippet backends))
-	backends
+        backends
       (append (if (consp backends)
-		  backends
-		(list backends))
-	      '(:with company-yasnippet))))
+                  backends
+                (list backends))
+              '(:with company-yasnippet))))
 
   (defun add-yas-in-company ()
     (setq company-backends
-	  (mapcar #'mars/company-backend-with-yas company-backends)))
+          (mapcar #'mars/company-backend-with-yas company-backends)))
 
   (add-yas-in-company)
 
@@ -384,25 +402,25 @@ Use ~company~ for autocompletion. Add snippets to company backends
 #+end_src
 Lsp ~backend~ for ~company~
 #+begin_src emacs-lisp
-(use-package company-lsp
-  :after lsp-mode
-  :ensure t
-  :config
-  (push 'company-lsp company-backends)
-  (setq company-lsp-enable-snippet t)
-  (setq lsp-enable-snippet t))
+;; (use-package company-lsp
+;;   :after lsp-mode
+;; ;;   :ensure t
+;;   :config
+;;   (push 'company-lsp company-backends)
+;;   (setq company-lsp-enable-snippet t)
+;;   (setq lsp-enable-snippet t))
 #+end_src
 Display completion in child buffer, quite slow 😞
 #+BEGIN_SRC emacs-lisp
 ;; (use-package company-posframe
-;;   :ensure t
+;; ;;   :ensure t
 ;;   :config
 ;;   (company-posframe-mode 1))
 #+END_SRC
 Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
 #+begin_src emacs-lisp
 (use-package counsel
-  :ensure t
+  ;;   :ensure t
   :init
   (ivy-mode 1)
   :config
@@ -433,28 +451,32 @@ Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/
           ))
   (setq lsp-log-io nil)
   (setq lsp-idle-delay 0.500)
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 Syntax checking and lsp related errors/warnings. Posfrmae stil sucks
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck
-  :ensure t)
+  ;;   :ensure t
+  )
 ;; (use-package flycheck-posframe
-;;   :ensure t
+;; ;;   :ensure t
 ;;   :hook (flycheck-mode . flycheck-posframe-mode))
 #+END_SRC
 Lsp integration with several plugins
 #+begin_src emacs-lisp
 (use-package lsp-treemacs
-  :ensure t)
+  ;;   :ensure t
+  )
 (use-package lsp-ivy
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 C++ lsp \\
 In /build/ directory run =cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=YES ..=
 #+BEGIN_SRC emacs-lisp
 (use-package ccls
-  :ensure t
+  ;;   :ensure t
   :config
   (setq ccls-executable "/usr/bin/ccls")
   (setq ccls-initialization-options
@@ -464,69 +486,82 @@ In /build/ directory run =cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=YES ..=
 Haskell lsp
 #+begin_src emacs-lisp
 (use-package lsp-haskell
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 Python lsp
 #+begin_src emacs-lisp
 (use-package lsp-pyright
-  :ensure t
+  ;;   :ensure t
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
                          (lsp))))  ; or lsp-deferred
 (use-package anaconda-mode
-  :ensure t)
+  ;;   :ensure t
+  )
 (use-package company-anaconda
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 emacs ipython notebook
 #+begin_src emacs-lisp
 (use-package ein
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 Lsp for latex
 #+begin_src emacs-lisp
 (use-package lsp-latex
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 Rust mode
 #+begin_src emacs-lisp
 (use-package rustic
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 Go mode
 #+begin_src emacs-lisp
 (use-package go-mode
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 Haskell mode
 #+begin_src emacs-lisp
 (use-package haskell-mode
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 Yaml files
 #+begin_src emacs-lisp
 (use-package yaml-mode
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 Kotlin
 #+BEGIN_SRC emacs-lisp
 (use-package kotlin-mode
-  :ensure t)
+  ;;   :ensure t
+  )
 #+END_SRC
 Graphviz
 #+BEGIN_SRC emacs-lisp
 (use-package graphviz-dot-mode
-  :ensure t)
+  ;;   :ensure t
+  )
 #+END_SRC
 Ipython for org babel
 #+BEGIN_SRC emacs-lisp
 (use-package ob-ipython
-  :ensure t)
+  ;;   :ensure t
+  )
 #+END_SRC
 Java lsp
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-java
-  :ensure t)
+  ;;   :ensure t
+  )
 #+END_SRC
 *** Settings
 - C style settings
@@ -539,14 +574,14 @@ Java lsp
 theoremes in LaTeX with org syntax
 #+begin_src emacs-lisp
 (use-package org-special-block-extras
-  :ensure t
+  ;;   :ensure t
   ;; :hook (org-mode . org-special-block-extras-mode)
   :config (org-special-block-extras-short-names))
 #+end_src
 Reveal.js for presentations
 #+BEGIN_SRC emacs-lisp
 (use-package ox-reveal
-  :ensure t
+  ;;   :ensure t
   :config
   (setq org-reveal-root (expand-file-name "~/.local/share/reveal.js-4.1.0"))
   )
@@ -554,12 +589,14 @@ Reveal.js for presentations
 Export Org mode to Json
 #+BEGIN_SRC emacs-lisp
 (use-package ox-json
-  :ensure t)
+  ;;   :ensure t
+  )
 #+END_SRC
 Org headers icons
 #+begin_src emacs-lisp
 (use-package org-bullets
-  :ensure t)
+  ;;   :ensure t
+  )
 #+end_src
 Loading Export backends
 #+BEGIN_SRC emacs-lisp
@@ -575,7 +612,7 @@ Loading Export backends
 Org Roam
 #+BEGIN_SRC emacs-lisp
 (use-package org-roam
-  :ensure t
+  ;;   :ensure t
   :init
   (setq org-roam-v2-ack t)
   :custom
@@ -589,23 +626,24 @@ Org Roam
   (setq org-roam-completion-everywhere t)
   (org-roam-setup))
 (use-package websocket
-  :ensure t)
+  ;;   :ensure t
+  )
 
-(add-to-list 'load-path "~/.emacs.d/lisp/org-roam-ui")
-(load-library "org-roam-ui")
+;; (add-to-list 'load-path "~/.emacs.d/lisp/org-roam-ui")
+;; (load-library "org-roam-ui")
 #+END_SRC
 *** Settings
 Setting visual stuff
 #+begin_src emacs-lisp
 (setq-default prettify-symbols-alist '(("#+begin_src" . "↓")
-				       ("#+end_src" . "↑")
-				       ("#+BEGIN_SRC" . "↓")
-				       ("#+END_SRC" . "↑")
-				       ("#+end_proof" . "⬜")
-				       ("[ ]" . "")
-				       ("[X]" . "")
-				       ("[-]" . "")
-				       ))
+                                       ("#+end_src" . "↑")
+                                       ("#+BEGIN_SRC" . "↓")
+                                       ("#+END_SRC" . "↑")
+                                       ("#+end_proof" . "⬜")
+                                       ("[ ]" . "")
+                                       ("[X]" . "")
+                                       ("[-]" . "")
+                                       ))
 
 (setq org-hide-emphasis-markers t
       org-fontify-done-headline t
@@ -621,14 +659,14 @@ Setting visual stuff
 
 (setq org-todo-keyword-faces
       '(("TODO"     . "magenta")
-	("FIXME"    . "red")
-	("DONE"     . "LawnGreen")
-	("DRIFTED"  . "DeepSkyBlue1")
-	("CANCELED" . "yellow2")))
+        ("FIXME"    . "red")
+        ("DONE"     . "LawnGreen")
+        ("DRIFTED"  . "DeepSkyBlue1")
+        ("CANCELED" . "yellow2")))
 
 (font-lock-add-keywords 'org-mode
-			'(("^ *\\([-]\\) "
-			   (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+                        '(("^ *\\([-]\\) "
+                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 #+end_src
 Defining action to execute at entering org-mode, disable marking capture entry as bookmark
 #+begin_src emacs-lisp
@@ -862,7 +900,7 @@ Setting packages
 RSS reader. Settings colors for each tag.
 #+begin_src emacs-lisp
 (use-package elfeed
-  :ensure t
+  ;;   :ensure t
   :custom
   (rmh-elfeed-org-files (list "~/org/elfeed.org"))
   :config
@@ -874,25 +912,25 @@ RSS reader. Settings colors for each tag.
   (defface starred-tag-face '((t :foreground "yellow")) "Mark favourite posts")
   (defface videos-tag-face '((t :foreground "tomato")) "Mark favourite posts")
   (setq elfeed-search-face-alist
-	'(
-	  (starred starred-tag-face)
-	  (ctf ctf-tag-face)
-	  (blog blog-tag-face)
-	  (news news-tag-face)
-	  (github github-tag-face)
-	  (videos videos-tag-face)
-	  (unread elfeed-search-unread-title-face)
-	  ))
+        '(
+          (starred starred-tag-face)
+          (ctf ctf-tag-face)
+          (blog blog-tag-face)
+          (news news-tag-face)
+          (github github-tag-face)
+          (videos videos-tag-face)
+          (unread elfeed-search-unread-title-face)
+          ))
 
   (defalias 'elfeed-toggle-star
     (elfeed-expose #'elfeed-search-toggle-all 'starred))
   )
 (use-package elfeed-org
-  :ensure t
+  ;;   :ensure t
   :init
   (elfeed-org))
 (use-package elfeed-goodies
-  :ensure t
+  ;;   :ensure t
   :init
   (elfeed-goodies/setup))
 #+end_src

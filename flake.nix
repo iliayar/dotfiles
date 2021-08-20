@@ -16,10 +16,16 @@
     };
 
     secrets.url = "path:./modules/secrets";
+
+    emacs-overlay.url = "github:nix-community/emacs-overlay";
   };
 
-  outputs = { self, home-manager, nixpkgs, code-stats-vim, secrets, ... }: 
+  outputs = { self, home-manager, nixpkgs, code-stats-vim, secrets, emacs-overlay, ... }: 
   let
+    overlays = [
+      emacs-overlay.overlay
+    ];
+
     specialArgs = {
       inherit home-manager
       code-stats-vim;
@@ -45,6 +51,7 @@
           nixpkgs.config = {
             allowUnfree = true;
           };
+          nixpkgs.overlays = overlays;
         };
       };
     };
@@ -59,6 +66,7 @@
             nixpkgs.config = {
               allowUnfree = true;
             };
+            nixpkgs.overlays = overlays;
           }
         ];
       in

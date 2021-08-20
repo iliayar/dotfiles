@@ -4,7 +4,7 @@
   programs.zsh = {
     enable = true;
     enableAutosuggestions = true;
-    # enableSyntaxHighlighting = true;
+    enableSyntaxHighlighting = true;
 
     oh-my-zsh = {
       enable = true;
