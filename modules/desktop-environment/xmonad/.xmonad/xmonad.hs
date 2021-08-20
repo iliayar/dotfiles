@@ -116,7 +116,7 @@ dzen' :: String -> String
 dzen' m = "(echo " ++
   dzenEscape m ++
   " | column; cat) | " ++ unwords [ "dzen2"
-                         , "-fn 'Hack 9'"
+                         , "-fn 'Fira Code'"
                          , "-fg '" ++ Theme.color7 ++ "'"
                          , "-bg '" ++ Theme.color0 ++ "'"
                          ]
@@ -236,7 +236,7 @@ addExitMap m = ("<Escape>", io $ return (), "Cancel") : m
 
 dzenKeymapsPipe :: String -> [(String, X (), String)] -> X Handle
 dzenKeymapsPipe d m = do
-   h <- spawnPipe $ "~/bin/dzenShowKeymap.sh \"" ++ (dzenEscape d) ++ "\""
+   h <- spawnPipe $ "dzenShowKeymap \"" ++ (dzenEscape d) ++ "\""
    io $ hPutStrLn h $ dzenEscape $ getDescription "\n" $ addExitMap m
    io $ hPutStrLn h "END"
    io $ return h
@@ -872,7 +872,7 @@ passInsertPrompt c =
 
 main = do
         homeDir <- getHomeDirectory
-        -- xmproc0 <- spawnPipe $ "xmobar " ++ homeDir ++ "/.config/xmobar/xmobar"
+        xmproc0 <- spawnPipe $ "xmobar"
         -- xmproc1 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_mon2"
         -- xmproc2 <- spawnPipe $ "xmobar " ++ homeDir ++ "/.config/xmobar/xmobar_top"
         xmonad $ ewmh def {
@@ -891,9 +891,9 @@ main = do
         handleEventHook    = myEventHook,
         logHook            = dynamicLogWithPP xmobarPP
                 { ppOutput  = \x ->
-                    appendFile "/tmp/.xmonad_data" x
-                    -- hPutStrLn xmproc0 x
+                    hPutStrLn xmproc0 x
                   -- >> hPutStrLn xmproc1 encX
+                  -- >> appendFile "/tmp/.xmonad_data" x
                 , ppCurrent = xmobarColor Theme.color2 "" -- . wrap "[" "]"
                 , ppVisible = xmobarColor Theme.color3 ""
                 , ppTitle   = xmobarColor Theme.color9 "" . shorten 25

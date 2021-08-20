@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, haskellPackages, ... }:
 
 {
   imports =
@@ -31,6 +31,9 @@
     windowManager.xmonad = {
       enable = true;
       enableContribAndExtras = true;
+      extraPackages = gpkgs: [
+        pkgs.ghc
+      ];
     };
     synaptics = {
       enable = true;

@@ -53,6 +53,20 @@
         "type": "github"
       }
     },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1629402377,
+        "narHash": "sha256-aumpjmlvbRYE2PiCZvE7IpYVi8ZjEPC6uqxZQ9Gg+AE=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "3861de42892e9a8dcf2145ad896e7548d479755a",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
     "root": {
       "inputs": {
         "code-stats-vim": "code-stats-vim",
@@ -62,9 +76,11 @@
       }
     },
     "secrets": {
-      "flake": false,
+      "inputs": {
+        "nixpkgs": "nixpkgs_2"
+      },
       "locked": {
-        "narHash": "sha256-p2Xn/PNQu6qLVzOU/syPcusmjj2WTJfoDDdJdkcR6cw=",
+        "narHash": "sha256-aLVRo+5iAMtzpFAIOm5WBPBnXlQJg+hjj4hlkyE2tTM=",
         "path": "./modules/secrets",
         "type": "path"
       },

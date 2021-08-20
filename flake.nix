@@ -64,7 +64,7 @@
       in
         nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
   in {
-    nixosConfigurations.nixos = dellLaptop;
+    nixosConfigurations.NixLaptop = dellLaptop;
     inherit homeConfigurations;
   };
 }

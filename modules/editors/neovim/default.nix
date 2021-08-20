@@ -2,6 +2,10 @@
 
 
 {
+  home.file."${config.xdg.configHome}/nvim/colors" = {
+    source = ./colors;
+    recursive = true;
+  };
 
   home.packages = [ pkgs.xsel ];
 
@@ -63,7 +67,7 @@
       " autocmd VimEnter * colorscheme gruvbox
 
       " Monokai colorscheme
-      " colorscheme monokai
+      colorscheme monokai
 
       " Pywal
       " colorscheme wal
@@ -101,7 +105,8 @@
       map <S-Down> <Down>
       map <S-Up> <Up>
 
-      " map <leader>gs <Plug>(easymotion-sn)
+      " FIXME: Why Plug
+      map <leader>gs <Plug>(easymotion-sn)
 
       imap <Left> <Nop>
       imap <Right> <Nop>
