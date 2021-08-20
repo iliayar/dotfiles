@@ -73,18 +73,19 @@ Project tree. Settings fonts for ~treemacs~
   ;;   :ensure t
   :config
   (dolist (face '(treemacs-root-face
-                  treemacs-git-unmodified-face
-                  treemacs-git-modified-face
-                  treemacs-git-renamed-face
-                  treemacs-git-ignored-face
-                  treemacs-git-untracked-face
-                  treemacs-git-added-face
-                  treemacs-git-conflict-face
-                  treemacs-directory-face
-                  treemacs-directory-collapsed-face
-                  treemacs-file-face
-                  treemacs-tags-face))
+		  treemacs-git-unmodified-face
+		  treemacs-git-modified-face
+		  treemacs-git-renamed-face
+		  treemacs-git-ignored-face
+		  treemacs-git-untracked-face
+		  treemacs-git-added-face
+		  treemacs-git-conflict-face
+		  treemacs-directory-face
+		  treemacs-directory-collapsed-face
+		  treemacs-file-face
+		  treemacs-tags-face))
     (set-face-attribute face nil :family "Fira Code" :height 100))
+  (setq treemacs-read-string-input 'from-minibuffer)
   )
 (use-package treemacs-evil
   :after evil
@@ -99,9 +100,6 @@ Project tree. Settings fonts for ~treemacs~
 ~Evil~ with dependecies. Disable Evil mode for some modes
 #+begin_src emacs-lisp
 (setq evil-want-keybinding nil)
-(use-package undo-tree
-  ;;   :ensure t
-  )
 (use-package goto-chg
   ;;   :ensure t
   )
@@ -113,8 +111,13 @@ Project tree. Settings fonts for ~treemacs~
   (evil-mode 1)
   (add-to-list 'evil-emacs-state-modes 'elfeed-search)
   (cl-loop for (mode . state) in '((dired-mode . emacs) (elfeed-search . emacs))
-           do (evil-set-initial-state mode state))
+	   do (evil-set-initial-state mode state))
   )
+(use-package undo-tree
+  ;;   :ensure t
+  :config
+  (global-undo-tree-mode)
+  (evil-set-undo-system 'undo-tree))
 #+end_src
 Collection of evil keybindings
 #+begin_src emacs-lisp
@@ -193,7 +196,7 @@ Dashboard showing on startup
   :config
   (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
   (setq dashboard-center-content t)
-  (setq dashboard-startup-banner "~/Themes/Neofetch.png")
+  (setq dashboard-startup-banner "~/Wallpapers/Neofetch.png")
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   (setq dashboard-items '((recents  . 5)
@@ -432,6 +435,14 @@ Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
   )
 #+end_src
 *** Languages and lsp
+Nix, and completion
+#+begin_src emacs-lisp
+(use-package nix-mode
+  :mode "\\.nix\\'") 
+(use-package nixos-options)
+(use-package company-nixos-options)
+#+end_src
+
 Lsp client. Speeding up 🛹, adding folders to not track. \\
 Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/
 #+begin_src emacs-lisp
@@ -1052,6 +1063,10 @@ Elfeed hydra binddings
 #+end_src
 Bindings using ~general~ package
 #+begin_src emacs-lisp
+(general-define-key
+ :state '(normal)
+ :keymaps '(org-mode-map)
+ "<tab>" 'org-cycle)
 (general-define-key
  :states '(normal visual emacs insert treemacs)
  :prefix "SPC"

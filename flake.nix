@@ -5,8 +5,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
-    home-manager = {
-      url = "github:nix-community/home-manager/master";
+    home-manager = {url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -24,7 +23,7 @@
   let
     overlays = [
       emacs-overlay.overlay
-    ];
+    ] ++ (import ./modules/overlays);
 
     specialArgs = {
       inherit home-manager
@@ -37,7 +36,9 @@
     homeConfigurations = {
       iliayar = home-manager.lib.homeManagerConfiguration rec {
         system = "x86_64-linux";
-        extraSpecialArgs = specialArgs;
+        extraSpecialArgs = specialArgs // {
+          wallpapers = (pkgs.callPackage (import ./modules/themes/wallpapers.nix) { });
+        };
         pkgs = import nixpkgs {
           inherit system;
         };
@@ -70,7 +71,12 @@
           }
         ];
       in
-        nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
+        nixpkgs.lib.nixosSystem {
+          inherit
+            system
+            modules
+            specialArgs;
+        };
   in {
     nixosConfigurations.NixLaptop = dellLaptop;
     inherit homeConfigurations;

@@ -25,6 +25,14 @@
     networkmanager.enable = true;
   };
 
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
+    supportedLocales = [
+      "en_US.UTF-8/UTF-8"
+      "ru_RU.UTF-8/UTF-8"
+    ];
+  };
+
 
   services.xserver = {
     enable = true;
@@ -33,20 +41,21 @@
     windowManager.xmonad = {
       enable = true;
       enableContribAndExtras = true;
-      extraPackages = gpkgs: [
-        pkgs.ghc
-      ];
     };
     synaptics = {
       enable = true;
       tapButtons = false;
       vertTwoFingerScroll = true;
       horizTwoFingerScroll = true;
-      maxSpeed = "2.0";
+      minSpeed = "1.0";
+      maxSpeed = "3.0";
     };
 
     autoRepeatInterval = 50;
     autoRepeatDelay = 200;
+
+    xkbOptions = "grp:switch,grp:alt_caps_toggle";
+    layout = "us,ru";
   }; 
 
   nix = {
@@ -61,7 +70,7 @@
     isNormalUser = true;
     home = "/home/iliayar";
     shell = pkgs.zsh;
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [ "wheel" "networkmanager" "video" ];
   };
 
   environment.systemPackages = with pkgs; [
@@ -85,7 +94,7 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "21.05"; # Did you read the comment?
+  # system.stateVersion = "21.05"; # Did you read the comment?
 
 }
 

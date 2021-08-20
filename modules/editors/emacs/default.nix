@@ -88,8 +88,16 @@
       elfeed
       elfeed-org
       elfeed-goodies
+      nix-mode
+      nixos-options
+      company-nixos-options
+      nix-sandbox
     ];
   };
+
+  home.packages = with pkgs; [
+    rnix-lsp
+  ];
 
   services.emacs = {
     enable = true;

@@ -22,19 +22,20 @@ rec {
 
   color0  = black;
   color1  = red;
-  color2  = yellow;
-  color3  = green;
+  color2  = green;
+  color3  = yellow;
   color4  = blue;
   color5  = magenta;
   color6  = cyan;
   color7  = white;
   color8  = brightBlack;
   color9  = brightRed;
-  color10 = brightYellow;
-  color11 = brightGreen;
+  color10 = brightGreen;
+  color11 = brightYellow;
   color12 = brightBlue;
   color13 = brightMagenta;
   color14 = brightCyan;
   color15 = brightWhite;
-  
+
+  font = "Fira Code";
 }

@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, wallpapers, ... }:
 
 {
   imports = [
@@ -13,5 +13,19 @@
 
   home.packages = with pkgs; [
     tdesktop # Telegram
+    spotify
+    xkb-switch
+    light
   ];
+
+  programs = {
+    feh = {
+      enable = true;
+    };
+  };
+
+  home.file."Wallpapers" = {
+    source = wallpapers;
+    recursive = true;
+  };
 }

@@ -3,6 +3,7 @@
 {
   imports = [
     ./python
+    ./cxx
   ];
 
 }

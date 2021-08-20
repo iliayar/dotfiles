@@ -368,7 +368,7 @@ tsAll =
    [ Node (TS.TSNode "+ General" "General purpose applications" (return ()))
        [ Node (TS.TSNode "Caja" "File Manager" (spawn "caja")) []
        , Node (TS.TSNode "Brave" "Browser" (spawn "brave")) []
-       , Node (TS.TSNode "Neofetch" "Show off" (termSpawn' $ URxvt (Just "neofetch-term") True [] $ Just "neofetch --w3m --source ~/Themes/Neofetch.png --image_size 360")) []
+       , Node (TS.TSNode "Neofetch" "Show off" (termSpawn' $ URxvt (Just "neofetch-term") True [] $ Just "neofetch --w3m --source ~/Wallpapers/Neofetch.png --image_size 360")) []
        ]
    , Node (TS.TSNode "+ Programming" "programming" (return ()))
        [ Node (TS.TSNode "IPython" "IPython interactive shell" (termSpawn termite "ipython")) []
