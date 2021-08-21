@@ -58,7 +58,7 @@
       echo "$INFO"
 
       N_LINES=$(wc -l <<< "$INFO")
-      Y=$(($3 + $5 - ($LH * ($N_LINES+1)) - 19))
+      Y=$(($3 + $5 - ($LH * ($N_LINES+1))))
       (echo "$INFO"; cat) | dzen2 -l $(($N_LINES)) \
         -fn "-*-Fira Code-*-*-*-*-14-*-*-*-*-*-*-*" \
         -fg $foreground \

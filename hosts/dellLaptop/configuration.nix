@@ -1,5 +1,14 @@
 { config, pkgs, haskellPackages, ... }:
 
+let
+  nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload" ''
+    export __NV_PRIME_RENDER_OFFLOAD=1
+    export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
+    export __GLX_VENDOR_LIBRARY_NAME=nvidia
+    export __VK_LAYER_NV_optimus=NVIDIA_only
+    exec -a "$0" "$@"
+  '';
+in
 {
   imports =
     [
@@ -36,14 +45,19 @@
 
   services.xserver = {
     enable = true;
+    videoDrivers = [ "nvidia" ];
+    screenSection = ''
+      Option         "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
+      Option         "AllowIndirectGLXProtocol" "off"
+      Option         "TripleBuffer" "on"
+    '';
     displayManager.lightdm.enable = true;
     # FIXME: Move to nixpkgs folder somehow
     windowManager.xmonad = {
       enable = true;
       enableContribAndExtras = true;
     };
-    synaptics = {
-      enable = true;
+    synaptics = {enable = true;
       tapButtons = false;
       vertTwoFingerScroll = true;
       horizTwoFingerScroll = true;
@@ -57,6 +71,12 @@
     xkbOptions = "grp:switch,grp:alt_caps_toggle";
     layout = "us,ru";
   }; 
+
+  hardware.nvidia.prime = {
+    offload.enable = true;
+    intelBusId = "PCI:0:2:0";
+    nvidiaBusId = "PCI:1:0:0";
+  };
 
   nix = {
     package = pkgs.nixFlakes;
@@ -79,6 +99,7 @@
     refind
     wget
     pciutils
+    nvidia-offload
   ];
 
   security.sudo = {

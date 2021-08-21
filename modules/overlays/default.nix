@@ -1,1 +1,4 @@
-[ (import ./overrides.nix) ]
+[
+  (import ./overrides.nix)
+  (import ./dev.nix)
+]

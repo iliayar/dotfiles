@@ -11,6 +11,7 @@
 
   home.packages = with pkgs; [
     killall
+    unzip
   ];
 
   services.syncthing.enable = true;
