@@ -1,4 +1,4 @@
-{ config, pkgs, haskellPackages, ... }:
+{ config, pkgs, ... }:
 
 let
   nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload" ''
@@ -55,9 +55,9 @@ in
     # FIXME: Move to nixpkgs folder somehow
     windowManager.xmonad = {
       enable = true;
-      enableContribAndExtras = true;
     };
-    synaptics = {enable = true;
+    synaptics = {
+      enable = true;
       tapButtons = false;
       vertTwoFingerScroll = true;
       horizTwoFingerScroll = true;

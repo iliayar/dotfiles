@@ -1,4 +1,4 @@
-{ ... }:
+{ ... }@inputs:
 final: prev: {
-  systec-can = prev.pkgs.callPackage ../dev/can/systec-socketcan.nix { };
+  systec-can = prev.pkgs.callPackage ../dev/can/systec-socketcan.nix inputs;
 }

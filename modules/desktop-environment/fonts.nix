@@ -12,5 +12,6 @@
     noto-fonts-emoji
     fira-code
     font-awesome
+    symbola
   ];
 }

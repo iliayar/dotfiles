@@ -1,20 +1,13 @@
-{ config, pkgs, themes, ...}:
+{ config, pkgs, themes, ...}@inputs:
 
+let
+  xmonad-configured = pkgs.callPackage ./config { };
+in
 {
   home.file.".xmonad" = {
-    source = ./.xmonad;
+    source = xmonad-configured;
     recursive = true;
   };
-
-  # home.file.".xmonad/build" = {
-    # text = ''
-      # ${pkgs.xmonad-with-packages}/bin/ghc --make \
-      # xmonad.hs \
-      # -ilib \
-      # -o "$1"
-    # '';
-    # executable = true;
-  # };
 
   home.packages = with pkgs; [
     dzen2 

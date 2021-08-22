@@ -1,8 +1,7 @@
-{ my-xmonad-contrib, ... }:
+{ my-xmonad-contrib, xmonad-newest, ... }@inputs:
 final: prev: {
-  haskell = prev.haskell // {
-    packages = prev.haskell.packages // {
-      xmonad-contrib = my-xmonad-contrib;
-    };
-  };
+  haskellPackages = prev.haskellPackages.extend (hfinal: hprev: {
+    xmonad-contrib = my-xmonad-contrib.defaultPackage."x86_64-linux";
+    xmonad = xmonad-newest.defaultPackage."x86_64-linux";
+  });
 }

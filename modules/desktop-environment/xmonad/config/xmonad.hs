@@ -478,7 +478,6 @@ myKeys = \conf -> let
   dzenAllBindings = withDzenKeymapsPipe "Keybindings" keymap $ createSubmap []
   restartRecompile = wrapBash $ (++" || (echo \x1b[31mFailed\x1b[m; killall xmessage; echo Press Enter; read)") $ wrap "(" ")" $ intercalate " && "
     [ "home-manager switch -j 8"
-    , "xmonad --recompile"
     , "xmonad --restart"
     , "echo \x1b[32mSucceed\x1b[m"
     , "sleep 1"
@@ -542,7 +541,7 @@ myKeys = \conf -> let
       , ("a", appPrompt myXPConfig  , "Applications prompt")
       , ("h", hooglePrompt myXPConfig  , "Hoogle search prompt")
       , ("g", anonGooglePrompt myXPConfig  , "Anonymous Google search prompt")
-      -- , ("e", withFixingClipboard $ unicodePrompt "/home/iliayar/Themes/unicode" emojiXPConfig, "Unicode prompt")
+      , ("e", withFixingClipboard $ unicodePrompt "/home/iliayar/.xmonad/unicode-prompt/unicode" emojiXPConfig, "Unicode prompt")
       , prefix "p"
         [ ("p", passPrompt myXPConfig, "Get password")
         , ("g", passGeneratePrompt myXPConfig, "Generate password")
@@ -755,7 +754,7 @@ myStartupHook = do
 
 emojiXPConfig :: XPConfig
 emojiXPConfig = def
-      { font                = "xft:Symbola:regular:size=12:antialise=true"
+      { font                = myFont ++ ",Noto Color Emoji"
       , bgColor             = Theme.background
       , fgColor             = Theme.foreground
       , bgHLight            = Theme.color0
@@ -897,7 +896,7 @@ main = do
                 , ppCurrent = xmobarColor Theme.color2 "" -- . wrap "[" "]"
                 , ppVisible = xmobarColor Theme.color3 ""
                 , ppTitle   = xmobarColor Theme.color9 "" . shorten 25
-		-- TODO: Fixm xmonadctl
+                -- TODO: Fixm xmonadctl
                 -- , ppLayout  = (\x -> "<action=~/.xmonad/xmonadctl 12>" ++ x ++ "</action>")
                 , ppLayout  = (\x -> x)
                 , ppExtras  = []

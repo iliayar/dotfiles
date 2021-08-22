@@ -1,6 +1,4 @@
-{
-  pkgs ? import <nixpkgs> { }
-}:
+{ pkgs, systec-can, ... }:
 let 
   stdenv = pkgs.stdenv;
   kernel = pkgs.linuxPackages.kernel;
@@ -8,10 +6,7 @@ in
 stdenv.mkDerivation {
   name = "systec-socketcan";
 
-  src = pkgs.fetchurl {
-    url = "https://www.systec-electronic.com/fileadmin/Redakteur/Unternehmen/Support/Downloadbereich/Treiber/systec_can-V1.0.3.tar.bz2";
-    sha256 = "PIohvsMh8WOayZ4NutXCXTCUw/XLB0/FUBgg8T1naag=";
-  };
+  src = systec-can;
 
   nativeBuildInputs = kernel.moduleBuildDependencies ++ [ pkgs.kmod ];
 
