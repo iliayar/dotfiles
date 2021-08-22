@@ -1,4 +1,6 @@
+{ ... }@inputs:
 [
-  (import ./overrides.nix)
-  (import ./dev.nix)
+  (import ./overrides.nix inputs)
+  (import ./dev.nix inputs)
+  (import ./additional.nix inputs)
 ]

@@ -2,7 +2,10 @@
 
 {
   fonts = {
-    fontconfig.enable = true;
+    fontconfig = {
+      enable = true;
+      # defaultFonts.emoji = [ "Noto Color Emoji" ];
+    };
   };
 
   home.packages = with pkgs; [

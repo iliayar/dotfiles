@@ -16,17 +16,28 @@
     secrets.url = "path:./modules/secrets";
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
+
+    libxft-bgra = {
+      url = "github:uditkarode/libxft-bgra";
+      flake = false;
+    };
+
+    my-xmonad-contrib = {
+      url = "github:iliayar/xmonad-contrib/feature/fallback-fonts";
+    };
   };
 
-  outputs = { self, home-manager, nixpkgs, code-stats-vim, secrets, emacs-overlay, ... }: 
+  outputs = { self, home-manager, nixpkgs, code-stats-vim, secrets, emacs-overlay, libxft-bgra, ... }@inputs: 
   let
     overlays = [
       emacs-overlay.overlay
-    ] ++ (import ./modules/overlays);
+    ] ++ (import ./modules/overlays inputs);
 
     specialArgs = {
-      inherit home-manager
-      code-stats-vim;
+      inherit
+        home-manager
+        code-stats-vim
+        libxft-bgra;
 
       secrets = import secrets;
       themes = import ./modules/themes;

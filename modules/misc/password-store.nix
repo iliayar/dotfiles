@@ -9,7 +9,8 @@
     };
   };
 
-  services.password-store-sync = {
-    enable = true;
-  };
+  # FIXME: Seems broken
+  # services.password-store-sync = {
+  #   enable = true;
+  # };
 }

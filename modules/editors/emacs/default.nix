@@ -92,6 +92,8 @@
       nixos-options
       company-nixos-options
       nix-sandbox
+
+      pkgs.clang-tools
     ];
   };
 
