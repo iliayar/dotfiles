@@ -2,7 +2,7 @@
 
 {
   home.packages = with pkgs; [
-    # clang
+    clang
     # cmake
     # gnumake
     # gcc

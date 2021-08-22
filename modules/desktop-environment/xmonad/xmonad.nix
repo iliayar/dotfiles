@@ -1,7 +1,7 @@
-{ config, pkgs, themes, ...}@inputs:
+{ config, pkgs, themes, my-xmonad-contrib, ...}@inputs:
 
 let
-  xmonad-configured = pkgs.callPackage ./config { };
+  xmonad-configured = pkgs.callPackage ./config inputs;
 in
 {
   home.file.".xmonad" = {
@@ -53,7 +53,7 @@ in
       N_LINES=$(wc -l <<< "$INFO")
       Y=$(($3 + $5 - ($LH * ($N_LINES+1))))
       (echo "$INFO"; cat) | dzen2 -l $(($N_LINES)) \
-        -fn "-*-Fira Code-*-*-*-*-14-*-*-*-*-*-*-*" \
+        -fn "-*-${themes.font}-*-*-*-*-14-*-*-*-*-*-*-*" \
         -fg $foreground \
         -bg $background \
         -h $LH -x $X -y $Y -w $W \

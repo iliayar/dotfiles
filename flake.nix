@@ -24,10 +24,14 @@
       flake = false;
     };
 
-    xmonad-newest.url = "github:xmonad/xmonad";
+    xmonad-newest = {
+      url = "github:xmonad/xmonad";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     my-xmonad-contrib = {
       url = "github:iliayar/xmonad-contrib/feature/fallback-fonts";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     systec-can = {
@@ -59,10 +63,6 @@
           my-xmonad-contrib
           xmonad-newest;
 
-        # my-xmonad-contrib = pkgs.haskell.lib.overrideCabal (my-xmonad-contrib.defaultPackage."x86_64-linux") (drv: {
-        #   configureFlags = [ "-fuse_xft" ];
-        # });
-
         secrets = import secrets;
         themes = import ./modules/themes;
       };
@@ -79,10 +79,8 @@
           configuration = { pkgs, config, ... }: {
             imports = [
               ./hosts/dellLaptop/home.nix
-              {
-                nixpkgs = nixpkgs-config;
-              }
             ];
+            nixpkgs = nixpkgs-config;
           };
         };
       };
@@ -91,19 +89,10 @@
         let
           modules = [
             ./hosts/dellLaptop/configuration.nix
+            ./cachix.nix
             {
               nixpkgs = nixpkgs-config;
               nix = {
-                binaryCaches = [
-                  "https://cache.nixos.org"
-                  "https://nix-community.cachix.org"
-                  "https://nixpkgs.cachix.org"
-                ];
-                binaryCachePublicKeys = [
-                  "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-                  "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-                  "nixpkgs.cachix.org-1:q91R6hxbwFvDqTSDKwDAV4T5PxqXGxswD8vhONFMeOE="
-                ];
                 gc = {
                   automatic = true;
                   options = "--delete-older-than 3d";
