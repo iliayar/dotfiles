@@ -1,4 +1,4 @@
-{ libxft-bgra, ... }:
+{ libxft-bgra, picom-jonaburg, ... }:
 
 final: prev: {
   libxft-bgra = prev.stdenv.mkDerivation {
@@ -7,4 +7,8 @@ final: prev: {
     buildInputs = with prev; [ fontconfig xorg.utilmacros pkgconfig xorg.libX11 xorg.libXext xorg.libXrender ];
     nativeBuildInputs = with prev; [ freetype autoreconfHook ];
   };
+
+  picom-jonaburg = prev.picom.overrideDerivation (old: {
+    src = picom-jonaburg;
+  });
 }

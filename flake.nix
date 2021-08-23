@@ -43,6 +43,11 @@
       url = "github:org-roam/org-roam-ui";
       flake = false;
     };
+
+    picom-jonaburg = {
+      url = "github:jonaburg/picom";
+      flake = false;
+    };
   };
 
   outputs = { self
@@ -55,6 +60,7 @@
             , my-xmonad-contrib
             , xmonad-newest
             , org-roam-ui
+            , picom-jonaburg
             , ...
             }
     @inputs: 
@@ -80,6 +86,7 @@
             my-xmonad-contrib
             xmonad-newest
             org-roam-ui
+            picom-jonaburg
           ;
 
           secrets = import secrets;

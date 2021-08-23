@@ -10,6 +10,7 @@
     ./fonts.nix
     ./sound.nix
     ./dunst.nix
+    ./picom.nix
   ];
 
   home.packages = with pkgs; [
