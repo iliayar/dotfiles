@@ -754,7 +754,7 @@ myStartupHook = do
 
 emojiXPConfig :: XPConfig
 emojiXPConfig = def
-      { font                = myFont ++ ",Noto Color Emoji"
+      { font                = myFont ++ ",Noto Color Emoji:size=12:antialise=true,Symbola:regular:size=12:antialise=true"
       , bgColor             = Theme.background
       , fgColor             = Theme.foreground
       , bgHLight            = Theme.color0

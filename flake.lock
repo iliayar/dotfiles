@@ -280,6 +280,22 @@
         "type": "indirect"
       }
     },
+    "org-roam-ui": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1629481819,
+        "narHash": "sha256-8n5QKBKnCyDA5L7ZgPWw3O8HPyOiCqc6BOO0B7H5sT0=",
+        "owner": "org-roam",
+        "repo": "org-roam-ui",
+        "rev": "99f7d62bd6fa5a2f0661e8ed5b89ae875e59524a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "org-roam",
+        "repo": "org-roam-ui",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "code-stats-vim": "code-stats-vim",
@@ -288,6 +304,7 @@
         "libxft-bgra": "libxft-bgra",
         "my-xmonad-contrib": "my-xmonad-contrib",
         "nixpkgs": "nixpkgs_4",
+        "org-roam-ui": "org-roam-ui",
         "secrets": "secrets",
         "systec-can": "systec-can",
         "xmonad-newest": "xmonad-newest"

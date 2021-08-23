@@ -38,77 +38,96 @@
       url = "https://www.systec-electronic.com/fileadmin/Redakteur/Unternehmen/Support/Downloadbereich/Treiber/systec_can-V1.0.3.tar.bz2";
       flake = false;
     };
+
+    org-roam-ui = {
+      url = "github:org-roam/org-roam-ui";
+      flake = false;
+    };
   };
 
-  outputs = { self, home-manager, nixpkgs, code-stats-vim, secrets, emacs-overlay, libxft-bgra, my-xmonad-contrib, xmonad-newest, ... }@inputs: 
-    let
-      system = "x86_64-linux";
+  outputs = { self
+            , home-manager
+            , nixpkgs
+            , code-stats-vim
+            , secrets
+            , emacs-overlay
+            , libxft-bgra
+            , my-xmonad-contrib
+            , xmonad-newest
+            , org-roam-ui
+            , ...
+            }
+    @inputs: 
+      let
+        system = "x86_64-linux";
 
-      overlays = [
-        emacs-overlay.overlay
-      ] ++ (import ./modules/overlays inputs);
+        overlays = [
+          emacs-overlay.overlay
+        ] ++ (import ./modules/overlays inputs);
 
-      nixpkgs-config = {
-        inherit system overlays;
-        config.allowUnfree = true;
-      };
+        nixpkgs-config = {
+          inherit system overlays;
+          config.allowUnfree = true;
+        };
 
-      pkgs = import nixpkgs nixpkgs-config;
+        pkgs = import nixpkgs nixpkgs-config;
 
-      specialArgs = {
-        inherit
-          home-manager
-          code-stats-vim
-          libxft-bgra
-          my-xmonad-contrib
-          xmonad-newest;
+        specialArgs = {
+          inherit
+            home-manager
+            code-stats-vim
+            libxft-bgra
+            my-xmonad-contrib
+            xmonad-newest
+            org-roam-ui
+          ;
 
-        secrets = import secrets;
-        themes = import ./modules/themes;
-      };
+          secrets = import secrets;
+          themes = import ./modules/themes;
+        };
 
-      homeConfigurations = {
-        iliayar = home-manager.lib.homeManagerConfiguration rec {
-          inherit system;
-          extraSpecialArgs = specialArgs // {
-            inherit pkgs system;
-            wallpapers = (pkgs.callPackage (import ./modules/themes/wallpapers.nix) { });
-          };
-          homeDirectory = "/home/iliayar";
-          username = "iliayar";
-          configuration = { pkgs, config, ... }: {
-            imports = [
-              ./hosts/dellLaptop/home.nix
-            ];
-            nixpkgs = nixpkgs-config;
+        homeConfigurations = {
+          iliayar = home-manager.lib.homeManagerConfiguration rec {
+            inherit system;
+            extraSpecialArgs = specialArgs // {
+              inherit pkgs system;
+              wallpapers = (pkgs.callPackage (import ./modules/themes/wallpapers.nix) { });
+            };
+            homeDirectory = "/home/iliayar";
+            username = "iliayar";
+            configuration = { pkgs, config, ... }: {
+              imports = [
+                ./hosts/dellLaptop/home.nix
+              ];
+              nixpkgs = nixpkgs-config;
+            };
           };
         };
-      };
 
-      dellLaptop = 
-        let
-          modules = [
-            ./hosts/dellLaptop/configuration.nix
-            ./cachix.nix
-            {
-              nixpkgs = nixpkgs-config;
-              nix = {
-                gc = {
-                  automatic = true;
-                  options = "--delete-older-than 3d";
+        dellLaptop = 
+          let
+            modules = [
+              ./hosts/dellLaptop/configuration.nix
+              ./cachix.nix
+              {
+                nixpkgs = nixpkgs-config;
+                nix = {
+                  gc = {
+                    automatic = true;
+                    options = "--delete-older-than 3d";
+                  };
                 };
-              };
-            }
-          ];
-        in
-          nixpkgs.lib.nixosSystem {
-            inherit
-              system
-              modules
-              specialArgs;
-          };
-    in {
-      nixosConfigurations.NixLaptop = dellLaptop;
-      inherit homeConfigurations;
-    };
+              }
+            ];
+          in
+            nixpkgs.lib.nixosSystem {
+              inherit
+                system
+                modules
+                specialArgs;
+            };
+      in {
+        nixosConfigurations.NixLaptop = dellLaptop;
+        inherit homeConfigurations;
+      };
 }

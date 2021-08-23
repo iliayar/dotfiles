@@ -15,4 +15,10 @@
     VISUAL = "emacs";
     BROWSER = "brave";
   };
+
+  home.packages = with pkgs; [
+    scrot
+    xclip
+    slop
+  ];
 }

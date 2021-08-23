@@ -1,12 +1,11 @@
-{ config, pkgs, secrets, ...}:
+{ config, pkgs, secrets, ...}@inputs:
 
 { home.file.".emacs.d" = {
     source = ./.emacs.d;
     recursive = true;
   };
 
-  home.file.".emacs.d/private.el".text = '' (setq code-stats-token "${secrets.code-stats-api-key}")
-  '';
+  home.file.".emacs.d/private.el".text = '' (setq code-stats-token "${secrets.code-stats-api-key}") '';
 
   home.file.".emacs.d/config.org" = {
     source = ./.emacs.d/config.org;
@@ -15,9 +14,14 @@
     '';
   };
 
+  home.file.".emacs.d/nix.el".text = ''
+                                   (setq lsp-clangd-binary-path "${pkgs.clang-tools}/bin/clangd")
+  '';
+
   programs.emacs = {
     enable = true;
     package = pkgs.emacsGcc;
+    overrides = import ./overrides.nix inputs;
     extraPackages = epkgs: with epkgs; [
       gcmh
       projectile
@@ -92,8 +96,9 @@
       nixos-options
       company-nixos-options
       nix-sandbox
+      direnv
 
-      pkgs.clang-tools
+      org-roam-ui
     ];
   };
 

@@ -9,6 +9,7 @@
     ./terminal-emulators
     ./fonts.nix
     ./sound.nix
+    ./dunst.nix
   ];
 
   home.packages = with pkgs; [

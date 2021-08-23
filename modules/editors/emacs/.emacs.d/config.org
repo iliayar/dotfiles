@@ -42,6 +42,10 @@ Extending executable path
 #+BEGIN_SRC  emacs-lisp
 ;; (add-to-list 'exec-path "~/.local/bin")
 #+END_SRC
+Load nix specific config(mostly for pathes)
+#+begin_src emacs-lisp
+(load "~/.emacs.d/nix.el")  
+#+end_src
 * Packages
 Speeding up again 🦼
 #+begin_src emacs-lisp
@@ -61,6 +65,13 @@ Projects management with ~counsel~ completion
   ;;   :ensure t
   )
 #+end_src
+Support for nix environment variables
+#+begin_src emacs-lisp
+(use-package direnv
+  :config
+  (direnv-mode)) 
+#+end_src
+
 Amazing git tool
 #+begin_src emacs-lisp
 (use-package magit
@@ -640,8 +651,7 @@ Org Roam
   ;;   :ensure t
   )
 
-;; (add-to-list 'load-path "~/.emacs.d/lisp/org-roam-ui")
-;; (load-library "org-roam-ui")
+(load-library "org-roam-ui")
 #+END_SRC
 *** Settings
 Setting visual stuff
