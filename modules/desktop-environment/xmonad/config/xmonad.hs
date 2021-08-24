@@ -1,4 +1,3 @@
--- Test
 -------------------------------------------------
 ------------------ Imports ----------------------
 -------------------------------------------------
@@ -241,11 +240,10 @@ dzenKeymapsPipe d m = do
    io $ hPutStrLn h "END"
    io $ return h
 
-withDzenKeymapsPipe :: String -> [(String, X (), String)] -> X () -> X ()
+withDzenKeymapsPipe :: String -> [(String, X (), String)] -> (Handle -> X ()) -> X ()
 withDzenKeymapsPipe d m f = do
   h <- dzenKeymapsPipe d m
-  f
-  io $ hClose h
+  f h
 
 afIcon s = "<fn=1>" ++ s ++ "</fn>"
 
@@ -269,11 +267,8 @@ myModMask       = mod4Mask
 
 myWorkspaces = [afIcon "\xf001", afIcon "\xf120", afIcon "\xf1c9", afIcon "\xf03d", afIcon "\xf3f6", afIcon "\xf305", "6", afIcon "\xf468", afIcon "\xf268", afIcon "\xf3fe"]
 myWorkspacesClickable    = clickable myWorkspaces
-    -- TODO: Fix xmonadctl
     where
-        -- clickable l = [ "<action=~/.xmonad/xmonadctl " ++ i ++ ">" ++ ws ++ "</action>" |
-        --               (i,ws) <- zip (map show [2..11]) l]
-        clickable l = [ ws |
+        clickable l = [ "<action=~/.xmonad/xmonadctl " ++ i ++ ">" ++ ws ++ "</action>" |
                       (i,ws) <- zip (map show [2..11]) l]
 
 myNormalBorderColor  = Theme.color8
@@ -472,7 +467,10 @@ tsDefaultConfig = TS.TSConfig { TS.ts_hidechildren = True
 -------------------------------------------------
 
 myKeys = \conf -> let
-  createSubmap m = submap $ mkKeymap conf $ map ((\ (k, a) -> (k, spawn "killall dzen2"  >> a)) . dropRdTuple) $ addExitMap m
+  createSubmap m h = submap $ mkKeymap conf $ map ((\ (k, a) -> (k, do
+                                                                    io $ hClose h
+                                                                    a
+                                                                )) . dropRdTuple) $ addExitMap m
   prefix p m d = (p, withDzenKeymapsPipe d m $ createSubmap m,
                   "+ " ++ d ++ "\n" ++ getHelp m)
   dzenAllBindings = withDzenKeymapsPipe "Keybindings" keymap $ createSubmap []
@@ -594,7 +592,7 @@ myKeys = \conf -> let
                                 \mv $f ~/Pictures/screenshots/;\
                                 \notify-send -a 'XMonad' 'Scrot' \"Screenshot copied to clipboard\" -i \"~/Pictures/screenshots/$f\"'"
       playerctl a = spawn $ "playerctl " ++ a ++ " -p spotify"
-      rustBlocks block cmd = spawn $ "~/bin/rust-blocks/target/release/rust-blocks-client " ++ block ++ " " ++ cmd
+      rustBlocks block cmd = spawn $ "rust-blocks-client " ++ block ++ " " ++ cmd
       musicBlock = rustBlocks "music"
       createSearchPrompt = map (\ (a, b, c) -> (a, S.promptSearch myXPConfig b, c))
       createSearchSelect = map (\ (a, b, c) -> (a, S.selectSearch b, c))
@@ -731,21 +729,8 @@ myEventHook = serverModeEventHook' (return myCommands)
           <+> docksEventHook
 
 myStartupHook = do
-          -- spawnOnce "~/.cargo/bin/spotifyd"
-          -- spawnOnce "~/.config/conky/run_conky.sh &"
-          -- spawnOnce "syncthing -no-browser -logfile='/tmp/syncthing.log' &"
-          -- spawnOnce "nitrogen --restore &"
-          -- spawnOnce "picom --experimental-backends -b &"
-          -- spawnOnce "xautolock -time 5 -locker ~/bin/lock.sh &"
-          -- spawnOnce "lxpolkit &"
-          -- spawnOnce "udiskie &"
-          -- spawnOnce "stalonetray &"
-          -- spawnOnce "xsetroot -cursor_name arrow &"
-          -- spawnOnce "~/bin/blocks/music_xmobar_async.py 2>/dev/null &"
-          -- spawnOnce "~/bin/rust-blocks/target/release/rust-blocks &"
-          -- spawnOnce "~/bin/blocks/pacman_xmobar_async.sh &"
-          -- spawnOnce $ wrapBash "touch ~/.emacs.d/config.org; emacs --daemon &"
-          -- spawn "xrdb ~/.Xresources &"
+          spawnOnce "run_conky"
+          spawnOnce "rust-blocks &"
           setWMName "LG3D"
 
 -------------------------------------------------
@@ -873,7 +858,7 @@ main = do
         homeDir <- getHomeDirectory
         xmproc0 <- spawnPipe $ "xmobar"
         -- xmproc1 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_mon2"
-        -- xmproc2 <- spawnPipe $ "xmobar " ++ homeDir ++ "/.config/xmobar/xmobar_top"
+        xmproc2 <- spawnPipe $ "xmobar_top"
         xmonad $ ewmh def {
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
@@ -896,9 +881,7 @@ main = do
                 , ppCurrent = xmobarColor Theme.color2 "" -- . wrap "[" "]"
                 , ppVisible = xmobarColor Theme.color3 ""
                 , ppTitle   = xmobarColor Theme.color9 "" . shorten 25
-                -- TODO: Fixm xmonadctl
-                -- , ppLayout  = (\x -> "<action=~/.xmonad/xmonadctl 12>" ++ x ++ "</action>")
-                , ppLayout  = (\x -> x)
+                , ppLayout  = (\x -> "<action=~/.xmonad/xmonadctl 12>" ++ x ++ "</action>")
                 , ppExtras  = []
                 , ppOrder   = \(ws:l:t:ex) -> [ws,l]++ex++[t]
                 },

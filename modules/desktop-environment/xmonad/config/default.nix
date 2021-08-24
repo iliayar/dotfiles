@@ -11,6 +11,7 @@ pkgs.stdenv.mkDerivation {
 
   buildPhase = ''
                ${ghc}/bin/ghc -ilib xmonad.hs -o xmonad-${system}
+               ${ghc}/bin/ghc -ilib xmonadctl.hs -o xmonadctl
   '';
 
   installPhase = ''

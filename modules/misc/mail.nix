@@ -40,6 +40,32 @@
           showSignature = "append";
         };
       };
+      cock = {
+        address = "iliayar@cock.li";
+        imap.host = "mail.cock.li";
+        gpg = {
+          key = "0x3FE87CB13CB3AC4E";
+          signByDefault = true;
+        };
+        mu.enable = true;
+        mbsync = {
+          enable = true;
+          create = "both";
+          patterns = [ 
+            "*" 
+          ];
+        };
+        msmtp.enable = true;
+        realName = "Ilya Yaroshevskiy";
+        passwordCommand = "pass cock.li/iliayar@cock.li";
+        smtp.host = "mail.cock.li";
+        userName = "iliayar@cock.li";
+        signature = {
+          text = ''
+          '';
+          showSignature = "append";
+        };
+      };
     };
   };
 

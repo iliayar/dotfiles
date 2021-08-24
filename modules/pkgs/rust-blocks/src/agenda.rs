@@ -211,8 +211,8 @@ impl ToString for ElispError {
 }
 
 async fn elisp(fun: LispFunction) -> Result<String, ElispError> {
-    let proc = Command::new("/usr/bin/emacs")
-	.args(&["-batch", "-l", "~/bin/lisp/load-org", "-Q", "--eval"])
+    let proc = Command::new("emacs")
+	.args(&["-batch", "-l", "~/.emacs.d/lisp/load-org", "-Q", "--eval"])
 	.arg(fun.to_string())
 	.output().await
 	.map_err(ElispError::from)?;

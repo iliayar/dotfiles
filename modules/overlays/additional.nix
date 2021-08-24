@@ -1,4 +1,4 @@
-{ libxft-bgra, picom-jonaburg, ... }:
+{ libxft-bgra, picom-jonaburg, ... }@inputs:
 
 final: prev: {
   libxft-bgra = prev.stdenv.mkDerivation {
@@ -11,4 +11,6 @@ final: prev: {
   picom-jonaburg = prev.picom.overrideDerivation (old: {
     src = picom-jonaburg;
   });
+
+  rust-blocks = import ../pkgs/rust-blocks { pkgs = prev; };
 }

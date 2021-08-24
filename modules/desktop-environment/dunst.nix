@@ -53,7 +53,7 @@
 
       urgency_normal = {
         background = "${themes.background}";
-        foreground = "${themes.brightYellow}";
+        foreground = "${themes.foreground}";
         timeout = 10;
       };
 
