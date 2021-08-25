@@ -90,7 +90,7 @@
           ;
 
           secrets = import secrets;
-          themes = import ./modules/themes;
+          themes = import ./modules/themes { lib = pkgs.lib; };
         };
 
         homeConfigurations = {

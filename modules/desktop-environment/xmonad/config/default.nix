@@ -3,6 +3,7 @@ let
   ghc = pkgs.ghc.withPackages (p: [
     p.xmonad
     p.xmonad-contrib
+    p.split
   ]);
 in
 pkgs.stdenv.mkDerivation {

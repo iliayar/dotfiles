@@ -10,7 +10,7 @@ let
     
     icon="${wallpapers}/Neofetch.png"
     
-    [[ -e $tmpbg ]] && rm $tmpbg
+    [[ -e "$tmpbg" ]] && ${pkgs.coreutils}/bin/rm "$tmpbg"
     ${pkgs.scrot}/bin/scrot "$tmpbg"
     ${pkgs.imagemagick}/bin/convert "$tmpbg" -scale 10% -scale 1000% "$tmpbg"
     ${pkgs.imagemagick}/bin/convert "$tmpbg" "$icon" -gravity center -composite -matte "$tmpbg"
@@ -23,5 +23,7 @@ in
     lockCmd = "${locker}/bin/locker";
     inactiveInterval = 5;
   };
+
+  home.packages = [ locker ];
 
 }

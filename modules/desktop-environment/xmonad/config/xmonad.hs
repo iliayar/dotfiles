@@ -9,6 +9,7 @@ import           Data.Tree
 import           Data.Maybe
 import           Data.Bifunctor (first, bimap)
 import qualified Data.Map as M
+import           Data.List.Split (splitOn)
 
 import           System.IO
 import           System.Exit
@@ -383,14 +384,14 @@ tsAll =
    ]
 
 tsSystem =
-   [ Node (TS.TSNode "Lock" "Lock screen" (spawn "~/bin/lock.sh")) []
+   [ Node (TS.TSNode "Lock" "Lock screen" (spawn "locker")) []
    , Node (TS.TSNode "+ Picom" "Picom switch on/off" (return ()))
        [ Node (TS.TSNode "off" "Switch off compositor" (spawn "killall picom")) []
        , Node (TS.TSNode "on" "Switch on compositor" (spawn "picom --experimental-backends -b")) []
        ]
    , Node (TS.TSNode "+ Auto lock" "xautolock switch on/off" (return ()))
-       [ Node (TS.TSNode "off" "Switch off xautolock" (spawn "xautolock -disable")) []
-       , Node (TS.TSNode "on" "Switch on xautolock" (spawn "xautolock -enable")) []
+       [ Node (TS.TSNode "off" "Switch off xautolock" (spawn "systemctl --user stop xautolock-session")) []
+       , Node (TS.TSNode "on" "Switch on xautolock" (spawn "systemctl --user start xautolock-session")) []
        ]
    , Node (TS.TSNode "+ Brightness" "Set Brightness" (return ()))
        [ Node (TS.TSNode "Max Brightness" "Set Brightness to 100" (spawn "light -S 100")) []
@@ -797,11 +798,13 @@ instance Eq a => Eq (PairFirst a b) where
 
 appPrompt :: XPConfig -> X ()
 appPrompt c = do
-  userHome <- io $ getHomeDirectory
-  li <- fmap (nubPairs . filterWithArgs . catMaybes) $ io $ getApplications
-         [ "/usr/share/applications"
-         , userHome ++ "/.local/share/applications"
-         ]
+  xdgDirs' <- fmap (splitOn ":") $ io $ getEnv "XDG_DATA_DIRS"
+  xdgDirs <- fmap catMaybes $ io $ mapM
+    (\d -> do
+        let nd = d ++ "/applications"
+        exists <- doesDirectoryExist nd
+        return $ if exists then Just nd else Nothing) xdgDirs'
+  li <- fmap (nubPairs . filterWithArgs . catMaybes) $ io $ getApplications xdgDirs
   let compl = \s -> fst <$> filter (fuzzyMatch s . fst) li
   mkXPrompt App c (return . compl) (spawn . (M.fromList li M.!))
   where

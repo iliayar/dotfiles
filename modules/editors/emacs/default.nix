@@ -10,7 +10,7 @@
   home.file.".emacs.d/config.org" = {
     source = ./.emacs.d/config.org;
     onChange = ''
-      rm ~/.emacs.d/config.el
+      [ -e ~/.emacs.d/config.el] && rm ~/.emacs.d/config.el
     '';
   };
 

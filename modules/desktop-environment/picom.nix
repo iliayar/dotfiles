@@ -23,14 +23,18 @@
     '';
     opacityRule = [
       "80:class_g = 'xmobar'"
-	    "90:class_g = 'Emacs'"
-	    "80:class_g = 'Zathura'"
-	    "80:class_g = 'Pcmanfm'"
-	    "80:class_g = 'code-oss'"
-	    "90:class_g = 'Spotify'"
-	    "90:class_g = 'TelegramDesktop'"
-	    "90:class_g = 'cutter'"
+      "90:class_g = 'Emacs'"
+      "80:class_g = 'Zathura'"
+      "80:class_g = 'Pcmanfm'"
+      "80:class_g = 'code-oss'"
+      "90:class_g = 'Spotify'"
+      "90:class_g = 'TelegramDesktop'"
+      "90:class_g = 'cutter'"
       "90:class_g = 'jetbrains-idea'"
+    ];
+    blurExclude = [
+      "class_g = 'Peek'"
+      "class_g = 'slop'"
     ];
   };
 

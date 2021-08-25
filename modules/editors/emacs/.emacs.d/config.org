@@ -50,7 +50,6 @@ Load nix specific config(mostly for pathes)
 Speeding up again 🦼
 #+begin_src emacs-lisp
 (use-package gcmh
-  ;;   :ensure t
   :init
   (gcmh-mode 1))
 #+end_src
@@ -58,12 +57,9 @@ Speeding up again 🦼
 Projects management with ~counsel~ completion
 #+begin_src emacs-lisp
 (use-package projectile
-  ;;   :ensure t
   :config
   (projectile-mode))
-(use-package counsel-projectile
-  ;;   :ensure t
-  )
+(use-package counsel-projectile)
 #+end_src
 Support for nix environment variables
 #+begin_src emacs-lisp
@@ -74,14 +70,11 @@ Support for nix environment variables
 
 Amazing git tool
 #+begin_src emacs-lisp
-(use-package magit
-  ;;   :ensure t
-  )
+(use-package magit)
 #+end_src
 Project tree. Settings fonts for ~treemacs~
 #+begin_src emacs-lisp
 (use-package treemacs
-  ;;   :ensure t
   :config
   (dolist (face '(treemacs-root-face
 		  treemacs-git-unmodified-face
@@ -99,23 +92,16 @@ Project tree. Settings fonts for ~treemacs~
   (setq treemacs-read-string-input 'from-minibuffer)
   )
 (use-package treemacs-evil
-  :after evil
-  ;;   :ensure t
-  )
+  :after evil)
 (use-package treemacs-projectile
-  :after projectile
-  ;;   :ensure t
-  )
+  :after projectile)
 #+end_src
 ** Evil mode
 ~Evil~ with dependecies. Disable Evil mode for some modes
 #+begin_src emacs-lisp
 (setq evil-want-keybinding nil)
-(use-package goto-chg
-  ;;   :ensure t
-  )
+(use-package goto-chg)
 (use-package evil
-  ;;   :ensure t
   :init
   (setq evil-want-integration t)
   :config
@@ -125,7 +111,6 @@ Project tree. Settings fonts for ~treemacs~
 	   do (evil-set-initial-state mode state))
   )
 (use-package undo-tree
-  ;;   :ensure t
   :config
   (global-undo-tree-mode)
   (evil-set-undo-system 'undo-tree))
@@ -134,14 +119,12 @@ Collection of evil keybindings
 #+begin_src emacs-lisp
 (use-package evil-collection
   :after evil
-  ;;   :ensure t
   :config
   (evil-collection-init))
 #+end_src
 Fast search
 #+begin_src emacs-lisp
 (use-package evil-snipe
-  ;;   :ensure t
   :config
   (evil-snipe-mode +1)
   (evil-snipe-override-mode +1))
@@ -149,17 +132,13 @@ Fast search
 Change brakets in evil mode
 #+begin_src emacs-lisp
 (use-package evil-surround
-  ;;   :ensure t
   :config
   (global-evil-surround-mode 1))
 #+end_src
 Multicursor
 #+begin_src emacs-lisp
-(use-package evil-multiedit
-  ;;   :ensure t
-  )
+(use-package evil-multiedit)
 (use-package evil-mc
-  ;;   :ensure t
   :config
   (global-evil-mc-mode 1))
 #+end_src
@@ -167,41 +146,34 @@ Multicursor
 Icons
 #+begin_src emacs-lisp
 (use-package all-the-icons
-  ;;   :ensure t
   :config
   (setq all-the-icons-scale-factor 1.0))
 #+end_src
 HIghlight todo keywords
 #+begin_src emacs-lisp
 (use-package hl-todo
-  ;;   :ensure t
   :config
   (global-hl-todo-mode t))
 #+end_src
 Colorize parenthesis
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
-  ;;   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 #+end_src
 Searching
 #+begin_src emacs-lisp
 (use-package avy
-  ;;   :ensure t
   )
 #+end_src
 Windows hoping
 #+begin_src emacs-lisp
 (use-package ace-window
-  ;;   :ensure t
   :config
-  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-  )
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 #+end_src
 Dashboard showing on startup
 #+begin_src emacs-lisp
 (use-package dashboard
-  ;;   :ensure t
   :config
   (dashboard-setup-startup-hook)
   :config
@@ -221,7 +193,6 @@ Dashboard showing on startup
 Highlight lines chaned according to ~git~
 #+BEGIN_SRC emacs-lisp
 (use-package diff-hl
-  ;;   :ensure t
   :config
   (global-diff-hl-mode)) 
 #+END_SRC
@@ -229,7 +200,6 @@ Highlight lines chaned according to ~git~
 ~Doom-modeline~ as modeline
 #+begin_src emacs-lisp
 (use-package doom-modeline
-  ;;   :ensure t
   :init 
   (doom-modeline-mode 1)
   :config
@@ -238,18 +208,14 @@ Highlight lines chaned according to ~git~
 Colors from pywal
 #+begin_src emacs-lisp
 (use-package ewal
-  ;;   :ensure t
   :init (setq ewal-use-built-in-always nil
               ewal-use-built-in-on-failure-p t
               ewal-built-in-palette "doom-gruvbox"))
-(use-package ewal-doom-themes
-  ;;   :ensure t
-  )
+(use-package ewal-doom-themes)
 #+end_src
 *Or* doom theme
 #+begin_src emacs-lisp
 (use-package doom-themes
-  ;;   :ensure t
   :preface (defvar region-fg nil)
   (setq doom-themes-treemacs-theme "doom-colors")
   (doom-themes-treemacs-config)
@@ -284,20 +250,15 @@ Colors from pywal
 ** Keybingings
 Convenient keybindings
 #+begin_src emacs-lisp
-(use-package general
-  ;;   :ensure t
-  )
+(use-package general)
 #+end_src
 Constructing menus
 #+begin_src emacs-lisp
-(use-package hydra
-  ;;   :ensure t
-  )
+(use-package hydra)
 #+end_src
 Keys hints
 #+begin_src emacs-lisp
 (use-package which-key
-  ;;   :ensure t
   :config
   (which-key-mode 1))
 #+end_src
@@ -305,7 +266,6 @@ Keys hints
 Code::stats
 #+BEGIN_SRC emacs-lisp
 (use-package code-stats
-  ;;   :ensure t
   :config
   (add-hook 'prog-mode-hook #'code-stats-mode)
   (add-hook 'org-mode-hook #'code-stats-mode)
@@ -316,56 +276,42 @@ Code::stats
 Auto parenthesis
 #+begin_src emacs-lisp
 (use-package smartparens
-  ;;   :ensure t
   :init
   (smartparens-global-mode))
 #+end_src
 Editconfig support
 #+begin_src emacs-lisp
 (use-package editorconfig
-  ;;   :ensure t
   :config
   (editorconfig-mode 1))
 #+end_src
 Snippets
 #+begin_src emacs-lisp
 (use-package yasnippet
-  ;;   :ensure t
   :init
   (yas-global-mode 1))
-(use-package yasnippet-snippets
-  ;;   :ensure t
-  )
+(use-package yasnippet-snippets)
 #+end_src
 Code formatting
 #+begin_src emacs-lisp
-(use-package format-all
-  ;;   :ensure t
-  )
+(use-package format-all)
 #+end_src
 Dockerfile support
 #+BEGIN_SRC emacs-lisp
-(use-package dockerfile-mode
-  ;;   :ensure t
-  )
+(use-package dockerfile-mode)
 #+END_SRC
 Package for html live view
 #+begin_src emacs-lisp
-(use-package impatient-mode
-  ;;   :ensure t
-  )
+(use-package impatient-mode)
 #+end_src
 Cool web stuff
 #+BEGIN_SRC emacs-lisp
-(use-package web-mode
-  ;;   :ensure t
-  )
+(use-package web-mode)
 #+END_SRC
 *** Auto completion
 Use ~company~ for autocompletion. Add snippets to company backends
 #+begin_src emacs-lisp
 (use-package company
-  ;;   :ensure t
   :init
   (add-hook 'after-init-hook 'global-company-mode)
   :config
@@ -418,7 +364,6 @@ Lsp ~backend~ for ~company~
 #+begin_src emacs-lisp
 ;; (use-package company-lsp
 ;;   :after lsp-mode
-;; ;;   :ensure t
 ;;   :config
 ;;   (push 'company-lsp company-backends)
 ;;   (setq company-lsp-enable-snippet t)
@@ -427,14 +372,12 @@ Lsp ~backend~ for ~company~
 Display completion in child buffer, quite slow 😞
 #+BEGIN_SRC emacs-lisp
 ;; (use-package company-posframe
-;; ;;   :ensure t
 ;;   :config
 ;;   (company-posframe-mode 1))
 #+END_SRC
 Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
 #+begin_src emacs-lisp
 (use-package counsel
-  ;;   :ensure t
   :init
   (ivy-mode 1)
   :config
@@ -472,33 +415,23 @@ Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/
           ".git"
           ))
   (setq lsp-log-io nil)
-  (setq lsp-idle-delay 0.500)
-  ;;   :ensure t
-  )
+  (setq lsp-idle-delay 0.500))
 #+end_src
 Syntax checking and lsp related errors/warnings. Posfrmae stil sucks
 #+BEGIN_SRC emacs-lisp
-(use-package flycheck
-  ;;   :ensure t
-  )
+(use-package flycheck)
 ;; (use-package flycheck-posframe
-;; ;;   :ensure t
 ;;   :hook (flycheck-mode . flycheck-posframe-mode))
 #+END_SRC
 Lsp integration with several plugins
 #+begin_src emacs-lisp
-(use-package lsp-treemacs
-  ;;   :ensure t
-  )
-(use-package lsp-ivy
-  ;;   :ensure t
-  )
+(use-package lsp-treemacs)
+(use-package lsp-ivy)
 #+end_src
 C++ lsp \\
 In /build/ directory run =cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=YES ..=
 #+BEGIN_SRC emacs-lisp
 (use-package ccls
-  ;;   :ensure t
   :config
   (setq ccls-executable "/usr/bin/ccls")
   (setq ccls-initialization-options
@@ -507,83 +440,56 @@ In /build/ directory run =cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=YES ..=
 #+END_SRC
 Haskell lsp
 #+begin_src emacs-lisp
-(use-package lsp-haskell
-  ;;   :ensure t
-  )
+(use-package lsp-haskell)
 #+end_src
 Python lsp
 #+begin_src emacs-lisp
 (use-package lsp-pyright
-  ;;   :ensure t
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
                          (lsp))))  ; or lsp-deferred
-(use-package anaconda-mode
-  ;;   :ensure t
-  )
-(use-package company-anaconda
-  ;;   :ensure t
-  )
+(use-package anaconda-mode)
+(use-package company-anaconda)
 #+end_src
 emacs ipython notebook
 #+begin_src emacs-lisp
-(use-package ein
-  ;;   :ensure t
-  )
+(use-package ein)
 #+end_src
 Lsp for latex
 #+begin_src emacs-lisp
-(use-package lsp-latex
-  ;;   :ensure t
-  )
+(use-package lsp-latex)
 #+end_src
 Rust mode
 #+begin_src emacs-lisp
-(use-package rustic
-  ;;   :ensure t
-  )
+(use-package rustic)
 #+end_src
 Go mode
 #+begin_src emacs-lisp
-(use-package go-mode
-  ;;   :ensure t
-  )
+(use-package go-mode)
 #+end_src
 Haskell mode
 #+begin_src emacs-lisp
-(use-package haskell-mode
-  ;;   :ensure t
-  )
+(use-package haskell-mode)
 #+end_src
 Yaml files
 #+begin_src emacs-lisp
-(use-package yaml-mode
-  ;;   :ensure t
-  )
+(use-package yaml-mode)
 #+end_src
 Kotlin
 #+BEGIN_SRC emacs-lisp
-(use-package kotlin-mode
-  ;;   :ensure t
-  )
+(use-package kotlin-mode)
 #+END_SRC
 Graphviz
 #+BEGIN_SRC emacs-lisp
-(use-package graphviz-dot-mode
-  ;;   :ensure t
-  )
+(use-package graphviz-dot-mode)
 #+END_SRC
 Ipython for org babel
 #+BEGIN_SRC emacs-lisp
-(use-package ob-ipython
-  ;;   :ensure t
-  )
+(use-package ob-ipython)
 #+END_SRC
 Java lsp
 #+BEGIN_SRC emacs-lisp
-(use-package lsp-java
-  ;;   :ensure t
-  )
+(use-package lsp-java)
 #+END_SRC
 *** Settings
 - C style settings
@@ -596,29 +502,22 @@ Java lsp
 theoremes in LaTeX with org syntax
 #+begin_src emacs-lisp
 (use-package org-special-block-extras
-  ;;   :ensure t
   ;; :hook (org-mode . org-special-block-extras-mode)
   :config (org-special-block-extras-short-names))
 #+end_src
 Reveal.js for presentations
 #+BEGIN_SRC emacs-lisp
-(use-package ox-reveal
-  ;;   :ensure t
-  :config
-  (setq org-reveal-root (expand-file-name "~/.local/share/reveal.js-4.1.0"))
-  )
+;; (use-package ox-reveal
+;;   :config
+;;   (setq org-reveal-root (expand-file-name "~/.local/share/reveal.js-4.1.0")))
 #+END_SRC
 Export Org mode to Json
 #+BEGIN_SRC emacs-lisp
-(use-package ox-json
-  ;;   :ensure t
-  )
+(use-package ox-json)
 #+END_SRC
 Org headers icons
 #+begin_src emacs-lisp
-(use-package org-bullets
-  ;;   :ensure t
-  )
+(use-package org-bullets)
 #+end_src
 Loading Export backends
 #+BEGIN_SRC emacs-lisp
@@ -634,22 +533,21 @@ Loading Export backends
 Org Roam
 #+BEGIN_SRC emacs-lisp
 (use-package org-roam
-  ;;   :ensure t
   :init
   (setq org-roam-v2-ack t)
   :custom
   (org-roam-directory "~/org/roam")
   :bind (("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n f" . org-roam-node-find)
-         ("C-c n i" . org-roam-node-insert)
-         :map org-mode-map
-         ("C-M-i" . completion-at-point))
+	 ("C-c n f" . org-roam-node-find)
+	 ("C-c n i" . org-roam-node-insert)
+	 ("C-c n d" . org-roam-dailies-capture-today)
+	 :map org-mode-map
+	 ("C-M-i" . completion-at-point))
   :config
   (setq org-roam-completion-everywhere t)
+  (setq org-roam-dailies-direcory "journal/")
   (org-roam-setup))
-(use-package websocket
-  ;;   :ensure t
-  )
+(use-package websocket)
 
 (load-library "org-roam-ui")
 #+END_SRC
@@ -921,7 +819,6 @@ Setting packages
 RSS reader. Settings colors for each tag.
 #+begin_src emacs-lisp
 (use-package elfeed
-  ;;   :ensure t
   :custom
   (rmh-elfeed-org-files (list "~/org/elfeed.org"))
   :config
@@ -947,11 +844,9 @@ RSS reader. Settings colors for each tag.
     (elfeed-expose #'elfeed-search-toggle-all 'starred))
   )
 (use-package elfeed-org
-  ;;   :ensure t
   :init
   (elfeed-org))
 (use-package elfeed-goodies
-  ;;   :ensure t
   :init
   (elfeed-goodies/setup))
 #+end_src
