@@ -166,6 +166,7 @@ mod dummy;
 mod updates;
 mod agenda;
 mod lock;
+mod vpn;
 
 fn spawn_client<B: Block + Send + Sync + 'static>(block: &Arc<B>, cmd: &str) {
     let cmd = cmd.to_owned();
@@ -193,6 +194,7 @@ fn main() {
 	let agenda_block = runner.run(agenda::block()).await;
 	// let _dummy_block = runner.run(dummy::block()).await;
 	let lock_block = runner.run(lock::block()).await;
+	let vpn_block = runner.run(vpn::block()).await;
 
 	let socket_path = Path::new(config::SOCKET);
 	if socket_path.exists() {
@@ -210,6 +212,7 @@ fn main() {
 			"lock" => spawn_client(&lock_block, &cmd),
 			// "updates" => spawn_client(&updates_block, &cmd),
 			"agenda" => spawn_client(&agenda_block, &cmd),
+			"vpn" => spawn_client(&vpn_block, &cmd),
 			// "dummy" => spawn_client(&_dummy_block, &cmd),
 			_ => error!("Main Listener: Invalid block name"),
 		    };

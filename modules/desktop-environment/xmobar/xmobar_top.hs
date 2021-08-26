@@ -19,7 +19,7 @@ config = defaultConfig {
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
    -- , template = " %pomodoro% | %agenda% }{ %music_pipe% | %updates% "
-   , template = " %agenda% }{ %music_pipe% | %lock% "
+   , template = " %agenda% }{ %music_pipe% | %vpn% | %lock% "
 
    -- general behavior
    , lowerOnStart     = True    -- send to bottom of window stack on start
@@ -37,6 +37,7 @@ config = defaultConfig {
         -- , Run $ PipeReader "/tmp/.updates_data" "updates"
         , Run $ PipeReader "/tmp/agenda.io" "agenda"
         , Run $ PipeReader "/tmp/auto-lock.io" "lock"
+        , Run $ PipeReader "/tmp/vpn.io" "vpn"
         ]
    }
 main :: IO ()

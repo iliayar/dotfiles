@@ -63,7 +63,7 @@ impl Block for LockBlock
 		Command::new("systemctl")
 		    .args(&["--user", "--no-pager", "start", LOCK_SERVICE])
 		    .spawn()
-		    .expect("Failed run command to stop lock service")
+		    .expect("Failed run command to start lock service")
 		    .wait()
 		    .await.ok();
 	    },

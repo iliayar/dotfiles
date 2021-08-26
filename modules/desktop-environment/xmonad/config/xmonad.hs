@@ -393,6 +393,10 @@ tsSystem =
        [ Node (TS.TSNode "off" "Switch off xautolock" (spawn "rust-blocks-client lock disable")) []
        , Node (TS.TSNode "on" "Switch on xautolock" (spawn "rust-blocks-client lock enable")) []
        ]
+   , Node (TS.TSNode "+ Wireguard" "wireguard switch on/off" (return ()))
+       [ Node (TS.TSNode "off" "Switch off wireguard" (spawn "rust-blocks-client vpn down")) []
+       , Node (TS.TSNode "on" "Switch on wireguard" (spawn "rust-blocks-client vpn up")) []
+       ]
    , Node (TS.TSNode "+ Brightness" "Set Brightness" (return ()))
        [ Node (TS.TSNode "Max Brightness" "Set Brightness to 100" (spawn "light -S 100")) []
        , Node (TS.TSNode "Norm Brightness" "Set Brightness to 50" (spawn "light -S 50")) []
