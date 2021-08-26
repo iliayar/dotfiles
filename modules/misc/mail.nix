@@ -57,7 +57,7 @@
         };
         msmtp.enable = true;
         realName = "Ilya Yaroshevskiy";
-        passwordCommand = "pass cock.li/iliayar@cock.li";
+        passwordCommand = "pass cock.li/iliayar";
         smtp.host = "mail.cock.li";
         userName = "iliayar@cock.li";
         signature = {

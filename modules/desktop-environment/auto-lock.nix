@@ -10,8 +10,7 @@ let
     
     icon="${wallpapers}/Neofetch.png"
     
-    [[ -e "$tmpbg" ]] && ${pkgs.coreutils}/bin/rm "$tmpbg"
-    ${pkgs.scrot}/bin/scrot "$tmpbg"
+    ${pkgs.scrot}/bin/scrot -o "$tmpbg"
     ${pkgs.imagemagick}/bin/convert "$tmpbg" -scale 10% -scale 1000% "$tmpbg"
     ${pkgs.imagemagick}/bin/convert "$tmpbg" "$icon" -gravity center -composite -matte "$tmpbg"
     ${pkgs.i3lock}/bin/i3lock -i "$tmpbg"

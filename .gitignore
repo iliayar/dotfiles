@@ -18,6 +18,8 @@ transient
 # Nix
 result
 bin-tmp
+.envrc
+.direnv
 
 # Temp
 *~

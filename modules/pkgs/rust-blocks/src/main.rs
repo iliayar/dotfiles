@@ -165,6 +165,7 @@ mod music;
 mod dummy;
 mod updates;
 mod agenda;
+mod lock;
 
 fn spawn_client<B: Block + Send + Sync + 'static>(block: &Arc<B>, cmd: &str) {
     let cmd = cmd.to_owned();
@@ -191,6 +192,7 @@ fn main() {
 	// let updates_block = runner.run(updates::block()).await;
 	let agenda_block = runner.run(agenda::block()).await;
 	// let _dummy_block = runner.run(dummy::block()).await;
+	let lock_block = runner.run(lock::block()).await;
 
 	let socket_path = Path::new(config::SOCKET);
 	if socket_path.exists() {
@@ -205,6 +207,7 @@ fn main() {
 		    // FIXME: Generalising it would be pure hell. Block trait can't be ~dyn~.
 		    match block {
 			"music" => spawn_client(&music_block, &cmd),
+			"lock" => spawn_client(&lock_block, &cmd),
 			// "updates" => spawn_client(&updates_block, &cmd),
 			"agenda" => spawn_client(&agenda_block, &cmd),
 			// "dummy" => spawn_client(&_dummy_block, &cmd),

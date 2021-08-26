@@ -1001,6 +1001,7 @@ Bindings using ~general~ package
  "sl" 'lsp
  "sr" 'lsp-workspace-restart
  "ss" 'lsp-workspace-shutdown
+ "sd" 'lsp-describe-thing-at-point
  "tt" 'treemacs-select-window
  "wd" 'delete-window
  "wk" 'kill-buffer-and-window

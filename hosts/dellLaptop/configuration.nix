@@ -26,34 +26,19 @@ in
 
   networking = {
     hostName = "NixLaptop";
-    useDHCP = false;
+    # useDHCP = false;
     interfaces = {
       enp60s0.useDHCP = true;
       wlp61s0.useDHCP = true;
+      wg0.useDHCP = true;
     }; 
-    networkmanager.enable = true;
-
-    firewall = {
-      allowedUDPPorts = [ 41007 ];
+    networkmanager = {
+      enable = true;
     };
 
-    # wireguard.enable = false;
-    # wireguard.interfaces = {
-    #   wg0 = {
-    #     ips = [ "192.168.66.2/32" ];
-    #     listenPort = 41007;
-    #     privateKeyFile = "${secrets.wireguard.nixDell.private}";
-
-    #     peers = [
-    #       {
-    #         publicKey = secrets.wireguard.server.public;
-    #         allowedIPs = [ "0.0.0.0/0" ];
-    #         endpoint = "vps.iliayar.ru:8999";
-    #         persistentKeepalive = 25;
-    #       }
-    #     ];
-    #   };
-    # };
+    firewall = {
+      checkReversePath = false;
+    };
   };
 
   i18n = {

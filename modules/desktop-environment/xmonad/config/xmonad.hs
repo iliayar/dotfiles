@@ -390,8 +390,8 @@ tsSystem =
        , Node (TS.TSNode "on" "Switch on compositor" (spawn "picom --experimental-backends -b")) []
        ]
    , Node (TS.TSNode "+ Auto lock" "xautolock switch on/off" (return ()))
-       [ Node (TS.TSNode "off" "Switch off xautolock" (spawn "systemctl --user stop xautolock-session")) []
-       , Node (TS.TSNode "on" "Switch on xautolock" (spawn "systemctl --user start xautolock-session")) []
+       [ Node (TS.TSNode "off" "Switch off xautolock" (spawn "rust-blocks-client lock disable")) []
+       , Node (TS.TSNode "on" "Switch on xautolock" (spawn "rust-blocks-client lock enable")) []
        ]
    , Node (TS.TSNode "+ Brightness" "Set Brightness" (return ()))
        [ Node (TS.TSNode "Max Brightness" "Set Brightness to 100" (spawn "light -S 100")) []

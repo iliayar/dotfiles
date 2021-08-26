@@ -97,6 +97,7 @@
       company-nixos-options
       nix-sandbox
       direnv
+      lsp-pyright
 
       org-roam-ui
     ];
