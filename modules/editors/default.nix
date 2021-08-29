@@ -1,9 +1,10 @@
-{ config, pkgs, ... }:
+{ config, pkgs, secrets, ... }:
 
 {
   imports = [
     ./neovim
     ./emacs
+    ./wakatime.nix
   ];
 
   home.packages = with pkgs; [

@@ -324,7 +324,9 @@
         "picom-jonaburg": "picom-jonaburg",
         "secrets": "secrets",
         "systec-can": "systec-can",
-        "xmonad-newest": "xmonad-newest"
+        "wakatime-cli": "wakatime-cli",
+        "xmonad-newest": "xmonad-newest",
+        "zsh-wakatime": "zsh-wakatime"
       }
     },
     "secrets": {
@@ -332,7 +334,7 @@
         "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "narHash": "sha256-jE1st4Bkj/bcXUXjB5YGgTwpTZFETTVlomrpYamnzfs=",
+        "narHash": "sha256-bZv+C/nMkaDCA2wlXAwsVjQXz3q8BvB6r8EdyOswHE4=",
         "path": "./modules/secrets",
         "type": "path"
       },
@@ -351,6 +353,22 @@
       "original": {
         "type": "tarball",
         "url": "https://www.systec-electronic.com/fileadmin/Redakteur/Unternehmen/Support/Downloadbereich/Treiber/systec_can-V1.0.3.tar.bz2"
+      }
+    },
+    "wakatime-cli": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1630020526,
+        "narHash": "sha256-p4zAaPzB9lvAXwYPzOFBlXs9sVGBDKVYK7dQ60bhwGs=",
+        "owner": "wakatime",
+        "repo": "wakatime-cli",
+        "rev": "b0312a62cdbf75195798c7422d477c568092b1e1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "wakatime",
+        "repo": "wakatime-cli",
+        "type": "github"
       }
     },
     "xmonad": {
@@ -392,6 +410,22 @@
       "original": {
         "owner": "xmonad",
         "repo": "xmonad",
+        "type": "github"
+      }
+    },
+    "zsh-wakatime": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1603815905,
+        "narHash": "sha256-fJ4tdEkInlwv7F88QKg3pzYinxI3Ko7TbrJ32Kefud0=",
+        "owner": "wbingli",
+        "repo": "zsh-wakatime",
+        "rev": "7396e143f2eb048a4a6d64dacae81c52e1ad72ab",
+        "type": "github"
+      },
+      "original": {
+        "owner": "wbingli",
+        "repo": "zsh-wakatime",
         "type": "github"
       }
     }
