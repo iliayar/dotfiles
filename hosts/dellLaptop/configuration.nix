@@ -30,7 +30,6 @@ in
     interfaces = {
       enp60s0.useDHCP = true;
       wlp61s0.useDHCP = true;
-      wg0.useDHCP = true;
     }; 
     networkmanager = {
       enable = true;
