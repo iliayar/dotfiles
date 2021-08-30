@@ -3,6 +3,6 @@
 {
   programs.bash = {
     enable = true;
-    profileExtra = "exec zsh";
+    profileExtra = "exec ${pkgs.zsh}/bin/zsh";
   };
 }

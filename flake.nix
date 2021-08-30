@@ -15,6 +15,16 @@
       flake = false;
     };
 
+    wakatime-cli = {
+      url = "github:wakatime/wakatime-cli";
+      flake = false;
+    };
+
+    zsh-wakatime = {
+      url = "github:wbingli/zsh-wakatime";
+      flake = false;
+    };
+
     secrets.url = "path:./modules/secrets";
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
@@ -61,6 +71,8 @@
             , xmonad-newest
             , org-roam-ui
             , picom-jonaburg
+            , wakatime-cli
+            , zsh-wakatime
             , ...
             }
     @inputs: 
@@ -87,6 +99,8 @@
             xmonad-newest
             org-roam-ui
             picom-jonaburg
+            wakatime-cli
+            zsh-wakatime
           ;
 
           secrets = import secrets;
@@ -105,6 +119,21 @@
             configuration = { pkgs, config, ... }: {
               imports = [
                 ./hosts/dellLaptop/home.nix
+              ];
+              nixpkgs = nixpkgs-config;
+            };
+          };
+
+          wsl = home-manager.lib.homeManagerConfiguration rec {
+            inherit system;
+            extraSpecialArgs = specialArgs // {
+              inherit pkgs system;
+            };
+            homeDirectory = "/home/iliayar";
+            username = "iliayar";
+            configuration = { pkgs, config, ... }: {
+              imports = [
+                ./hosts/wsl/home.nix
               ];
               nixpkgs = nixpkgs-config;
             };
