@@ -273,6 +273,12 @@ Code::stats
   (add-hook 'kill-emacs-hook (lambda () (code-stats-sync :wait)))  
   )
 #+END_SRC
+Another code traking
+#+begin_src emacs-lisp
+(use-package wakatime-mode
+  :config
+  (global-wakatime-mode))  
+#+end_src
 Auto parenthesis
 #+begin_src emacs-lisp
 (use-package smartparens

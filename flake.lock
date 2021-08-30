@@ -334,7 +334,7 @@
         "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "narHash": "sha256-bZv+C/nMkaDCA2wlXAwsVjQXz3q8BvB6r8EdyOswHE4=",
+        "narHash": "sha256-i0Sum1ii73iNm02593FBbSxXETqrk+RWdDGRpI02bb4=",
         "path": "./modules/secrets",
         "type": "path"
       },

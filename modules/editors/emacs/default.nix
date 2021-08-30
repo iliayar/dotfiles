@@ -16,6 +16,7 @@
 
   home.file.".emacs.d/nix.el".text = ''
                                    (setq lsp-clangd-binary-path "${pkgs.clang-tools}/bin/clangd")
+                                   (setq wakatime-cli-path "${pkgs.wakatime-cli}/bin/wakatime")
   '';
 
   programs.emacs = {
@@ -101,6 +102,7 @@
       lsp-pyright
 
       org-roam-ui
+      wakatime-mode
     ];
   };
 
@@ -108,12 +110,12 @@
     rnix-lsp
   ];
 
-  # services.emacs = {
-  #   enable = true;
+  services.emacs = {
+    enable = true;
 
-  #   client = {
-  #     enable = true;
-  #   };
-  # };
+    client = {
+      enable = true;
+    };
+  };
 
 }
