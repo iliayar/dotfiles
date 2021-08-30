@@ -2,9 +2,12 @@
 
 {
   imports = [
-	../../modules/shell/zsh/wsl.nix
-	../../modules/shell/bash.nix
-	../../modules/editors/wsl.nix
+    ../../modules/shell/zsh/wsl.nix
+    ../../modules/shell
+    ../../modules/shell/bash.nix
+    ../../modules/editors
+    ../../modules/misc/git.nix
+    ../../modules/dev/python
   ];
 
   # Let Home Manager install and manage itself.

@@ -10,7 +10,7 @@
   home.file.".emacs.d/config.org" = {
     source = ./.emacs.d/config.org;
     onChange = ''
-      [ -e ~/.emacs.d/config.el] && rm ~/.emacs.d/config.el
+      [ -e ~/.emacs.d/config.el ] && rm ~/.emacs.d/config.el
     '';
   };
 
@@ -23,6 +23,7 @@
     package = pkgs.emacsGcc;
     overrides = import ./overrides.nix inputs;
     extraPackages = epkgs: with epkgs; [
+      use-package
       gcmh
       projectile
       counsel-projectile
@@ -107,12 +108,12 @@
     rnix-lsp
   ];
 
-  services.emacs = {
-    enable = true;
+  # services.emacs = {
+  #   enable = true;
 
-    client = {
-      enable = true;
-    };
-  };
+  #   client = {
+  #     enable = true;
+  #   };
+  # };
 
 }

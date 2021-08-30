@@ -9,5 +9,4 @@ final: prev: {
     cp -r out $out/share/emacs/site-lisp
     '';
   };
-
 }
