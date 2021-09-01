@@ -37,6 +37,7 @@ in
 
     firewall = {
       checkReversePath = false;
+      allowedTCPPorts = [ 1337 ];
     };
   };
 
