@@ -162,8 +162,32 @@
                 modules
                 specialArgs;
             };
+
+        lenovoLaptop = 
+          let
+            modules = [
+              ./hosts/lenovoLaptop/configuration.nix
+              ./cachix.nix
+              {
+                nixpkgs = nixpkgs-config;
+                nix = {
+                  gc = {
+                    automatic = true;
+                    options = "--delete-older-than 3d";
+                  };
+                };
+              }
+            ];
+          in
+            nixpkgs.lib.nixosSystem {
+              inherit
+                system
+                modules
+                specialArgs;
+            };
       in {
         nixosConfigurations.NixLaptop = dellLaptop;
+        nixosConfigurations.NixLenovo = lenovoLaptop;
         inherit homeConfigurations;
       };
 }

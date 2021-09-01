@@ -7,7 +7,7 @@ pkgs.stdenv.mkDerivation rec {
 
   src = pkgs.fetchurl {
     url = "https://imgur.com/a/eptG3El/zip";
-    sha256 = "0R/6sSpfIvtn/XOpYhbpujuU4oFUDOR3BW2OTQbTFgg=";
+    sha256 = "0z38zv4p5q0zhaisq6gcvavl1ny5ha4gbd7kd49d3zx0y6wjhkbi";
   };
 
   buildInputs = with pkgs; [
