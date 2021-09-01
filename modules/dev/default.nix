@@ -4,6 +4,7 @@
   imports = [
     ./python
     ./cxx
+    ./latex.nix
   ];
 
 }
