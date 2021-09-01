@@ -16,6 +16,7 @@
     ./stalonetray.nix
     ./conky.nix
     ./spotify.nix
+    ./steam
   ];
 
   home.packages = with pkgs; [
@@ -23,6 +24,8 @@
     xkb-switch
     light
     rust-blocks
+    gimp
+    zoom-us
   ];
 
   programs = {

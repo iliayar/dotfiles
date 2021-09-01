@@ -10,7 +10,8 @@ Speeding up 🐌
 #+begin_src emacs-lisp
 (setq comp-deferred-compilation t)
 (setq byte-compile-warnings '(cl-functions))
-(setq gc-cons-threshold 100000000)
+(setq gc-cons-threshold (* 100 1024 1024))
+(setq create-lockfiles nil)
 #+end_src
 * Main config
 ** Repositories
@@ -312,8 +313,27 @@ Package for html live view
 #+end_src
 Cool web stuff
 #+BEGIN_SRC emacs-lisp
-(use-package web-mode)
+(use-package web-mode
+  :mode (("\\.js\\'" . web-mode)
+         ("\\.jsx\\'" . web-mode)
+         ("\\.ts\\'" . web-mode)
+         ("\\.tsx\\'" . web-mode)
+         ("\\.html\\'" . web-mode)
+         ("\\.vue\\'" . web-mode)
+	 ("\\.json\\'" . web-mode))
+  :commands web-mode
+  :config
+  (setq web-mode-content-types-alist
+	'(("jsx" . "\\.js[x]?\\'")))
+  )
 #+END_SRC
+Debugger
+#+begin_src emacs-lisp
+(use-package dap-mode
+  :config
+  (require 'dap-chrome)) 
+#+end_src
+
 *** Auto completion
 Use ~company~ for autocompletion. Add snippets to company backends
 #+begin_src emacs-lisp
@@ -345,6 +365,7 @@ Use ~company~ for autocompletion. Add snippets to company backends
           ;; company-files 
           ;; company-ctags
           ;; company-anaconda
+          company-tide
           ))
 
   (defun mars/company-backend-with-yas (backends)
@@ -395,6 +416,21 @@ Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
   )
 #+end_src
 *** Languages and lsp
+Typescript
+#+begin_src emacs-lisp
+(use-package tide
+  :ensure t
+  :after (typescript-mode company flycheck)
+  :hook ((typescript-mode . tide-setup)
+         (typescript-mode . tide-hl-identifier-mode)
+         (before-save . tide-format-before-save)))
+
+(add-hook 'typescript-mode-hook #'setup-tide-mode)
+
+(use-package typescript-mode)
+(use-package rjsx-mode)
+#+end_src
+
 Nix, and completion
 #+begin_src emacs-lisp
 (use-package nix-mode
@@ -412,7 +448,7 @@ Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/
          (c++-mode . lsp)
          )
   :config
-  (setq read-process-output-max (* 4 (* 1024 1024)))
+  (setq read-process-output-max (* 1024 1024))
   (setq lsp-file-watch-ignored
         '("build"
           "out"
@@ -579,7 +615,7 @@ Setting visual stuff
       org-agenda-files '("~/org")
       org-default-notes-file (concat org-directory "/Notes.org")
       org-highlight-latex-and-related '(latex entities)
-      org-todo-keywords '((sequence "DRIFTED" "TODO" "FIXME" "|" "DONE" "CANCELED" ))
+      org-todo-keywords '((sequence "EVENT" "DRIFTED" "TODO" "FIXME" "|" "DONE" "CANCELED" ))
       org-src-preserve-indentation t)
 
 (setq org-todo-keyword-faces
@@ -587,6 +623,7 @@ Setting visual stuff
         ("FIXME"    . "red")
         ("DONE"     . "LawnGreen")
         ("DRIFTED"  . "DeepSkyBlue1")
+        ("EVENT"    . "PaleTurquoise")
         ("CANCELED" . "yellow2")))
 
 (font-lock-add-keywords 'org-mode

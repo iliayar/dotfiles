@@ -48,6 +48,8 @@ in
     ];
   };
 
+  programs.steam.enable = true;
+
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", MODE="0666", RUN+="${pkgs.coreutils}/bin/chmod a+w /sys/class/backlight/%k/brightness"
   '';
@@ -81,6 +83,9 @@ in
     xkbOptions = "grp:switch,grp:alt_caps_toggle";
     layout = "us,ru";
   }; 
+
+  services.blueman.enable = true;
+  hardware.bluetooth.enable = true;
 
   hardware.nvidia.prime = {
     offload.enable = true;

@@ -63,6 +63,9 @@
       dockerfile-mode
       impatient-mode
       web-mode
+      tide
+      rjsx-mode
+      typescript-mode
       company
       # company-lsp
       counsel
@@ -100,6 +103,7 @@
       nix-sandbox
       direnv
       lsp-pyright
+      dap-mode
 
       org-roam-ui
       wakatime-mode

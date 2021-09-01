@@ -311,7 +311,7 @@ myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
             , ("Alacritty", "alacritty")
             , ("Spotify", "spotify")
             , ("Discord", "discord")
-            , ("Steam", "steam")
+            , ("Steam", "flatpak run com.valvesoftware.Steam")
             , ("Emacs Instance", "emacs")
             ]
 
@@ -437,6 +437,7 @@ tsLayout =
    ]
 tsTools =
   [ Node (TS.TSNode "NetworkManager TUI" "Terminal Interface for NetworkManager" (termSpawn termite "nmtui")) []
+  , Node (TS.TSNode "Blueman" "Bluetooth manager" (spawn "blueman-manager")) []
   , Node (TS.TSNode "PulseMixer" "Pulse Audio Mixer" (termSpawn termite "pulsemixer")) []
   , Node (TS.TSNode "Syncthing GUI" "Open Syncthing GUI in browser" (spawn "xdg-open 'https://localhost:8384'")) []
   , Node (TS.TSNode "Main Workflow 🤘" "Run Brace, Telegram on appropriate workspaces"
@@ -711,6 +712,7 @@ myManageHook = composeAll
   , className =? "yakuake"             --> doFloat
   , resource  =? "stalonetray"         --> doIgnore
   , title     =? "xmessage"            --> doFloat
+  , title     =? "Bluetooth Devices"   --> doFloat
   , title     =? "temp-term"           --> (customFloating $ W.RationalRect 0.05 0.05 0.9 0.9)
   , title     =? "temp-term-quake"     --> (customFloating $ W.RationalRect 0 0 1 0.5)
   , title     =? "neofetch-term"       --> (customFloating $ W.RationalRect 0.5 0.05 0.45 0.45)
