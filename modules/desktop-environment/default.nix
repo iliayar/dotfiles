@@ -26,6 +26,7 @@
     rust-blocks
     gimp
     zoom-us
+    vlc
   ];
 
   programs = {
