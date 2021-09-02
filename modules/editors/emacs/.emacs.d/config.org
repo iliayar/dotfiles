@@ -616,7 +616,8 @@ Setting visual stuff
       org-default-notes-file (concat org-directory "/Notes.org")
       org-highlight-latex-and-related '(latex entities)
       org-todo-keywords '((sequence "EVENT" "DRIFTED" "TODO" "FIXME" "|" "DONE" "CANCELED" ))
-      org-src-preserve-indentation t)
+      org-src-preserve-indentation t
+      org-pretty-entities-include-sub-superscripts nil)
 
 (setq org-todo-keyword-faces
       '(("TODO"     . "magenta")

@@ -277,7 +277,8 @@ async fn check_notify(event: AgendaRecord) {
 
 async fn check_status(event: &AgendaRecord) -> Option<String> {
     let date = event.date.status_time().unwrap().clone();
-    if date < Local::now() {
+    let now = Local::now();
+    if date < now {
 	return None;
     }
     match event.event_type {
@@ -289,7 +290,7 @@ async fn check_status(event: &AgendaRecord) -> Option<String> {
     } else {
 	let mut time = event.date.status_string().unwrap();
 	let date = event.date.status_time().unwrap().clone();
-	if date.date() != Local::now().date() {
+	if date.date() != now.date() {
 	    time.push_str(&date.format(" %m.%d").to_string())
 	}
 	time
@@ -326,8 +327,8 @@ impl Block for AgendaBlock
 
 			}
 		    }
-
 		}
+
 		if !was_status {
 		    fifo.lock().await.write_all("Chill\n".as_bytes()).await.ok();
 		}
