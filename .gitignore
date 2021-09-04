@@ -28,3 +28,4 @@ recentf
 *.lock
 /home/bin/ics-to-org
 /home/bin/__pycache__/
+cachix
