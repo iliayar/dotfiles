@@ -4,3 +4,7 @@ Mostly Emacs Windows specific config branch.
 ** Main workflow
 *** Emacs
 Using native binary. Some stuff installed used ~MSYS~.
+** Other Distros
+- [[https://github.com/iliayar/dotfiles/tree/arch][Arch]]
+- [[https://github.com/iliayar/dotfiles/tree/gentoo][Gentoo]]
+- [[https://github.com/iliayar/dotfiles/tree/master][Nix]]
