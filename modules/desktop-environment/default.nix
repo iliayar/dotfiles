@@ -27,12 +27,29 @@
     gimp
     zoom-us
     vlc
+
+    paprefs
+    nitrogen
+    pcmanfm
   ];
 
   programs = {
     feh = {
       enable = true;
     };
+  };
+
+  gtk = {
+    enable = true;
+    theme = {
+      package = pkgs.vimix-gtk-themes;
+      name = "vimix-dark";
+    };
+  };
+
+  qt = {
+    enable = true;
+    platformTheme = "gtk";
   };
 
   home.file."Wallpapers" = {

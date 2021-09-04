@@ -689,7 +689,7 @@ myLayout = avoidStruts
     tabs    = renamed [Replace "tabs"]
             $ tabbed shrinkText tabbedConf
     tabbedConf = def
-                   { fontName            = myFont
+                   { fontName            = myFont ++ ",Noto Color Emoji"
                    , activeColor         = Theme.color0
                    , inactiveColor       = Theme.background
                    , activeBorderColor   = Theme.color4
@@ -738,6 +738,7 @@ myEventHook = serverModeEventHook' (return myCommands)
 myStartupHook = do
           spawnOnce "run_conky"
           spawnOnce "rust-blocks &"
+          spawn     "nitrogen --restore"
           setWMName "LG3D"
 
 -------------------------------------------------
@@ -867,7 +868,7 @@ main = do
         homeDir <- getHomeDirectory
         xmproc0 <- spawnPipe $ "xmobar"
         -- xmproc1 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_mon2"
-        xmproc2 <- spawnPipe $ "xmobar_top"
+        xmproc2 <- spawnPipe $ "killall -9 xmobar_top; xmobar_top"
         xmonad $ ewmh def {
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,

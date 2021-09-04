@@ -22,7 +22,11 @@ in
 
   time.timeZone = "Europe/Moscow";
 
-  hardware.pulseaudio.enable = true;
+  hardware.pulseaudio = {
+    enable = true;
+    package = pkgs.pulseaudioFull;
+  };
+  programs.dconf.enable = true;
 
   networking = {
     hostName = "NixLaptop";

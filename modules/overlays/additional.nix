@@ -20,4 +20,6 @@ final: prev: {
   #   vendorSha256 = null;
   # };
   wakatime-cli = prev.wakatime;
+
+  rz-ghidra = prev.callPackage ../pkgs/rz-ghidra { pkgs = prev; };
 }

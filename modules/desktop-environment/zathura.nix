@@ -4,7 +4,7 @@
   programs.zathura = {
     enable = true;
     options = {
-      recolor = "";
+      recolor = "true";
       recolor-keephue = "true";
       recolor-darkcolor = "${themes.foreground}";
       recolor-lightcolor = "${themes.background}";
