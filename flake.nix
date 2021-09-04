@@ -90,6 +90,10 @@
 
         pkgs = import nixpkgs nixpkgs-config;
 
+        mylib = import ./modules/lib.nix { inherit pkgs; };
+
+        wallpapers = import ./modules/themes/wallpapers.nix { inherit pkgs mylib; };
+
         specialArgs = {
           inherit
             home-manager
@@ -101,18 +105,20 @@
             picom-jonaburg
             wakatime-cli
             zsh-wakatime
+            wallpapers
+            mylib
           ;
 
           secrets = import secrets;
-          themes = import ./modules/themes { lib = pkgs.lib; };
+          themes = import ./modules/themes { inherit mylib; };
         };
+
 
         homeConfigurations = {
           iliayar = home-manager.lib.homeManagerConfiguration rec {
             inherit system;
             extraSpecialArgs = specialArgs // {
               inherit pkgs system;
-              wallpapers = (pkgs.callPackage (import ./modules/themes/wallpapers.nix) { });
             };
             homeDirectory = "/home/iliayar";
             username = "iliayar";

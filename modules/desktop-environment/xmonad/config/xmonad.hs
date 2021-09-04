@@ -410,7 +410,7 @@ tsSystem =
      tsLayout
    ]
 tsCommands =
-   [ Node (TS.TSNode "XMonad config" "Open xmonad.hs in Emacs" (spawn "emacsclient -c -a emacs -e '(find-file \"~/.xmonad/xmonad.hs\")'")) []
+   [ Node (TS.TSNode "Nix flake config" "Open dotfiles flake.nix in Emacs" (spawn "emacsclient -c -a emacs -e '(find-file \"~/Repos/dotfiles/flake.nix\")'")) []
    , Node (TS.TSNode "Pomodoro start" "Run pomodoro timer in bar" (spawn "touch ~/.cache/pomodoro_session")) []
    , Node (TS.TSNode "Close all dzen" "Kill broken dzen" (spawn "killall dzen2")) []
    , Node (TS.TSNode "Pacman update" "Get updates from pacman" (termSpawn termite "sudo pacman -Syyu")) []
@@ -720,7 +720,7 @@ myManageHook = composeAll
   , namedScratchpadManageHook myScratchPads
   ] <+> manageSpawn
 
-myCommands = [ ("XMonad config", (spawn "emacsclient -c -a emacs -e '(find-file \"~/.xmonad/xmonad.hs\")'")) -- 1 Action on bar icon
+myCommands = [ ("Nix flake config", (spawn "emacsclient -c -a emacs -e '(find-file \"~/Repos/dotfiles/flake.nix\")'")) -- 1 Action on bar icon
              ]
              ++
              [("Switch to workspace " ++ n, windows $ W.greedyView i) | (n, i) <- zip myWorkspaces myWorkspacesClickable]

@@ -3,5 +3,6 @@
 {
   imports = [
     ./alacritty.nix
+    ./urxvt.nix
   ];
 }

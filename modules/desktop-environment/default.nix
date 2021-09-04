@@ -69,7 +69,7 @@
       "x-scheme-handler/tg" = [ "telegramdesktop.desktop" ];
       "image/png" = [ "feh.desktop" ];
       "image/jpeg" = [ "feh.desktop" ];
-      "application/pdf" = [ "zathura.desktop" ];
+      "application/pdf" = [ "org.pwmt.zathura-pdf-mupdf.desktop" ];
     };
   };
 }

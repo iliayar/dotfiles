@@ -1,4 +1,4 @@
-{ config, pkgs, secrets, ... }:
+{ config, pkgs, secrets, wallpapers, ... }:
 
 let
   nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload" ''
@@ -68,11 +68,20 @@ in
       Option         "AllowIndirectGLXProtocol" "off"
       Option         "TripleBuffer" "on"
     '';
-    displayManager.lightdm.enable = true;
-    # FIXME: Move to nixpkgs folder somehow
-    windowManager.xmonad = {
+
+    windowManager.xmonad.enable = true;
+    displayManager.defaultSession = "none+xmonad";
+    displayManager.lightdm.greeters.mini = {
       enable = true;
+      user = "iliayar";
+      extraConfig = ''
+                [greeter]
+                show-password-label = false
+                [greeter-theme]
+                background-image = "${wallpapers}/2 - HtmoocM.jpg"
+      '';
     };
+
     synaptics = {
       enable = true;
       tapButtons = false;
