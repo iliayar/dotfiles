@@ -26,3 +26,7 @@ Several xmobar configs in [[file:home/.config/xmobar/][here]]
   - [[file:home/.config/wal/templates/termite.conf][template]] for termite
   - [[file:home/.config/wal/templates/alacritty.yml][template]] for alacritty colors
 - *conky* flex [[file:home/.config/conky/conky.conf][config]]
+** Other Distros
+- [[https://github.com/iliayar/dotfiles/tree/arch][Arch]]
+- [[https://github.com/iliayar/dotfiles/tree/master][Nix]]
+- [[https://github.com/iliayar/dotfiles/tree/windows][Windows]]
