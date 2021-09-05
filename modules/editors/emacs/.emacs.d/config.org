@@ -180,7 +180,7 @@ Dashboard showing on startup
   :config
   (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
   (setq dashboard-center-content t)
-  (setq dashboard-startup-banner "~/Wallpapers/Neofetch.png")
+  (setq dashboard-startup-banner "~/Wallpapers/Emacs.png")
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   (setq dashboard-items '((recents  . 5)
@@ -1027,10 +1027,10 @@ Helper functions for university labs
     (setq lab-file (buffer-file-name))
     (split-window-right)
     (next-window-any-frame)
-    (find-file "local.in")
+    (find-file (getenv "inputFile"))
     (split-window-below)
     (next-window-any-frame)
-    (find-file "local.out")
+    (find-file (getenv "outputFile"))
     (auto-revert-mode)
     (select-window prog)))
 

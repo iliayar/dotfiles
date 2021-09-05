@@ -14,8 +14,8 @@ pkgs.stdenv.mkDerivation rec {
   version = "1.0.0";
 
   src = pkgs.fetchzip {
-    url = "https://zip.imgur.com/4159f3f4483ce1314de008188d126b02c12f0e6e46e5f94d960382b0a91f808a";
-    sha256 = "sha256-/NVKOT2UpZP19zVn9CeIWiZYvQVGr7t8hXkuuKN4/uo=";
+    url = "https://zip.imgur.com/046df2a9c34fc749924137e9a08a9417723e73fe60fd8570bda66ba74d26648d";
+    sha256 = "sha256-sBydMnyK/f6Y/sVPIpVdkRLLuKePLE9XiObA8Qsw8JA=";
     extension = "zip";
     stripRoot = false;
   };
@@ -26,7 +26,8 @@ pkgs.stdenv.mkDerivation rec {
 
   installPhase = ''
                ${fixNames}/bin/fixNames
-               mv NM41MId.png Neofetch.png
+               ${pkgs.imagemagick}/bin/convert NM41MId.png -resize 512x512 Neofetch.png
+               cp Rm1L6BN.png Emacs.png
                mkdir -p $out
                mv * $out/
   '';
