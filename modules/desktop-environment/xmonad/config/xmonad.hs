@@ -737,7 +737,7 @@ myEventHook = serverModeEventHook' (return myCommands)
 
 myStartupHook = do
           spawnOnce "run_conky"
-          spawnOnce "rust-blocks &"
+          spawnOnce "killall rust-blocks; rust-blocks &"
           spawn     "nitrogen --restore"
           setWMName "LG3D"
 

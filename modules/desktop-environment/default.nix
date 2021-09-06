@@ -27,6 +27,7 @@
     gimp
     zoom-us
     vlc
+    inkscape
 
     paprefs
     nitrogen

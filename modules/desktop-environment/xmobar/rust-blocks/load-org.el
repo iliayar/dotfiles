@@ -63,12 +63,11 @@ EXPORTER - The org export function, e.g. (lambda () (org-html-export-as-html nil
 	(while (re-search-forward "<span class=\"underline\">\\(\\(.\\|\n\\)*\\)</span>" nil t)
 	  (replace-match "<u>\\1</u>"))
 	(beginning-of-buffer)
-	(while (re-search-forward "</?\\(div.*\\|h[0-9]+.*\\|p\\)>[\n\t ]*" nil t)
+	(while (re-search-forward "</?\\(div.*\\|h[0-9]+.*\\|p\\|ul.*\\|li.*\\)>[\n\t ]*" nil t)
+	  (replace-match ""))
+	(while (re-search-forward "State \"DONE\"[^\n]*\n" nil t)
 	  (replace-match ""))
 	buffer))))
-
-;; (princ-headline-with "Notes" "Rust Agenda 3" (lambda () (org-pango-export-as-pango)))
-;; (princ-headline-parent-with "Study" "Test" (lambda () (org-pango-export-as-pango)))
 
 (defun get-study-headline (headline)
   (princ-headline-parent-with "Study" headline 'org-org-export-as-org))

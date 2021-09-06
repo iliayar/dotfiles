@@ -13,6 +13,8 @@
     killall
     unzip
     zip
+    pandoc
+    poppler_utils
   ];
 
   services.syncthing.enable = true;
