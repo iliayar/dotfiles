@@ -1,8 +1,9 @@
 { config, pkgs, ... }:
 
 {
+  # Doesn't respect Xorg configs
   xsession = {
-    enable = true;
+    enable = false;
 
     pointerCursor = {
       package = pkgs.vanilla-dmz;

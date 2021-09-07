@@ -27,7 +27,11 @@
     gimp
     zoom-us
     vlc
-    inkscape
+    (inkscape-with-extensions.override {
+      inkscapeExtensions = [
+        inkscape-extensions.textext
+      ];
+    })
 
     paprefs
     nitrogen

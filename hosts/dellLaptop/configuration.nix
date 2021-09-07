@@ -77,10 +77,16 @@ in
       extraConfig = ''
                 [greeter]
                 show-password-label = false
+                password-alignment = left
                 [greeter-theme]
-                background-image = "${wallpapers}/2 - HtmoocM.jpg"
+                background-image = "${wallpapers}/HtmoocM.jpg"
       '';
     };
+
+
+    displayManager.sessionCommands = ''
+      ${pkgs.xlibs.xsetroot}/bin/xsetroot -xcf ${pkgs.vanilla-dmz}/share/icons/Vanilla-DMZ/cursors/left_ptr 16
+    '';
 
     synaptics = {
       enable = true;

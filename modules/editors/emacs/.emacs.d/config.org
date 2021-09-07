@@ -1038,6 +1038,14 @@ Helper functions for university labs
   (interactive)
   (setq lab-file (buffer-file-name)))
 #+end_src
+Pretty stuff for highlighting text
+#+begin_src emacs-lisp
+(defun highlight-manul ()
+  (interactive)
+  (let ((color (counsel-colors-emacs)))
+    (set-face-attribute 'region nil :foreground color))) 
+#+end_src
+
 #+begin_src emacs-lisp
 (general-define-key
  :state '(normal)
