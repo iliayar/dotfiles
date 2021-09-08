@@ -59,6 +59,35 @@ enum AgendaTime {
     None,
 }
 
+impl PartialEq for AgendaTime {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Self::Exact(l0), Self::Exact(r0)) => l0 == r0,
+            (Self::Interval(l0, l1), Self::Interval(r0, r1)) => l0 == r0 && l1 == r1,
+            (Self::Day(l0), Self::Day(r0)) => l0 == r0,
+            _ => core::mem::discriminant(self) == core::mem::discriminant(other),
+        }
+    }
+}
+
+impl PartialOrd for AgendaTime {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+	match self {
+	    &Self::None => Option::None,
+	    &Self::Exact(date) |
+	    &Self::Interval(date, _)  |
+	    &Self::Day(date) => {
+		match other {
+		    &Self::None => Option::None,
+		    &Self::Exact(other_date) |
+		    &Self::Interval(other_date, _) |
+		    &Self::Day(other_date) => date.partial_cmp(&other_date)
+		}
+	    }
+	}
+    }
+}
+
 impl AgendaTime {
     fn status_string(&self) -> Option<String> {
 	use AgendaTime::*;
@@ -103,6 +132,7 @@ impl<'de> Deserialize<'de> for AgendaRecord {
     where D: Deserializer<'de> {
 	Deserialize::deserialize(deserializer)
 	    .map(|a: AgendaRecordHelper| {
+		debug!("AgendaRecordHelper read: {:?}", a);
 		let date = if let Some(date) = NaiveDate::parse_from_str(&a.5, "%Y-%m-%d").ok() {
 		    let times: Vec<DateTime<Local>> = a.6
 			.trim_end_matches(|c| c == '.')
@@ -313,19 +343,20 @@ impl Block for AgendaBlock
 
 	match elisp(LispFunction::GetAgenda).await {
 	    Ok(data) => {
+		debug!("Data from elisp: {:?}", data);
 		let mut rdr = Reader::from_reader(data.as_bytes());
 		let mut was_status = false;
-		for result in rdr.deserialize::<AgendaRecord>() {
-		    if let Ok(result) = result {
-			debug!("Get record: {:?}", result);
-			tokio::spawn(check_notify(result.clone()));
-			if !was_status {
-			    if let Some(status) = check_status(&result).await {
-				fifo.lock().await.write_all(format!("{}\n", status).as_bytes()).await.ok();
-				was_status = true;
-			    }
-
+		let mut records: Vec<AgendaRecord> = rdr.deserialize::<AgendaRecord>().filter_map(|e| e.ok()).collect();
+		records.sort_by(|a, b| a.date.partial_cmp(&b.date).unwrap_or(std::cmp::Ordering::Less));
+		for result in records {
+		    debug!("Get record: {:?}", result);
+		    tokio::spawn(check_notify(result.clone()));
+		    if !was_status {
+			if let Some(status) = check_status(&result).await {
+			    fifo.lock().await.write_all(format!("{}\n", status).as_bytes()).await.ok();
+			    was_status = true;
 			}
+
 		    }
 		}
 

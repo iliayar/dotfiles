@@ -737,7 +737,7 @@ myEventHook = serverModeEventHook' (return myCommands)
 
 myStartupHook = do
           spawnOnce "run_conky"
-          spawnOnce "killall rust-blocks; rust-blocks &"
+          spawn     "killall rust-blocks; rust-blocks &"
           spawn     "nitrogen --restore"
           setWMName "LG3D"
 
@@ -805,7 +805,7 @@ instance Eq a => Eq (PairFirst a b) where
 
 appPrompt :: XPConfig -> X ()
 appPrompt c = do
-  xdgDirs' <- fmap (splitOn ":") $ io $ getEnv "XDG_DATA_DIRS"
+  xdgDirs' <- fmap ((++[ "/home/iliayar/.local/share" ]) . splitOn ":") $ io $ getEnv "XDG_DATA_DIRS"
   xdgDirs <- fmap catMaybes $ io $ mapM
     (\d -> do
         let nd = d ++ "/applications"

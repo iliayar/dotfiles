@@ -16,7 +16,7 @@
     ./stalonetray.nix
     ./conky.nix
     ./spotify.nix
-    ./steam
+    ./games
   ];
 
   home.packages = with pkgs; [
@@ -32,6 +32,7 @@
         inkscape-extensions.textext
       ];
     })
+    libreoffice
 
     paprefs
     nitrogen
