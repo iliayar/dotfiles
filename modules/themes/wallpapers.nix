@@ -14,7 +14,7 @@ pkgs.stdenv.mkDerivation rec {
   version = "1.0.0";
 
   src = pkgs.fetchzip {
-    url = "https://zip.imgur.com/046df2a9c34fc749924137e9a08a9417723e73fe60fd8570bda66ba74d26648d";
+    url = "https://imgur.com/a/eptG3El/zip";
     sha256 = "sha256-sBydMnyK/f6Y/sVPIpVdkRLLuKePLE9XiObA8Qsw8JA=";
     extension = "zip";
     stripRoot = false;

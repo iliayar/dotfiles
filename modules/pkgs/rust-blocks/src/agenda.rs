@@ -103,8 +103,16 @@ impl AgendaTime {
     fn status_time(&self) -> Option<&DateTime<Local>> {
 	use AgendaTime::*;
 	match self {
-	    Exact(date) | Interval(date, _) | Day(date) => Some(&date),
+	    Exact(date) | Interval(_, date) | Day(date) => Some(&date),
 	    _ => Option::None
+	}
+    }
+
+    fn notify_time(&self) -> Option<&DateTime<Local>> {
+	use AgendaTime::*;
+	match self {
+	    Interval(date, _) => Some(&date),
+	    _ => self.status_time()
 	}
     }
 }
@@ -293,7 +301,7 @@ async fn notify(event: AgendaRecord, expired: Option<chrono::Duration>) {
 
 async fn check_notify(event: AgendaRecord) {
     let now = Local::now();
-    let date = event.date.status_time().unwrap().clone();
+    let date = event.date.notify_time().unwrap().clone();
     if date < now {
 	notify(event, Some(now.signed_duration_since(date))).await;
     } else {
@@ -319,7 +327,6 @@ async fn check_status(event: &AgendaRecord) -> Option<String> {
 	"Whole day".to_owned()
     } else {
 	let mut time = event.date.status_string().unwrap();
-	let date = event.date.status_time().unwrap().clone();
 	if date.date() != now.date() {
 	    time.push_str(&date.format(" %m.%d").to_string())
 	}
