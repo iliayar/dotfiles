@@ -714,7 +714,7 @@ Publishing for:
 (setq org-publish-project-alist
       '(
         ("org-mainsite"
-         :base-directory "~/Documents/MainSite/public/notes"
+         :base-directory "~/Repos/MainSite/public/notes"
          :base-extension "org"
          :exclude "level-[0-9]*.org"
          :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes"
@@ -728,7 +728,7 @@ Publishing for:
          :auto-preamble t
          )
         ("rss-mainsite"
-         :base-directory "~/Documents/MainSite/public/notes"
+         :base-directory "~/Repos/MainSite/public/notes"
          :base-extension "org"
          :exclude ".*"
          :include ("blog.org")
@@ -743,7 +743,7 @@ Publishing for:
          :publishing-function org-rss-publish-to-rss
          )
         ("static-mainsite"
-         :base-directory "~/Documents/MainSite/public/notes"
+         :base-directory "~/Repos/MainSite/public/notes"
          :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|pdf"
          :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes"
          :recursive t
@@ -752,7 +752,7 @@ Publishing for:
         ("mainsite" :components ("org-mainsite" "rss-mainsite" "static-mainsite"))
 
         ("org-conspects"
-         :base-directory "~/Documents/ITMO"
+         :base-directory "~/Repos/ITMO"
          :exclude ".*[^E].org"
          :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes/conspects"
          :recursive t
@@ -762,7 +762,7 @@ Publishing for:
          ;; :html-preamble my-conspects-header
          )
         ("pdfs-conspects"
-         :base-directory "~/Documents/ITMO"
+         :base-directory "~/Repos/ITMO"
          :base-extension "org"
          :exclude "README.org\\|level-[0-9]*.org\\|level-subj.org"
          :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes/conspects"

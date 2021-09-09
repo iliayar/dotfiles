@@ -386,8 +386,8 @@ tsAll =
 tsSystem =
    [ Node (TS.TSNode "Lock" "Lock screen" (spawn "locker")) []
    , Node (TS.TSNode "+ Picom" "Picom switch on/off" (return ()))
-       [ Node (TS.TSNode "off" "Switch off compositor" (spawn "killall picom")) []
-       , Node (TS.TSNode "on" "Switch on compositor" (spawn "picom --experimental-backends -b")) []
+       [ Node (TS.TSNode "off" "Switch off compositor" (spawn "systemctl --user stop picom")) []
+       , Node (TS.TSNode "on" "Switch on compositor" (spawn "systemctl --user start picom")) []
        ]
    , Node (TS.TSNode "+ Auto lock" "xautolock switch on/off" (return ()))
        [ Node (TS.TSNode "off" "Switch off xautolock" (spawn "rust-blocks-client lock disable")) []

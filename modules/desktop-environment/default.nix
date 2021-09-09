@@ -27,6 +27,7 @@
     gimp
     zoom-us
     vlc
+    libreoffice
   ];
 
   programs = {
