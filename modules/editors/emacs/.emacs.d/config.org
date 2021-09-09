@@ -48,6 +48,9 @@ Load nix specific config(mostly for pathes)
 (load "~/.emacs.d/nix.el")  
 #+end_src
 * Packages
+#+begin_src emacs-lisp
+(require 'use-package)  
+#+end_src
 Speeding up again 🦼
 #+begin_src emacs-lisp
 (use-package gcmh
@@ -108,7 +111,10 @@ Project tree. Settings fonts for ~treemacs~
   :config
   (evil-mode 1)
   (add-to-list 'evil-emacs-state-modes 'elfeed-search)
-  (cl-loop for (mode . state) in '((dired-mode . emacs) (elfeed-search . emacs))
+  (cl-loop for (mode . state) in '(
+				   (dired-mode . emacs)
+				   (elfeed-search-mode . emacs)
+				   (magit-status-mode . emacs))
 	   do (evil-set-initial-state mode state))
   )
 (use-package undo-tree
