@@ -621,7 +621,7 @@ Setting visual stuff
       org-agenda-files '("~/org")
       org-default-notes-file (concat org-directory "/Notes.org")
       org-highlight-latex-and-related '(latex entities)
-      org-todo-keywords '((sequence "EVENT" "DRIFTED" "TODO" "FIXME" "|" "DONE" "CANCELED" ))
+      org-todo-keywords '((sequence "EVENT" "DRIFTED" "TODO" "FIXME" "|" "CANCELED" "DONE" ))
       org-src-preserve-indentation t
       org-pretty-entities-include-sub-superscripts nil)
 
