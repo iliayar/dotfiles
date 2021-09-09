@@ -83,7 +83,6 @@ in
       '';
     };
 
-
     displayManager.sessionCommands = ''
       ${pkgs.xlibs.xsetroot}/bin/xsetroot -xcf ${pkgs.vanilla-dmz}/share/icons/Vanilla-DMZ/cursors/left_ptr 16
     '';

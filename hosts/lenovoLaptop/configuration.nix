@@ -1,4 +1,4 @@
-{ config, pkgs, secrets, ... }:
+{ config, pkgs, secrets, wallpapers, ... }:
 
 {
   imports =
@@ -13,7 +13,11 @@
 
   time.timeZone = "Europe/Moscow";
 
-  hardware.pulseaudio.enable = true;
+  hardware.pulseaudio = {
+    enable = true;
+    package = pkgs.pulseaudioFull;
+  };
+  programs.dconf.enable = true;
 
   networking = {
     hostName = "NixLenovo";
@@ -47,11 +51,26 @@
 
   services.xserver = {
     enable = true;
-    displayManager.lightdm.enable = true;
-    # FIXME: Move to nixpkgs folder somehow
-    windowManager.xmonad = {
+
+    windowManager.xmonad.enable = true;
+
+    displayManager.defaultSession = "none+xmonad";
+    displayManager.lightdm.greeters.mini = {
       enable = true;
+      user = "iliayar";
+      extraConfig = ''
+                [greeter]
+                show-password-label = false
+                password-alignment = left
+                [greeter-theme]
+                background-image = "${wallpapers}/HtmoocM.jpg"
+      '';
     };
+
+    displayManager.sessionCommands = ''
+      ${pkgs.xlibs.xsetroot}/bin/xsetroot -xcf ${pkgs.vanilla-dmz}/share/icons/Vanilla-DMZ/cursors/left_ptr 16
+    '';
+
     synaptics = {
       enable = true;
       tapButtons = false;
