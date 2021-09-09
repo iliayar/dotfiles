@@ -410,7 +410,7 @@ tsSystem =
      tsLayout
    ]
 tsCommands =
-   [ Node (TS.TSNode "XMonad config" "Open xmonad.hs in Emacs" (spawn "emacsclient -c -a emacs -e '(find-file \"~/.xmonad/xmonad.hs\")'")) []
+   [ Node (TS.TSNode "Nix flake config" "Open dotfiles flake.nix in Emacs" (spawn "emacsclient -c -a emacs -e '(find-file \"~/Repos/dotfiles/flake.nix\")'")) []
    , Node (TS.TSNode "Pomodoro start" "Run pomodoro timer in bar" (spawn "touch ~/.cache/pomodoro_session")) []
    , Node (TS.TSNode "Close all dzen" "Kill broken dzen" (spawn "killall dzen2")) []
    , Node (TS.TSNode "Pacman update" "Get updates from pacman" (termSpawn termite "sudo pacman -Syyu")) []
@@ -689,7 +689,7 @@ myLayout = avoidStruts
     tabs    = renamed [Replace "tabs"]
             $ tabbed shrinkText tabbedConf
     tabbedConf = def
-                   { fontName            = myFont
+                   { fontName            = myFont ++ ",Noto Color Emoji"
                    , activeColor         = Theme.color0
                    , inactiveColor       = Theme.background
                    , activeBorderColor   = Theme.color4
@@ -720,7 +720,7 @@ myManageHook = composeAll
   , namedScratchpadManageHook myScratchPads
   ] <+> manageSpawn
 
-myCommands = [ ("XMonad config", (spawn "emacsclient -c -a emacs -e '(find-file \"~/.xmonad/xmonad.hs\")'")) -- 1 Action on bar icon
+myCommands = [ ("Nix flake config", (spawn "emacsclient -c -a emacs -e '(find-file \"~/Repos/dotfiles/flake.nix\")'")) -- 1 Action on bar icon
              ]
              ++
              [("Switch to workspace " ++ n, windows $ W.greedyView i) | (n, i) <- zip myWorkspaces myWorkspacesClickable]
@@ -737,7 +737,8 @@ myEventHook = serverModeEventHook' (return myCommands)
 
 myStartupHook = do
           spawnOnce "run_conky"
-          spawnOnce "rust-blocks &"
+          spawn     "killall rust-blocks; rust-blocks &"
+          spawn     "nitrogen --restore"
           setWMName "LG3D"
 
 -------------------------------------------------
@@ -804,7 +805,7 @@ instance Eq a => Eq (PairFirst a b) where
 
 appPrompt :: XPConfig -> X ()
 appPrompt c = do
-  xdgDirs' <- fmap (splitOn ":") $ io $ getEnv "XDG_DATA_DIRS"
+  xdgDirs' <- fmap ((++[ "/home/iliayar/.local/share" ]) . splitOn ":") $ io $ getEnv "XDG_DATA_DIRS"
   xdgDirs <- fmap catMaybes $ io $ mapM
     (\d -> do
         let nd = d ++ "/applications"
@@ -867,7 +868,7 @@ main = do
         homeDir <- getHomeDirectory
         xmproc0 <- spawnPipe $ "xmobar"
         -- xmproc1 <- spawnPipe $ homeDir ++ "/.config/xmobar/xmobar_mon2"
-        xmproc2 <- spawnPipe $ "xmobar_top"
+        xmproc2 <- spawnPipe $ "killall -9 xmobar_top; xmobar_top"
         xmonad $ ewmh def {
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,

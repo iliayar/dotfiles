@@ -180,7 +180,7 @@ Dashboard showing on startup
   :config
   (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
   (setq dashboard-center-content t)
-  (setq dashboard-startup-banner "~/Wallpapers/Neofetch.png")
+  (setq dashboard-startup-banner "~/Wallpapers/Emacs.png")
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   (setq dashboard-items '((recents  . 5)
@@ -1011,6 +1011,41 @@ Elfeed hydra binddings
   ("a" (elfeed-search-set-filter "") "All"))
 #+end_src
 Bindings using ~general~ package
+Helper functions for university labs
+#+begin_src emacs-lisp
+(defun run-nix-lab ()
+  (interactive)
+  (shell-command (concat "labRun "
+			 (if (eq lab-file nil)
+			     (buffer-file-name)
+			   lab-file))))
+
+(defun lab-init ()
+  (interactive)
+  (let
+      ((prog (selected-window)))
+    (setq lab-file (buffer-file-name))
+    (split-window-right)
+    (next-window-any-frame)
+    (find-file (getenv "inputFile"))
+    (split-window-below)
+    (next-window-any-frame)
+    (find-file (getenv "outputFile"))
+    (auto-revert-mode)
+    (select-window prog)))
+
+(defun lab-reinit ()
+  (interactive)
+  (setq lab-file (buffer-file-name)))
+#+end_src
+Pretty stuff for highlighting text
+#+begin_src emacs-lisp
+(defun highlight-manul ()
+  (interactive)
+  (let ((color (counsel-colors-emacs)))
+    (set-face-attribute 'region nil :foreground color))) 
+#+end_src
+
 #+begin_src emacs-lisp
 (general-define-key
  :state '(normal)
@@ -1042,6 +1077,7 @@ Bindings using ~general~ package
  "pf" 'counsel-projectile-find-file
  "pp" 'projectile-switch-project
  "rr" 'rustic-cargo-run
+ "rl" 'run-nix-lab
  "sl" 'lsp
  "sr" 'lsp-workspace-restart
  "ss" 'lsp-workspace-shutdown

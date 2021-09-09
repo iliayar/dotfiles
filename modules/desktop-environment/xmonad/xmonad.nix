@@ -10,6 +10,12 @@ in
   };
 
   home.packages = with pkgs; [
+    gotop
+    ueberzug
+    w3m
+    neofetch
+    imagemagick
+
     dzen2 
     gawk
     (writeScriptBin "dzenShowKeymap" ''

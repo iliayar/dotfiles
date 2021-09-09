@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  home.packages = [ pkgs.pinentry.qt pkgs.gcr ];
+  home.packages = [ pkgs.pinentry.gtk2 pkgs.gcr ];
 
   programs.gpg = {
     enable = true;
@@ -9,6 +9,6 @@
 
   services.gpg-agent = {
     enable = true;
-    pinentryFlavor = "qt";
+    pinentryFlavor = "gtk2";
   };
 }

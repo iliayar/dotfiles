@@ -3,8 +3,8 @@
 # name: org-latex
 # --
 
-#+LATEX_CLASS: general
+#+setupfile: setup.org
 #+TITLE: $1
-#+AUTHOR: Ilya Yaroshevskiy
+#+date: $2
 
 $0

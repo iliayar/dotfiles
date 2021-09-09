@@ -16,7 +16,7 @@
     ./stalonetray.nix
     ./conky.nix
     ./spotify.nix
-    ./steam
+    ./games
   ];
 
   home.packages = with pkgs; [
@@ -27,13 +27,35 @@
     gimp
     zoom-us
     vlc
+    (inkscape-with-extensions.override {
+      inkscapeExtensions = [
+        inkscape-extensions.textext
+      ];
+    })
     libreoffice
+
+    paprefs
+    nitrogen
+    pcmanfm
   ];
 
   programs = {
     feh = {
       enable = true;
     };
+  };
+
+  gtk = {
+    enable = true;
+    theme = {
+      package = pkgs.vimix-gtk-themes;
+      name = "vimix-dark";
+    };
+  };
+
+  qt = {
+    enable = true;
+    platformTheme = "gtk";
   };
 
   home.file."Wallpapers" = {
@@ -53,7 +75,7 @@
       "x-scheme-handler/tg" = [ "telegramdesktop.desktop" ];
       "image/png" = [ "feh.desktop" ];
       "image/jpeg" = [ "feh.desktop" ];
-      "application/pdf" = [ "zathura.desktop" ];
+      "application/pdf" = [ "org.pwmt.zathura-pdf-mupdf.desktop" ];
     };
   };
 }

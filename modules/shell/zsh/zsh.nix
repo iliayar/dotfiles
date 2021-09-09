@@ -23,6 +23,10 @@
       theme = "l";
     };
 
+    shellAliases = {
+      magit = "emacsclient -t -e '(magit)'";
+    };
+
     initExtra = ''
         export PATH=$PATH:${pkgs.wakatime-cli}/bin
     '';

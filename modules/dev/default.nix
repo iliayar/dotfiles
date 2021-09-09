@@ -5,6 +5,7 @@
     ./python
     ./cxx
     ./latex.nix
+    ./reverse.nix
   ];
 
 }

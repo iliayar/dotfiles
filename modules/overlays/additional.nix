@@ -20,4 +20,10 @@ final: prev: {
   #   vendorSha256 = null;
   # };
   wakatime-cli = prev.wakatime;
+
+  # rz-ghidra = prev.callPackage ../pkgs/rz-ghidra { pkgs = prev; };
+
+  inkscape-extensions = prev.inkscape-extensions // {
+    textext = prev.callPackage ../pkgs/inkscape/textext.nix { };
+  };
 }

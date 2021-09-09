@@ -1,28 +1,6 @@
-{ lib, ... }:
+{ mylib, ... }:
 with builtins;
 let
-  matchColor = match "#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})";
-  hexToDec = {
-    "0" = 0; "1" = 1; "2" = 2; "3" = 3;
-    "4" = 4; "5" = 5; "6" = 6; "7" = 7;
-    "8" = 8; "9" = 9; "a" = 10; "b" = 11;
-    "c" = 12; "d" = 13; "e" = 14; "f" = 15;
-  };
-  hex2ToDec = s:
-    let
-      l = lib.stringToCharacters s;
-    in
-      hexToDec."${(elemAt l 0)}" * 16 + hexToDec."${elemAt l 1}";
-  strToColor = s:
-    let
-      s = lib.toLower s;
-      l = matchColor s;
-    in mapAttrs (_: s: hex2ToDec s) {
-      r = elemAt l 0;
-      g = elemAt l 1;
-      b = elemAt l 2;
-    };
-
   theme = rec {
     cursor        = "#f92672";
     cursorText    = "#272822";
@@ -65,10 +43,11 @@ let
     font = "Fira Code";
   };
 
-  createMap = f: mapAttrs (_: c: f (strToColor c));
+  createMap = f: mapAttrs (_: c: f (lib.strToColor c));
   defMap = s: f: th: { "${s}" = createMap f th; };
   withMaps = maps: th: foldl' (a: v: a // v) th (map (m: m th) maps);
 in
 withMaps [
+
 
 ] theme
