@@ -6,6 +6,7 @@
     ./cxx
     ./latex.nix
     ./reverse.nix
+    ./haskell.nix
   ];
 
 }

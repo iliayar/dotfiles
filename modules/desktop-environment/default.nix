@@ -37,11 +37,22 @@
     paprefs
     nitrogen
     pcmanfm
+
+    arandr
   ];
 
   programs = {
     feh = {
       enable = true;
+    };
+
+    autorandr = {
+      enable = true;
+      hooks = {
+        postswitch = {
+          "notify-xmonad" = "${pkgs.haskellPackages.xmonad}/bin/xmonad --restart";
+        };
+      };
     };
   };
 

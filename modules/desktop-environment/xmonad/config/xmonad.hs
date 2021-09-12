@@ -236,7 +236,9 @@ addExitMap m = ("<Escape>", io $ return (), "Cancel") : m
 
 dzenKeymapsPipe :: String -> [(String, X (), String)] -> X Handle
 dzenKeymapsPipe d m = do
-   h <- spawnPipe $ "dzenShowKeymap \"" ++ (dzenEscape d) ++ "\""
+   curscreen <-
+      (fromIntegral . W.screen . W.current) `fmap` gets windowset :: X Int
+   h <- spawnPipe $ "dzenShowKeymap \"" ++ (dzenEscape d) ++ "\" " ++ (show $ curscreen + 1)
    io $ hPutStrLn h $ dzenEscape $ getDescription "\n" $ addExitMap m
    io $ hPutStrLn h "END"
    io $ return h

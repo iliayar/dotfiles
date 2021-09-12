@@ -23,7 +23,8 @@
     '';
     opacityRule = [
       "80:class_g = 'xmobar'"
-      "80:class_g = 'pinentry'"
+      "80:class_g = 'Pinentry'"
+      "80:class_g = 'Steam'"
       "90:class_g = 'Emacs'"
       "80:class_g = 'Zathura'"
       "80:class_g = 'Pcmanfm'"

@@ -93,8 +93,7 @@ Project tree. Settings fonts for ~treemacs~
 		  treemacs-file-face
 		  treemacs-tags-face))
     (set-face-attribute face nil :family "Fira Code" :height 100))
-  (setq treemacs-read-string-input 'from-minibuffer)
-  )
+  (setq treemacs-read-string-input 'from-minibuffer))
 (use-package treemacs-evil
   :after evil)
 (use-package treemacs-projectile
@@ -236,7 +235,7 @@ Colors from pywal
 - no annoying bell!
 - setting ~ace-window~ keys
 - isearch
-- Treat =_= as work(~vim~ variant)
+- Treat =_= as word(~vim~ variant)
 #+BEGIN_SRC  emacs-lisp
 (defun init-hooks () (global-display-line-numbers-mode 1))
 (add-hook 'after-init-hook 'init-hooks)
@@ -464,6 +463,7 @@ Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/
           ))
   (setq lsp-log-io nil)
   (setq lsp-idle-delay 0.500))
+(use-package lsp-ui)
 #+end_src
 Syntax checking and lsp related errors/warnings. Posfrmae stil sucks
 #+BEGIN_SRC emacs-lisp
@@ -1044,13 +1044,6 @@ Helper functions for university labs
   (interactive)
   (setq lab-file (buffer-file-name)))
 #+end_src
-Pretty stuff for highlighting text
-#+begin_src emacs-lisp
-(defun highlight-manul ()
-  (interactive)
-  (let ((color (counsel-colors-emacs)))
-    (set-face-attribute 'region nil :foreground color))) 
-#+end_src
 
 #+begin_src emacs-lisp
 (general-define-key
@@ -1133,3 +1126,22 @@ Hydra
   ("c" nil "Cancel"))
 #+end_src
 
+* Other
+** Faces
+#+begin_src emacs-lisp
+(custom-set-faces
+ '(italic ((t (:slant italic :family "Ubuntu Mono"))))
+ '(org-block ((t (:extend t :background "gray10"))))
+ '(org-block-begin-line ((t (:extend t :background "#1c1e1f" :foreground "#555556" :overline nil :underline t))))
+ '(org-block-end-line ((t (:inherit org-block-begin-line :extend t :overline t :underline nil))))
+ '(org-document-title ((t (:foreground "#fd971f" :weight bold :height 1.3))))
+ '(org-ellipsis ((t (:foreground "red"))))
+ '(org-footnote ((t (:foreground "#fd971f" :weight extra-bold :height 0.7))))
+ '(org-latex-and-related ((t (:inherit nil :foreground "tomato" :weight bold))))
+ '(org-level-1 ((t (:inherit outline-1 :extend t :underline t :height 1.2))))
+ '(org-level-2 ((t (:inherit outline-2 :extend t :height 1.1))))
+ '(org-link ((t (:foreground "deep sky blue" :inherit link))))
+ '(org-tag ((t (:foreground "#e2c770" :slant italic :weight normal :family "Ubuntu Mono"))))
+ '(org-verbatim ((t (:foreground "#b6e63e" :box (:line-width (2 . 2) :color "dim gray" :style released-button)))))
+ '(outline-1 ((t (:extend t :foreground "#fb2874" :weight bold)))))
+#+end_src

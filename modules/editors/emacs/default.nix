@@ -70,6 +70,7 @@
       # company-lsp
       counsel
       lsp-mode
+      lsp-ui
       flycheck
       lsp-treemacs
       lsp-ivy

@@ -22,12 +22,8 @@ in
       #!${pkgs.bash}/bin/bash
 
       KEYMAP=$1
+      SCREEN=$2
       COLS=4
-
-      FW=350
-      LH=15
-      X=0
-      W=1920
 
       background="${themes.background}"
       foreground="${themes.foreground}"
@@ -57,13 +53,12 @@ in
       echo "$INFO"
 
       N_LINES=$(wc -l <<< "$INFO")
-      Y=$(($3 + $5 - ($LH * ($N_LINES+1))))
       (echo "$INFO"; cat) | dzen2 -l $(($N_LINES)) \
         -fn "-*-${themes.font}-*-*-*-*-14-*-*-*-*-*-*-*" \
         -fg $foreground \
         -bg $background \
-        -h $LH -x $X -y $Y -w $W \
-        -e onstart=uncollapse
+        -e onstart=uncollapse \
+        -xs $SCREEN
     '')  
   ];
 

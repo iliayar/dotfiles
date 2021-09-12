@@ -18,6 +18,7 @@ pkgs.stdenv.mkDerivation rec {
     sha256 = "sha256-sBydMnyK/f6Y/sVPIpVdkRLLuKePLE9XiObA8Qsw8JA=";
     extension = "zip";
     stripRoot = false;
+    curlOpts = "-L";
   };
 
   buildInputs = with pkgs; [
