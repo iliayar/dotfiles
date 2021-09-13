@@ -4,6 +4,7 @@
   imports =
     [
       ./hardware-configuration.nix
+      ../laptop.nix
     ];
 
   boot.supportedFilesystems = [ "ntfs" ];

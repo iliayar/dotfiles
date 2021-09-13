@@ -13,6 +13,7 @@ in
   imports =
     [
       ./hardware-configuration.nix
+      ../laptop.nix
     ];
 
   boot.supportedFilesystems = [ "ntfs" ];
@@ -59,7 +60,6 @@ in
     ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", MODE="0666", RUN+="${pkgs.coreutils}/bin/chmod a+w /sys/class/backlight/%k/brightness"
   '';
 
-
   services.xserver = {
     enable = true;
     videoDrivers = [ "nvidia" ];
@@ -104,7 +104,7 @@ in
   }; 
 
   services.tlp = {
-    enable = true;
+    enable = false;
     settings = {
       "CPU_SCALING_GOVERNOR_ON_AC" = "performance";
     };
