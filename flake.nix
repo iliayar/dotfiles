@@ -58,6 +58,11 @@
       url = "github:jonaburg/picom";
       flake = false;
     };
+
+    tlpui-src = {
+      url = "github:d4nj1/TLPUI";
+      flake = false;
+    };
   };
 
   outputs = { self
@@ -73,6 +78,7 @@
             , picom-jonaburg
             , wakatime-cli
             , zsh-wakatime
+            , tlpui-src
             , ...
             }
     @inputs: 
@@ -107,6 +113,7 @@
             zsh-wakatime
             wallpapers
             mylib
+            tlpui-src
           ;
 
           secrets = import secrets;

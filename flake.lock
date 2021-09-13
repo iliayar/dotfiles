@@ -324,6 +324,7 @@
         "picom-jonaburg": "picom-jonaburg",
         "secrets": "secrets",
         "systec-can": "systec-can",
+        "tlpui-src": "tlpui-src",
         "wakatime-cli": "wakatime-cli",
         "xmonad-newest": "xmonad-newest",
         "zsh-wakatime": "zsh-wakatime"
@@ -353,6 +354,22 @@
       "original": {
         "type": "tarball",
         "url": "https://www.systec-electronic.com/fileadmin/Redakteur/Unternehmen/Support/Downloadbereich/Treiber/systec_can-V1.0.3.tar.bz2"
+      }
+    },
+    "tlpui-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1626286868,
+        "narHash": "sha256-H69ReVKIMDU2viv8p6LhaJiwkBfLZ/pcw0YKmsZdPNg=",
+        "owner": "d4nj1",
+        "repo": "TLPUI",
+        "rev": "4633e390b8696328671e02360addcc628d12a6b0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "d4nj1",
+        "repo": "TLPUI",
+        "type": "github"
       }
     },
     "wakatime-cli": {

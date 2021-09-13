@@ -87,6 +87,10 @@
     layout = "us,ru";
   }; 
 
+  services.tlp = {
+    enable = true;
+  };
+
   services.blueman.enable = true;
   hardware.bluetooth.enable = true;
 

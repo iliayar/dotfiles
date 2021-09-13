@@ -39,6 +39,7 @@
     pcmanfm
 
     arandr
+    tlpui
   ];
 
   programs = {

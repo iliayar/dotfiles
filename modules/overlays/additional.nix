@@ -1,4 +1,4 @@
-{ libxft-bgra, picom-jonaburg, wakatime-cli, ... }@inputs:
+{ libxft-bgra, picom-jonaburg, wakatime-cli, tlpui-src, ... }@inputs:
 
 final: prev: {
   libxft-bgra = prev.stdenv.mkDerivation {
@@ -26,4 +26,6 @@ final: prev: {
   inkscape-extensions = prev.inkscape-extensions // {
     textext = prev.callPackage ../pkgs/inkscape/textext.nix { };
   };
+
+  tlpui = prev.callPackage ../pkgs/tlpui { inherit tlpui-src; };
 }

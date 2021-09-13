@@ -103,6 +103,13 @@ in
     layout = "us,ru";
   }; 
 
+  services.tlp = {
+    enable = true;
+    settings = {
+      "CPU_SCALING_GOVERNOR_ON_AC" = "performance";
+    };
+  };
+
   services.blueman.enable = true;
   hardware.bluetooth.enable = true;
 
