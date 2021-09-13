@@ -7,4 +7,18 @@ final: prev: {
         xmonad = xmonad-newest.defaultPackage."x86_64-linux";
       });
   });
+
+  inkscape = (prev.inkscape.override {
+    python3 = {
+      withPackages = f: prev.python3.withPackages (pypkgs: with pypkgs; [
+        pygobject3
+        gst-python
+      ] ++ (f pypkgs));
+    };
+  }).overrideAttrs (old: {
+    buildInputs = old.buildInputs ++ (with prev; [
+      gobject-introspection
+      gtk3
+    ]);
+  });
 }

@@ -1,5 +1,18 @@
+diff --git a/setup.py b/setup.py
+index 3dff373..63050f7 100644
+--- a/setup.py
++++ b/setup.py
+@@ -322,7 +322,7 @@ if __name__ == "__main__":
+     fh.setFormatter(formatter)
+     logger.addHandler(fh)
+ 
+-    settings = Settings(directory=os.path.join(args.inkscape_extensions_path, "textext"))
++    settings = Settings(directory="/tmp")
+ 
+     checker = TexTextRequirementsChecker(logger, settings)
+ 
 diff --git a/textext/base.py b/textext/base.py
-index 8198c45..af276f1 100644
+index 8198c45..89cbb5c 100644
 --- a/textext/base.py
 +++ b/textext/base.py
 @@ -33,7 +33,7 @@ EXIT_CODE_OK = 0
@@ -11,3 +24,35 @@ index 8198c45..af276f1 100644
  if not os.path.isdir(LOG_LOCATION):
      os.makedirs(LOG_LOCATION)
  LOG_FILENAME = os.path.join(LOG_LOCATION, "textext.log")  # todo: check destination is writeable
+@@ -93,7 +93,7 @@ class TexText(inkex.EffectExtension):
+ 
+     def __init__(self):
+ 
+-        self.config = Settings(directory=os.path.dirname(os.path.realpath(__file__)))
++        self.config = Settings(directory="/tmp")
+         self.cache = Cache()
+         previous_exit_code = self.cache.get("previous_exit_code", None)
+ 
+diff --git a/textext/utility.py b/textext/utility.py
+index c0bebf5..53f7036 100644
+--- a/textext/utility.py
++++ b/textext/utility.py
+@@ -162,9 +162,10 @@ class CycleBufferHandler(logging.handlers.BufferingHandler):
+ class Settings(object):
+     def __init__(self, basename="config.json", directory=None):
+         if directory is None:
+-            directory = os.getcwd()
++            directory = "/tmp"
+         self.values = {}
+         self.config_path = os.path.join(directory, basename)
++        self.save()
+         try:
+             self.load()
+         except ValueError as e:
+@@ -258,4 +259,4 @@ def exec_command(cmd, ok_return_value=0):
+ 
+ MAC = "Darwin"
+ WINDOWS = "Windows"
+-PLATFORM = platform.system()
+\ No newline at end of file
++PLATFORM = platform.system()

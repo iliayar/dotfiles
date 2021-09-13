@@ -28,8 +28,10 @@
     zoom-us
     vlc
     (inkscape-with-extensions.override {
-      inkscapeExtensions = [
-        inkscape-extensions.textext
+      inkscapeExtensions = with inkscape-extensions; [
+        textext
+        madeeasy
+        plot
       ];
     })
     libreoffice

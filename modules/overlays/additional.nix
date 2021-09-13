@@ -25,6 +25,8 @@ final: prev: {
 
   inkscape-extensions = prev.inkscape-extensions // {
     textext = prev.callPackage ../pkgs/inkscape/textext.nix { };
+    madeeasy = prev.callPackage ../pkgs/inkscape/madeeasy.nix { };
+    plot = prev.callPackage ../pkgs/inkscape/plot.nix { };
   };
 
   tlpui = prev.callPackage ../pkgs/tlpui { inherit tlpui-src; };

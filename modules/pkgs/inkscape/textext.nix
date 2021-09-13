@@ -1,4 +1,11 @@
 { pkgs, ... }:
+let
+  python3Env = (pkgs.python3.withPackages (pypkgs: with pypkgs; [
+    pygobject3
+    gst-python
+    wrapPython
+  ]));
+in
 pkgs.stdenv.mkDerivation {
   name = "inkscape-textext";
 
@@ -14,11 +21,7 @@ pkgs.stdenv.mkDerivation {
   ];
 
   buildInputs = with pkgs; [
-    (python3.withPackages (pypkgs: with pypkgs; [
-      pygobject3
-      gst-python
-      wrapPython
-    ])) 
+    python3Env
     gtk3
     inkscape
     texlive.combined.scheme-full
