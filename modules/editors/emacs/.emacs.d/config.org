@@ -1036,6 +1036,11 @@ Helper functions for university labs
  :keymaps '(org-mode-map)
  "<tab>" 'org-cycle)
 (general-define-key
+ :states '(normal visual)
+ :keymaps 'override
+ "gr" 'lsp-ui-peek-find-references
+ "gd" 'lsp-ui-peek-find-definitions)
+(general-define-key
  :states '(normal visual emacs insert treemacs)
  :prefix "SPC"
  :non-normal-prefix "M-SPC"
@@ -1060,6 +1065,8 @@ Helper functions for university labs
  "pc" 'projectile-compile-project
  "pf" 'counsel-projectile-find-file
  "pp" 'projectile-switch-project
+ "pl" 'org-latex-preview
+ "pi" 'org-toggle-inline-images
  "rr" 'rustic-cargo-run
  "rl" 'run-nix-lab
  "sl" 'lsp

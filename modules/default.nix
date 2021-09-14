@@ -8,6 +8,7 @@
     ./shell
     ./desktop-environment
     ./dev
+    ./study
   ];
 
   home.sessionVariables = {
