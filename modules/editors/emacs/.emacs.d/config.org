@@ -554,7 +554,7 @@ Org headers icons
 #+end_src
 Loading Export backends
 #+BEGIN_SRC emacs-lisp
-(require 'ox-rss)
+;; (require 'ox-rss)
 (eval-after-load "org"
   (progn
     '(require 'ox-md nil t)
