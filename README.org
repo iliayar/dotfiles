@@ -6,10 +6,10 @@
 ** Main workflow
 *** Emacs
 Emacs config in one [[file:modules/editors/emacs/.emacs.d/config.org][Org File]] \\
-Using /emacs-native-comp-git-enhanced/ from AUR for better performance (and broken GTK interface)
+Using emacs with native compilation from Nix Emacs Overlay
 *** XMonad
 [[file:modules/desktop-environment/xmonad/config/xmonad.hs][Main Config]] \\
-Xmonad and xmobar, compile form source because of arch's broken haskell packages
+Xmonad and xmobar, compile form source because of lack of fallback fonts in xmonad-contrib
 **** Xmobar
 Several xmobar configs in [[file:modules/desktop-environment/xmobar/][here]]
 *** Other utils
