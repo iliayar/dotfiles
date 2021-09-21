@@ -66,6 +66,32 @@
           showSignature = "append";
         };
       };
+      university = {
+        address = "iliayar@niuitmo.ru";
+        imap.host = "outlook.office365.com";
+        gpg = {
+          key = "0x3FE87CB13CB3AC4E";
+          signByDefault = true;
+        };
+        mu.enable = true;
+        mbsync = {
+          enable = true;
+          create = "both";
+          patterns = [ 
+            "*" 
+          ];
+        };
+        msmtp.enable = true;
+        realName = "Ilya Yaroshevskiy";
+        passwordCommand = "pass outlook/iliayar@niuitmo.ru";
+        smtp.host = "smtp-mail.outlook.com";
+        userName = "iliayar@niuitmo.ru";
+        signature = {
+          text = ''
+          '';
+          showSignature = "append";
+        };
+      };
     };
   };
 

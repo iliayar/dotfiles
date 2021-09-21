@@ -942,6 +942,26 @@ Mail client
                                      ;; ("maildir:/personal/[Gmail]/Important" "Important" ?!)
                                      ))
                   ))
+         ;; University context
+         (make-mu4e-context
+          :name "university"
+          :match-func (lambda (msg) (when msg
+                                      (string-prefix-p "/university" (mu4e-message-field msg :maildir))))
+          :vars '(
+                  (mu4e-sent-folder . "/university/Sent")
+                  ;; (mu4e-drafts-folder . "/cock/Drafts")
+                  (mu4e-refile-folder . "/university/Junk")
+                  (mu4e-trash-folder . "/university/Trash")
+                  (user-mail-address . "iliayar@niuitmo.ru")
+                  (mu4e-get-mail-command . "mbsync university")
+                  (smtpmail-smtp-server . "smtp-mail.outlook.com")
+                  (smtpmail-smtp-service . 587)
+                  (smtpmail-stream-type . ssl)
+                  (smtpmail-smtp-user . "iliayar@niuitmo.ru")
+                  (mu4e-bookmarks . (("maildir:/cock/Inbox" "Inbox" ?i)
+                                     ;; ("maildir:/personal/[Gmail]/Important" "Important" ?!)
+                                     ))
+                  ))
          )))
 #+END_SRC
 

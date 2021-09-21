@@ -22,6 +22,7 @@
   home.packages = with pkgs; [
     tdesktop # Telegram
     discord
+    slack
     xkb-switch
     light
     rust-blocks
