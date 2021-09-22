@@ -69,6 +69,8 @@ in
       Option         "TripleBuffer" "on"
     '';
 
+
+    dpi = 96;
     windowManager.xmonad.enable = true;
     displayManager.defaultSession = "none+xmonad";
     displayManager.lightdm.greeters.mini = {
@@ -92,8 +94,8 @@ in
       tapButtons = false;
       vertTwoFingerScroll = true;
       horizTwoFingerScroll = true;
-      minSpeed = "1.0";
-      maxSpeed = "3.0";
+      minSpeed = "0.6";
+      maxSpeed = "2.4";
     };
 
     autoRepeatInterval = 50;
@@ -114,11 +116,14 @@ in
   hardware.bluetooth.enable = true;
 
   hardware.nvidia.prime = {
-    offload.enable = true;
+    # offload.enable = false;
+    sync.enable = true;
     intelBusId = "PCI:0:2:0";
     nvidiaBusId = "PCI:1:0:0";
   };
   hardware.nvidia.modesetting.enable = true;
+  # hardware.video.hidpi.enable = true;
+
 
   nix = {
     package = pkgs.nixFlakes;
@@ -133,6 +138,10 @@ in
     home = "/home/iliayar";
     shell = pkgs.zsh;
     extraGroups = [ "wheel" "networkmanager" "video" ];
+  };
+
+  environment.variables = {
+    GDK_SCALE = "1";
   };
 
   environment.systemPackages = with pkgs; [

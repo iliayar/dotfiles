@@ -5,7 +5,7 @@ let
   config = { alignment, ... }: ''
     conky.config = {
         alignment = '${alignment}',
-        xinerama_head = 0,
+        xinerama_head = 1,
         background = false,
         border_width = 1,
         cpu_avg_samples = 2,
