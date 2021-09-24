@@ -105,6 +105,7 @@
       direnv
       lsp-pyright
       dap-mode
+      minimap
 
       org-roam-ui
       wakatime-mode

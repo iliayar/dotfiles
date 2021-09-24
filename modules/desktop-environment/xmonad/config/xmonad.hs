@@ -250,6 +250,38 @@ withDzenKeymapsPipe d m f = do
 
 afIcon s = "<fn=1>" ++ s ++ "</fn>"
 
+data ScreenLayout = SingleScreen
+                  | SamsungRight
+                  | DefaultScreenLayout
+
+
+screenLayoutFile :: ScreenLayout -> String
+screenLayoutFile SingleScreen = "single"
+screenLayoutFile SamsungRight = "samsungRight"
+screenLayoutFile DefaultScreenLayout = "default"
+
+screenLayoutDescription :: ScreenLayout -> String
+screenLayoutDescription SingleScreen = "Sinle Screen"
+screenLayoutDescription SamsungRight = "Samsung monitor in the right"
+
+screenLayoutCmd :: ScreenLayout -> String
+screenLayoutCmd l = "bash ~/.screenlayout/" ++ (screenLayoutFile l) ++ ".sh"
+
+changeScreenLayout :: ScreenLayout -> X ()
+changeScreenLayout l = do
+  let file = screenLayoutFile l
+  spawn $ "cp ~/.screenlayout/" ++ file ++ ".sh ~/.screenlayout/default.sh"
+  return ()
+
+applyScreenLayout :: ScreenLayout -> X ()
+applyScreenLayout l = do
+  let cmd = screenLayoutCmd l
+  spawn cmd
+  return ()
+
+defaultScreenLayout :: ScreenLayout
+defaultScreenLayout = DefaultScreenLayout
+
 -------------------------------------------------
 ----------------- Variables ---------------------
 -------------------------------------------------
@@ -413,18 +445,21 @@ tsSystem =
    ]
 tsCommands =
    [ Node (TS.TSNode "Nix flake config" "Open dotfiles flake.nix in Emacs" (spawn "emacsclient -c -a emacs -e '(find-file \"~/Repos/dotfiles/flake.nix\")'")) []
-   , Node (TS.TSNode "Pomodoro start" "Run pomodoro timer in bar" (spawn "touch ~/.cache/pomodoro_session")) []
-   , Node (TS.TSNode "Close all dzen" "Kill broken dzen" (spawn "killall dzen2")) []
-   , Node (TS.TSNode "Pacman update" "Get updates from pacman" (termSpawn termite "sudo pacman -Syyu")) []
-   , Node (TS.TSNode "AUR update" "Get updates from AUR" (termSpawn termite "yay -Syyu")) []
    , Node (TS.TSNode "+ Pass" "Pass commands" (return ()))
      [ Node (TS.TSNode "Push" "Push to remote" $ gitCmd "push" ["origin", "github", "gitlab"]) []
      , Node (TS.TSNode "Pull" "Pull from remote" $ gitCmd "pull" ["origin"]) []
      ]
+   , Node (TS.TSNode "Restart XMonad" "" (spawn "xmonad --restart")) []
+   , Node (TS.TSNode "+ Screen Layouts" "" (return ())) $ map screenLayoutNode
+     [ SingleScreen
+     , SamsungRight
+     ]
    ]
-  where gitCmd s h =
-          (termSpawn tempAlacrittyQuake $ wrapBash $ (++ "; sleep 1")
-            $ intercalate "; " $ map (\ x -> "echo " ++ x ++ "; pass git " ++ s ++  " " ++ x ++ " master") h)
+  where
+    gitCmd s h =
+      (termSpawn tempAlacrittyQuake $ wrapBash $ (++ "; sleep 1")
+        $ intercalate "; " $ map (\ x -> "echo " ++ x ++ "; pass git " ++ s ++  " " ++ x ++ " master") h)
+    screenLayoutNode l = Node (TS.TSNode (screenLayoutDescription l) "" (changeScreenLayout l >> spawn "xmonad --restart")) []
   
 tsLayout =
    [ Node (TS.TSNode "Tile" "Make Window Tiled" (withFocused $ windows . W.sink)) []
@@ -442,7 +477,7 @@ tsTools =
   , Node (TS.TSNode "Blueman" "Bluetooth manager" (spawn "blueman-manager")) []
   , Node (TS.TSNode "PulseMixer" "Pulse Audio Mixer" (termSpawn termite "pulsemixer")) []
   , Node (TS.TSNode "Syncthing GUI" "Open Syncthing GUI in browser" (spawn "xdg-open 'https://localhost:8384'")) []
-  , Node (TS.TSNode "Main Workflow 🤘" "Run Brace, Telegram on appropriate workspaces"
+  , Node (TS.TSNode "Main Workflow" "Run Brace, Telegram on appropriate workspaces"
           (do
               spawnOn (myWorkspacesClickable !! 9) "telegram-desktop"
               spawnOn (myWorkspacesClickable !! 8) "brave"
@@ -738,7 +773,8 @@ myEventHook = serverModeEventHook' (return myCommands)
           <+> docksEventHook
 
 myStartupHook = do
-          spawnOnce "run_conky"
+          applyScreenLayout defaultScreenLayout
+          spawnOnce "killall -9 conky; run_conky"
           spawn     "killall rust-blocks; rust-blocks &"
           spawn     "nitrogen --restore"
           setWMName "LG3D"

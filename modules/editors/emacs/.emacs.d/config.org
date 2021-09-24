@@ -190,6 +190,11 @@ Highlight lines chaned according to ~git~
   :config
   (global-diff-hl-mode)) 
 #+END_SRC
+#+begin_src emacs-lisp
+(use-package minimap
+  :custom
+  (minimap-window-location "right")) 
+#+end_src
 *** Themes
 ~Doom-modeline~ as modeline
 #+begin_src emacs-lisp
@@ -1082,6 +1087,7 @@ Helper functions for university labs
  "or" 'elfeed
  "op" 'treemacs
  "om" 'mu4e
+ "oi" 'minimap-mode
  "pc" 'projectile-compile-project
  "pf" 'counsel-projectile-find-file
  "pp" 'projectile-switch-project
