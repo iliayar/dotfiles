@@ -663,6 +663,7 @@ Org mode file associations
  '((dot . t)
    (gnuplot . t)
    (org . t)
+   (haskell . t)
    (python . t)
    (js . t)
    (shell . t)
