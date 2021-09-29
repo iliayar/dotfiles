@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: tex long equal
+# key: =^
+# --
+\xlongequal[$1]{$2}$0

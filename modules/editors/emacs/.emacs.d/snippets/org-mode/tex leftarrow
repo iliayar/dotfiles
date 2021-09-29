@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: tex leftarrow
+# key: <-
+# --
+\leftarrow

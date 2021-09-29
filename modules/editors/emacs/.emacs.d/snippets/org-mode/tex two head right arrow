@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: tex two head right arrow 
+# key: ->>
+# --
+\twoheadrightarrow

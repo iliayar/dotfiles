@@ -971,7 +971,7 @@ Mail client
          )))
 #+END_SRC
 
-* Keybindings
+* COMMENT Keybindings
 Evil!
 #+BEGIN_SRC emacs-lisp
 (define-minor-mode my-override-mode
@@ -1074,7 +1074,9 @@ Helper functions for university labs
  "bf" 'counsel-switch-buffer
  "bb" 'ibuffer
  "ca" 'lsp-execute-code-action
- "cc" 'compile
+ "cc" 'counsel-compile
+ "ck" 'kill-compilation
+ "ce" 'counsel-compilation-errors
  "cd" 'kill-compilation-buffer
  "cf" 'counsel-grep-or-swiper
  "cl" 'comment-or-uncomment-region
@@ -1100,6 +1102,7 @@ Helper functions for university labs
  "sr" 'lsp-workspace-restart
  "ss" 'lsp-workspace-shutdown
  "sd" 'lsp-describe-thing-at-point
+ "se" 'lsp-ui-flycheck-list
  "tt" 'treemacs-select-window
  "wd" 'delete-window
  "wk" 'kill-buffer-and-window
