@@ -971,7 +971,7 @@ Mail client
          )))
 #+END_SRC
 
-* COMMENT Keybindings
+* Keybindings
 Evil!
 #+BEGIN_SRC emacs-lisp
 (define-minor-mode my-override-mode
