@@ -29,6 +29,7 @@
     gimp
     zoom-us
     vlc
+    mpv
     (inkscape-with-extensions.override {
       inkscapeExtensions = with inkscape-extensions; [
         textext

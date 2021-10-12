@@ -241,7 +241,8 @@ Colors from pywal
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq ring-bell-function 'ignore)
 (setq case-fold-search t)
-(modify-syntax-entry ?_ "w") 
+(modify-syntax-entry ?_ "w")
+(setq display-line-numbers-type 'relative)
 #+end_src
 ** Keybingings
 Convenient keybindings
@@ -328,7 +329,6 @@ Debugger
   :config
   (require 'dap-chrome)) 
 #+end_src
-
 *** Auto completion
 Use ~company~ for autocompletion. Add snippets to company backends
 #+begin_src emacs-lisp
@@ -536,6 +536,29 @@ Java lsp
 (setq c-default-style "linux")
 (setq compilation-scroll-output 'first-error)
 #+END_SRC
+Compilation windows settings:
+- Enable colors in ~*compilation*~ buffer
+- Make ~*compilation*~ buffer spawn in bottom
+#+begin_src emacs-lisp
+(require 'ansi-color)
+(defun colorize-compilation-buffer ()
+  (toggle-read-only)
+  (ansi-color-apply-on-region compilation-filter-start (point))
+  (toggle-read-only))
+(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+
+(defun my-compilation-hook ()
+  (when (not (get-buffer-window "*compilation*"))
+    (save-selected-window
+      (save-excursion
+        (let* ((w (split-window-vertically)))
+          (select-window w)
+          (switch-to-buffer "*compilation*"))))))
+(add-hook 'compilation-mode-hook 'my-compilation-hook)
+
+(setq compilation-window-height 10)
+#+end_src
+
 ** Org-mode
 theoremes in LaTeX with org syntax
 #+begin_src emacs-lisp
@@ -972,38 +995,6 @@ Mail client
 #+END_SRC
 
 * Keybindings
-Evil!
-#+BEGIN_SRC emacs-lisp
-(define-minor-mode my-override-mode
-  "Overrides all major and minor mode keys" t)
-
-(defvar my-override-map (make-sparse-keymap "my-override-map")
-  "Override all major and minor mode keys")
-
-(add-to-list 'emulation-mode-map-alists
-             `((my-override-mode . ,my-override-map)))
-
-(define-key my-override-map (kbd "<left>")
-  (lambda ()
-    (interactive)
-    (message "Use Vim keys: h for Left")))
-
-(define-key my-override-map (kbd "<right>")
-  (lambda ()
-    (interactive)
-    (message "Use Vim keys: l for Right")))
-
-(define-key my-override-map (kbd "<up>")
-  (lambda ()
-    (interactive)
-    (message "Use Vim keys: k for Up")))
-
-(define-key my-override-map (kbd "<down>")
-  (lambda ()
-    (interactive)
-    (message "Use Vim keys: j for Down")))
-(evil-make-intercept-map my-override-map) 
-#+END_SRC
 #+begin_src emacs-lisp
 (general-define-key
  :keymaps 'company-active-map
@@ -1112,7 +1103,9 @@ Helper functions for university labs
 (general-define-key
  :states '(visual)
  :keymaps 'override
- "R"  'evil-multiedit-match-all
+ "R"  'evil-mc-make-all-cursors
+ "C-u" 'evil-mc-undo-last-added-cursor
+ "M-u" 'evil-mc-undo-all-cursors
  )
 
 (general-define-key

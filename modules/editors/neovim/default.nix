@@ -111,26 +111,6 @@
       " FIXME: Why Plug
       map <leader>gs <Plug>(easymotion-sn)
 
-      imap <Left> <Nop>
-      imap <Right> <Nop>
-      imap <Up> <Nop>
-      imap <Down> <Nop>
-
-      map <Left> <Nop>
-      map <Right> <Nop>
-      map <Up> <Nop>
-      map <Down> <Nop>
-
-      imap <C-Left> <Nop>
-      imap <C-Right> <Nop>
-      imap <C-Up> <Nop>
-      imap <C-Down> <Nop>
-
-      map <C-Left> <Nop>
-      map <C-Right> <Nop>
-      map <C-Up> <Nop>
-      map <C-Down> <Nop>
-
       " Copy to system clipboard whem exit
       autocmd VimLeave * call system("xsel -ib", getreg('+'))
     '';
