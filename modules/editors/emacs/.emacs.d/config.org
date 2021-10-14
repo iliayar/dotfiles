@@ -1106,6 +1106,8 @@ Helper functions for university labs
  "R"  'evil-mc-make-all-cursors
  "C-u" 'evil-mc-undo-last-added-cursor
  "M-u" 'evil-mc-undo-all-cursors
+ "C-h" 'evil-mc-make-cursor-here
+ "C-a" 'evil-mc-make-cursor-in-visual-selection-beg
  )
 
 (general-define-key
