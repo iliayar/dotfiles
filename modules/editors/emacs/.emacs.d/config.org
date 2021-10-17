@@ -131,7 +131,6 @@ Change brakets in evil mode
 #+end_src
 Multicursor
 #+begin_src emacs-lisp
-(use-package evil-multiedit)
 (use-package evil-mc
   :config
   (global-evil-mc-mode 1))
@@ -1055,8 +1054,8 @@ Helper functions for university labs
 (general-define-key
  :states '(normal visual)
  :keymaps 'override
- "gr" 'lsp-ui-peek-find-references
- "gd" 'lsp-ui-peek-find-definitions)
+ "fgx" 'lsp-ui-peek-find-references
+ "fgd" 'lsp-ui-peek-find-definitions)
 (general-define-key
  :states '(normal visual emacs insert treemacs)
  :prefix "SPC"
@@ -1102,12 +1101,9 @@ Helper functions for university labs
 
 (general-define-key
  :states '(visual)
- :keymaps 'override
- "R"  'evil-mc-make-all-cursors
- "C-u" 'evil-mc-undo-last-added-cursor
- "M-u" 'evil-mc-undo-all-cursors
- "C-h" 'evil-mc-make-cursor-here
- "C-a" 'evil-mc-make-cursor-in-visual-selection-beg
+ :keymap 'evil-mc-key-map
+ "A" 'evil-mc-make-cursor-in-visual-selection-end
+ "I" 'evil-mc-make-cursor-in-visual-selection-beg
  )
 
 (general-define-key

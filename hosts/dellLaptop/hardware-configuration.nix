@@ -12,7 +12,6 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ pkgs.systec-can ];
-
   hardware.firmware = [ pkgs.systec-can ];
 
   fileSystems."/" =
