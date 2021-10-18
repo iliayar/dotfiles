@@ -335,13 +335,17 @@
         "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "narHash": "sha256-yAVHlSuZewPcX/QEvKYZvE6OahK7bbmwZIRx3FMEdzQ=",
-        "path": "./modules/secrets",
-        "type": "path"
+        "lastModified": 1630514686,
+        "narHash": "sha256-mNf6ZVLRzf8+dSAI29o5ng4yV0v9u2VN4njbDg0ikD4=",
+        "ref": "master",
+        "rev": "2e63908c7854849775ffd682b4528d42e94e601c",
+        "revCount": 8,
+        "type": "git",
+        "url": "ssh://git@github.com/iliayar/dotfiles-secrets.git"
       },
       "original": {
-        "path": "./modules/secrets",
-        "type": "path"
+        "type": "git",
+        "url": "ssh://git@github.com/iliayar/dotfiles-secrets.git"
       }
     },
     "systec-can": {

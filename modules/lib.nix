@@ -15,25 +15,32 @@ rec {
       hexToDec."${(elemAt l 0)}" * 16 + hexToDec."${elemAt l 1}";
   strToColor = s:
     let
-      s = pkgs.lib.toLower s;
-      l = matchColor s;
+      ns = pkgs.lib.toLower s;
+      l = matchColor ns;
     in mapAttrs (_: s: hex2ToDec s) {
       r = elemAt l 0;
       g = elemAt l 1;
       b = elemAt l 2;
     };
+  decToHex = [ "0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "A" "B" "C" "D" "E" "F" ];
+  mod = base: int: base - (int * (builtins.div base int));
+  decToHex2 = n:
+    let
+      hi = builtins.div n 16;
+      lo = mod n 16;
+    in "${elemAt decToHex hi}${elemAt decToHex lo}";
 
   writePython3Bin = name: deps: text:
     let
       python = pkgs.python39.withPackages deps;
     in
-    pkgs.writeTextFile {
-      name = name;
-      executable = true;
-      destination = "/bin/${name}";
-      text = ''
+      pkgs.writeTextFile {
+        name = name;
+        executable = true;
+        destination = "/bin/${name}";
+        text = ''
       #!${python}/bin/python
       ${text}
       '';
-    };
+      };
 }

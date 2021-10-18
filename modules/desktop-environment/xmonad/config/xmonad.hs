@@ -217,7 +217,6 @@ tempAlacritty = Alacritty (Just "temp-term") Nothing False []
 
 tempURxvt   = URxvt (Just "temp-term") False []
 
-wrapBash c = "bash -c 'source ~/.bashrc; " ++ c ++ "'"
 wrapZsh c = "zsh -c 'source ~/.zshrc; " ++ c ++ "'"
 
 
@@ -356,7 +355,7 @@ myAppGrid = [ ("Emacs", "emacsclient -c -a emacs")
 myScratchPads :: [NamedScratchpad]
 myScratchPads = [ termAppClass alacrittyScratchpad "terminal" Nothing manageQuake
                 , NS "notes" spawnNotes findNotes manageNotes
-                , termAppClass alacrittyScratchpad "weather" (Just $ wrapBash "curl wttr.in; cat") manageWeather
+                , termAppClass alacrittyScratchpad "weather" (Just $ wrapZsh "curl wttr.in; cat") manageWeather
                 , termAppClass alacrittyScratchpad "ipython" (Just "ipython") manageQuake
                 , termAppClass alacrittyScratchpad "ghci" (Just "ghci") manageQuake
                 , termAppClass alacrittyScratchpad "spotify" (Just "spt") manageNotes
@@ -457,7 +456,7 @@ tsCommands =
    ]
   where
     gitCmd s h =
-      (termSpawn tempAlacrittyQuake $ wrapBash $ (++ "; sleep 1")
+      (termSpawn tempAlacrittyQuake $ wrapZsh $ (++ "; sleep 1")
         $ intercalate "; " $ map (\ x -> "echo " ++ x ++ "; pass git " ++ s ++  " " ++ x ++ " master") h)
     screenLayoutNode l = Node (TS.TSNode (screenLayoutDescription l) "" (changeScreenLayout l >> spawn "xmonad --restart")) []
   
@@ -517,10 +516,10 @@ myKeys = \conf -> let
   prefix p m d = (p, withDzenKeymapsPipe d m $ createSubmap m,
                   "+ " ++ d ++ "\n" ++ getHelp m)
   dzenAllBindings = withDzenKeymapsPipe "Keybindings" keymap $ createSubmap []
-  restartRecompile = wrapBash $ (++" || (echo \x1b[31mFailed\x1b[m; killall xmessage; echo Press Enter; read)") $ wrap "(" ")" $ intercalate " && "
+  restartRecompile = wrapZsh $ (++" || (echo \"\x1b[31mFailed\x1b[m\"; echo Press Enter; read)") $ wrap "(" ")" $ intercalate " && "
     [ "home-manager switch -j 8"
     , "xmonad --restart"
-    , "echo \x1b[32mSucceed\x1b[m"
+    , "echo \"\x1b[32mSucceed\x1b[m\""
     , "sleep 1"
     ]
   keymap =
@@ -650,7 +649,7 @@ myKeys = \conf -> let
                       ]
       withFixingClipboard f = do
         f
-        spawn $ wrapBash "xclip -o -selection primary | xclip -selection clipboard"
+        spawn $ wrapZsh "xclip -o -selection primary | xclip -selection clipboard"
         return()
 
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
