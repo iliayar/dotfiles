@@ -57,37 +57,37 @@ impl Notification {
     }
 
     pub fn body<T: AsRef<str>>(&mut self, body: T) -> &mut Self {
-        self.body.insert(body.as_ref().to_owned());
+        self.body = Some(body.as_ref().to_owned());
 	self
     }
 
     pub fn appname<T: AsRef<str>>(&mut self, app: T) -> &mut Self {
-        self.app.insert(app.as_ref().to_owned());
+        self.app = Some(app.as_ref().to_owned());
 	self
     }
 
     pub fn urgency(&mut self, urgency: u32) -> &mut Self {
-        self.urgency.insert(urgency);
+        self.urgency = Some(urgency);
 	self
     }
 
     pub fn timeout(&mut self, timeout: Duration) -> &mut Self {
-        self.timeout.insert(timeout);
+        self.timeout = Some(timeout);
 	self
     }
 
     pub fn icon<T: AsRef<str>>(&mut self, icon: T) -> &mut Self {
-        self.icon.insert(icon.as_ref().to_owned());
+        self.icon = Some(icon.as_ref().to_owned());
 	self
     }
 
     pub fn raw_icon<T: AsRef<str>>(&mut self, raw_icon: T) -> &mut Self {
-        self.raw_icon.insert(raw_icon.as_ref().to_owned());
+        self.raw_icon = Some(raw_icon.as_ref().to_owned());
 	self
     }
 
     pub fn id(&mut self, id: u32) -> &mut Self {
-	self.replace_id.insert(id);
+	self.replace_id = Some(id);
 	self
     }
 
@@ -186,7 +186,8 @@ impl<'a> NotificationHandler {
 	}
 	let mut id_str = String::new();
 	self.reader.read_line(&mut id_str).await.ok();
-	*self.id.insert(id_str.trim().parse().unwrap())
+	self.id = Some(id_str.trim().parse().unwrap());
+	self.id.unwrap()
     }
 
     pub async fn action(mut self) -> Option<String> {
@@ -241,17 +242,17 @@ impl ColorBuilder {
     }
 
     pub fn font<T: AsRef<str>>(&mut self, font: T) -> &mut ColorBuilder {
-	self.font.insert(font.as_ref().to_owned());
+	self.font = Some(font.as_ref().to_owned());
 	self
     } 
 
     pub fn bg(&mut self, color: Color) -> &mut ColorBuilder {
-	self.background.insert(color);
+	self.background = Some(color);
 	self
     } 
 
     pub fn fg(&mut self, color: Color) -> &mut ColorBuilder {
-	self.foreground.insert(color);
+	self.foreground = Some(color);
 	self
     } 
 
