@@ -25,7 +25,7 @@
       flake = false;
     };
 
-    secrets.url = "path:./modules/secrets";
+    secrets.url = "git+ssh://git@github.com/iliayar/dotfiles-secrets.git";
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
 

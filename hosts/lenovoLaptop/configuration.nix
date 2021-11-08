@@ -9,8 +9,12 @@
 
   boot.supportedFilesystems = [ "ntfs" ];
 
-  boot.loader.systemd-boot.enable = true;
+  boot.loader.grub.enable = true;
+  boot.loader.grub.version = 2;
+  boot.loader.grub.device = "nodev";
+  boot.loader.grub.efiSupport = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.efi.efiSysMountPoint = "/boot/";
 
   time.timeZone = "Europe/Moscow";
 
@@ -50,30 +54,36 @@
     ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", MODE="0666", RUN+="${pkgs.coreutils}/bin/chmod a+w /sys/class/backlight/%k/brightness"
   '';
 
+  virtualisation.virtualbox.host.enable = true;
+  virtualisation.virtualbox.host.enableExtensionPack = true;
+  users.extraGroups.vboxusers.members = [ "iliayar" ];
+
   services.xserver = {
     enable = true;
 
     windowManager.xmonad.enable = true;
 
-    displayManager.defaultSession = "none+xmonad";
-    displayManager.lightdm.greeters.mini = {
-      enable = true;
-      user = "iliayar";
-      extraConfig = ''
-                [greeter]
-                show-password-label = false
-                password-alignment = left
-                [greeter-theme]
-                background-image = "${wallpapers}/HtmoocM.jpg"
-      '';
-    };
+    displayManager.gdm.enable = true;
+    desktopManager.gnome.enable = true;
+    # displayManager.defaultSession = "none+xmonad";
+    # displayManager.lightdm.greeters.mini = {
+      # enable = true;
+      # user = "iliayar";
+      # extraConfig = ''
+                # [greeter]
+                # show-password-label = false
+                # password-alignment = left
+                # [greeter-theme]
+                # background-image = "${wallpapers}/HtmoocM.jpg"
+      # '';
+    # };
 
     displayManager.sessionCommands = ''
       ${pkgs.xlibs.xsetroot}/bin/xsetroot -xcf ${pkgs.vanilla-dmz}/share/icons/Vanilla-DMZ/cursors/left_ptr 16
     '';
 
     synaptics = {
-      enable = true;
+      enable = false;
       tapButtons = false;
       vertTwoFingerScroll = true;
       horizTwoFingerScroll = true;
@@ -89,7 +99,7 @@
   }; 
 
   services.tlp = {
-    enable = true;
+    enable = false;
   };
 
   services.blueman.enable = true;
