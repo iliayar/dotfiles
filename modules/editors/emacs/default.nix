@@ -106,6 +106,7 @@
       lsp-pyright
       dap-mode
       minimap
+      bison-mode
 
       org-roam-ui
       wakatime-mode

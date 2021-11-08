@@ -9,6 +9,7 @@
     fade = true;
     fadeDelta = 5;
     inactiveDim = "0.2";
+    vSync = true;
     extraOptions = ''
                  use-ewmh-active-win = true;
 
