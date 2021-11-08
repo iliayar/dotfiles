@@ -1,7 +1,7 @@
 use super::*;
 
 use tokio::process::Command;
-use csv::Reader;
+use csv::ReaderBuilder;
 use serde::{Deserialize, Deserializer};
 use chrono::{DateTime, Local, NaiveDate, NaiveTime, TimeZone};
 
@@ -351,10 +351,13 @@ impl Block for AgendaBlock
 	match elisp(LispFunction::GetAgenda).await {
 	    Ok(data) => {
 		debug!("Data from elisp: {:?}", data);
-		let mut rdr = Reader::from_reader(data.as_bytes());
+		let mut rdr = ReaderBuilder::new()
+		    .has_headers(false)
+		    .from_reader(data.as_bytes());
 		let mut was_status = false;
 		let mut records: Vec<AgendaRecord> = rdr.deserialize::<AgendaRecord>().filter_map(|e| e.ok()).collect();
 		records.sort_by(|a, b| a.date.partial_cmp(&b.date).unwrap_or(std::cmp::Ordering::Less));
+		debug!("Gen records: {:?}", records);
 		for result in records {
 		    debug!("Get record: {:?}", result);
 		    tokio::spawn(check_notify(result.clone()));
@@ -376,7 +379,7 @@ impl Block for AgendaBlock
     }
 
     fn set_fifo(&mut self, fifo: File) {
-	self.fifo.insert(Mutex::new(fifo));
+	self.fifo = Some(Mutex::new(fifo));
     }
 
     async fn command(&self, _cmd: &str) { }

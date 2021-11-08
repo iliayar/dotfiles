@@ -48,7 +48,7 @@ impl Block for VpnBlock
     }
 
     fn set_fifo(&mut self, fifo: File) {
-	self.fifo.insert(Mutex::new(fifo));
+	self.fifo = Some(Mutex::new(fifo));
     }
 
     async fn command(&self, cmd: &str) {

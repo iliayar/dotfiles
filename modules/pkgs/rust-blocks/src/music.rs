@@ -100,9 +100,9 @@ async fn process_playback(msg: Message, fifo: Arc<Mutex<File>>) {
 		    "PlaybackStatus" => {
 			if let Ok(status) = iter.read::<String>() {
 			    if status == "Playing" {
-				playback.insert(PlaybackStatus::Playing);
+				playback = Some(PlaybackStatus::Playing);
 			    } else if status == "Paused" {
-				playback.insert(PlaybackStatus::Paused);
+				playback = Some(PlaybackStatus::Paused);
 			    }
 			}
 
@@ -244,7 +244,7 @@ impl Block for MusicBlock
     }
 
     fn set_fifo(&mut self, fifo: File) {
-	self.fifo.insert(Arc::new(Mutex::new(fifo)));
+	self.fifo = Some(Arc::new(Mutex::new(fifo)));
     }
 
     async fn command(&self, cmd: &str) {

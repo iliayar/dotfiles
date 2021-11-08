@@ -425,6 +425,11 @@ Typescript
 (use-package rjsx-mode)
 #+end_src
 
+Bison, flex
+#+begin_src emacs-lisp
+(use-package bison-mode) 
+#+end_src
+
 Nix, and completion
 #+begin_src emacs-lisp
 (use-package nix-mode
@@ -470,7 +475,6 @@ In /build/ directory run =cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=YES ..=
 #+BEGIN_SRC emacs-lisp
 (use-package ccls
   :config
-  (setq ccls-executable "/usr/bin/ccls")
   (setq ccls-initialization-options
         '(:compilationDatabaseDirectory "build"
                                         :cache (:directory "build/.ccls-cache"))))
@@ -1054,8 +1058,8 @@ Helper functions for university labs
 (general-define-key
  :states '(normal visual)
  :keymaps 'override
- "fgx" 'lsp-ui-peek-find-references
- "fgd" 'lsp-ui-peek-find-definitions)
+ "gsx" 'lsp-ui-peek-find-references
+ "gsd" 'lsp-ui-peek-find-definitions)
 (general-define-key
  :states '(normal visual emacs insert treemacs)
  :prefix "SPC"

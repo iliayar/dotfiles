@@ -162,7 +162,7 @@ impl Block for UpdatesBlock
     }
 
     fn set_fifo(&mut self, fifo: File) {
-	self.fifo.insert(Mutex::new(fifo));
+	self.fifo = Some(Mutex::new(fifo));
     }
 }
 

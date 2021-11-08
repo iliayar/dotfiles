@@ -43,11 +43,12 @@ let
     font = "Fira Code";
   };
 
-  createMap = f: mapAttrs (_: c: f (lib.strToColor c));
+  createMap = f: mapAttrs (_: c: f (mylib.strToColor c));
   defMap = s: f: th: { "${s}" = createMap f th; };
   withMaps = maps: th: foldl' (a: v: a // v) th (map (m: m th) maps);
+  tsColor = alpha: c: "0x${mylib.decToHex2 alpha}${mylib.decToHex2 c.r}${mylib.decToHex2 c.g}${mylib.decToHex2 c.b}";
 in
 withMaps [
-
-
+  (defMap "ts" (tsColor 255))
+  (defMap "tsTransparent" (tsColor 0))
 ] theme
