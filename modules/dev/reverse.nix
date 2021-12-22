@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
-    ghidra-bin
+    # ghidra-bin
     cutter
     # rz-ghidra
   ];

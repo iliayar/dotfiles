@@ -30,14 +30,14 @@
     zoom-us
     vlc
     mpv
-    (inkscape-with-extensions.override {
-      inkscapeExtensions = with inkscape-extensions; [
-        textext
-        madeeasy
-        plot
-      ];
-    })
-    libreoffice
+    # (inkscape-with-extensions.override {
+      # inkscapeExtensions = with inkscape-extensions; [
+        # textext
+        # madeeasy
+        # plot
+      # ];
+    # })
+    # libreoffice
 
     paprefs
     nitrogen

@@ -3,11 +3,11 @@
 {
   home.packages = with pkgs; [
     # steam
-    steamcmd
+    # steamcmd
     steam-tui
 
-    wineWowPackages.staging
-    (winetricks.override { wine = wineWowPackages.staging; })
+    # wineWowPackages.staging
+    # (winetricks.override { wine = wineWowPackages.staging; })
     samba
     libkrb5
 

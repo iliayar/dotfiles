@@ -28,8 +28,36 @@ in
   time.timeZone = "Europe/Moscow";
 
   hardware.pulseaudio = {
-    enable = true;
+    enable = false;
     package = pkgs.pulseaudioFull;
+  };
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    media-session.config.bluez-monitor.rules = [
+      {
+        matches = [ { "device.name" = "~bluez_card.*"; } ];
+        actions = {
+          "update-props" = {
+            "bluez5.reconnect-profiles" = [ "hfp_hf" "hsp_hs" "a2dp_sink" ];
+            "bluez5.msbc-support" = true;
+            "bluez5.sbc-xq-support" = true;
+          };
+        };
+      }
+      {
+        matches = [
+          { "node.name" = "~bluez_input.*"; }
+          { "node.name" = "~bluez_output.*"; }
+        ];
+        actions = {
+          "node.pause-on-idle" = false;
+        };
+      }
+    ];
   };
   programs.dconf.enable = true;
 
@@ -105,7 +133,7 @@ in
     autoRepeatInterval = 50;
     autoRepeatDelay = 200;
 
-    xkbOptions = "grp:switch,grp:alt_caps_toggle";
+    xkbOptions = "grp:switch,grp:caps_toggle";
     layout = "us,ru";
   }; 
 
@@ -141,12 +169,18 @@ in
     isNormalUser = true;
     home = "/home/iliayar";
     shell = pkgs.zsh;
-    extraGroups = [ "wheel" "networkmanager" "video" ];
+    extraGroups = [ "wheel" "networkmanager" "video" "libvirtd" ];
   };
 
   environment.variables = {
     GDK_SCALE = "1";
   };
+
+  virtualisation.libvirtd.enable = true;
+
+  virtualisation.virtualbox.host.enable = true;
+  users.extraGroups.vboxusers.members = [ "iliayar" ];
+  virtualisation.virtualbox.host.enableExtensionPack = true;
 
   environment.systemPackages = with pkgs; [
     vim
@@ -155,6 +189,7 @@ in
     wget
     pciutils
     nvidia-offload
+    virt-manager
   ];
 
   security.sudo = {

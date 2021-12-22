@@ -110,6 +110,7 @@
 
       org-roam-ui
       wakatime-mode
+      esup
     ];
   };
 

@@ -2,7 +2,7 @@
 {
   home.packages = with pkgs; [
     lci
-    xmind
+    # xmind
     jetbrains.idea-community
   ];
 }
