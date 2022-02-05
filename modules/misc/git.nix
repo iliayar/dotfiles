@@ -16,6 +16,14 @@
       signByDefault = true;
       key = "0x3FE87CB13CB3AC4E";
     };
+
+    aliases = {
+      a = "add";
+      co = "checkout";
+      st = "status";
+      br = "branch";
+      ci = "commit";
+    };
   };
 
 }

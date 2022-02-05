@@ -1,9 +1,9 @@
-{ my-xmonad-contrib, xmonad-newest, ... }@inputs:
+{ xmonad-contrib-newest, xmonad-newest, ... }@inputs:
 final: prev: {
   haskellPackages = prev.haskellPackages.override (old: {
     overrides = final.lib.composeExtensions (old.overrides or (_: _: {}))
       (hfinal: hprev: {
-        xmonad-contrib = my-xmonad-contrib.defaultPackage."x86_64-linux";
+        xmonad-contrib = xmonad-contrib-newest.defaultPackage."x86_64-linux";
         xmonad = xmonad-newest.defaultPackage."x86_64-linux";
       });
   });

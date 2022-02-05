@@ -15,6 +15,9 @@
     zip
     pandoc
     poppler_utils
+
+    ripgrep
+    fd
   ];
 
   services.syncthing.enable = true;

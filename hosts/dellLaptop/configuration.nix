@@ -159,7 +159,9 @@ in
 
   nix = {
     package = pkgs.nixFlakes;
-    trustedUsers = [ "root" ];
+    settings = {
+      trusted-users = [ "root" ];
+    };
     extraOptions = ''
       experimental-features = nix-command flakes
     '';

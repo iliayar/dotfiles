@@ -1,4 +1,4 @@
-{ my-xmonad-contrib, ... }@inputs:
+{ ... }@inputs:
 [
   (import ./overrides.nix inputs)
   (import ./dev.nix inputs)

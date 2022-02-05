@@ -313,7 +313,7 @@ Debugger
   :config
   (require 'dap-chrome)) 
 #+end_src
-*** Auto completion
+*** COMMENT Auto completion
 Use ~company~ for autocompletion. Add snippets to company backends
 #+begin_src emacs-lisp
 (use-package company
@@ -325,6 +325,7 @@ Use ~company~ for autocompletion. Add snippets to company backends
   (setq company-minimum-prefix-length 2)
   (setq company-tooltip-align-annotations t)
   (setq company-auto-commit 'company-auto-commit-p)
+  (setq company-auto-complete nil)
 
   (defun iliayar/company-complete-selection ()
     "Insert the selected candidate or the first if none are selected."

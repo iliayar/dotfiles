@@ -39,8 +39,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    my-xmonad-contrib = {
-      url = "github:iliayar/xmonad-contrib/feature/fallback-fonts";
+    xmonad-contrib-newest = {
+      url = "github:xmonad/xmonad-contrib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -72,7 +72,7 @@
             , secrets
             , emacs-overlay
             , libxft-bgra
-            , my-xmonad-contrib
+            , xmonad-contrib-newest
             , xmonad-newest
             , org-roam-ui
             , picom-jonaburg
@@ -105,7 +105,7 @@
             home-manager
             code-stats-vim
             libxft-bgra
-            my-xmonad-contrib
+            xmonad-contrib-newest
             xmonad-newest
             org-roam-ui
             picom-jonaburg

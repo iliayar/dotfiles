@@ -12,6 +12,7 @@
           x = 3;
           y = 3;
         };
+        opacity = 0.85;
       };
       font = {
         normal = {
@@ -49,7 +50,6 @@
           white = "${themes.brightWhite}";
         };
       };
-      background_opacity = 0.85;
     };
   };
 
