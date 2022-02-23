@@ -18,6 +18,12 @@
 
     ripgrep
     fd
+    bat
+    procs
+    sd
+    du-dust
+    tokei
+    delta
   ];
 
   services.syncthing.enable = true;

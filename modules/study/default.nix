@@ -4,5 +4,8 @@
     lci
     # xmind
     jetbrains.idea-community
+
+    gnumake
+    coq
   ];
 }

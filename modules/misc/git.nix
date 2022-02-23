@@ -24,6 +24,8 @@
       br = "branch";
       ci = "commit";
     };
+
+    delta.enable = true;
   };
 
 }

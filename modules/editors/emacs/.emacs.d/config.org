@@ -260,6 +260,11 @@ Another code traking
 ;;   :config
 ;;   (global-wakatime-mode))  
 #+end_src
+Lama mode
+#+begin_src emacs-lisp
+(require 'lama-mode) 
+#+end_src
+
 Auto parenthesis
 #+begin_src emacs-lisp
 (use-package smartparens
@@ -313,7 +318,7 @@ Debugger
   :config
   (require 'dap-chrome)) 
 #+end_src
-*** COMMENT Auto completion
+*** Auto completion
 Use ~company~ for autocompletion. Add snippets to company backends
 #+begin_src emacs-lisp
 (use-package company
@@ -410,6 +415,13 @@ Typescript
 (use-package typescript-mode)
 (use-package rjsx-mode)
 #+end_src
+
+Coq, ...
+#+begin_src emacs-lisp
+(use-package proof-general)
+(use-package company-coq)
+#+end_src
+
 
 Bison, flex
 #+begin_src emacs-lisp

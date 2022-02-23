@@ -133,7 +133,7 @@ in
     autoRepeatInterval = 50;
     autoRepeatDelay = 200;
 
-    xkbOptions = "grp:switch,grp:caps_toggle";
+    xkbOptions = "grp:switch,grp:caps_toggle,altwin:swap_alt_win";
     layout = "us,ru";
   }; 
 
