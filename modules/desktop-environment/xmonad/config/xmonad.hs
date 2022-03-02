@@ -357,6 +357,7 @@ myScratchPads = [ termAppClass alacrittyScratchpad "terminal" Nothing manageQuak
                 , NS "notes" spawnNotes findNotes manageNotes
                 , termAppClass alacrittyScratchpad "weather" (Just $ wrapZsh "curl wttr.in; cat") manageWeather
                 , termAppClass alacrittyScratchpad "ipython" (Just "ipython") manageQuake
+                , termAppClass alacrittyScratchpad "julia" (Just "julia") manageQuake
                 , termAppClass alacrittyScratchpad "ghci" (Just "ghci") manageQuake
                 , termAppClass alacrittyScratchpad "spotify" (Just "spt") manageNotes
                 , termAppClass alacrittyScratchpad "htop" (Just "htop") manageNotes
@@ -552,6 +553,7 @@ myKeys = \conf -> let
       , ("n", namedScratchpadAction myScratchPads "notes"   , "Notes.org scratchpad")
       , ("w", namedScratchpadAction myScratchPads "weather" , "Weather scratchpad")
       , ("p", namedScratchpadAction myScratchPads "ipython" , "IPython intercative shell")
+      , ("j", namedScratchpadAction myScratchPads "julia"   , "Julia intercative shell")
       , ("g", namedScratchpadAction myScratchPads "ghci"    , "Haskell intercative shell")
       , ("m", namedScratchpadAction myScratchPads "spotify" , "Spotify TUI client")
       , ("h", namedScratchpadAction myScratchPads "htop"    , "System monitoring scratchpad")

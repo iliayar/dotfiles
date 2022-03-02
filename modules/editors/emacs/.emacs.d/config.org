@@ -493,10 +493,18 @@ Python lsp
 emacs ipython notebook
 #+begin_src emacs-lisp
 (use-package ein)
+(use-package jupyter)
 #+end_src
 Lsp for latex
 #+begin_src emacs-lisp
 (use-package lsp-latex)
+#+end_src
+Julia mode
+#+begin_src emacs-lisp
+(use-package julia-mode)
+(use-package lsp-julia
+  :config
+  (setq lsp-julia-default-environment "~/.julia/environments/v1.7"))
 #+end_src
 Rust mode
 #+begin_src emacs-lisp
@@ -691,6 +699,7 @@ Org mode file associations
    (python . t)
    (js . t)
    (shell . t)
+   (julia . t)
    (ipython . t)))
 (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
 (setq org-confirm-babel-evaluate nil)

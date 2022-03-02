@@ -19,7 +19,7 @@ config = defaultConfig {
    -- layout
    , sepChar  = "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "<action=~/.xmonad/xmonadctl 1>" ++ (icon "nix") ++ "</action> | %UnsafeStdinReader% }{ %disku% | %bright% | %default:Master% | %kbd% | %memory% | %multicpu% | %dynnetwork% | %battery% | %multicoretemp% | %date% "
+   , template = "<action=~/.xmonad/xmonadctl 1>" ++ (icon "nix") ++ "</action> | %UnsafeStdinReader% }{ %disku% | %bright% | %pulse:Master% | %kbd% | %memory% | %multicpu% | %dynnetwork% | %battery% | %multicoretemp% | %date% "
 
    -- general behavior
    , lowerOnStart     = True    -- send to bottom of window stack on start
@@ -42,7 +42,7 @@ config = defaultConfig {
                              ] 10
 
         -- Volume
-        , Run $ Volume "default" "Master"
+        , Run $ Volume "pulse" "Master"
                              [ "--template" , "<action=pactl set-sink-mute '@DEFAULT_SINK@' toggle><status> <volume>%</action>"
                              , "--"
                              , "--on"       , afIcon "\xf028"

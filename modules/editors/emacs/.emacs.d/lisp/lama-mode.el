@@ -11,7 +11,7 @@
 
 (eval-and-compile
   (defconst lama-keywords
-    '("if" "else" "for" "let" "import" "func" "public" )))
+    '("after" "array" "at" "before" "box" "elif" "eta" "false" "infix" "infixl" "infixr" "lazy" "sexp" "skip" "str" "syntax" "then" "true" "val" "while" "if" "fi" "else" "for" "let" "import" "var" "fun" "do" "od" "public" "case" "of" "esac" )))
 
 (defconst lama-highlights
   `((,(regexp-opt lama-keywords 'symbols) . font-lock-keyword-face)))

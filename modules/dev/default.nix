@@ -7,6 +7,7 @@
     ./latex.nix
     ./reverse.nix
     ./haskell.nix
+    ./julia.nix
   ];
 
 }

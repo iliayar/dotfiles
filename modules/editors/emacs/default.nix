@@ -114,6 +114,15 @@
 
       proof-general
       company-coq
+
+      jupyter
+
+      julia-mode
+      (lsp-julia.overrideAttrs (old: {
+        patches = [
+          ./lsp-julia.patch
+        ];
+      }))
     ];
   };
 

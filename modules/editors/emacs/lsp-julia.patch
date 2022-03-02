@@ -1,0 +1,12 @@
+diff --git a/lsp-julia.el b/lsp-julia.el
+index 3e87f98..0887129 100644
+--- a/lsp-julia.el
++++ b/lsp-julia.el
+@@ -276,7 +276,6 @@ body."
+   `(,lsp-julia-command
+     ,@lsp-julia-flags
+     ,(concat "-e"
+-             "import Pkg; Pkg.instantiate(); "
+              "using LanguageServer, LanguageServer.SymbolServer;"
+              ;; " Union{Int64, String}(x::String) = x; "
+              " server = LanguageServer.LanguageServerInstance("
