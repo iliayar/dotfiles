@@ -21,7 +21,7 @@
 
   programs.emacs = {
     enable = true;
-    package = pkgs.emacsGcc;
+    package = pkgs.emacsNativeComp;
     overrides = import ./overrides.nix inputs;
     extraPackages = epkgs: with epkgs; [
       use-package
@@ -128,6 +128,7 @@
 
   home.packages = with pkgs; [
     rnix-lsp
+    ccls
   ];
 
   services.emacs = {

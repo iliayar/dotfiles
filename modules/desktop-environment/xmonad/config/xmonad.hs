@@ -610,7 +610,7 @@ myKeys = \conf -> let
     ++
     [("M" ++ m ++ "-" ++ k, screenWorkspace sc >>= flip whenJust (windows . f)
     , d ++ " to screen " ++ (show sc))
-        | (k, sc) <- zip ["[", "]"] [0..]
+        | (k, sc) <- zip ["[", "]"] [1, 0]
         , (f, m, d) <- [ (W.view, ""   , "Switch")
                        , (W.shift, "-S", "Move window")]]
     ++

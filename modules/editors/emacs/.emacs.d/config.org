@@ -218,7 +218,7 @@ Colors from pywal
   (setq doom-themes-treemacs-theme "doom-colors")
   (doom-themes-treemacs-config)
   (doom-themes-org-config)
-  :init (load-theme 'wombat t))
+  :init (load-theme 'doom-ayu-mirage t))
 #+end_src
 *** Settings
 - Visual/behaviour
@@ -492,8 +492,8 @@ Python lsp
 #+end_src
 emacs ipython notebook
 #+begin_src emacs-lisp
-(use-package ein)
-(use-package jupyter)
+;; (use-package ein)
+;; (use-package jupyter)
 #+end_src
 Lsp for latex
 #+begin_src emacs-lisp
@@ -532,7 +532,7 @@ Graphviz
 #+END_SRC
 Ipython for org babel
 #+BEGIN_SRC emacs-lisp
-(use-package ob-ipython)
+;; (use-package ob-ipython)
 #+END_SRC
 Java lsp
 #+BEGIN_SRC emacs-lisp
@@ -581,6 +581,18 @@ Reveal.js for presentations
 ;;   :config
 ;;   (setq org-reveal-root (expand-file-name "~/.local/share/reveal.js-4.1.0")))
 #+END_SRC
+😋 Apply ANSI escape symbols for block output!
+#+begin_src emacs-lisp
+(defun ek/babel-ansi ()
+  (when-let ((beg (org-babel-where-is-src-block-result nil nil)))
+    (save-excursion
+      (goto-char beg)
+      (when (looking-at org-babel-result-regexp)
+        (let ((end (org-babel-result-end))
+              (ansi-color-context-region nil))
+          (ansi-color-apply-on-region beg end))))))
+(add-hook 'org-babel-after-execute-hook 'ek/babel-ansi)
+#+end_src
 Export Org mode to Json
 #+BEGIN_SRC emacs-lisp
 (use-package ox-json)
@@ -700,7 +712,8 @@ Org mode file associations
    (js . t)
    (shell . t)
    (julia . t)
-   (ipython . t)))
+;;   (ipython . t)
+   ))
 (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
 (setq org-confirm-babel-evaluate nil)
 (setq org-src-tab-acts-natively t)
@@ -1155,6 +1168,7 @@ Hydra
 (setq default-family "Fira Code")
 (setq default-height 95)
 (custom-set-faces
+ `(ivy-current-match ((t (:foreground "white smoke" :background "dark orange" :extend t))))
  `(treemacs-root-face ((t (:family ,default-family :height ,default-height))))
  `(treemacs-git-unmodified-face ((t (:family ,default-family :height ,default-height))))
  `(treemacs-git-modified-face ((t (:family ,default-family :height ,default-height))))
@@ -1172,14 +1186,14 @@ Hydra
  `(org-block ((t (:extend t))))
  `(org-block-begin-line ((t (:extend t :overline nil :underline t))))
  `(org-block-end-line ((t (:inherit org-block-begin-line :extend t :overline t :underline nil))))
- `(org-document-title ((t (:foreground "#fd971f" :weight bold :height 1.3))))
+ `(org-document-title ((t (:weight bold :height 1.3))))
  `(org-ellipsis ((t (:foreground "red"))))
- `(org-footnote ((t (:foreground "#fd971f" :weight extra-bold :height 0.7))))
+ `(org-footnote ((t (:weight extra-bold :height 0.7))))
  `(org-latex-and-related ((t (:inherit nil :foreground "tomato" :weight bold))))
  `(org-level-1 ((t (:inherit outline-1 :extend t :underline t :height 1.2))))
  `(org-level-2 ((t (:inherit outline-2 :extend t :height 1.1))))
  `(org-link ((t (:inherit link))))
- `(org-tag ((t (:foreground "#e2c770" :slant italic :weight normal :family "Ubuntu Mono"))))
- `(org-verbatim ((t (:foreground "#b6e63e" :box (:line-width (2 . 2) :color "dim gray" :style released-button)))))
- `(outline-1 ((t (:extend t :foreground "#fb2874" :weight bold)))))
+ `(org-tag ((t (:slant italic :weight normal :family "Ubuntu Mono"))))
+ `(org-verbatim ((t (:box (:line-width (2 . 2) :color "dim gray" :style released-button)))))
+ `(outline-1 ((t (:extend t :weight bold)))))
 #+end_src

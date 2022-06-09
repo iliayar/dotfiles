@@ -6,6 +6,5 @@
     jetbrains.idea-community
 
     gnumake
-    coq
   ];
 }

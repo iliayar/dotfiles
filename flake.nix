@@ -44,10 +44,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    systec-can = {
-      url = "https://www2.systec-electronic.com/fileadmin/Redakteur/Unternehmen/Support/Downloadbereich/Treiber/systec_can-V1.0.3.tar.bz2";
-      flake = false;
-    };
+    # systec-can = {
+      # url = "https://www2.systec-electronic.com/fileadmin/Redakteur/Unternehmen/Support/Downloadbereich/Treiber/systec_can-V1.0.3.tar.bz2";
+      # flake = false;
+    # };
 
     org-roam-ui = {
       url = "github:org-roam/org-roam-ui";

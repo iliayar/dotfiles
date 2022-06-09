@@ -11,8 +11,12 @@
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
-  boot.extraModulePackages = [ pkgs.systec-can ];
-  hardware.firmware = [ pkgs.systec-can ];
+  boot.extraModulePackages = [ 
+    # pkgs.systec-can 
+  ];
+  hardware.firmware = [ 
+    # pkgs.systec-can 
+  ];
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/8ffa31d5-c06a-4c8b-af3f-8f5c635724b3";

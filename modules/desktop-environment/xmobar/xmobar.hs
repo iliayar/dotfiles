@@ -19,7 +19,7 @@ config = defaultConfig {
    -- layout
    , sepChar  = "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "<action=~/.xmonad/xmonadctl 1>" ++ (icon "nix") ++ "</action> | %UnsafeStdinReader% }{ %disku% | %bright% | %pulse:Master% | %kbd% | %memory% | %multicpu% | %dynnetwork% | %battery% | %multicoretemp% | %date% "
+   , template = "<action=~/.xmonad/xmonadctl 1>" ++ (icon "nix") ++ "</action> | %UnsafeStdinReader% }{ %disku% | %bright% | Volume | %kbd% | %memory% | %multicpu% | %dynnetwork% | %battery% | %multicoretemp% | %date% "
 
    -- general behavior
    , lowerOnStart     = True    -- send to bottom of window stack on start
@@ -118,7 +118,7 @@ config = defaultConfig {
         --   (%F = y-m-d date, %a = day of week, %T = h:m:s time)
         , Run $ Date           (afIcon "\xf783" ++ " %F (%a) %T") "date" 10
 
-        -- keyboard layout indicator
+        -- -- keyboard layout indicator
         , Run $ Kbd          [ ("ru"         , setColor Theme.color1 "RU")
                              , ("us"         , setColor Theme.color2 "US")
                              ]
