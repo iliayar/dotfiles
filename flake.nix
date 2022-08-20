@@ -63,6 +63,11 @@
       url = "github:d4nj1/TLPUI";
       flake = false;
     };
+
+    rust-blocks = {
+      url = github:iliayar/rust-blocks;
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self
@@ -79,6 +84,7 @@
             , wakatime-cli
             , zsh-wakatime
             , tlpui-src
+            , rust-blocks
             , ...
             }
     @inputs: 
@@ -87,7 +93,7 @@
 
         overlays = [
           emacs-overlay.overlay
-        ] ++ (import ./modules/overlays inputs);
+        ] ++ (import ./modules/overlays (inputs // { inherit system; }));
 
         nixpkgs-config = {
           inherit system overlays;

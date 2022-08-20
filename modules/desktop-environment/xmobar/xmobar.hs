@@ -19,7 +19,7 @@ config = defaultConfig {
    -- layout
    , sepChar  = "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "<action=~/.xmonad/xmonadctl 1>" ++ (icon "nix") ++ "</action> | %UnsafeStdinReader% }{ %disku% | %bright% | Volume | %kbd% | %memory% | %multicpu% | %dynnetwork% | %battery% | %multicoretemp% | %date% "
+   , template = "<action=~/.xmonad/xmonadctl 1>" ++ (icon "nix") ++ "</action> | %UnsafeStdinReader% }{ %disku% | %bright% | %sound% | %kbd% | %memory% | %multicpu% | %dynnetwork% | %battery% | %multicoretemp% | %date% "
 
    -- general behavior
    , lowerOnStart     = True    -- send to bottom of window stack on start
@@ -42,14 +42,15 @@ config = defaultConfig {
                              ] 10
 
         -- Volume
-        , Run $ Volume "pulse" "Master"
-                             [ "--template" , "<action=pactl set-sink-mute '@DEFAULT_SINK@' toggle><status> <volume>%</action>"
-                             , "--"
-                             , "--on"       , afIcon "\xf028"
-                             , "--onc"      , Theme.color2
-                             , "--off"      , afIcon "\xf6a9"
-                             , "--offc"     , Theme.color1
-                             ] 10
+        , Run $ PipeReader "/tmp/sound.io" "sound"
+        -- , Run $ Volume "default" "Master"
+        --                      [ "--template" , "<action=pactl set-sink-mute '@DEFAULT_SINK@' toggle><status> <volume>%</action>"
+        --                      , "--"
+        --                      , "--on"       , afIcon "\xf028"
+        --                      , "--onc"      , Theme.color2
+        --                      , "--off"      , afIcon "\xf6a9"
+        --                      , "--offc"     , Theme.color1
+        --                      ] 10
 
         -- network activity monitor (dynamic interface resolution)
         , Run $ DynNetwork   [ "--template" , "<dev>: " ++ (afIcon "\xf063") ++ "<rx>kB/s " ++ (afIcon "\xf062") ++ "<tx>kB/s"

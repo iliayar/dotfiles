@@ -29,7 +29,7 @@ import           XMonad
 import           XMonad.Hooks.DynamicLog (xmobarPP, dynamicLogWithPP, xmobarColor, PP(..), wrap, shorten)
 import           XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import           XMonad.Hooks.ManageDocks (avoidStruts, manageDocks, docksEventHook, ToggleStruts(..))
-import           XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat)
+import           XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, (^?), (~?))
 import           XMonad.Hooks.SetWMName
 import           XMonad.Hooks.ServerMode
 
@@ -528,6 +528,7 @@ myKeys = \conf -> let
     , ("M-\\"        , spawn "xkb-switch -n"                     , "Switch keyboard layout")
     , ("M-,"         , sendMessage (IncMasterN 1)                , "Increase Master N")
     , ("M-a"         , sendMessage MirrorShrink                  , "Mirror shrink")
+    , ("M-e"         , spawn "emacsclient -F '(quote (name . \"emacs-everywhere\"))' --eval '(emacs-everywhere)'", "Emacs everywhere")
     , ("M-z"         , sendMessage MirrorExpand                  , "Mirror expand")
     , ("M-h"         , sendMessage Shrink                        , "Shrink window")
     , ("M-j"         , windows W.focusDown                       , "Prev window")
@@ -610,7 +611,7 @@ myKeys = \conf -> let
     ++
     [("M" ++ m ++ "-" ++ k, screenWorkspace sc >>= flip whenJust (windows . f)
     , d ++ " to screen " ++ (show sc))
-        | (k, sc) <- zip ["[", "]"] [1, 0]
+        | (k, sc) <- zip ["'", "[", "]"] [2, 1, 0]
         , (f, m, d) <- [ (W.view, ""   , "Switch")
                        , (W.shift, "-S", "Move window")]]
     ++
@@ -751,6 +752,7 @@ myManageHook = composeAll
   , resource  =? "stalonetray"         --> doIgnore
   , title     =? "xmessage"            --> doFloat
   , title     =? "Bluetooth Devices"   --> doFloat
+  , title     =? "emacs-everywhere"    --> doFloat
   , title     =? "temp-term"           --> (customFloating $ W.RationalRect 0.05 0.05 0.9 0.9)
   , title     =? "temp-term-quake"     --> (customFloating $ W.RationalRect 0 0 1 0.5)
   , title     =? "neofetch-term"       --> (customFloating $ W.RationalRect 0.5 0.05 0.45 0.45)

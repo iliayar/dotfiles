@@ -4,11 +4,14 @@
     "BROWSER" = "brave";
   };
 
-  virtualisation.docker.enable = true;
-  users.users."iliayar".extraGroups = [ "docker" ];
+  virtualisation.podman = {
+    enable = true;
+    dockerCompat = true;
+  };
+  users.users."iliayar".extraGroups = [ "dialout" ];
 
   environment.systemPackages = with pkgs; [
-    docker-compose
+    # docker-compose
   ];
 
   # networking.bonds."bond0" = {

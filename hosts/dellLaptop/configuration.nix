@@ -192,6 +192,9 @@ in
     pciutils
     nvidia-offload
     virt-manager
+
+    config.boot.kernelPackages.vm-tools
+    config.boot.kernelPackages.perf
   ];
 
   security.sudo = {

@@ -1,4 +1,4 @@
-{ libxft-bgra, picom-jonaburg, wakatime-cli, tlpui-src, ... }@inputs:
+{ system, libxft-bgra, picom-jonaburg, wakatime-cli, tlpui-src, rust-blocks, ... }@inputs:
 
 final: prev: {
   libxft-bgra = prev.stdenv.mkDerivation {
@@ -12,7 +12,7 @@ final: prev: {
     src = picom-jonaburg;
   });
 
-  rust-blocks = import ../pkgs/rust-blocks { pkgs = prev; };
+  rust-blocks = rust-blocks.defaultPackage.${system};
 
   # wakatime-cli = prev.buildGoModule { 
   #   pname = "wakatime-cli";

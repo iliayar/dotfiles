@@ -454,7 +454,8 @@ Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/
           ".git"
           ))
   (setq lsp-log-io nil)
-  (setq lsp-idle-delay 0.500))
+  (setq lsp-idle-delay 0.500)
+  (setq lsp-lens-enable nil))
 (use-package lsp-ui)
 #+end_src
 Syntax checking and lsp related errors/warnings. Posfrmae stil sucks
@@ -1016,6 +1017,13 @@ Mail client
                   ))
          )))
 #+END_SRC
+
+
+Emacs everywher!
+#+begin_src emacs-lisp
+(use-package emacs-everywhere)
+#+end_src
+
 * Keybindings
 #+begin_src emacs-lisp
 (general-define-key

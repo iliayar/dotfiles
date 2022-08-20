@@ -38,6 +38,7 @@
       # ];
     # })
     # libreoffice
+    deluge
 
     paprefs
     nitrogen

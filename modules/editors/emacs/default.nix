@@ -87,7 +87,7 @@
       yaml-mode
       kotlin-mode
       graphviz-dot-mode
-      ob-ipython
+      # ob-ipython
       lsp-java
       org-special-block-extras
       ox-reveal
@@ -115,7 +115,7 @@
       proof-general
       company-coq
 
-      jupyter
+      # jupyter
 
       julia-mode
       (lsp-julia.overrideAttrs (old: {
@@ -123,12 +123,16 @@
           ./lsp-julia.patch
         ];
       }))
+
+      emacs-everywhere
     ];
   };
 
   home.packages = with pkgs; [
     rnix-lsp
     ccls
+    xdotool
+    xorg.xwininfo
   ];
 
   services.emacs = {

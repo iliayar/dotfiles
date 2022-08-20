@@ -25,6 +25,10 @@
       ci = "commit";
     };
 
+    ignores = [
+      "*.~undo-tree~"
+    ];
+
     delta.enable = true;
   };
 
