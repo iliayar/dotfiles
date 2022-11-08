@@ -5,6 +5,8 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    nur.url = github:nix-community/NUR;
+
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -44,11 +46,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # systec-can = {
-      # url = "https://www2.systec-electronic.com/fileadmin/Redakteur/Unternehmen/Support/Downloadbereich/Treiber/systec_can-V1.0.3.tar.bz2";
-      # flake = false;
-    # };
-
     org-roam-ui = {
       url = "github:org-roam/org-roam-ui";
       flake = false;
@@ -85,6 +82,7 @@
             , zsh-wakatime
             , tlpui-src
             , rust-blocks
+            , nur
             , ...
             }
     @inputs: 
@@ -106,6 +104,8 @@
 
         wallpapers = import ./modules/themes/wallpapers.nix { inherit pkgs mylib; };
 
+        themes = import ./modules/themes { inherit mylib; };
+
         specialArgs = {
           inherit
             home-manager
@@ -120,48 +120,39 @@
             wallpapers
             mylib
             tlpui-src
+            system
           ;
 
           secrets = import secrets;
-          themes = import ./modules/themes { inherit mylib; };
+          themes = themes;
         };
-
 
         homeConfigurations = {
           iliayar = home-manager.lib.homeManagerConfiguration rec {
-            inherit system;
+            inherit pkgs;
             extraSpecialArgs = specialArgs // {
               inherit pkgs system;
             };
-            homeDirectory = "/home/iliayar";
-            username = "iliayar";
-            configuration = { pkgs, config, ... }: {
-              imports = [
-                ./hosts/dellLaptop/home.nix
-              ];
-              nixpkgs = nixpkgs-config;
-            };
+            modules = [
+              ./hosts/dellLaptop/home.nix
+            ];
           };
 
           wsl = home-manager.lib.homeManagerConfiguration rec {
-            inherit system;
+            inherit pkgs;
             extraSpecialArgs = specialArgs // {
               inherit pkgs system;
             };
-            homeDirectory = "/home/iliayar";
-            username = "iliayar";
-            configuration = { pkgs, config, ... }: {
-              imports = [
-                ./hosts/wsl/home.nix
-              ];
-              nixpkgs = nixpkgs-config;
-            };
+            modules = [
+              ./hosts/wsl/home.nix
+            ];
           };
         };
 
         dellLaptop = 
           let
             modules = [
+              nur.nixosModules.nur
               ./hosts/dellLaptop/configuration.nix
               ./cachix.nix
               {

@@ -123,7 +123,7 @@ config = defaultConfig {
         , Run $ Kbd          [ ("ru"         , setColor Theme.color1 "RU")
                              , ("us"         , setColor Theme.color2 "US")
                              ]
-        , Run $ DiskU [("/", "/ <usedp>%")]
+        , Run $ DiskU [("/home", "HDD <usedp>%"), ("/", "SSD <usedp>%")]
                     [ "--Low"      , "30"
                     , "--High"     , "60"
                     , "--low"      , Theme.color2

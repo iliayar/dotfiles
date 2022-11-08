@@ -25,6 +25,9 @@ in
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/";
 
+  boot.kernelPackages = pkgs.linuxPackages_5_15;
+  boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
+
   time.timeZone = "Europe/Moscow";
 
   hardware.pulseaudio = {
@@ -63,7 +66,6 @@ in
 
   networking = {
     hostName = "NixLaptop";
-    # useDHCP = false;
     interfaces = {
       enp60s0.useDHCP = true;
       wlp61s0.useDHCP = true;
@@ -137,25 +139,17 @@ in
     layout = "us,ru";
   }; 
 
-  services.tlp = {
-    enable = false;
-    settings = {
-      "CPU_SCALING_GOVERNOR_ON_AC" = "performance";
-    };
-  };
-
   services.blueman.enable = true;
   hardware.bluetooth.enable = true;
 
   hardware.nvidia.prime = {
-    # offload.enable = false;
     sync.enable = true;
     intelBusId = "PCI:0:2:0";
     nvidiaBusId = "PCI:1:0:0";
   };
+  hardware.opengl.enable = true;
+  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
   hardware.nvidia.modesetting.enable = true;
-  # hardware.video.hidpi.enable = true;
-
 
   nix = {
     package = pkgs.nixFlakes;
@@ -210,7 +204,7 @@ in
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  # system.stateVersion = "21.05"; # Did you read the comment?
+  system.stateVersion = "22.05"; # Did you read the comment?
 
 }
 

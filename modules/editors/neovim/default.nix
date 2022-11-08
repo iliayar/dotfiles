@@ -23,11 +23,8 @@
       rainbow_parentheses
       nerdcommenter
       gruvbox
-      # wal
       vim-easymotion
       # rust
-
-      vim-wakatime
 
       (pkgs.vimUtils.buildVimPluginFrom2Nix { name = "code-stats-vim"; src = code-stats-vim; })
     ];
@@ -58,7 +55,6 @@
       filetype plugin on
 
       let g:codestats_api_key = "${secrets.code-stats-api-key}"
-      let g:wakatime_OverrideCommandPrefix = '${pkgs.wakatime-cli}/bin/wakatime'
 
       " Airline code::stats
       let g:airline_section_x = airline#section#create_right(['tagbar', 'filetype', '%{CodeStatsXp()}'])

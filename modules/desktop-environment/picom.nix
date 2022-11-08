@@ -5,24 +5,30 @@
     enable = true;
     package = pkgs.picom-jonaburg;
     experimentalBackends = true;
-    blur = true;
-    fade = true;
-    fadeDelta = 5;
-    inactiveDim = "0.2";
     vSync = true;
-    extraOptions = ''
-                 use-ewmh-active-win = true;
+    settings = {
+      blur = true;
+      fade = true;
+      fade-delta = 5;
+      blur-background-fixed = false;
+      blur-background-exclude = [
+       "class_g = 'Peek'"
+       "class_g = 'slop'"
+       "class_g = 'conky'"
+      ];
 
-                 detect-rounded-corners = true;
-                 corner-radius=8;
-                 round-borders=8;
+      inactive-dim = 0.2;
+      # use-ewmh-active-win = true;
 
-                 transition-length=300;
+      transition-length = 300;
 
-                 blur-method = "dual_kawase";
-                 blur-strength = 5;
-    '';
-    opacityRule = [
+      blur-method = "dual_kawase";
+      blur-strength = 5;
+
+      backend = "glx";
+    };
+
+    opacityRules = [
       "80:class_g = 'xmobar'"
       "80:class_g = 'Pinentry'"
       "80:class_g = 'Steam'"
@@ -34,10 +40,6 @@
       "90:class_g = 'TelegramDesktop'"
       "90:class_g = 'cutter'"
       "90:class_g = 'jetbrains-idea'"
-    ];
-    blurExclude = [
-      "class_g = 'Peek'"
-      "class_g = 'slop'"
     ];
   };
 

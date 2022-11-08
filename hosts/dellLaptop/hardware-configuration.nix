@@ -19,28 +19,24 @@
   ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/8ffa31d5-c06a-4c8b-af3f-8f5c635724b3";
+    { device = "/dev/disk/by-uuid/a2efc398-ec8d-4ba4-a599-fbdff9b17e03";
       fsType = "ext4";
       neededForBoot = true;
     };
 
-  boot.initrd.luks.devices."cryptroot" =
-    {
-      device = "/dev/disk/by-uuid/a9cee7c3-ba8e-42d0-ac8d-24ee23be55c5";
-    };
-
+  boot.initrd.luks.devices."cryptroot".device = "/dev/disk/by-uuid/f14dc83e-edb5-4e2c-8ec5-b676366c914d";
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/A9E3-2619";
+    { device = "/dev/disk/by-uuid/F239-4E11";
       fsType = "vfat";
     };
 
   fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/cf4af9e2-b3a1-49be-8f95-f7d6164baa15";
+    { device = "/dev/disk/by-uuid/4830a5d3-9e69-46d2-bcba-6f7d8f67803a";
       encrypted = {
         enable = true;
         label = "crypthome";
-        blkDev = "/dev/disk/by-uuid/2ebb75d6-d220-42ed-b731-d5b76ed67d20";
+        blkDev = "/dev/disk/by-uuid/25c60fb2-cffe-499a-87c1-6a0c67fcbee4";
         keyFile = "/mnt-root/etc/keyfiles/crypthome";
       };
       fsType = "ext4";
@@ -48,5 +44,6 @@
 
   swapDevices = [ ];
 
-  powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
+  powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }
