@@ -46,6 +46,8 @@
 
     arandr
     tlpui
+
+    obs-studio
   ];
 
   programs = {

@@ -125,6 +125,8 @@
       }))
 
       emacs-everywhere
+
+      centaur-tabs
     ];
   };
 

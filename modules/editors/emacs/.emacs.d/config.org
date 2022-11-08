@@ -107,7 +107,9 @@ Project tree. Settings fonts for ~treemacs~
 (use-package undo-tree
   :config
   (global-undo-tree-mode)
-  (evil-set-undo-system 'undo-tree))
+  (evil-set-undo-system 'undo-tree)
+  :custom
+  (undo-tree-auto-save-history nil))
 #+end_src
 Collection of evil keybindings
 #+begin_src emacs-lisp
@@ -136,6 +138,19 @@ Multicursor
   (global-evil-mc-mode 1))
 #+end_src
 ** Visual
+Tabs
+#+begin_src emacs-lisp
+(use-package centaur-tabs
+  :config
+  (centaur-tabs-mode t)
+  :custom
+  (centaur-tabs-style "bar")
+  (centaur-tabs-set-icons t)
+  (centaur-tabs-set-bar 'left)
+  (centaur-tabs-set-close-button nil)
+  (centaur-tabs-set-modified-market t))
+#+end_src
+
 Icons
 #+begin_src emacs-lisp
 (use-package all-the-icons
@@ -1086,7 +1101,10 @@ Helper functions for university labs
  :states '(normal visual)
  :keymaps 'override
  "gsx" 'lsp-ui-peek-find-references
- "gsd" 'lsp-ui-peek-find-definitions)
+ "gsd" 'lsp-ui-peek-find-definitions
+ "gt"  'centaur-tabs-forward
+ "gT"  'centaur-tabs-backward
+ "C-=" 'format-all-buffer)
 (general-define-key
  :states '(normal visual emacs insert treemacs)
  :prefix "SPC"
