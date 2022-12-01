@@ -16,7 +16,6 @@
 
   home.file.".emacs.d/nix.el".text = ''
                                    (setq lsp-clangd-binary-path "${pkgs.clang-tools}/bin/clangd")
-                                   (setq wakatime-cli-path "${pkgs.wakatime-cli}/bin/wakatime")
   '';
 
   programs.emacs = {
@@ -107,9 +106,11 @@
       dap-mode
       minimap
       bison-mode
+      solidity-mode
+      solidity-flycheck
+      company-solidity
 
       org-roam-ui
-      wakatime-mode
       esup
 
       proof-general

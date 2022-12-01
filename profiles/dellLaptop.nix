@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ../../modules
+    ../modules
   ];
 
   # Let Home Manager install and manage itself.
@@ -12,6 +12,12 @@
   # paths it should manage.
   home.username = "iliayar";
   home.homeDirectory = "/home/iliayar";
+
+
+  custom = {
+    dev.python.enable = true;
+    study.sage.enable = true;
+  };
 
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage

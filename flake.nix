@@ -128,13 +128,13 @@
         };
 
         homeConfigurations = {
-          iliayar = home-manager.lib.homeManagerConfiguration rec {
+          dellLaptop = home-manager.lib.homeManagerConfiguration rec {
             inherit pkgs;
             extraSpecialArgs = specialArgs // {
               inherit pkgs system;
             };
             modules = [
-              ./hosts/dellLaptop/home.nix
+              ./profiles/dellLaptop.nix
             ];
           };
 

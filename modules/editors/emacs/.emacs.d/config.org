@@ -269,15 +269,28 @@ Code::stats
   (add-hook 'kill-emacs-hook (lambda () (code-stats-sync :wait)))  
   )
 #+END_SRC
-Another code traking
-#+begin_src emacs-lisp
-;; (use-package wakatime-mode
-;;   :config
-;;   (global-wakatime-mode))  
-#+end_src
 Lama mode
 #+begin_src emacs-lisp
 (require 'lama-mode) 
+#+end_src
+Solidity mode
+#+begin_src emacs-lisp
+(use-package solidity-mode) 
+(use-package company-solidity
+  :hook
+  (solidity-mode . iliayar/solidity-company-init)
+
+  :config
+
+  (defun iliayar/solidity-company-init ()
+    (set (make-local-variable 'company-backends)
+	 (append '((company-solidity)) company-backends))))
+(use-package solidity-flycheck
+  :hook
+  (solidity-mode . flycheck-mode)
+
+  :init
+  (setq solidity-flycheck-solc-checker-active t))
 #+end_src
 
 Auto parenthesis
@@ -728,6 +741,7 @@ Org mode file associations
    (js . t)
    (shell . t)
    (julia . t)
+   (sql . t)
 ;;   (ipython . t)
    ))
 (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
