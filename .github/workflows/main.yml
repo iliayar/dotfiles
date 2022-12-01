@@ -1,25 +1,15 @@
-on: 
+name: "Test flake"
+on:
+  pull_request:
   push:
-    branch:
-      - master
-
-name: 'Shellcheck'
-
 jobs:
-  shellcheck:
-    name: Shellcheck
+  tests:
     runs-on: ubuntu-latest
     steps:
-    - name: Installing shellcheck
-      run: |
-        sudo apt-get update
-        sudo apt-get install shellcheck
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Cheking scripts
-      env:
-        SCRIPTS: |
-          install.sh
-      run: |
-        shellcheck $SCRIPTS
-      
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v18
+      with:
+        extra_nix_config: |
+          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+    - run: nix build
+    - run: nix flake check
