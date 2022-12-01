@@ -1,6 +1,8 @@
 * dotfiles
 [[file:rice.png]]
-[[https://github.com/iliayar/dotfiles/workflows/Shellcheck/badge.svg]]
+--------
+[[https://github.com/iliayar/dotfiles/actions/workflows/main.yml/badge.svg]]
+
 ** Installation
 [[file:install.sh][Script]] installs systemwide flake.
 ** Main workflow
