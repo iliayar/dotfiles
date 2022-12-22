@@ -17,6 +17,10 @@
   custom = {
     dev.python.enable = true;
     study.sage.enable = true;
+
+    games = {
+      minecraft.enable = true;
+    };
   };
 
   # This value determines the Home Manager release that your

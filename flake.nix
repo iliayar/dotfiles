@@ -128,13 +128,13 @@
         };
 
         homeConfigurations = {
-          dellLaptop = home-manager.lib.homeManagerConfiguration rec {
+          heavy = home-manager.lib.homeManagerConfiguration rec {
             inherit pkgs;
             extraSpecialArgs = specialArgs // {
               inherit pkgs system;
             };
             modules = [
-              ./profiles/dellLaptop.nix
+              ./profiles/heavy.nix
             ];
           };
 

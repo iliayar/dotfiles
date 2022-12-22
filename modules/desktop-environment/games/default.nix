@@ -1,6 +1,10 @@
 { pkgs, ... }:
 
 {
+  imports = [
+    ./minecraft.nix
+  ];
+
   home.packages = with pkgs; [
     # steam
     # steamcmd
