@@ -15,11 +15,65 @@
 
 
   custom = {
-    dev.python.enable = true;
+    dev = {
+      python.enable = true;
+      cpp.enable = true;
+      latex.enable = true;
+    };
+
     study.sage.enable = true;
 
     games = {
       minecraft.enable = true;
+      wine.enable = true;
+      lutris.enable = true;
+    };
+
+    editors.emacs.enable = true;
+    editors.nvim.enable = true;
+
+    misc = {
+      enable = true;
+      syncthing = true;
+
+      git.enable = true;
+      gpg.enable = true;
+      pass.enable = true;
+      ssh.enable = true;
+    };
+
+    shell = {
+      misc.enable = true;
+      zsh.enable = true;
+    };
+
+    de = {
+      misc = true;
+      media = true;
+      social = true;
+
+      browsers = {
+        brave.enable = true;
+        qute.enable = true;
+      };
+
+      terms = {
+        alacritty.enable = true;
+        urxvt.enable = true;
+      };
+
+      xmobar.enable = true;
+      xmonad.enable = true;
+
+      lock.enable = true;
+      conky.enable = true;
+      dunst.enable = true;
+      picom.enable = true;
+
+      audio-utils.enable = true;
+      spotify.enable = true;
+
+      zathura.enable = true;
     };
   };
 

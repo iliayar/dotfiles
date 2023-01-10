@@ -1,21 +1,25 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, themes, ... }:
 
+with lib;
+
+let
+  cfg = config.custom.de.pointer;
+in
 {
-  # Doesn't respect Xorg configs
-  xsession = {
-    enable = false;
-
-    # initExtra = ''
-    #           [ -e $HOME/.xprofile ] && . $HOME/.xprofile
-    # '';
+  options = {
+    custom.de.pointer = {
+      enable = mkOption {
+        default = true;
+      };
+    };
   };
 
-  home.pointerCursor = {
-    package = pkgs.vanilla-dmz;
-    name = "Vanilla-DMZ";
-    # defaultCursor = "left_ptr";
-    size = 16;
-    x11.enable = true;
+  config = mkIf cfg.enable {
+    home.pointerCursor = {
+      package = pkgs.vanilla-dmz;
+      name = "Vanilla-DMZ";
+      size = 16;
+      x11.enable = true;
+    };
   };
-
 }

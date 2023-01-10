@@ -1,8 +1,22 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, themes, ... }:
 
+with lib;
+
+let
+  cfg = config.custom.misc;
+in
 {
-  programs.ssh = {
-    enable = true;
+  options = {
+    custom.misc.ssh = {
+      enable = mkOption {
+        default = false;
+      };
+    };
   };
 
+  config = mkIf (cfg.enable && cfg.ssh.enable) {
+    programs.ssh = {
+      enable = true;
+    };
+  };
 }

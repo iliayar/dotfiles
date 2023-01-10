@@ -1,35 +1,52 @@
-{ config, pkgs, code-stats-vim, secrets, ... }:
+{ config, lib, pkgs, code-stats-vim, secrets, ... }:
 
+with lib;
 
+let
+  cfg = config.custom.editors.nvim;
+in
 {
-  home.file."${config.xdg.configHome}/nvim/colors" = {
-    source = ./colors;
-    recursive = true;
+  options = {
+    custom.editors.nvim = {
+      enable = mkOption {
+        default = false;
+      };
+    };
   };
 
-  home.packages = [ pkgs.xsel ];
+  config = mkIf cfg.enable {
+    home.file."${config.xdg.configHome}/nvim/colors" = {
+      source = ./colors;
+      recursive = true;
+    };
 
-  programs.neovim = {
-    enable = true;
-    vimAlias = true;
-    plugins = with pkgs.vimPlugins; [
-      vim-nix
-      # fzf
-      vim-airline
-      vim-surround
-      vim-gitgutter
-      editorconfig-vim
-      nerdtree
-      rainbow_parentheses
-      nerdcommenter
-      gruvbox
-      vim-easymotion
-      # rust
+    home.packages = [ pkgs.xsel ];
 
-      (pkgs.vimUtils.buildVimPluginFrom2Nix { name = "code-stats-vim"; src = code-stats-vim; })
-    ];
+    home.sessionVariables = {
+      EDITOR = "vim";
+    };
 
-    extraConfig = ''
+    programs.neovim = {
+      enable = true;
+      vimAlias = true;
+      plugins = with pkgs.vimPlugins; [
+        vim-nix
+        # fzf
+        vim-airline
+        vim-surround
+        vim-gitgutter
+        editorconfig-vim
+        nerdtree
+        rainbow_parentheses
+        nerdcommenter
+        gruvbox
+        vim-easymotion
+        # rust
+
+        (pkgs.vimUtils.buildVimPluginFrom2Nix { name = "code-stats-vim"; src = code-stats-vim; })
+      ];
+
+      extraConfig = ''
       set clipboard=unnamedplus
 
       let mapleader = "\<Space>"
@@ -110,5 +127,6 @@
       " Copy to system clipboard whem exit
       autocmd VimLeave * call system("xsel -ib", getreg('+'))
     '';
+    };
   };
 }

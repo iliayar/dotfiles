@@ -1,20 +1,34 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
+
+with lib;
+
 let
   texc = pkgs.writeShellScriptBin "texc" ''
        ${pkgs.texlive.combined.scheme-full}/bin/pdflatex -interaction=nonstopmode -shell-escape
   '';
+  cfg = config.custom.dev.latex;
 in
 {
-  home.packages = with pkgs; [
-    tectonic
-    texc
-  ];
+  options = {
+    custom.dev.latex = {
+      enable = mkOption {
+        default = false;
+      };
+    };
+  };
 
-  programs.texlive = {
-    enable = true;
-    extraPackages = tpkgs: {
-      inherit (tpkgs)
-        scheme-full;
+
+  config = mkIf cfg.enable {
+    home.packages = with pkgs; [
+      texc
+    ];
+
+    programs.texlive = {
+      enable = true;
+      extraPackages = tpkgs: {
+        inherit (tpkgs)
+          scheme-full;
+      };
     };
   };
 }

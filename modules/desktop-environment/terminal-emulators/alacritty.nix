@@ -1,53 +1,71 @@
-{ config, pkgs, themes, ... }:
+{ config, pkgs, lib, themes, ... }:
 
+with lib;
+
+let
+  cfg = config.custom.de.terms;
+in
 {
-  programs.alacritty = {
-    enable = true;
-    settings = {
-      env = {
-        TERM = "xterm-256color";
+
+  options = {
+    custom.de.terms = {
+      alacritty = {
+        enable = mkOption {
+          default = false;
+        };
       };
-      window = {
-        padding = {
-          x = 3;
-          y = 3;
+    };
+  };
+
+  config = mkIf cfg.alacritty.enable {
+    programs.alacritty = {
+      enable = true;
+      settings = {
+        env = {
+          TERM = "xterm-256color";
         };
-        opacity = 0.85;
-      };
-      font = {
-        normal = {
-          family = "Fira Code";
+        window = {
+          padding = {
+            x = 3;
+            y = 3;
+          };
+          opacity = 0.85;
         };
-        size = 9.0;
-      };
-      colors = {
-        primary = {
-          background = "${themes.background}";
-          foreground = "${themes.foreground}";
+        font = {
+          normal = {
+            family = "Fira Code";
+          };
+          size = 9.0;
         };
-        cursor = {
-          text = "${themes.cursorText}";
-          cursor = "${themes.cursor}";
-        };
-        normal = {
-          black = "${themes.black}";
-          red = "${themes.red}";
-          green = "${themes.green}";
-          yellow = "${themes.yellow}";
-          blue = "${themes.blue}";
-          magenta = "${themes.magenta}";
-          cyan = "${themes.cyan}";
-          white = "${themes.white}";
-        };
-        bright = {
-          black = "${themes.brightBlack}";
-          red = "${themes.brightRed}";
-          green = "${themes.brightGreen}";
-          yellow = "${themes.brightYellow}";
-          blue = "${themes.brightBlue}";
-          magenta = "${themes.brightMagenta}";
-          cyan = "${themes.brightCyan}";
-          white = "${themes.brightWhite}";
+        colors = {
+          primary = {
+            background = "${themes.background}";
+            foreground = "${themes.foreground}";
+          };
+          cursor = {
+            text = "${themes.cursorText}";
+            cursor = "${themes.cursor}";
+          };
+          normal = {
+            black = "${themes.black}";
+            red = "${themes.red}";
+            green = "${themes.green}";
+            yellow = "${themes.yellow}";
+            blue = "${themes.blue}";
+            magenta = "${themes.magenta}";
+            cyan = "${themes.cyan}";
+            white = "${themes.white}";
+          };
+          bright = {
+            black = "${themes.brightBlack}";
+            red = "${themes.brightRed}";
+            green = "${themes.brightGreen}";
+            yellow = "${themes.brightYellow}";
+            blue = "${themes.brightBlue}";
+            magenta = "${themes.brightMagenta}";
+            cyan = "${themes.brightCyan}";
+            white = "${themes.brightWhite}";
+          };
         };
       };
     };

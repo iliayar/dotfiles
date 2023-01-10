@@ -1,14 +1,29 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, themes, ... }:
 
+with lib;
+
+let
+  cfg = config.custom.misc;
+in
 {
-  home.packages = [ pkgs.pinentry.gtk2 pkgs.gcr ];
-
-  programs.gpg = {
-    enable = true;
+  options = {
+    custom.misc.gpg = {
+      enable = mkOption {
+        default = false;
+      };
+    };
   };
 
-  services.gpg-agent = {
-    enable = true;
-    pinentryFlavor = "gtk2";
+  config = mkIf (cfg.enable && cfg.gpg.enable) {
+    home.packages = [ pkgs.pinentry.gtk2 pkgs.gcr ];
+
+    programs.gpg = {
+      enable = true;
+    };
+
+    services.gpg-agent = {
+      enable = true;
+      pinentryFlavor = "gtk2";
+    };
   };
 }

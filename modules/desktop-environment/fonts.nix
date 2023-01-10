@@ -1,14 +1,27 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, themes, ... }:
 
+with lib;
+
+let
+  cfg = config.custom.de.fonts;
+in
 {
-  fonts = {
-    fontconfig = {
-      enable = true;
-      # defaultFonts.emoji = [ "Noto Color Emoji" ];
+  options = {
+    custom.de.fonts = {
+      enable = mkOption {
+        default = true;
+      };
     };
   };
 
-  xdg.configFile."fontconfig/conf.d/40-font-order.conf".text = ''
+  config = mkIf cfg.enable {
+    fonts = {
+      fontconfig = {
+        enable = true;
+      };
+    };
+
+    xdg.configFile."fontconfig/conf.d/40-font-order.conf".text = ''
     <?xml version="1.0"?>
     <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
     <fontconfig>
@@ -39,11 +52,12 @@
     </fontconfig>
   '';
 
-  home.packages = with pkgs; [
-    noto-fonts-emoji
-    fira-code
-    font-awesome
-    symbola
-    ubuntu_font_family
-  ];
+    home.packages = with pkgs; [
+      noto-fonts-emoji
+      fira-code
+      font-awesome
+      symbola
+      ubuntu_font_family
+    ];
+  };
 }

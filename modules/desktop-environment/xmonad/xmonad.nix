@@ -1,24 +1,37 @@
-{ config, pkgs, themes, my-xmonad-contrib, ...}@inputs:
+{ config, lib, pkgs, themes, my-xmonad-contrib, ...}@inputs:
+
+with lib;
 
 let
+  cfg = config.custom.de.xmonad;
   xmonad-configured = pkgs.callPackage ./config inputs;
 in
 {
-  home.file.".xmonad" = {
-    source = xmonad-configured;
-    recursive = true;
+
+  options = {
+    custom.de.xmonad = {
+      enable = mkOption {
+        default = false;
+      };
+    };
   };
 
-  home.packages = with pkgs; [
-    gotop
-    ueberzug
-    w3m
-    neofetch
-    imagemagick
+  config = mkIf cfg.enable {
+    home.file.".xmonad" = {
+      source = xmonad-configured;
+      recursive = true;
+    };
 
-    dzen2 
-    gawk
-    (writeScriptBin "dzenShowKeymap" ''
+    home.packages = with pkgs; [
+      gotop
+      ueberzug
+      w3m
+      neofetch
+      imagemagick
+
+      dzen2 
+      gawk
+      (writeScriptBin "dzenShowKeymap" ''
       #!${pkgs.bash}/bin/bash
 
       KEYMAP=$1
@@ -44,8 +57,8 @@ in
                 for (j=0; j<=i;) {
                     for (k=0; k < rows; k++) {
                          row[k] = row[k] key_hint[j++]
-                    }
-                }
+                         }
+                     }
                 for (k=0; k < rows; k++) {print row[k]}
                 print ""
             }')
@@ -60,6 +73,6 @@ in
         -e onstart=uncollapse \
         -xs $SCREEN
     '')  
-  ];
-
+    ];
+  };
 }

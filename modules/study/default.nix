@@ -1,15 +1,39 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ...}:
+
+with lib;
+
+let
+  cfg = config.custom.study;
+in
 {
   imports = [
     ./sage.nix
   ];
 
+  options = {
+    custom.study.lci = {
+      enable = mkOption {
+        default = false;
+      };
+    };
 
-  home.packages = with pkgs; [
-    lci
-    # xmind
-    jetbrains.idea-community
+    custom.study.idea = {
+      enable = mkOption {
+        default = false;
+      };
+    };
+  };
 
-    gnumake
+  config = mkMerge [
+    (mkIf cfg.lci.enable {
+      home.packages = with pkgs; [
+        lci
+      ];
+    })
+    (mkIf cfg.idea.enable {
+      home.packages = with pkgs; [
+        jetbrains.idea-community
+      ];
+    })
   ];
 }

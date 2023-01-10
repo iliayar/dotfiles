@@ -1,5 +1,10 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, themes, ... }:
 
+with lib;
+
+let
+  cfg = config.custom.misc;
+in
 {
   imports = [
     ./git.nix
@@ -9,22 +14,39 @@
     ./mail.nix
   ];
 
-  home.packages = with pkgs; [
-    killall
-    unzip
-    zip
-    pandoc
-    poppler_utils
+  options = {
+    custom.misc = {
+      enable = mkOption {
+        default = false;
+      };
 
-    ripgrep
-    fd
-    bat
-    procs
-    sd
-    du-dust
-    tokei
-    delta
-  ];
+      syncthing = mkOption {
+        default = false;
+      };
+    };
+  };
 
-  services.syncthing.enable = true;
+  config = mkIf cfg.enable (mkMerge [
+    {
+      home.packages = with pkgs; [
+        killall
+        unzip
+        zip
+        pandoc
+        poppler_utils
+
+        ripgrep
+        fd
+        bat
+        procs
+        sd
+        du-dust
+        tokei
+        delta
+      ];
+    }
+    (mkIf cfg.syncthing {
+      services.syncthing.enable = true;
+    })
+  ]);
 }

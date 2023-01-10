@@ -1,6 +1,10 @@
-{ pkgs, wallpapers, ... }:
+{ config, pkgs, lib, wallpapers, ... }:
+
+with lib;
 
 let
+  cfg = config.custom.de.lock;
+
   locker = pkgs.writeShellScriptBin "locker" ''
     #!${pkgs.bash}/bin/bash
     
@@ -17,12 +21,21 @@ let
   '';
 in
 {
-  services.screen-locker = {
-    enable = true;
-    lockCmd = "${locker}/bin/locker";
-    inactiveInterval = 5;
+  options = {
+    custom.de.lock = {
+      enable = mkOption {
+        default = false;
+      };
+    };
   };
 
-  home.packages = [ locker ];
+  config = mkIf cfg.enable {
+    services.screen-locker = {
+      enable = true;
+      lockCmd = "${locker}/bin/locker";
+      inactiveInterval = 5;
+    };
 
+    home.packages = [ locker ];
+  };
 }

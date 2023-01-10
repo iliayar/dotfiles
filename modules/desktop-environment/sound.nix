@@ -1,8 +1,24 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, themes, ... }:
 
+with lib;
+
+let
+  cfg = config.custom.de.audio-utils;
+in
 {
-  home.packages = with pkgs; [ 
-    pulseaudio
-    pulsemixer
-  ];
+  options = {
+    custom.de.audio-utils = {
+      enable = mkOption {
+        default = false;
+      };
+    };
+  };
+
+  config = mkIf cfg.enable {
+    home.packages = with pkgs; [ 
+      pulseaudio
+      pulsemixer
+      paprefs
+    ];
+  };
 }

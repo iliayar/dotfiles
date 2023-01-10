@@ -27,7 +27,7 @@ in
   users.users."iliayar".extraGroups = [ "dialout" ];
 
   environment.systemPackages = with pkgs; [
-    # docker-compose
+    podman-compose
   ];
 
   systemd.services.logid = {

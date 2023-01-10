@@ -1,28 +1,42 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, themes, ... }:
 
+with lib;
+
+let
+  cfg = config.custom.shell.misc;
+in
 {
   imports = [
     ./zsh
-    # ./bash.nix # Need for run zsh. UPD: No more
   ];
 
-  programs.fzf = {
-    enable = true;
-  };
-
-  programs.exa = {
-    enable = true;
-    enableAliases = true;
-  };
-
-  programs.direnv = {
-    enable = true;
-    nix-direnv = {
-      enable = true;
+  options = {
+    custom.shell.misc = {
+      enable = mkOption {
+        default = false;
+      };
     };
   };
 
-  programs.zoxide = {
-    enable = true;
+  config = mkIf cfg.enable {
+    programs.fzf = {
+      enable = true;
+    };
+
+    programs.exa = {
+      enable = true;
+      enableAliases = true;
+    };
+
+    programs.direnv = {
+      enable = true;
+      nix-direnv = {
+        enable = true;
+      };
+    };
+
+    programs.zoxide = {
+      enable = true;
+    };
   };
 }

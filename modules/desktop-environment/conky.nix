@@ -1,8 +1,11 @@
-{ pkgs, themes, ... }:
+{ config, pkgs, lib, themes, ... }:
+
+with lib;
 
 let
+  cfg = config.custom.de.conky;
   iface = "enp0s20f0u2";
-  config = { alignment, ... }: ''
+  conky-config = { alignment, ... }: ''
     conky.config = {
         alignment = '${alignment}',
         xinerama_head = 1,
@@ -40,24 +43,35 @@ let
     }
   '';
   mkConfig = cfg: text: ''
-           ${config cfg}
+           ${conky-config cfg}
            
            ${text}
   '';
 in
 {
-  home.packages = [
-    pkgs.conky
-    (pkgs.writeShellScriptBin "run_conky" ''
+
+
+  options = {
+    custom.de.conky = {
+      enable = mkOption {
+        default = false;
+      };
+    };
+  };
+
+  config = mkIf cfg.enable {
+    home.packages = [
+      pkgs.conky
+      (pkgs.writeShellScriptBin "run_conky" ''
                              #!${pkgs.bash}/bin/bash
                              ${pkgs.conky}/bin/conky -c ~/.config/conky/conky.conf &
                              ${pkgs.conky}/bin/conky -c ~/.config/conky/conky_date.conf &
     '')
-  ];
+    ];
 
-  xdg.configFile."conky/conky.conf".text = mkConfig {
-    alignment = "bottom_left";
-  } ''
+    xdg.configFile."conky/conky.conf".text = mkConfig {
+      alignment = "bottom_left";
+    } ''
     conky.text = [[
     ''${color}Highest CPU: ''${goto 300} ''${color}Highest MEM:
     ''${color #e3276b} ''${top name 1}''${top cpu 1} ''${goto 300} ''${color #e3276b} ''${top_mem name 1}''${top_mem mem 1}
@@ -74,11 +88,11 @@ in
     ''${color}Up: ''${color }''${upspeed ${iface}}k/s ''${goto 300} ''${color}Down: ''${color }''${downspeed ${iface}}k/s''${color}
     ''${upspeedgraph ${iface} 20,130 000000 ffffff} ''${goto 300} ''${downspeedgraph ${iface} 20,130 000000 ffffff}
 
-    ]];
+                                                                                                  ]];
   '';
-  xdg.configFile."conky/conky_date.conf".text = mkConfig {
-    alignment = "bottom_right";
-  } ''
+    xdg.configFile."conky/conky_date.conf".text = mkConfig {
+      alignment = "bottom_right";
+    } ''
     conky.text = [[
     ''${color }''${time %a, } ''${color }''${time %e %B %G}
     ''${color }''${time %Z,    }''${color }''${time %H:%M:%S}
@@ -90,6 +104,7 @@ in
     ''${color }Load: ''${color }$loadavg
     ''${color }Processes: ''${color }$processes
     ''${color }Running:   ''${color }$running_processes
-    ]];
+  ]];
   '';
+  };
 }

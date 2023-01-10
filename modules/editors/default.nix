@@ -4,7 +4,6 @@
   imports = [
     ./neovim
     ./emacs
-    ./wakatime.nix
   ];
 
   home.packages = with pkgs; [

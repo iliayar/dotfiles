@@ -1,34 +1,38 @@
-{ config, pkgs, zsh-wakatime, ... }:
+{ config, pkgs, lib, themes, ... }:
 
+with lib;
+
+let
+  cfg = config.custom.shell.zsh;
+in
 {
-  programs.zsh = {
-    enable = true;
-    enableAutosuggestions = true;
-    enableSyntaxHighlighting = true;
+  options = {
+    custom.shell.zsh = {
+      enable = mkOption {
+        default = false;
+      };
+    };
+  };
 
-    plugins = [
-        {
-            name = "zsh-wakatime";
-            src = zsh-wakatime;
-        }
-    ];
-
-    oh-my-zsh = {
+  config = mkIf cfg.enable {
+    programs.zsh = {
       enable = true;
-      plugins = [
-        "git"
-      ];
+      enableAutosuggestions = true;
+      enableSyntaxHighlighting = true;
 
-      custom = "${./.oh-my-zsh/themes}";
-      theme = "l";
+      oh-my-zsh = {
+        enable = true;
+        plugins = [
+          "git"
+        ];
+
+        custom = "${./.oh-my-zsh/themes}";
+        theme = "l";
+      };
+
+      shellAliases = {
+        magit = "emacsclient -t -e '(magit)'";
+      };
     };
-
-    shellAliases = {
-      magit = "emacsclient -t -e '(magit)'";
-    };
-
-    initExtra = ''
-        export PATH=$PATH:${pkgs.wakatime-cli}/bin
-    '';
   };
 }

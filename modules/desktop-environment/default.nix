@@ -1,5 +1,10 @@
-{ config, pkgs, wallpapers, ... }:
+{ config, lib, pkgs, wallpapers, ... }:
 
+with lib;
+
+let
+  cfg = config.custom.de;
+in
 {
   imports = [
     ./xsession.nix
@@ -19,83 +24,106 @@
     ./games
   ];
 
-  home.packages = with pkgs; [
-    tdesktop # Telegram
-    discord
-    slack
-    xkb-switch
-    light
-    rust-blocks
-    gimp
-    zoom-us
-    vlc
-    mpv
-    # (inkscape-with-extensions.override {
-      # inkscapeExtensions = with inkscape-extensions; [
-        # textext
-        # madeeasy
-        # plot
-      # ];
-    # })
-    # libreoffice
-    deluge
+  options = {
+    custom.de = {
+      misc = mkOption {
+        default = false;
+      };
 
-    paprefs
-    nitrogen
-    pcmanfm
+      media = mkOption {
+        default = false;
+      };
 
-    arandr
-    tlpui
-
-    obs-studio
-  ];
-
-  programs = {
-    feh = {
-      enable = true;
-    };
-
-    autorandr = {
-      enable = true;
-      hooks = {
-        postswitch = {
-          "notify-xmonad" = "${pkgs.haskellPackages.xmonad}/bin/xmonad --restart";
-        };
+      social = mkOption {
+        default = false;
       };
     };
   };
 
-  gtk = {
-    enable = true;
-    theme = {
-      package = pkgs.vimix-gtk-themes;
-      name = "vimix-dark";
-    };
-  };
+  config = mkMerge [
+    (mkIf cfg.misc {
+      home.packages = with pkgs; [
+        xkb-switch
+        light
+        nitrogen
+        pcmanfm
+        arandr
+        tlpui
 
-  qt = {
-    enable = true;
-    platformTheme = "gtk";
-  };
+        scrot
+        xclip
+        slop
+      ];
 
-  home.file."Wallpapers" = {
-    source = wallpapers;
-    recursive = true;
-  };
+      home.sessionVariables = {
+        TERM = "xterm-256color";
+      };
 
-  xdg.mimeApps = {
-    enable = true;
-    defaultApplications = {
-      "text/plain" = [ "emacsclient.desktop" ];
-      "text/html" = [ "brave-browser.desktop" ];
-      "x-scheme-handler/http" = [ "brave-browser.desktop" ];
-      "x-scheme-handler/https" = [ "brave-browser.desktop" ];
-      "x-scheme-handler/about" = [ "brave-browser.desktop" ];
-      "x-scheme-handler/unknown" = [ "brave-browser.desktop" ];
-      "x-scheme-handler/tg" = [ "telegramdesktop.desktop" ];
-      "image/png" = [ "feh.desktop" ];
-      "image/jpeg" = [ "feh.desktop" ];
-      "application/pdf" = [ "org.pwmt.zathura-pdf-mupdf.desktop" ];
-    };
-  };
+      programs = {
+        feh = {
+          enable = true;
+        };
+
+        autorandr = {
+          enable = true;
+          hooks = {
+            postswitch = {
+              "notify-xmonad" = "${pkgs.haskellPackages.xmonad}/bin/xmonad --restart";
+            };
+          };
+        };
+      };
+
+      gtk = {
+        enable = true;
+        theme = {
+          package = pkgs.vimix-gtk-themes;
+          name = "vimix-dark";
+        };
+      };
+
+      qt = {
+        enable = true;
+        platformTheme = "gtk";
+      };
+
+      home.file."Wallpapers" = {
+        source = wallpapers;
+        recursive = true;
+      };
+
+      xdg.mimeApps = {
+        enable = true;
+        defaultApplications = {
+          "image/png" = [ "feh.desktop" ];
+          "image/jpeg" = [ "feh.desktop" ];
+        };
+      };
+    })
+
+    (mkIf cfg.media {
+      home.packages = with pkgs; [
+        gimp
+        vlc
+        mpv
+        deluge
+        obs-studio
+      ];
+    })
+
+    (mkIf cfg.social {
+      home.packages = with pkgs; [
+        tdesktop
+        discord
+        slack
+        zoom-us
+      ];
+
+      xdg.mimeApps = {
+        defaultApplications = {
+          "x-scheme-handler/tg" = [ "telegramdesktop.desktop" ];
+        };
+      };
+    })
+  ];
 }
