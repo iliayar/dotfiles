@@ -11,42 +11,45 @@ in
       enable = mkOption {
         default = false;
       };
+
+      code-stats = mkOption {
+        default = true;
+      };
     };
   };
 
-  config = mkIf cfg.enable {
-    home.file."${config.xdg.configHome}/nvim/colors" = {
-      source = ./colors;
-      recursive = true;
-    };
+  config = mkIf cfg.enable (mkMerge [
+    {
+      home.file."${config.xdg.configHome}/nvim/colors" = {
+        source = ./colors;
+        recursive = true;
+      };
 
-    home.packages = [ pkgs.xsel ];
+      home.packages = [ pkgs.xsel ];
 
-    home.sessionVariables = {
-      EDITOR = "vim";
-    };
+      home.sessionVariables = {
+        EDITOR = "vim";
+      };
 
-    programs.neovim = {
-      enable = true;
-      vimAlias = true;
-      plugins = with pkgs.vimPlugins; [
-        vim-nix
-        # fzf
-        vim-airline
-        vim-surround
-        vim-gitgutter
-        editorconfig-vim
-        nerdtree
-        rainbow_parentheses
-        nerdcommenter
-        gruvbox
-        vim-easymotion
-        # rust
+      programs.neovim = {
+        enable = true;
+        vimAlias = true;
+        plugins = with pkgs.vimPlugins; [
+          vim-nix
+          # fzf
+          vim-airline
+          vim-surround
+          vim-gitgutter
+          editorconfig-vim
+          nerdtree
+          rainbow_parentheses
+          nerdcommenter
+          gruvbox
+          vim-easymotion
+          # rust
+        ];
 
-        (pkgs.vimUtils.buildVimPluginFrom2Nix { name = "code-stats-vim"; src = code-stats-vim; })
-      ];
-
-      extraConfig = ''
+        extraConfig = ''
       set clipboard=unnamedplus
 
       let mapleader = "\<Space>"
@@ -70,11 +73,6 @@ in
       set nofoldenable
 
       filetype plugin on
-
-      let g:codestats_api_key = "${secrets.code-stats-api-key}"
-
-      " Airline code::stats
-      let g:airline_section_x = airline#section#create_right(['tagbar', 'filetype', '%{CodeStatsXp()}'])
 
       " Comments
       let g:NERDSpaceDelims = 1
@@ -127,6 +125,22 @@ in
       " Copy to system clipboard whem exit
       autocmd VimLeave * call system("xsel -ib", getreg('+'))
     '';
-    };
-  };
+      };
+    }
+    (mkIf cfg.code-stats {
+
+      programs.neovim = {
+        plugins = with pkgs.vimPlugins; [
+          (pkgs.vimUtils.buildVimPluginFrom2Nix { name = "code-stats-vim"; src = code-stats-vim; })
+        ];
+
+        extraConfig = ''
+      let g:codestats_api_key = "${secrets.code-stats-api-key}"
+
+      " Airline code::stats
+      let g:airline_section_x = airline#section#create_right(['tagbar', 'filetype', '%{CodeStatsXp()}'])
+    '';
+      };
+    })
+  ]);
 }
