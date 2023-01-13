@@ -11,6 +11,13 @@ in
       enable = mkOption {
         default = false;
       };
+
+      gpg-key = mkOption {
+        default = null;
+        description = ''
+          If not null, enables auto signing
+        '';
+      };
     };
   };
 
@@ -25,11 +32,6 @@ in
 
         extraConfig = {
           core.editor = "vim";
-        };
-
-        signing = {
-          signByDefault = true;
-          key = "0x3FE87CB13CB3AC4E";
         };
 
         aliases = {
@@ -47,11 +49,11 @@ in
         delta.enable = true;
       };
     })
-    (mkIf (cfg.enable && cfg.git.enable && cfg.gpg.enable) {
+    (mkIf (cfg.enable && cfg.git.enable && cfg.gpg.enable && cfg.git.gpg-key != null) {
       programs.git = {
         signing = {
           signByDefault = true;
-          key = "0x3FE87CB13CB3AC4E";
+          key = cfg.git.gpg-key;
         };
       };
     })
