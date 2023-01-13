@@ -563,7 +563,7 @@ myKeys = \conf -> let
       ] "Sratchpads"
     , prefix "M-S-e"
        [ ("r"  , spawn "reboot"                                     , "Reboot")
-       , ("s"  , spawn "~/bin/lock.sh" >> (spawn "systemctl suspend"), "Suspend")
+       , ("s"  , spawn "systemctl suspend"                          , "Suspend")
        , ("e"  , io (exitWith ExitSuccess)                          , "Exit XMonad")
        , ("S-s", spawn "shutdown 0"                                 , "Shutdown")
        ] "Power management"

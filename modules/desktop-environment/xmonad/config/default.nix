@@ -51,7 +51,6 @@ pkgs.stdenv.mkDerivation {
 
   installPhase = ''
                mkdir -p $out
-               rm -Rf lib *.hs *.o *.hi
                cp -r ./* $out/
   '';
 }
