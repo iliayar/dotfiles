@@ -17,7 +17,7 @@ in
       };
 
       server = mkOption {
-        default = true;
+        default = false;
         description = ''
           Emacs server
         '';
@@ -25,36 +25,42 @@ in
 
 
       code-stats = mkOption {
-        default = true;
+        default = false;
       };
 
-      misc = mkOption {
-        default = true;
+      misc = {
+        enable = mkOption {
+          default = false;
+        };
+
+        vertico = mkOption {
+          default = true;
+        };
       };
 
       evil = mkOption {
-        default = true;
+        default = false;
       };
 
       additional-motions = mkOption {
-        default = true;
+        default = false;
       };
 
       visual = mkOption {
-        default = true;
+        default = false;
       };
 
       code-misc = mkOption {
-        default = true;
+        default = false;
       };
 
       prog-misc = mkOption {
-        default = true;
+        default = false;
       };
 
       web = {
         misc = mkOption {
-          default = true;
+          default = false;
         };
 
         dap = mkOption {
@@ -67,27 +73,27 @@ in
       };
 
       lsp = mkOption {
-        default = true;
+        default = false;
       };
 
       cpp = mkOption {
-        default = true;
+        default = false;
       };
 
       haskell = mkOption {
-        default = true;
+        default = false;
       };
 
       python = mkOption {
-        default = true;
+        default = false;
       };
 
       latex = mkOption {
-        default = true;
+        default = false;
       };
 
       rust = mkOption {
-        default = true;
+        default = false;
       };
 
       go = mkOption {
@@ -103,15 +109,15 @@ in
       };
 
       org-additional = mkOption {
-        default = true;
+        default = false;
       };
 
       roam = mkOption {
-        default = true;
+        default = false;
       };
 
       rss = mkOption {
-        default = true;
+        default = false;
       };
 
       nix = mkOption {
@@ -128,6 +134,14 @@ in
 
       julia = mkOption {
         default = false;
+      };
+
+      exwm = mkOption {
+        default = false;
+      };
+
+      dicts = mkOption {
+        default = true;
       };
     };
   };
@@ -198,7 +212,7 @@ in
       ];
     })
 
-    (mkIf cfg.misc {
+    (mkIf cfg.misc.enable {
       home.file.".emacs.d/nix-modules.el".text = ''
         (setq nix-misc t)
       '';
@@ -208,13 +222,35 @@ in
         magit
         treemacs
         counsel
-        treemacs-projectile
         counsel-projectile
+        treemacs-projectile
         undo-tree
         minimap
         esup
       ];
     })
+
+    (mkIf (cfg.misc.enable && cfg.misc.vertico) {
+      home.file.".emacs.d/nix-modules.el".text = ''
+        (setq nix-vertico t)
+      '';
+
+      programs.emacs.extraPackages = epkgs: with epkgs; [
+        vertico
+        consult
+        consult-projectile
+        marginalia
+        orderless
+      ];
+    })
+
+    (mkIf (cfg.misc.enable && !cfg.misc.vertico) {
+      programs.emacs.extraPackages = epkgs: with epkgs; [
+        counsel
+        counsel-projectile
+      ];
+    })
+
 
     (mkIf cfg.evil {
       home.file.".emacs.d/nix-modules.el".text = ''
@@ -222,13 +258,13 @@ in
       '';
 
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          goto-chg
-          evil
-          evil-collection
-          evil-snipe
-          evil-surround
-          evil-multiedit
-          evil-mc
+        goto-chg
+        evil
+        evil-collection
+        evil-snipe
+        evil-surround
+        evil-multiedit
+        evil-mc
       ];
     })
 
@@ -238,10 +274,11 @@ in
       '';
 
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          avy
-          ace-window
-          hydra
-          emacs-everywhere
+        avy
+        ace-window
+        hydra
+        emacs-everywhere
+        minimap
       ];
 
       home.packages = with pkgs; [
@@ -256,14 +293,14 @@ in
       '';
 
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          all-the-icons
-          hl-todo
-          rainbow-delimiters
-          dashboard
-          diff-hl
-          doom-modeline
-          doom-themes
-          centaur-tabs
+        all-the-icons
+        hl-todo
+        rainbow-delimiters
+        dashboard
+        diff-hl
+        doom-modeline
+        doom-themes
+        centaur-tabs
       ];
     })
 
@@ -273,12 +310,12 @@ in
       '';
 
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          smartparens
-          editorconfig
-          yasnippet
-          yasnippet-snippets
-          format-all
-          company
+        smartparens
+        editorconfig
+        yasnippet
+        yasnippet-snippets
+        format-all
+        company
       ];
     })
 
@@ -288,10 +325,10 @@ in
       '';
 
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          dockerfile-mode
-          yaml-mode
-          graphviz-dot-mode
-          bison-mode
+        dockerfile-mode
+        yaml-mode
+        graphviz-dot-mode
+        bison-mode
       ];
     })
 
@@ -360,7 +397,7 @@ in
       '';
 
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          haskell-mode
+        haskell-mode
       ];
     })
 
@@ -370,7 +407,7 @@ in
       '';
 
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          lsp-haskell
+        lsp-haskell
       ];
     })
 
@@ -380,14 +417,14 @@ in
       '';
 
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          anaconda-mode
-          company-anaconda
+        anaconda-mode
+        company-anaconda
       ];
     })
 
     (mkIf (cfg.python && cfg.lsp) {
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          lsp-pyright
+        lsp-pyright
       ];
     })
 
@@ -397,13 +434,13 @@ in
       '';
 
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          org-special-block-extras
+        org-special-block-extras
       ];
     })
 
     (mkIf (cfg.latex && cfg.lsp) {
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          lsp-latex
+        lsp-latex
       ];
     })
 
@@ -413,7 +450,7 @@ in
       '';
 
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          rustic
+        rustic
       ];
     })
 
@@ -423,7 +460,7 @@ in
       '';
 
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          go-mode
+        go-mode
       ];
     })
 
@@ -433,7 +470,7 @@ in
       '';
 
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          kotlin-mode
+        kotlin-mode
       ];
     })
 
@@ -445,7 +482,7 @@ in
 
     (mkIf (cfg.java && cfg.lsp) {
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          lsp-java
+        lsp-java
       ];
     })
 
@@ -455,11 +492,11 @@ in
       '';
 
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          org-special-block-extras
-          ox-reveal
-          ox-json
-          org-bullets
-          org-special-block-extras
+        org-special-block-extras
+        ox-reveal
+        ox-json
+        org-bullets
+        org-special-block-extras
       ];
     })
 
@@ -469,9 +506,9 @@ in
       '';
 
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          org-roam
-          org-roam-ui
-          websocket
+        org-roam
+        org-roam-ui
+        websocket
       ];
     })
 
@@ -481,9 +518,9 @@ in
       '';
 
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          elfeed
-          elfeed-org
-          elfeed-goodies
+        elfeed
+        elfeed-org
+        elfeed-goodies
       ];
     })
 
@@ -493,10 +530,10 @@ in
       '';
 
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          nix-mode
-          nixos-options
-          company-nixos-options
-          nix-sandbox
+        nix-mode
+        nixos-options
+        company-nixos-options
+        nix-sandbox
       ];
 
       home.packages = with pkgs; [
@@ -510,9 +547,9 @@ in
       '';
 
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          solidity-mode
-          solidity-flycheck
-          company-solidity
+        solidity-mode
+        solidity-flycheck
+        company-solidity
       ];
     })
 
@@ -522,8 +559,8 @@ in
       '';
 
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          proof-general
-          company-coq
+        proof-general
+        company-coq
       ];
     })
 
@@ -547,17 +584,43 @@ in
       ];
     })
 
-    (mkIf (cfg.misc && cfg.evil) {
+    (mkIf (cfg.misc.enable && cfg.evil) {
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          treemacs-evil
+        treemacs-evil
       ];
     })
 
-    (mkIf (cfg.misc && cfg.lsp) {
+    (mkIf (cfg.misc.enable && cfg.lsp) {
       programs.emacs.extraPackages = epkgs: with epkgs; [
-          lsp-treemacs
-          lsp-ivy
+        lsp-treemacs
       ];
+    })
+
+    (mkIf (cfg.misc.enable && !cfg.misc.vertico && cfg.lsp) {
+      programs.emacs.extraPackages = epkgs: with epkgs; [
+        lsp-ivy
+      ];
+    })
+
+    (mkIf cfg.exwm {
+      home.file.".emacs.d/nix-modules.el".text = ''
+        (setq nix-exwm t)
+      '';
+
+      xsession = {
+        enable = true;
+      };
+
+
+      programs.emacs.extraPackages = epkgs: with epkgs; [
+        exwm
+      ];
+    })
+
+    (mkIf cfg.dicts {
+      home.file.".emacs.d/nix-modules.el".text = ''
+        (setq nix-dicts t)
+      '';
     })
   ]);
 }

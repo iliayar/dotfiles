@@ -9,7 +9,7 @@ in
   options = {
     custom.dev.python = {
       enable = mkOption {
-        default = true;
+        default = false;
         description = ''
           Systemwide python environment
         '';

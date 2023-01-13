@@ -134,7 +134,19 @@
               inherit pkgs system;
             };
             modules = [
+              ./modules
               ./profiles/heavy.nix
+            ];
+          };
+
+          ubuntu-virt = home-manager.lib.homeManagerConfiguration rec {
+            inherit pkgs;
+            extraSpecialArgs = specialArgs // {
+              inherit pkgs system;
+            };
+            modules = [
+              ./modules
+              ./profiles/ubuntu-virt.nix
             ];
           };
 

@@ -1,10 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  imports = [
-    ../modules
-  ];
-
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
@@ -29,7 +25,33 @@
       lutris.enable = true;
     };
 
-    editors.emacs.enable = true;
+    editors.emacs = {
+      enable = true;
+      server = true;
+
+      code-stats = true;
+      misc = {
+        enable = true;
+      };
+
+      evil = true;
+      additional-motions = true;
+      visual = true;
+      code-misc = true;
+      prog-msc = true;
+      web = {
+        misc = true;
+      };
+
+      lsp = true;
+      rust = true;
+
+      org-additional = true;
+      roam = true;
+      nix = true;
+
+      dicts = true;
+    };
     editors.nvim.enable = true;
 
     misc = {

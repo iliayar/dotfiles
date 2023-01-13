@@ -9,6 +9,7 @@ Nix Modules switches. Setting to default
 (setq nix-modules nil) 
 (setq nix-code-stats nil)
 (setq nix-misc nil)
+(setq nix-vertico nil)
 (setq nix-evil nil)
 (setq nix-additional-motions nil)
 (setq nix-visual nil)
@@ -33,6 +34,8 @@ Nix Modules switches. Setting to default
 (setq nix-solidity nil)
 (setq nix-proof-assist nil)
 (setq nix-julia nil)
+(setq nix-exwm nil)
+(setq nix-dicts nil)
 #+end_src
 And load actual enabled modules
 #+begin_src emacs-lisp
@@ -78,9 +81,20 @@ Adding folder with manually added packages, loading file private variables
 (setq backup-directory-alist
       `(("." . ,(concat user-emacs-directory "backups"))))
 #+end_src
+
+Turn into window manager if enabled
+#+begin_src emacs-lisp
+(if nix-exwm
+    (progn
+      (require 'exwm)
+      (require 'exwm-config)
+      (exwm-config-example)))
+#+end_src
 * Packages
 #+begin_src emacs-lisp
 (require 'use-package)  
+;; Load general to use :general in use-package
+(require 'general)
 #+end_src
 Speeding up again 🦼
 #+begin_src emacs-lisp
@@ -101,7 +115,7 @@ Projects management with ~counsel~ completion
   :config
   (projectile-mode))
 (use-package counsel-projectile
-  :if nix-misc
+  :if (and nix-misc (not nix-vertico))
   :after (projectile counsel))
 #+end_src
 Support for nix environment variables
@@ -262,7 +276,7 @@ Highlight lines chaned according to ~git~
 #+END_SRC
 #+begin_src emacs-lisp
 (use-package minimap
-  :if nix-misc
+  :if nix-additional-motions
   :custom
   (minimap-window-location "right")) 
 #+end_src
@@ -291,6 +305,7 @@ Colors from pywal. /Disabled/
 (use-package doom-themes
   :if nix-visual
   :preface (defvar region-fg nil)
+  :config
   (setq doom-themes-treemacs-theme "doom-colors")
   (doom-themes-treemacs-config)
   (doom-themes-org-config)
@@ -378,7 +393,8 @@ Snippets
   :if nix-code-misc
   :init
   (yas-global-mode 1))
-(use-package yasnippet-snippets)
+(use-package yasnippet-snippets
+  :if nix-code-misc)
 #+end_src
 Code formatting
 #+begin_src emacs-lisp
@@ -466,7 +482,7 @@ Use ~company~ for autocompletion. Add snippets to company backends
 Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
 #+begin_src emacs-lisp
 (use-package counsel
-  :if nix-misc
+  :if (and nix-misc (not nix-vertico))
   :init
   (ivy-mode 1)
   :config
@@ -474,7 +490,50 @@ Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
   :config
   (setq projectile-completion-system 'ivy)
   (setq ivy-use-selectable-prompt t)
-  (setq ivy-initial-inputs-alist nil))
+  (setq ivy-initial-inputs-alist nil)
+
+  :general
+  ("M-x" 'counsel-M-x)
+
+  (
+   :states '(normal visual emacs insert treemacs)
+   :prefix "SPC"
+   :non-normal-prefix "M-SPC"
+   :keymaps 'override
+   "bf" 'counsel-switch-buffer
+   "cc" 'counsel-compile
+   "ce" 'counsel-compilation-errors
+   "ff" 'counsel-find-file
+   "pf" 'counsel-projectile-find-file))
+
+;; If vertico (consult) is enabled
+(use-package consult
+  :if (and nix-misc nix-vertico)
+  :general
+  (
+   :states '(normal visual emacs insert treemacs)
+   :prefix "SPC"
+   :non-normal-prefix "M-SPC"
+   :keymaps 'override
+   "bf" 'consult-buffer
+   "ce" 'consult-compile-error
+   "ff" 'find-file
+   "pf" 'consult-projectile))
+(use-package vertico
+  :if (and nix-misc nix-vertico)
+  :init (vertico-mode))
+(use-package consult-projectile
+  :if (and nix-misc nix-vertico)
+  :after (consult projectile))
+(use-package marginalia
+  :if (and nix-misc nix-vertico)
+  :after vertico
+  :init
+  (marginalia-mode))
+(use-package orderless
+  :if (and nix-misc nix-vertico)
+  :custom
+  (completion-styles '(orderless basic)))
 #+end_src
 *** Languages and lsp
 Typescript
@@ -767,7 +826,9 @@ Defining action to execute at entering org-mode, disable marking capture entry a
 #+begin_src emacs-lisp
 (add-hook 'org-mode-hook 
           (lambda () 
-            (org-bullets-mode 1)
+            (if nix-org-additional
+		(progn
+		  (org-bullets-mode 1)))
             (org-indent-mode nil)
             (prettify-symbols-mode)
             (set-fontset-font t 'symbol "Noto Color Emoji")
@@ -818,11 +879,13 @@ Export settings
 #+END_SRC
 Setting up spell checking. Working for both laguages, but only one in one buffer.
 #+BEGIN_SRC emacs-lisp
+(if nix-dicts
+  (progn
 (with-eval-after-load "ispell"
   (setq ispell-program-name "hunspell")
   (setq ispell-dictionary "ru_RU,en_US")
   (ispell-set-spellchecker-params)
-  (ispell-hunspell-add-multi-dic "ru_RU,en_US"))
+  (ispell-hunspell-add-multi-dic "ru_RU,en_US"))))
 #+END_SRC
 Inserting last screenshot
 #+BEGIN_SRC emacs-lisp
@@ -912,6 +975,8 @@ Publishing for:
 Org mode to LaTeX and pdf
 Setting packages
 #+BEGIN_SRC emacs-lisp
+(if nix-latex 
+  (progn
 (setq org-latex-packages-alist '(
                                  ("T1, T2A" "fontenc" t)
                                  ("lutf8" "luainputenc" t)
@@ -993,7 +1058,7 @@ Setting packages
         "pdflatex -shell-escape --synctex=1 -interaction nonstopmode -output-directory %o %f"))
 (setq org-latex-minted-options
       '(("frame" "lines") ("linenos=true") ("mathescape")))
-(add-to-list 'org-latex-minted-langs '(ipython "python"))
+(add-to-list 'org-latex-minted-langs '(ipython "python"))))
 #+END_SRC
 ** Common
 RSS reader. Settings colors for each tag.
@@ -1129,9 +1194,6 @@ Emacs everywher!
  "<backtab>" 'iliayar/company-complete-selection)
 
 (general-define-key
- "M-x" 'counsel-M-x)
-
-(general-define-key
  :map 'org-mode-map
  "C-c C-x i" 'my/org-insert-last-screenshot)
 
@@ -1140,10 +1202,12 @@ Emacs everywher!
 #+end_src
 Elfeed hydra binddings
 #+begin_src emacs-lisp
+(if (and nix-additional-motions nix-rss)
+  (progn
 (defhydra elfeed-search-view-hydra (:color blue :hint t)
   ("d" (elfeed-search-set-filter nil) "Default")
   ("f" (elfeed-search-set-filter "+starred") "Favourite")
-  ("a" (elfeed-search-set-filter "") "All"))
+  ("a" (elfeed-search-set-filter "") "All"))))
 #+end_src
 Bindings using ~general~ package
 Helper functions for university labs
@@ -1187,22 +1251,18 @@ Helper functions for university labs
  "gt"  'centaur-tabs-forward
  "gT"  'centaur-tabs-backward
  "C-=" 'format-all-buffer)
+
 (general-define-key
  :states '(normal visual emacs insert treemacs)
  :prefix "SPC"
  :non-normal-prefix "M-SPC"
  :keymaps 'override
- "bf" 'counsel-switch-buffer
  "bb" 'ibuffer
  "ca" 'lsp-execute-code-action
- "cc" 'counsel-compile
  "ck" 'kill-compilation
- "ce" 'counsel-compilation-errors
  "cd" 'kill-compilation-buffer
- "cf" 'counsel-grep-or-swiper
  "cl" 'comment-or-uncomment-region
  "cr" 'lsp-rename
- "ff" 'counsel-find-file
  "gl" 'avy-goto-line
  "gr" 'revert-buffer
  "gs" 'avy-goto-char-timer
@@ -1213,7 +1273,6 @@ Helper functions for university labs
  "om" 'mu4e
  "oi" 'minimap-mode
  "pc" 'projectile-compile-project
- "pf" 'counsel-projectile-find-file
  "pp" 'projectile-switch-project
  "pl" 'org-latex-preview
  "pi" 'org-toggle-inline-images
@@ -1252,6 +1311,8 @@ Helper functions for university labs
 #+end_src
 Hydra
 #+begin_src emacs-lisp
+(if nix-additional-motions
+  (progn
 (defhydra hydra-window-resize-menu (:color red
                                            :hint nil)
   "
@@ -1267,7 +1328,7 @@ Hydra
   ("l" evil-window-increase-width)
   ("k" evil-window-decrease-height)
   ("j" evil-window-increase-height)
-  ("c" nil "Cancel"))
+  ("c" nil "Cancel"))))
 #+end_src
 
 * Other
