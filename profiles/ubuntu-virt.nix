@@ -38,6 +38,12 @@
 
       nix = true;
       exwm = true;
+
+      code-misc = true;
+      prog-misc = true;
+
+      lsp = true;
+      rust = true;
     };
 
     de.terms.alacritty.enable = true;

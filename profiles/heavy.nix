@@ -38,7 +38,7 @@
       additional-motions = true;
       visual = true;
       code-misc = true;
-      prog-msc = true;
+      prog-misc = true;
       web = {
         misc = true;
       };

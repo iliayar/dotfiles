@@ -615,7 +615,7 @@ Lsp integration with several plugins
 (use-package lsp-treemacs
   :if (and nix-lsp nix-misc))
 (use-package lsp-ivy
-  :if (and nix-lsp nix-misc))
+  :if (and nix-lsp nix-misc (not nix-vertico)))
 #+end_src
 C++ lsp \\
 In /build/ directory run =cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=YES ..=
