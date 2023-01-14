@@ -37,23 +37,20 @@
         enable = true;
       };
 
-      evil = true;
-      additional-motions = true;
-      visual = true;
-      code-misc = true;
-      prog-misc = true;
-      web = {
-        misc = true;
+      evil = {
+        enable = true;
       };
 
-      lsp = true;
-      rust = true;
+      org = {
+        roam = {
+          enable = true;
+          ui = true;
+        };
+      };
 
-      org-additional = true;
-      roam = true;
-      nix = true;
-
-      dicts = true;
+      pretty = {
+        theme = "doom-gruvbox";
+      };
     };
     editors.nvim.enable = true;
 

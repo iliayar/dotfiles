@@ -1,0 +1,59 @@
+RSS reader. Settings colors for each tag.
+#+begin_src emacs-lisp
+(use-package elfeed
+  :if nixcfg-elfeed
+  :custom
+  (rmh-elfeed-org-files (list "~/org/elfeed.org"))
+  :config
+  (defface unread-tag-face '((t :foreground "light grey")) "Marks unread")
+  (defface news-tag-face '((t :foreground "light yellow")) "Mark news")
+  (defface ctf-tag-face '((t :foreground "red")) "Mark CTF events")
+  (defface blog-tag-face '((t :foreground "cyan")) "Mark posts")
+  (defface github-tag-face '((t :foreground "orange")) "Mark Github feed")
+  (defface starred-tag-face '((t :foreground "yellow")) "Mark favourite posts")
+  (defface videos-tag-face '((t :foreground "tomato")) "Mark favourite posts")
+  (setq elfeed-search-face-alist
+        '(
+          (starred starred-tag-face)
+          (ctf ctf-tag-face)
+          (blog blog-tag-face)
+          (news news-tag-face)
+          (github github-tag-face)
+          (videos videos-tag-face)
+          (unread elfeed-search-unread-title-face)
+          ))
+
+  (defalias 'elfeed-toggle-star
+    (elfeed-expose #'elfeed-search-toggle-all 'starred))
+
+  :general
+  (
+   :keymaps 'elfeed-search-mode-map
+   "f" 'elfeed-toggle-star
+   "v" 'elfeed-search-view-hydra/body)
+
+  (
+   :states '(normal visual emacs insert treemacs)
+   :prefix "SPC"
+   :non-normal-prefix "M-SPC"
+   :keymaps 'override
+   "or" 'elfeed))
+(use-package elfeed-org
+  :if nixcfg-elfeed-org
+  :init
+  (elfeed-org))
+(use-package elfeed-goodies
+  :if nixcfg-elfeed-goodies
+  :init
+  (elfeed-goodies/setup))
+#+end_src
+
+Elfeed hydra binddings
+#+begin_src emacs-lisp
+(if nixcfg-elfeed
+    (progn
+      (defhydra elfeed-search-view-hydra (:color blue :hint t)
+	("d" (elfeed-search-set-filter nil) "Default")
+	("f" (elfeed-search-set-filter "+starred") "Favourite")
+	("a" (elfeed-search-set-filter "") "All"))))
+#+end_src

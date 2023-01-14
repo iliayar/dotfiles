@@ -20,28 +20,11 @@ Speeding up 🐌
 (define-key special-event-map [config-changed-event] 'ignore)
 #+end_src
 * Main config
-** Repositories
-There is initializes package mangers and initializing ~use-package~ \\
-Package config -- see https://melpa.org/#/getting-started. No more
-needed because of managing packages using Nix's home-manager.
-#+begin_src emacs-lisp
-(require 'package)
-(add-to-list
- 'package-archives
- '("melpa" . "https://melpa.org/packages/")
- t)
-(package-initialize)
-
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-#+end_src
 Adding folder with manually added packages, loading file private variables
 - store all backups in a single directory
 #+begin_src emacs-lisp
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 (load "~/.emacs.d/private.el")
-(setq user-init-file "~/.emacs.d/init.el")
 (setq backup-directory-alist
       `(("." . ,(concat user-emacs-directory "backups"))))
 #+end_src
@@ -54,11 +37,20 @@ Turn into window manager if enabled
       (require 'exwm-config)
       (exwm-config-example)))
 #+end_src
+
+Default global variables
+#+begin_src emacs-lisp
+(setq default-family "Fira Code")
+(setq default-height 95)
+#+end_src
+
 * Packages
 #+begin_src emacs-lisp
 (require 'use-package)  
 ;; Load general to use :general in use-package
 (require 'general)
+
+(setq use-package-compute-statistics t)
 #+end_src
 Speeding up again 🦼
 #+begin_src emacs-lisp
@@ -77,7 +69,15 @@ Projects management with ~counsel~ completion
 (use-package projectile
   :if nixcfg-projectile
   :config
-  (projectile-mode))
+  (projectile-mode)
+  :general
+  (
+   :states '(normal visual emacs insert treemacs)
+   :prefix "SPC"
+   :non-normal-prefix "M-SPC"
+   :keymaps 'override
+   "pc" 'projectile-compile-project
+   "pp" 'projectile-switch-project))
 (use-package counsel-projectile
   :if nixcfg-counsel-projectile
   :after (projectile counsel))
@@ -93,14 +93,30 @@ Support for nix environment variables
 Amazing git tool
 #+begin_src emacs-lisp
 (use-package magit
-  :if nixcfg-magit)
+  :if nixcfg-magit
+  :general
+  (
+   :states '(normal visual emacs insert treemacs)
+   :prefix "SPC"
+   :non-normal-prefix "M-SPC"
+   :keymaps 'override
+   "og" 'magit))
 #+end_src
 Project tree. Settings fonts for ~treemacs~
 #+begin_src emacs-lisp
 (use-package treemacs
   :if nixcfg-treemacs
   :config
-  (setq treemacs-read-string-input 'from-minibuffer))
+  (setq treemacs-read-string-input 'from-minibuffer)
+
+  :general
+(
+ :states '(normal visual emacs insert treemacs)
+ :prefix "SPC"
+ :non-normal-prefix "M-SPC"
+ :keymaps 'override
+ "op" 'treemacs
+ "tt" 'treemacs-select-window))
 (use-package treemacs-evil
   :if nixcfg-treemacs-evil
   :after evil)
@@ -163,7 +179,13 @@ Multicursor
 (use-package evil-mc
   :if nixcfg-evil-mc
   :config
-  (global-evil-mc-mode 1))
+  (global-evil-mc-mode 1)
+  :general
+  (
+   :states '(visual)
+   :keymap 'evil-mc-key-map
+   "A" 'evil-mc-make-cursor-in-visual-selection-end
+   "I" 'evil-mc-make-cursor-in-visual-selection-beg))
 #+end_src
 ** Visual
 Tabs
@@ -177,7 +199,14 @@ Tabs
   (centaur-tabs-set-icons t)
   (centaur-tabs-set-bar 'left)
   (centaur-tabs-set-close-button nil)
-  (centaur-tabs-set-modified-market t))
+  (centaur-tabs-set-modified-market t)
+  :general
+
+  (
+   :states '(normal visual)
+   :keymaps 'override
+   "gt"  'centaur-tabs-forward
+   "gT"  'centaur-tabs-backward))
 #+end_src
 
 Icons
@@ -203,14 +232,31 @@ Colorize parenthesis
 Searching
 #+begin_src emacs-lisp
 (use-package avy
-  :if nixcfg-avy)
+  :if nixcfg-avy
+  :general
+
+  (
+   :states '(normal visual emacs insert treemacs)
+   :prefix "SPC"
+   :non-normal-prefix "M-SPC"
+   :keymaps 'override
+   "gl" 'avy-goto-line
+   "gs" 'avy-goto-char-timer))
 #+end_src
 Windows hoping
 #+begin_src emacs-lisp
 (use-package ace-window
   :if nixcfg-ace-window
   :config
-  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+  :general
+  
+  (
+   :states '(normal visual emacs insert treemacs)
+   :prefix "SPC"
+   :non-normal-prefix "M-SPC"
+   :keymaps 'override
+   "ww" 'ace-window))
 #+end_src
 Dashboard showing on startup
 #+begin_src emacs-lisp
@@ -243,7 +289,15 @@ Highlight lines chaned according to ~git~
 (use-package minimap
   :if nixcfg-minimap
   :custom
-  (minimap-window-location "right")) 
+  (minimap-window-location "right")
+
+  :general
+  (
+   :states '(normal visual emacs insert treemacs)
+   :prefix "SPC"
+   :non-normal-prefix "M-SPC"
+   :keymaps 'override
+   "oi" 'minimap-mode)) 
 #+end_src
 *** Themes
 ~Doom-modeline~ as modeline
@@ -264,7 +318,7 @@ Highlight lines chaned according to ~git~
   (setq doom-themes-treemacs-theme "doom-colors")
   (doom-themes-treemacs-config)
   (doom-themes-org-config)
-  :init (load-theme 'doom-ayu-mirage t))
+  :init (load-theme nixcfg-theme t))
 #+end_src
 *** Settings
 - Visual/behaviour
@@ -353,7 +407,13 @@ Snippets
 Code formatting
 #+begin_src emacs-lisp
 (use-package format-all
-  :if nixcfg-format-all)
+  :if nixcfg-format-all
+  :general
+
+  (
+   :states '(normal visual)
+   :keymaps 'override
+   "C-=" 'format-all-buffer))
 #+end_src
 Dockerfile support
 #+BEGIN_SRC emacs-lisp
@@ -541,23 +601,50 @@ Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/
 (use-package lsp-mode
   :if nixcfg-lsp-mode
   :hook (
-         (lsp-mode . lsp-enable-which-key-integration) 
-         (c++-mode . lsp)
-         )
+	 (lsp-mode . lsp-enable-which-key-integration) 
+	 (c++-mode . lsp)
+	 )
   :config
   (setq read-process-output-max (* 1024 1024))
   (setq lsp-file-watch-ignored
-        '("build"
-          "out"
-          "target"
-          "release"
-          ".git"
-          ))
+	'("build"
+	  "out"
+	  "target"
+	  "release"
+	  ".git"
+	  ))
   (setq lsp-log-io nil)
   (setq lsp-idle-delay 0.500)
-  (setq lsp-lens-enable nil))
+  (setq lsp-lens-enable nil)
+
+  :general
+
+  (
+   :states '(normal visual emacs insert treemacs)
+   :prefix "SPC"
+   :non-normal-prefix "M-SPC"
+   :keymaps 'override
+   "ca" 'lsp-execute-code-action
+   "cr" 'lsp-rename
+   "sl" 'lsp
+   "sr" 'lsp-workspace-restart
+   "ss" 'lsp-workspace-shutdown
+   "sd" 'lsp-describe-thing-at-point))
 (use-package lsp-ui
-  :if nixcfg-lsp-ui)
+  :if nixcfg-lsp-ui
+  :general
+  (
+   :states '(normal visual)
+   :keymaps 'override
+   "gsx" 'lsp-ui-peek-find-references
+   "gsd" 'lsp-ui-peek-find-definitions)
+
+  (
+   :states '(normal visual emacs insert treemacs)
+   :prefix "SPC"
+   :non-normal-prefix "M-SPC"
+   :keymaps 'override
+   "se" 'lsp-ui-flycheck-list))
 #+end_src
 Syntax checking and lsp related errors/warnings. Posfrmae stil sucks
 #+BEGIN_SRC emacs-lisp
@@ -616,7 +703,15 @@ Julia mode
 Rust mode
 #+begin_src emacs-lisp
 (use-package rustic
-  :if nixcfg-rustic)
+  :if nixcfg-rustic
+  :general
+
+  (
+   :states '(normal visual emacs insert treemacs)
+   :prefix "SPC"
+   :non-normal-prefix "M-SPC"
+   :keymaps 'override
+   "rr" 'rustic-cargo-run))
 #+end_src
 Go mode
 #+begin_src emacs-lisp
@@ -678,41 +773,12 @@ Compilation windows settings:
 (setq compilation-window-height 10)
 #+end_src
 
-** Org-mode
-😋 Apply ANSI escape symbols for block output!
+** [[file:org-v1.org][Org mode]]
 #+begin_src emacs-lisp
-(defun ek/babel-ansi ()
-  (when-let ((beg (org-babel-where-is-src-block-result nil nil)))
-    (save-excursion
-      (goto-char beg)
-      (when (looking-at org-babel-result-regexp)
-        (let ((end (org-babel-result-end))
-              (ansi-color-context-region nil))
-          (ansi-color-apply-on-region beg end))))))
-(add-hook 'org-babel-after-execute-hook 'ek/babel-ansi)
+(if nixcfg-bundle-org-style-v1 (org-babel-load-file "~/.emacs.d/org-v1.el"))
 #+end_src
-Export Org mode to Json
-#+BEGIN_SRC emacs-lisp
-(use-package ox-json
-  :if nixcfg-ox-json)
-#+END_SRC
-Org headers icons
-#+begin_src emacs-lisp
-(use-package org-bullets
-  :if nixcfg-org-bullets)
-#+end_src
-Loading Export backends
-#+BEGIN_SRC emacs-lisp
-;; (require 'ox-rss)
-(eval-after-load "org"
-  (progn
-    '(require 'ox-md nil t)
-    '(require 'ox-rss nil t)
-    '(require 'ox-latex nil t)
-    '(require 'ox-json nil t)
-    '(require 'ox-reveal nil t)))
-#+end_src
-Org Roam
+
+*** Org Roam
 #+BEGIN_SRC emacs-lisp
 (use-package org-roam
   :if nixcfg-org-roam
@@ -738,324 +804,20 @@ Org Roam
       (load-library "org-roam-ui")))
 
 #+END_SRC
-*** Settings
-Setting visual stuff
+** [[file:latex.org][Latex]]
 #+begin_src emacs-lisp
-(setq-default prettify-symbols-alist '(("#+begin_src" . "↓")
-                                       ("#+end_src" . "↑")
-                                       ("#+BEGIN_SRC" . "↓")
-                                       ("#+END_SRC" . "↑")
-                                       ("#+end_proof" . "⬜")
-                                       ("[ ]" . "")
-                                       ("[X]" . "")
-                                       ("[-]" . "")
-                                       ))
-
-(setq org-hide-emphasis-markers t
-      org-fontify-done-headline t
-      org-ellipsis "⤶"
-      org-pretty-entities t
-      prettify-symbols-unprettify-at-point 'right-edge
-      org-directory "~/org"
-      org-agenda-files '("~/org")
-      org-default-notes-file (concat org-directory "/Notes.org")
-      org-highlight-latex-and-related '(latex entities)
-      org-todo-keywords '((sequence "EVENT" "DRIFTED" "TODO" "FIXME" "|" "CANCELED" "DONE" ))
-      org-src-preserve-indentation t
-      org-pretty-entities-include-sub-superscripts nil)
-
-(setq org-todo-keyword-faces
-      '(("TODO"     . "magenta")
-        ("FIXME"    . "red")
-        ("DONE"     . "LawnGreen")
-        ("DRIFTED"  . "DeepSkyBlue1")
-        ("EVENT"    . "PaleTurquoise")
-        ("CANCELED" . "yellow2")))
-
-(font-lock-add-keywords 'org-mode
-                        '(("^ *\\([-]\\) "
-                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+(if nixcfg-bundle-latex (org-babel-load-file "~/.emacs.d/latex.el"))
 #+end_src
-Defining action to execute at entering org-mode, disable marking capture entry as bookmark
-#+begin_src emacs-lisp
-(add-hook 'org-mode-hook 
-          (lambda () 
-            (if nixcfg-bundle-org-additions-v1
-		(progn
-		  (org-bullets-mode 1)))
-            (org-indent-mode nil)
-            (prettify-symbols-mode)
-            (set-fontset-font t 'symbol "Noto Color Emoji")
-            (progn
-              (setq left-margin-width 5)
-              (setq right-margin-width 5)
-              (set-window-buffer nil (current-buffer)))))
-
-(setq org-capture-bookmark nil)
-#+END_SRC
-Increse readability of latex preview in org-mode
-#+begin_src emacs-lisp
-(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
-#+end_src
-Org mode file associations
-#+BEGIN_SRC emacs-lisp
-(setq org-file-apps
-      (append '(
-                ("\\.pdf\\'" . "zathura %s")
-                ) org-file-apps ))
-#+END_SRC
-- Add /dot/ to org-babel
-- Enable redisplaying images after executing block
-- Auto confirm evaluating /dot/
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'org-src-lang-modes (quote ("dot" . graphviz-dot)))
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((dot . t)
-   (gnuplot . t)
-   (org . t)
-   (haskell . t)
-   (python . t)
-   (js . t)
-   (shell . t)
-   (julia . t)
-   (sql . t)
-;;   (ipython . t)
-   ))
-(add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
-(setq org-confirm-babel-evaluate nil)
-(setq org-src-tab-acts-natively t)
-#+END_SRC
-Export settings
-#+BEGIN_SRC emacs-lisp
-(setq org-html-htmlize-output-type 'inline-css)
-(setq org-html-head-include-default-style nil)
-#+END_SRC
-Setting up spell checking. Working for both laguages, but only one in one buffer.
-#+BEGIN_SRC emacs-lisp
-(if nixcfg-bundle-dicts
-  (progn
-(with-eval-after-load "ispell"
-  (setq ispell-program-name "hunspell")
-  (setq ispell-dictionary "ru_RU,en_US")
-  (ispell-set-spellchecker-params)
-  (ispell-hunspell-add-multi-dic "ru_RU,en_US"))))
-#+END_SRC
-Inserting last screenshot
-#+BEGIN_SRC emacs-lisp
-(defun my/org-insert-last-screenshot ()
-  (interactive)
-  (setq screenshots-dir "~/Pictures/screenshots/")
-  (let ((cur-dir (read-directory-name "Copy screenshot to: "))
-        (screenshot (car (last (directory-files screenshots-dir)))))
-    (copy-file (concat screenshots-dir screenshot) (concat cur-dir screenshot) t)
-    (org-insert-link nil (concat "./" (file-relative-name (concat cur-dir screenshot) default-directory))))
-  (org-redisplay-inline-images))
-#+END_SRC
-Set Org-mode exporting backends
-#+BEGIN_SRC emacs-lisp
-(setq org-export-backends '(ascii html icalendar latex md odt))
-#+END_SRC
-*** Publishing
-Publishing for:
-- Main site
-- University consepcts (exporting to pdf and uploading on server)
-#+BEGIN_SRC emacs-lisp
-(defun my-conspects-header (arg)
-  "<style>#forkongithub a{background:#000;color:#fff;text-decoration:none;font-family:arial,sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:1rem;line-height:2rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#c11;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:\"\";width:100%;display:block;position:absolute;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:fixed;display:block;top:0;right:0;width:200px;overflow:hidden;height:200px;z-index:9999;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);-moz-transform:rotate(45deg);-o-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.8);}}</style><span id=\"forkongithub\"><a href=\"https://github.com/iliayar/ITMO\">Fork me on GitHub</a></span>")
-
-(setq org-publish-project-alist
-      '(
-        ("org-mainsite"
-         :base-directory "~/Repos/MainSite/public/notes"
-         :base-extension "org"
-         :exclude "level-[0-9]*.org"
-         :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes"
-         :html-html5-fancy t
-         ;; :html-link-home "https://iliayar.ru/public-notes/index.html"
-         :html-validation-link nil
-         :html-postamble "<hr><a href=\"/public-notes/index.html\">Home Page</a><span style=\"float: right\"><a href=\"/public-notes/blog.xml\"><i class=\"fas fa-rss\"></i></a> <a href=\"https://github.com/iliayar/iliayar\"><i class=\"fab fa-github\"></i></a></span>"
-         :recursive t
-         :publishing-function org-html-publish-to-html
-         :headline-levels 4             ; Just the default for this project.
-         :auto-preamble t
-         )
-        ("rss-mainsite"
-         :base-directory "~/Repos/MainSite/public/notes"
-         :base-extension "org"
-         :exclude ".*"
-         :include ("blog.org")
-         :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes"
-         :rss-extension "xml"
-         :section-numbers nil
-         :html-link-home "https://iliayar.ru/public-notes/"
-         :html-link-use-abs-url t
-         :html-link-org-files-as-html t
-         :output-file "rss"
-         :recursive nil
-         :publishing-function org-rss-publish-to-rss
-         )
-        ("static-mainsite"
-         :base-directory "~/Repos/MainSite/public/notes"
-         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|pdf"
-         :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes"
-         :recursive t
-         :publishing-function org-publish-attachment
-         )
-        ("mainsite" :components ("org-mainsite" "rss-mainsite" "static-mainsite"))
-
-        ("org-conspects"
-         :base-directory "~/Repos/ITMO"
-         :exclude ".*[^E].org"
-         :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes/conspects"
-         :recursive t
-         :html-postamble "<hr><a href=\"/public-notes/index.html\">Home Page</a><span style=\"float: right\"><a href=\"https://t.me/iliayar\"><i class=\"fab fa-telegram-plane\"></i></a> <a href=\"https://github.com/iliayar/ITMO\"><i class=\"fab fa-github\"></i></a></span><br><a href=\"/public-notes/conspects/README.html\">Conspects Home Page</a>"
-         :publishing-function org-html-publish-to-html
-         :headline-levels 4             ; Just the default for this project.
-         ;; :html-preamble my-conspects-header
-         )
-        ("pdfs-conspects"
-         :base-directory "~/Repos/ITMO"
-         :base-extension "org"
-         :exclude "README.org\\|level-[0-9]*.org\\|level-subj.org"
-         :publishing-directory "/ssh:iliayar@iliayar.ru:/var/www/mainsite/public/public-notes/conspects"
-         :recursive t
-         :publishing-function org-latex-publish-to-pdf
-         )
-        ("conspects" :components ("org-conspects" "pdfs-conspects"))
-        ))
-#+END_SRC
-*** LaTeX
-Org mode to LaTeX and pdf
-Setting packages
-#+BEGIN_SRC emacs-lisp
-(if nixcfg-bundle-latex 
-  (progn
-(setq org-latex-packages-alist '(
-                                 ("T1, T2A" "fontenc" t)
-                                 ("lutf8" "luainputenc" t)
-                                 ("english,russian" "babel" t)
-                                 ("" "minted" t)
-                                 ("" "graphicx" t)
-                                 ("" "longtable" t)
-                                 ("" "hyperref" t)
-                                 ("" "xcolor" t)
-                                 ("" "natbib" t)
-                                 ("" "amssymb" t)
-                                 ("" "stmaryrd" t)
-                                 ("" "amsmath" t)
-                                 ("" "caption" t)
-                                 ("" "mathtools" t)
-                                 ("" "amsthm" t)
-                                 ("" "tikz" t)
-                                 ("" "fancyhdr" t)
-                                 ("" "lastpage" t)
-                                 ("" "titling" t)
-                                 ("" "grffile" t)
-                                 ("" "extarrows" t)
-                                 ("" "wrapfig" t)
-                                 ("" "algorithm" t)
-                                 ("" "algorithmic" t)
-                                 ("" "lipsum" t)
-                                 ("" "rotating" t)
-                                 ("" "placeins" t)
-                                 ("normalem" "ulem" t)
-                                 ("" "amsmath" t)
-                                 ("" "textcomp" t)
-                                 ("" "svg" t)
-                                 ("" "capt-of" t)))
-;; Reset default value. For debugging
-(custom-reevaluate-setting 'org-latex-classes)
-(with-eval-after-load 'ox-latex
-  (progn 
-    (add-to-list 'org-latex-classes
-                 (list "general"
-                       "
-  \\documentclass[english]{article}
-  [NO-DEFAULT-PACKAGES]
-  [PACKAGES]
-  [EXTRA]
-  \\usepackage{geometry}
-  \\geometry{a4paper,left=2.5cm,top=2cm,right=2.5cm,bottom=2cm,marginparsep=7pt, marginparwidth=.6in}
-  \\input{~/.emacs.d/preamble.sty}
-  "
-                       '("\\section{%s}" . "\\section*{%s}")
-                       '("\\subsection{%s}" . "\\subsection*{%s}")
-                       '("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                       '("\\paragraph{%s}" . "\\paragraph*{%s}")
-                       '("\\subparagraph{%s}" . "\\subparagraph*{%s}")
-                       ))
-    (add-to-list 'org-latex-classes
-                 (list "lectures"
-                       "
-  \\documentclass[oneside]{book}
-  [NO-DEFAULT-PACKAGES]
-  [PACKAGES]
-  [EXTRA]
-  \\addto\\captionsrussian{\\renewcommand{\\chaptername}{Лекция}}
-  \\renewcommand{\\leftmark}{}
-  \\usepackage[a4paper, total={6in, 8in}]{geometry}
-  \\input{~/.emacs.d/preamble.sty}
-  \\fancyhead[L]{\\leftmark}
-  "
-                       '("\\chapter*{%1$s}\\renewcommand{\\leftmark}{%1$s}\\addcontentsline{toc}{chapter}{%1$s}\\stepcounter{chapter}" . "\\chapter{%s}")
-                       '("\\section{%s}" . "\\section*{%s}")
-                       '("\\subsection{%s}" . "\\subsection*{%s}")
-                       '("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                       '("\\paragraph{%s}" . "\\paragraph*{%s}")
-                       '("\\subparagraph{%s}" . "\\subparagraph*{%s}")
-                       ))))
-(setq org-latex-listings 'minted
-      org-latex-pdf-process
-      '("pdflatex -shell-escape --synctex=1 -interaction nonstopmode -output-directory %o %f"
-        "pdflatex -shell-escape --synctex=1 -interaction nonstopmode -output-directory %o %f"
-        "pdflatex -shell-escape --synctex=1 -interaction nonstopmode -output-directory %o %f"))
-(setq org-latex-minted-options
-      '(("frame" "lines") ("linenos=true") ("mathescape")))
-(add-to-list 'org-latex-minted-langs '(ipython "python"))))
-#+END_SRC
 ** Common
-RSS reader. Settings colors for each tag.
-#+begin_src emacs-lisp
-(use-package elfeed
-  :if nixcfg-elfeed
-  :custom
-  (rmh-elfeed-org-files (list "~/org/elfeed.org"))
-  :config
-  (defface unread-tag-face '((t :foreground "light grey")) "Marks unread")
-  (defface news-tag-face '((t :foreground "light yellow")) "Mark news")
-  (defface ctf-tag-face '((t :foreground "red")) "Mark CTF events")
-  (defface blog-tag-face '((t :foreground "cyan")) "Mark posts")
-  (defface github-tag-face '((t :foreground "orange")) "Mark Github feed")
-  (defface starred-tag-face '((t :foreground "yellow")) "Mark favourite posts")
-  (defface videos-tag-face '((t :foreground "tomato")) "Mark favourite posts")
-  (setq elfeed-search-face-alist
-        '(
-          (starred starred-tag-face)
-          (ctf ctf-tag-face)
-          (blog blog-tag-face)
-          (news news-tag-face)
-          (github github-tag-face)
-          (videos videos-tag-face)
-          (unread elfeed-search-unread-title-face)
-          ))
-
-  (defalias 'elfeed-toggle-star
-    (elfeed-expose #'elfeed-search-toggle-all 'starred))
-  )
-(use-package elfeed-org
-  :if nixcfg-elfeed-org
-  :init
-  (elfeed-org))
-(use-package elfeed-goodies
-  :if nixcfg-elfeed-goodies
-  :init
-  (elfeed-goodies/setup))
-#+end_src
 Emacs everywhere!
 #+begin_src emacs-lisp
 (use-package emacs-everywhere
   :if nixcfg-emacs-everywhere)
+#+end_src
+
+*** [[file:rss.org][RSS]]
+#+begin_src emacs-lisp
+(org-babel-load-file "~/.emacs.d/rss.el")
 #+end_src
 
 * Keybindings
@@ -1072,16 +834,6 @@ Emacs everywhere!
 (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance)
 (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat)
 #+end_src
-Elfeed hydra binddings
-#+begin_src emacs-lisp
-(if nixcfg-bundle-rss-hydra
-  (progn
-(defhydra elfeed-search-view-hydra (:color blue :hint t)
-  ("d" (elfeed-search-set-filter nil) "Default")
-  ("f" (elfeed-search-set-filter "+starred") "Favourite")
-  ("a" (elfeed-search-set-filter "") "All"))))
-#+end_src
-Bindings using ~general~ package
 Helper functions for university labs
 #+begin_src emacs-lisp
 (defun run-nix-lab ()
@@ -1115,14 +867,6 @@ Helper functions for university labs
  :state '(normal)
  :keymaps '(org-mode-map)
  "<tab>" 'org-cycle)
-(general-define-key
- :states '(normal visual)
- :keymaps 'override
- "gsx" 'lsp-ui-peek-find-references
- "gsd" 'lsp-ui-peek-find-definitions
- "gt"  'centaur-tabs-forward
- "gT"  'centaur-tabs-backward
- "C-=" 'format-all-buffer)
 
 (general-define-key
  :states '(normal visual emacs insert treemacs)
@@ -1130,43 +874,17 @@ Helper functions for university labs
  :non-normal-prefix "M-SPC"
  :keymaps 'override
  "bb" 'ibuffer
- "ca" 'lsp-execute-code-action
  "ck" 'kill-compilation
  "cd" 'kill-compilation-buffer
  "cl" 'comment-or-uncomment-region
- "cr" 'lsp-rename
- "gl" 'avy-goto-line
  "gr" 'revert-buffer
- "gs" 'avy-goto-char-timer
  "oa" 'org-agenda
- "og" 'magit
- "or" 'elfeed
- "op" 'treemacs
- "om" 'mu4e
- "oi" 'minimap-mode
- "pc" 'projectile-compile-project
- "pp" 'projectile-switch-project
  "pl" 'org-latex-preview
  "pi" 'org-toggle-inline-images
- "rr" 'rustic-cargo-run
  "rl" 'run-nix-lab
- "sl" 'lsp
- "sr" 'lsp-workspace-restart
- "ss" 'lsp-workspace-shutdown
- "sd" 'lsp-describe-thing-at-point
- "se" 'lsp-ui-flycheck-list
- "tt" 'treemacs-select-window
  "wd" 'delete-window
  "wk" 'kill-buffer-and-window
- "wr" 'hydra-window-resize-menu/body
- "ww" 'ace-window)
-
-(general-define-key
- :states '(visual)
- :keymap 'evil-mc-key-map
- "A" 'evil-mc-make-cursor-in-visual-selection-end
- "I" 'evil-mc-make-cursor-in-visual-selection-beg
- )
+ "wr" 'hydra-window-resize-menu/body)
 
 (general-define-key
  :states '(normal visual insert)
@@ -1175,16 +893,9 @@ Helper functions for university labs
  :keymaps 'latex-mode-map
  "si" 'latex-insert-block
  )
-
-(general-define-key
- :keymaps 'elfeed-search-mode-map
- "f" 'elfeed-toggle-star
- "v" 'elfeed-search-view-hydra/body)
 #+end_src
 Hydra
 #+begin_src emacs-lisp
-(if nixcfg-hydra
-  (progn
 (defhydra hydra-window-resize-menu (:color red
                                            :hint nil)
   "
@@ -1200,41 +911,42 @@ Hydra
   ("l" evil-window-increase-width)
   ("k" evil-window-decrease-height)
   ("j" evil-window-increase-height)
-  ("c" nil "Cancel"))))
+  ("c" nil "Cancel"))
 #+end_src
 
 * Other
 ** Faces
 #+begin_src emacs-lisp
-(setq default-family "Fira Code")
-(setq default-height 95)
 (custom-set-faces
- `(ivy-current-match ((t (:foreground "white smoke" :background "dark orange" :extend t))))
- `(treemacs-root-face ((t (:family ,default-family :height ,default-height))))
- `(treemacs-git-unmodified-face ((t (:family ,default-family :height ,default-height))))
- `(treemacs-git-modified-face ((t (:family ,default-family :height ,default-height))))
- `(treemacs-git-renamed-face ((t (:family ,default-family :height ,default-height))))
- `(treemacs-git-ignored-face ((t (:family ,default-family :height ,default-height))))
- `(treemacs-git-untracked-face ((t (:family ,default-family :height ,default-height))))
- `(treemacs-git-added-face ((t (:family ,default-family :height ,default-height))))
- `(treemacs-git-conflict-face ((t (:family ,default-family :height ,default-height))))
- `(treemacs-directory-face ((t (:family ,default-family :height ,default-height))))
- `(treemacs-directory-collapsed-face ((t (:family ,default-family :height ,default-height))))
- `(treemacs-file-face ((t (:family ,default-family :height ,default-height))))
- `(treemacs-tags-face ((t (:family ,default-family :height ,default-height))))
- `(default ((t (:family ,default-family :height ,default-height))))
- `(italic ((t (:slant italic :family "Ubuntu Mono" :height ,default-height))))
- `(org-block ((t (:extend t))))
- `(org-block-begin-line ((t (:extend t :overline nil :underline t))))
- `(org-block-end-line ((t (:inherit org-block-begin-line :extend t :overline t :underline nil))))
- `(org-document-title ((t (:weight bold :height 1.3))))
- `(org-ellipsis ((t (:foreground "red"))))
- `(org-footnote ((t (:weight extra-bold :height 0.7))))
- `(org-latex-and-related ((t (:inherit nil :foreground "tomato" :weight bold))))
- `(org-level-1 ((t (:inherit outline-1 :extend t :underline t :height 1.2))))
- `(org-level-2 ((t (:inherit outline-2 :extend t :height 1.1))))
- `(org-link ((t (:inherit link))))
- `(org-tag ((t (:slant italic :weight normal :family "Ubuntu Mono"))))
- `(org-verbatim ((t (:box (:line-width (2 . 2) :color "dim gray" :style released-button)))))
- `(outline-1 ((t (:extend t :weight bold)))))
+ `(default ((t (:family ,default-family :height ,default-height)))))
+
+;; (custom-set-faces
+;;  `(ivy-current-match ((t (:foreground "white smoke" :background "dark orange" :extend t))))
+;;  `(treemacs-root-face ((t (:family ,default-family :height ,default-height))))
+;;  `(treemacs-git-unmodified-face ((t (:family ,default-family :height ,default-height))))
+;;  `(treemacs-git-modified-face ((t (:family ,default-family :height ,default-height))))
+;;  `(treemacs-git-renamed-face ((t (:family ,default-family :height ,default-height))))
+;;  `(treemacs-git-ignored-face ((t (:family ,default-family :height ,default-height))))
+;;  `(treemacs-git-untracked-face ((t (:family ,default-family :height ,default-height))))
+;;  `(treemacs-git-added-face ((t (:family ,default-family :height ,default-height))))
+;;  `(treemacs-git-conflict-face ((t (:family ,default-family :height ,default-height))))
+;;  `(treemacs-directory-face ((t (:family ,default-family :height ,default-height))))
+;;  `(treemacs-directory-collapsed-face ((t (:family ,default-family :height ,default-height))))
+;;  `(treemacs-file-face ((t (:family ,default-family :height ,default-height))))
+;;  `(treemacs-tags-face ((t (:family ,default-family :height ,default-height))))
+;;  `(default ((t (:family ,default-family :height ,default-height))))
+;;  `(italic ((t (:slant italic :family "Ubuntu Mono" :height ,default-height))))
+;;  `(org-block ((t (:extend t))))
+;;  `(org-block-begin-line ((t (:extend t :overline nil :underline t))))
+;;  `(org-block-end-line ((t (:inherit org-block-begin-line :extend t :overline t :underline nil))))
+;;  `(org-document-title ((t (:weight bold :height 1.3))))
+;;  `(org-ellipsis ((t (:foreground "red"))))
+;;  `(org-footnote ((t (:weight extra-bold :height 0.7))))
+;;  `(org-latex-and-related ((t (:inherit nil :foreground "tomato" :weight bold))))
+;;  `(org-level-1 ((t (:inherit outline-1 :extend t :underline t :height 1.2))))
+;;  `(org-level-2 ((t (:inherit outline-2 :extend t :height 1.1))))
+;;  `(org-link ((t (:inherit link))))
+;;  `(org-tag ((t (:slant italic :weight normal :family "Ubuntu Mono"))))
+;;  `(org-verbatim ((t (:box (:line-width (2 . 2) :color "dim gray" :style released-button)))))
+;;  `(outline-1 ((t (:extend t :weight bold)))))
 #+end_src
