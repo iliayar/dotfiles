@@ -124,19 +124,7 @@ let
       ];
   };
 
-  # TODO package:
-  # "goto-chg"
-  # "evil-collection"
-  # "evil-snipe"
-  # "evil-multiedit"
-
   bundles = {
-    # Example:
-    # julia-lsp = {
-    #   auto-enable = cfg.bundles.lsp.enable && cfg.bundles.julia.enable;
-    #   packages = [ "lsp-julia" ];
-    # };
-
     basic = {
       auto-enable = true;
       packages = [ "use-package" "gcmh" "general" "hydra" "direnv" ];
@@ -179,13 +167,18 @@ let
 
     langs-nix-internal = {
       auto-enable = builtins.elem "nix" cfg.langs;
-      packages = [ "nix-mode" "nixos-options" ];
+      packages = [
+        "nix-mode"
+        # "nixos-options" # FIXME: Too slow on load
+      ];
     };
 
     langs-nix-misc-internal = {
       auto-enable = cfg.bundles.langs-nix-internal.enable
         && cfg.misc.code.enable;
-      packages = [ "company-nixos-options" ];
+      packages = [
+        # "company-nixos-options" # FIXME: nixos-options too slow on load
+      ];
       config = { home.packages = [ pkgs.nixfmt ]; };
     };
 
@@ -222,6 +215,8 @@ let
       packages = [ "evil-mc" "evil-surround" ];
     };
 
+    evil-integrations = { packages = [ "evil-collection" ]; };
+
     evil-treemacs-internal = {
       auto-enable = cfg.evil.enable && cfg.misc.enable;
       packages = [ "treemacs-evil" ];
@@ -235,6 +230,11 @@ let
           (setq nixcfg-theme '${cfg.pretty.theme})
         '';
       };
+    };
+
+    pretty-extra-internal = {
+      auto-enable = cfg.pretty.extra.enable;
+      packages = [ "dashboard" "diff-hl" "doom-modeline" "centaur-tabs" ];
     };
 
     lsp-internal = {
@@ -269,8 +269,111 @@ let
       };
     };
 
+    langs-misc-internal = {
+      auto-enable = builtins.elem "misc" cfg.langs;
+      packages =
+        [ "dockerfile-mode" "yaml-mode" "graphviz-dot-mode" "bison-mode" ];
+    };
+
+    langs-typescript-internal = {
+      auto-enable = builins.elem "typescript" cfg.langs;
+      packages = [ "tide" "rjsx-mode" "typescript-mode" ];
+    };
+
+    langs-cpp-internal = { auto-enable = builtins.elem "cpp" cfg.langs; };
+
+    langs-cpp-lsp-internal = {
+      auto-enable = cfg.bundles.lsp-internal.enable
+        && cfg.bundles.langs-cpp-internal.enable;
+      packages = [ "ccls" ];
+      config = { home.packages = [ pkgs.ccls ]; };
+    };
+
+    langs-haskell-internal = {
+      auto-enable = builtins.elem "haskell" cfg.langs;
+      packages = [ "haskell-mode" ];
+    };
+
+    langs-haskell-lsp-internal = {
+      auto-enable = cfg.bundles.lsp-internal.enable
+        && cfg.bundles.langs-haskell-internal.enable;
+      packages = [ "lsp-haskell" ];
+    };
+
+    langs-latex-internal = {
+      auto-enable = builtins.elem "latex" cfg.langs;
+      packages = [ "org-special-block-extras" ];
+    };
+
+    langs-latex-lsp-internal = {
+      auto-enable = cfg.bundles.lsp-internal.enable
+        && cfg.bundles.langs-latex-internal.enable;
+      packages = [ "lsp-latex" ];
+    };
+
+    langs-rust-internal = {
+      auto-enable = builtins.elem "rust" cfg.langs;
+      packages = [ "rustic" ];
+    };
+
+    langs-go-internal = {
+      auto-enable = builtins.elem "go" cfg.langs;
+      packages = [ "go-mode" ];
+    };
+
+    langs-kotlin-internal = {
+      auto-enable = builtins.elem "kotlin" cfg.langs;
+      packages = [ "kotlin-mode" ];
+    };
+
+    langs-java-internal = { auto-enable = builtins.elem "java" cfg.langs; };
+
+    langs-java-lsp-internal = {
+      auto-enable = cfg.bundles.lsp-internal.enable
+        && cfg.bundles.langs-java-internal.enable;
+      packages = [ "lsp-java" ];
+    };
+
+    langs-solidity-internal = {
+      auto-enable = builtins.elem "solidity" cfg.langs;
+      packages = [ "solidity-mode" ];
+    };
+
+    langs-solidity-lsp-internal = {
+      auto-enable = cfg.bundles.lsp-internal.enable
+        && cfg.bundles.langs-solidity-internal.enable;
+      packages = [ "solidity-flycheck" ];
+    };
+
+    langs-solidity-misc-internal = {
+      auto-enable = cfg.misc.code.enable
+        && cfg.bundles.langs-solidity-internal.enable;
+      packages = [ "company-solidity" ];
+    };
+
+    proof-assist = { packages = [ "proof-general" "company-coq" ]; };
+
+    langs-julia-internal = {
+      auto-enable = builtins.elem "julia" cfg.langs;
+      packages = [ "solidity-mode" ];
+    };
+
+    langs-julia-lsp-internal = {
+      auto-enable = cfg.bundles.lsp-internal.enable
+        && cfg.bundles.langs-julia-internal.enable;
+      packages = [ "lsp-julia" ];
+    };
+
+    web = { packages = [ "impatient-mode" "web-mode" ]; };
+
+    rss = { packages = [ "elfeed" "elfeed-org" "elfeed-goodies" ]; };
+
+    org-extra-internal = {
+      auto-enable = cfg.org.extra.enable;
+      packages = [ "ox-reveal" "ox-json" "org-bullets" ];
+    };
+
     dicts = { };
-    latex = { };
 
     exwm = {
       packages = [ "exwm" ];
@@ -319,8 +422,22 @@ in {
       };
 
       langs = mkOption {
-        default = [ ];
-        type = types.listOf (types.enum [ "nix" "python" "rust" ]);
+        default = [ "misc" ];
+        type = types.listOf (types.enum [
+          "nix"
+          "python"
+          "rust"
+          "typescript"
+          "cpp"
+          "haskell"
+          "latex"
+          "go"
+          "kotlin"
+          "java"
+          "solidity"
+          "julia"
+          "misc"
+        ]);
       };
 
       code-assist = {
@@ -337,6 +454,8 @@ in {
 
           ui = mkOption { default = false; };
         };
+
+        extra = { enable = mkOption { default = false; }; };
       };
 
       evil = {
@@ -345,7 +464,10 @@ in {
         extra = mkOption { default = true; };
       };
 
-      pretty = { theme = mkOption { default = null; }; };
+      pretty = {
+        theme = mkOption { default = null; };
+        extra = { enable = mkOption { default = false; }; };
+      };
     };
   };
 
@@ -388,8 +510,6 @@ in {
           if enabled then allPackages.${pkg} else _: [ ];
       }) (attrNames allPackages)))
 
-    # (enablePackages cfg.extra-packages)
-
     {
       home.sessionVariables = { VISUAL = "emacs"; };
 
@@ -424,224 +544,5 @@ in {
       };
     })
 
-    # (mkIf cfg.visual {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-visual t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     dashboard
-    #     diff-hl
-    #     doom-modeline
-    #     centaur-tabs
-    #   ];
-    # })
-
-    # (mkIf cfg.prog-misc {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-prog-misc t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     dockerfile-mode
-    #     yaml-mode
-    #     graphviz-dot-mode
-    #     bison-mode
-    #   ];
-    # })
-
-    # (mkIf cfg.web.misc {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-web-misc t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     impatient-mode
-    #     web-mode
-    #   ];
-    # })
-
-    # (mkIf cfg.web.dap {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-web-dap t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     dap-mode
-    #   ];
-    # })
-
-    # (mkIf cfg.ts-js {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-ts-js t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     tide
-    #     rjsx-mode
-    #     typescript-mode
-    #   ];
-    # })
-
-    # (mkIf cfg.cpp {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-cpp t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     ccls
-    #   ];
-
-    #   home.packages = with pkgs; [
-    #     ccls
-    #   ];
-    # })
-
-    # (mkIf cfg.haskell {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-haskell t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     haskell-mode
-    #   ];
-    # })
-
-    # (mkIf (cfg.haskell && cfg.lsp) {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-haskell t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     lsp-haskell
-    #   ];
-    # })
-
-    # (mkIf cfg.latex {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-latex t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     org-special-block-extras
-    #   ];
-    # })
-
-    # (mkIf (cfg.latex && cfg.lsp) {
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     lsp-latex
-    #   ];
-    # })
-
-    # (mkIf cfg.rust {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-rust t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     rustic
-    #   ];
-    # })
-
-    # (mkIf cfg.go {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-go t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     go-mode
-    #   ];
-    # })
-
-    # (mkIf cfg.kotlin {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-kotlin t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     kotlin-mode
-    #   ];
-    # })
-
-    # (mkIf cfg.java {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-java t)
-    #   '';
-    # })
-
-    # (mkIf (cfg.java && cfg.lsp) {
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     lsp-java
-    #   ];
-    # })
-
-    # (mkIf cfg.org-additional {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-org-additional t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     org-special-block-extras
-    #     ox-reveal
-    #     ox-json
-    #     org-bullets
-    #     org-special-block-extras
-    #   ];
-    # })
-
-    # (mkIf cfg.rss {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-rss t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     elfeed
-    #     elfeed-org
-    #     elfeed-goodies
-    #   ];
-    # })
-
-    # (mkIf cfg.solidity {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-solidity t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     solidity-mode
-    #     solidity-flycheck
-    #     company-solidity
-    #   ];
-    # })
-
-    # (mkIf cfg.proof-assist {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-proof-assist t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     proof-general
-    #     company-coq
-    #   ];
-    # })
-
-    # # (mkIf cfg.julia {
-    # #   home.file.".emacs.d/nix-modules.el".text = ''
-    # #     (setq nix-julia t)
-    # #   '';
-
-    # #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    # #     julia-mode
-    # #   ];
-    # # })
-
-    # # (mkIf (cfg.julia && cfg.lsp) {
-    # #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    # #     (lsp-julia.overrideAttrs (old: {
-    # #       patches = [
-    # #         ./lsp-julia.patch
-    # #       ];
-    # #     }))
-    # #   ];
-    # # })
   ]);
 }

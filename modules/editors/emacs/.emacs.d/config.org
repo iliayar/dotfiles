@@ -810,7 +810,7 @@ Compilation windows settings:
 #+END_SRC
 ** [[file:latex.org][Latex]]
 #+begin_src emacs-lisp
-  (if nixcfg-bundle-latex (org-babel-load-file "~/.emacs.d/latex.el"))
+  (if nixcfg-bundle-langs-latex-internal (org-babel-load-file "~/.emacs.d/latex.el"))
 #+end_src
 ** Common
 Emacs everywhere!

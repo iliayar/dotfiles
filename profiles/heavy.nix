@@ -28,7 +28,10 @@
       enable = true;
       server = true;
 
-      bundles = { code-stats.enable = true; };
+      bundles = {
+        code-stats.enable = true;
+        evil-integrations.enable = true;
+      };
 
       misc = {
         enable = true;
@@ -36,11 +39,9 @@
         code = { enable = true; };
       };
 
-      langs = [ "nix" "python" ];
+      langs = [ "nix" "python" "misc" ];
 
-      code-assist = {
-        enable = true;
-      };
+      code-assist = { enable = true; };
 
       evil = { enable = true; };
 
@@ -51,7 +52,10 @@
         };
       };
 
-      pretty = { theme = "doom-gruvbox"; };
+      pretty = {
+        theme = "doom-gruvbox";
+        extra.enable = true;
+      };
 
       packages = {
         ace-window.enable = true;
