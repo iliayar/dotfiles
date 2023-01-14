@@ -9,7 +9,6 @@
   home.username = "iliayar";
   home.homeDirectory = "/home/iliayar";
 
-
   custom = {
     dev = {
       python.enable = true;
@@ -29,17 +28,17 @@
       enable = true;
       server = true;
 
-      bundles = {
-        code-stats.enable = false; # FIXME
-      };
+      bundles = { code-stats.enable = true; };
 
       misc = {
         enable = true;
+
+        code = { enable = true; };
       };
 
-      evil = {
-        enable = true;
-      };
+      langs = [ "nix" ];
+
+      evil = { enable = true; };
 
       org = {
         roam = {
@@ -48,8 +47,12 @@
         };
       };
 
-      pretty = {
-        theme = "doom-gruvbox";
+      pretty = { theme = "doom-gruvbox"; };
+
+      packages = {
+        ace-window.enable = true;
+        avy.enable = true;
+        hl-todo.enable = true;
       };
     };
     editors.nvim.enable = true;
@@ -58,7 +61,11 @@
       enable = true;
       syncthing = true;
 
-      git.enable = true;
+      git = {
+        enable = true;
+        gpg-key = "0x3FE87CB13CB3AC4E";
+      };
+
       gpg.enable = true;
       pass.enable = true;
       ssh.enable = true;

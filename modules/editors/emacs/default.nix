@@ -6,19 +6,17 @@ let
   cfg = config.custom.editors.emacs;
 
   makeEnableOption = name: {
-    "${name}".enable = mkOption {
-      default = false;
-    };
+    "${name}".enable = mkOption { default = false; };
   };
 
-  makePackagesDictId = foldl (acc: e: acc // { "${e}" = epkgs: [ epkgs.${e} ]; }) {};
+  makePackagesDictId =
+    foldl (acc: e: acc // { "${e}" = epkgs: [ epkgs.${e} ]; }) { };
 
-  makeEnableOptions =
-    foldl (acc: name: acc // (makeEnableOption name)) {};
+  makeEnableOptions = foldl (acc: name: acc // (makeEnableOption name)) { };
 
-  enablePackages = pkgs: mkMerge (map (pkg: {
-    custom.editors.emacs.packages.${pkg}.enable = true;
-  }) pkgs);
+  enablePackages = pkgs:
+    mkMerge
+    (map (pkg: { custom.editors.emacs.packages.${pkg}.enable = true; }) pkgs);
 
   allPackages = makePackagesDictId [
     "use-package"
@@ -119,23 +117,18 @@ let
     "lsp-ivy"
     "exwm"
   ] // {
-    "lsp-julia" = epkgs: [
-      (epkgs.lsp-julia.overrideAttrs (old: {
-        patches = [
-          ./lsp-julia.patch
-        ];
-      }))
-    ];
+    "lsp-julia" = epkgs:
+      [
+        (epkgs.lsp-julia.overrideAttrs
+          (old: { patches = [ ./lsp-julia.patch ]; }))
+      ];
   };
 
   # TODO package:
-  # "which-key" 
-  # "undo-tree"
   # "goto-chg"
   # "evil-collection"
   # "evil-snipe"
   # "evil-multiedit"
-  # "treemacs-evil"
 
   bundles = {
     # Example:
@@ -146,12 +139,7 @@ let
 
     basic = {
       auto-enable = true;
-      packages = [
-        "use-package"
-        "gcmh"
-        "general"
-        "hydra"
-      ];
+      packages = [ "use-package" "gcmh" "general" "hydra" ];
       config = {
         home.file.".emacs.d/private.el".text = ''
           ;; Some secret info here
@@ -168,31 +156,46 @@ let
         "treemacs-projectile"
         "minimap"
         "esup"
+        "which-key"
       ];
+    };
+
+    misc-code-internal = {
+      auto-enable = cfg.misc.enable && cfg.misc.code.enable;
+      packages = [
+        "smartparens"
+        "editorconfig"
+        "yasnippet"
+        "yasnippet-snippets"
+        "format-all"
+        "company"
+      ];
+    };
+
+    langs-nix-internal = {
+      auto-enable = builtins.elem "nix" cfg.langs;
+      packages = [ "nix-mode" "nixos-options" ];
+    };
+
+    langs-nix-misc-internal = {
+      auto-enable = cfg.bundles.langs-nix-internal.enable
+        && cfg.misc.code.enable;
+      packages = [ "company-nixos-options" ];
+      config = { home.packages = [ pkgs.nixfmt ]; };
     };
 
     vertico-internal = {
       auto-enable = cfg.misc.enable && cfg.misc.completion == "vertico";
-      packages = [
-        "vertico"
-        "consult"
-        "consult-projectile"
-        "marginalia"
-        "orderless"
-      ];
+      packages =
+        [ "vertico" "consult" "consult-projectile" "marginalia" "orderless" ];
     };
 
     ivy-internal = {
       auto-enable = cfg.misc.enable && cfg.misc.completion == "ivy";
-      packages = [
-        "counsel"
-        "counsel-projectile"
-      ];
+      packages = [ "counsel" "counsel-projectile" ];
     };
 
-    org-style-v1 = {
-      auto-enable = cfg.org.style == "v1";
-    };
+    org-style-v1 = { auto-enable = cfg.org.style == "v1"; };
 
     org-roam-internal = {
       auto-enable = cfg.org.roam.enable;
@@ -201,47 +204,40 @@ let
 
     org-roam-ui-internal = {
       auto-enable = cfg.org.roam.ui;
-      packages = [
-        "org-roam-ui"
-        "websocket"
-      ];
+      packages = [ "org-roam-ui" "websocket" ];
     };
 
     evil-internal = {
       auto-enable = cfg.evil.enable;
-      packages = [ "evil" ];
+      packages = [ "evil" "undo-tree" ];
     };
 
     evil-extra-internal = {
       auto-enable = cfg.evil.enable && cfg.evil.extra;
-      packages = [
-        "evil-mc" 
-        "evil-surround"
-      ];
+      packages = [ "evil-mc" "evil-surround" ];
+    };
+
+    evil-treemacs-internal = {
+      auto-enable = cfg.evil.enable && cfg.misc.enable;
+      packages = [ "treemacs-evil" ];
     };
 
     theme-internal = {
       auto-enable = cfg.pretty.theme != null;
-      packages = [
-        "doom-themes"
-      ];
+      packages = [ "doom-themes" "all-the-icons" ];
       config = {
         home.file.".emacs.d/nixcfg.el".text = ''
-            (setq nixcfg-theme '${cfg.pretty.theme})
-          '';
+          (setq nixcfg-theme '${cfg.pretty.theme})
+        '';
       };
     };
 
-    dicts = {};
-    latex = {};
+    dicts = { };
+    latex = { };
 
     exwm = {
       packages = [ "exwm" ];
-      config = {
-        xsession = {
-          enable = true;
-        };
-      };
+      config = { xsession = { enable = true; }; };
     };
 
     code-stats = {
@@ -253,9 +249,8 @@ let
       };
     };
   };
-in
 
-{
+in {
   options = {
     custom.editors.emacs = {
       packages = makeEnableOptions (attrNames allPackages);
@@ -276,60 +271,57 @@ in
       };
 
       misc = {
-        enable = mkOption {
-          default = false;
-        };
+        enable = mkOption { default = false; };
 
         completion = mkOption {
           default = "vertico";
           type = types.enum [ "vertico" "ivy" ];
         };
+
+        code = { enable = mkOption { default = false; }; };
       };
 
+      langs = mkOption { default = [ ]; };
+
       org = {
-        style = mkOption {
-          default = null;
-        };
+        style = mkOption { default = null; };
 
         roam = {
-          enable = mkOption {
-            default = false;
-          };
+          enable = mkOption { default = false; };
 
-          ui = mkOption {
-            default = false;
-          };
+          ui = mkOption { default = false; };
         };
       };
 
       evil = {
-        enable = mkOption {
-          default = false;
-        };
+        enable = mkOption { default = false; };
 
-        extra = mkOption {
-          default = true;
-        };
+        extra = mkOption { default = true; };
       };
 
       pretty = {
-        theme = mkOption {
-          default = null;
-        };
+        theme = mkOption { default = null; };
       };
+
+      extra-packages = mkOption { default = [ ]; };
     };
   };
 
   config = mkIf cfg.enable (mkMerge [
     (mkMerge (map (name:
+      let bundle = { auto-enable = false; } // bundles.${name};
+      in { custom.editors.emacs.bundles.${name}.enable = bundle.auto-enable; })
+      (attrNames bundles)))
+
+    (mkMerge (map (name:
       let
         bundleDefault = {
           auto-enable = false;
-          packages = [];
-          config = {};
+          packages = [ ];
+          config = { };
         };
         bundle = bundleDefault // bundles.${name};
-        enabled = cfg.bundles.${name}.enable || bundle.auto-enable;
+        enabled = cfg.bundles.${name}.enable;
         val = if enabled then "t" else "nil";
       in mkMerge [
         ({
@@ -339,8 +331,7 @@ in
         })
         (mkIf enabled (enablePackages bundle.packages))
         (mkIf enabled (bundle.config))
-      ]
-    ) (attrNames bundles)))
+      ]) (attrNames bundles)))
 
     (mkMerge (map (pkg:
       let
@@ -351,19 +342,17 @@ in
           (setq nixcfg-${pkg} ${val})
         '';
 
-        programs.emacs.extraPackages = if enabled then allPackages.${pkg} else _: [];
-      }
-    ) (attrNames allPackages)))
+        programs.emacs.extraPackages =
+          if enabled then allPackages.${pkg} else _: [ ];
+      }) (attrNames allPackages)))
+
+    # (enablePackages cfg.extra-packages)
 
     {
-      home.sessionVariables = {
-        VISUAL = "emacs";
-      };
+      home.sessionVariables = { VISUAL = "emacs"; };
 
       xdg.mimeApps = {
-        defaultApplications = {
-          "text/plain" = [ "emacsclient.desktop" ];
-        };
+        defaultApplications = { "text/plain" = [ "emacsclient.desktop" ]; };
       };
 
       home.file.".emacs.d" = {
@@ -389,9 +378,7 @@ in
       services.emacs = {
         enable = true;
 
-        client = {
-          enable = true;
-        };
+        client = { enable = true; };
       };
     })
 
@@ -427,21 +414,6 @@ in
     #     diff-hl
     #     doom-modeline
     #     centaur-tabs
-    #   ];
-    # })
-
-    # (mkIf cfg.code-misc {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-code-misc t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     smartparens
-    #     editorconfig
-    #     yasnippet
-    #     yasnippet-snippets
-    #     format-all
-    #     company
     #   ];
     # })
 
@@ -635,23 +607,6 @@ in
     #     elfeed
     #     elfeed-org
     #     elfeed-goodies
-    #   ];
-    # })
-
-    # (mkIf cfg.nix {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-nix t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     nix-mode
-    #     nixos-options
-    #     company-nixos-options
-    #     nix-sandbox
-    #   ];
-
-    #   home.packages = with pkgs; [
-    #     rnix-lsp
     #   ];
     # })
 

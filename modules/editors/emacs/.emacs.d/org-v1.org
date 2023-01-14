@@ -1,165 +1,165 @@
 * Org-mode
 😋 Apply ANSI escape symbols for block output!
 #+begin_src emacs-lisp
-(defun ek/babel-ansi ()
-  (when-let ((beg (org-babel-where-is-src-block-result nil nil)))
-    (save-excursion
-      (goto-char beg)
-      (when (looking-at org-babel-result-regexp)
-        (let ((end (org-babel-result-end))
-              (ansi-color-context-region nil))
-          (ansi-color-apply-on-region beg end))))))
-(add-hook 'org-babel-after-execute-hook 'ek/babel-ansi)
+  (defun ek/babel-ansi ()
+    (when-let ((beg (org-babel-where-is-src-block-result nil nil)))
+      (save-excursion
+	(goto-char beg)
+	(when (looking-at org-babel-result-regexp)
+	  (let ((end (org-babel-result-end))
+		(ansi-color-context-region nil))
+	    (ansi-color-apply-on-region beg end))))))
+  (add-hook 'org-babel-after-execute-hook 'ek/babel-ansi)
 #+end_src
 Export Org mode to Json
 #+BEGIN_SRC emacs-lisp
-(use-package ox-json
-  :if nixcfg-ox-json)
+  (use-package ox-json
+    :if nixcfg-ox-json)
 #+END_SRC
 Org headers icons
 #+begin_src emacs-lisp
-(use-package org-bullets
-  :if nixcfg-org-bullets)
+  (use-package org-bullets
+    :if nixcfg-org-bullets)
 #+end_src
 Loading Export backends
 #+BEGIN_SRC emacs-lisp
-(eval-after-load "org"
-  '(progn
-    (require 'ox-md nil t)
-    (require 'ox-latex nil t)
-    (require 'ox-reveal nil t)))
+  (eval-after-load "org"
+    '(progn
+       (require 'ox-md nil t)
+       (require 'ox-latex nil t)
+       (require 'ox-reveal nil t)))
 #+end_src
 *** Settings
 Setting visual stuff
 #+begin_src emacs-lisp
-(setq-default prettify-symbols-alist '(("#+begin_src" . "↓")
-                                       ("#+end_src" . "↑")
-                                       ("#+BEGIN_SRC" . "↓")
-                                       ("#+END_SRC" . "↑")
-                                       ("#+end_proof" . "⬜")
-                                       ("[ ]" . "")
-                                       ("[X]" . "")
-                                       ("[-]" . "")
-                                       ))
+  (setq-default prettify-symbols-alist '(("#+begin_src" . "↓")
+					 ("#+end_src" . "↑")
+					 ("#+BEGIN_SRC" . "↓")
+					 ("#+END_SRC" . "↑")
+					 ("#+end_proof" . "⬜")
+					 ("[ ]" . "")
+					 ("[X]" . "")
+					 ("[-]" . "")
+					 ))
 
-(setq org-hide-emphasis-markers t
-      org-fontify-done-headline t
-      org-ellipsis "⤶"
-      org-pretty-entities t
-      prettify-symbols-unprettify-at-point 'right-edge
-      org-directory "~/org"
-      org-agenda-files '("~/org")
-      org-default-notes-file (concat org-directory "/Notes.org")
-      org-highlight-latex-and-related '(latex entities)
-      org-todo-keywords '((sequence "EVENT" "DRIFTED" "TODO" "FIXME" "|" "CANCELED" "DONE" ))
-      org-src-preserve-indentation t
-      org-pretty-entities-include-sub-superscripts nil)
+  (setq org-hide-emphasis-markers t
+	org-fontify-done-headline t
+	org-ellipsis "⤶"
+	org-pretty-entities t
+	prettify-symbols-unprettify-at-point 'right-edge
+	org-directory "~/org"
+	org-agenda-files '("~/org")
+	org-default-notes-file (concat org-directory "/Notes.org")
+	org-highlight-latex-and-related '(latex entities)
+	org-todo-keywords '((sequence "EVENT" "DRIFTED" "TODO" "FIXME" "|" "CANCELED" "DONE" ))
+	org-src-preserve-indentation t
+	org-pretty-entities-include-sub-superscripts nil)
 
-(setq org-todo-keyword-faces
-      '(("TODO"     . "magenta")
-        ("FIXME"    . "red")
-        ("DONE"     . "LawnGreen")
-        ("DRIFTED"  . "DeepSkyBlue1")
-        ("EVENT"    . "PaleTurquoise")
-        ("CANCELED" . "yellow2")))
+  (setq org-todo-keyword-faces
+	'(("TODO"     . "magenta")
+	  ("FIXME"    . "red")
+	  ("DONE"     . "LawnGreen")
+	  ("DRIFTED"  . "DeepSkyBlue1")
+	  ("EVENT"    . "PaleTurquoise")
+	  ("CANCELED" . "yellow2")))
 
-(font-lock-add-keywords 'org-mode
-                        '(("^ *\\([-]\\) "
-                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+  (font-lock-add-keywords 'org-mode
+			  '(("^ *\\([-]\\) "
+			     (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 #+end_src
 Defining action to execute at entering org-mode, disable marking capture entry as bookmark
 #+begin_src emacs-lisp
-(add-hook 'org-mode-hook 
-          (lambda () 
-		  (org-bullets-mode 1)
-            (org-indent-mode nil)
-            (prettify-symbols-mode)
-            (set-fontset-font t 'symbol "Noto Color Emoji")
-            (progn
-              (setq left-margin-width 5)
-              (setq right-margin-width 5)
-              (set-window-buffer nil (current-buffer)))))
+  (add-hook 'org-mode-hook 
+	    (lambda () 
+	      (org-bullets-mode 1)
+	      (org-indent-mode nil)
+	      (prettify-symbols-mode)
+	      (set-fontset-font t 'symbol "Noto Color Emoji")
+	      (progn
+		(setq left-margin-width 5)
+		(setq right-margin-width 5)
+		(set-window-buffer nil (current-buffer)))))
 
-(setq org-capture-bookmark nil)
+  (setq org-capture-bookmark nil)
 #+END_SRC
 Increse readability of latex preview in org-mode
 #+begin_src emacs-lisp
-(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
 #+end_src
 Org mode file associations
 #+BEGIN_SRC emacs-lisp
-(setq org-file-apps
-      (append '(
-                ("\\.pdf\\'" . "zathura %s")
-                ) org-file-apps ))
+  (setq org-file-apps
+	(append '(
+		  ("\\.pdf\\'" . "zathura %s")
+		  ) org-file-apps ))
 #+END_SRC
 - Add /dot/ to org-babel
 - Enable redisplaying images after executing block
 - Auto confirm evaluating /dot/
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'org-src-lang-modes (quote ("dot" . graphviz-dot)))
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((dot . t)
-   (gnuplot . t)
-   (org . t)
-   (haskell . t)
-   (python . t)
-   (js . t)
-   (shell . t)
-   (julia . t)
-   (sql . t)
-;;   (ipython . t)
-   ))
-(add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
-(setq org-confirm-babel-evaluate nil)
-(setq org-src-tab-acts-natively t)
+  (add-to-list 'org-src-lang-modes (quote ("dot" . graphviz-dot)))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((dot . t)
+     (gnuplot . t)
+     (org . t)
+     (haskell . t)
+     (python . t)
+     (js . t)
+     (shell . t)
+     (julia . t)
+     (sql . t)
+     ;;   (ipython . t)
+     ))
+  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
+  (setq org-confirm-babel-evaluate nil)
+  (setq org-src-tab-acts-natively t)
 #+END_SRC
 Export settings
 #+BEGIN_SRC emacs-lisp
-(setq org-html-htmlize-output-type 'inline-css)
-(setq org-html-head-include-default-style nil)
+  (setq org-html-htmlize-output-type 'inline-css)
+  (setq org-html-head-include-default-style nil)
 #+END_SRC
 Setting up spell checking. Working for both laguages, but only one in one buffer.
 #+BEGIN_SRC emacs-lisp
-(if nixcfg-bundle-dicts
-    (progn
-      (with-eval-after-load "ispell"
-	(setq ispell-program-name "hunspell")
-	(setq ispell-dictionary "ru_RU,en_US")
-	(ispell-set-spellchecker-params)
-	(ispell-hunspell-add-multi-dic "ru_RU,en_US"))))
+  (if nixcfg-bundle-dicts
+      (progn
+	(with-eval-after-load "ispell"
+	  (setq ispell-program-name "hunspell")
+	  (setq ispell-dictionary "ru_RU,en_US")
+	  (ispell-set-spellchecker-params)
+	  (ispell-hunspell-add-multi-dic "ru_RU,en_US"))))
 #+END_SRC
 Inserting last screenshot
 #+BEGIN_SRC emacs-lisp
-(defun my/org-insert-last-screenshot ()
-  (interactive)
-  (setq screenshots-dir "~/Pictures/screenshots/")
-  (let ((cur-dir (read-directory-name "Copy screenshot to: "))
-        (screenshot (car (last (directory-files screenshots-dir)))))
-    (copy-file (concat screenshots-dir screenshot) (concat cur-dir screenshot) t)
-    (org-insert-link nil (concat "./" (file-relative-name (concat cur-dir screenshot) default-directory))))
-  (org-redisplay-inline-images))
+  (defun my/org-insert-last-screenshot ()
+    (interactive)
+    (setq screenshots-dir "~/Pictures/screenshots/")
+    (let ((cur-dir (read-directory-name "Copy screenshot to: "))
+	  (screenshot (car (last (directory-files screenshots-dir)))))
+      (copy-file (concat screenshots-dir screenshot) (concat cur-dir screenshot) t)
+      (org-insert-link nil (concat "./" (file-relative-name (concat cur-dir screenshot) default-directory))))
+    (org-redisplay-inline-images))
 #+END_SRC
 Set Org-mode exporting backends
 #+BEGIN_SRC emacs-lisp
-(setq org-export-backends '(ascii html icalendar latex md odt))
+  (setq org-export-backends '(ascii html icalendar latex md odt))
 #+END_SRC
 
 * Faces
 #+begin_src emacs-lisp
-(custom-set-faces
- `(org-block ((t (:extend t))))
- `(org-block-begin-line ((t (:extend t :overline nil :underline t))))
- `(org-block-end-line ((t (:inherit org-block-begin-line :extend t :overline t :underline nil))))
- `(org-document-title ((t (:weight bold :height 1.3))))
- `(org-ellipsis ((t (:foreground "red"))))
- `(org-footnote ((t (:weight extra-bold :height 0.7))))
- `(org-latex-and-related ((t (:inherit nil :foreground "tomato" :weight bold))))
- `(org-level-1 ((t (:inherit outline-1 :extend t :underline t :height 1.2))))
- `(org-level-2 ((t (:inherit outline-2 :extend t :height 1.1))))
- `(org-link ((t (:inherit link))))
- `(org-tag ((t (:slant italic :weight normal :family "Ubuntu Mono"))))
- `(org-verbatim ((t (:box (:line-width (2 . 2) :color "dim gray" :style released-button)))))
- `(outline-1 ((t (:extend t :weight bold)))))
+  (custom-set-faces
+   `(org-block ((t (:extend t))))
+   `(org-block-begin-line ((t (:extend t :overline nil :underline t))))
+   `(org-block-end-line ((t (:inherit org-block-begin-line :extend t :overline t :underline nil))))
+   `(org-document-title ((t (:weight bold :height 1.3))))
+   `(org-ellipsis ((t (:foreground "red"))))
+   `(org-footnote ((t (:weight extra-bold :height 0.7))))
+   `(org-latex-and-related ((t (:inherit nil :foreground "tomato" :weight bold))))
+   `(org-level-1 ((t (:inherit outline-1 :extend t :underline t :height 1.2))))
+   `(org-level-2 ((t (:inherit outline-2 :extend t :height 1.1))))
+   `(org-link ((t (:inherit link))))
+   `(org-tag ((t (:slant italic :weight normal :family "Ubuntu Mono"))))
+   `(org-verbatim ((t (:box (:line-width (2 . 2) :color "dim gray" :style released-button)))))
+   `(outline-1 ((t (:extend t :weight bold)))))
 #+end_src

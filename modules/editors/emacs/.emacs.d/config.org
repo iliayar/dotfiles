@@ -6,319 +6,319 @@ stil not very good.
 
 Load enabled packages and bundles
 #+begin_src emacs-lisp
-(load "~/.emacs.d/nixcfg.el") 
+  (load "~/.emacs.d/nixcfg.el") 
 #+end_src
 
 Speeding up 🐌
 - Enabling native compilation
 - This sets the garbage collector to invoke every 100Mb instead of default 800Kb
 #+begin_src emacs-lisp
-(setq comp-deferred-compilation t)
-(setq byte-compile-warnings '(cl-functions))
-(setq gc-cons-threshold (* 100 1024 1024))
-(setq create-lockfiles nil)
-(define-key special-event-map [config-changed-event] 'ignore)
+  (setq comp-deferred-compilation t)
+  (setq byte-compile-warnings '(cl-functions))
+  (setq gc-cons-threshold (* 100 1024 1024))
+  (setq create-lockfiles nil)
+  (define-key special-event-map [config-changed-event] 'ignore)
 #+end_src
 * Main config
 Adding folder with manually added packages, loading file private variables
 - store all backups in a single directory
 #+begin_src emacs-lisp
-(add-to-list 'load-path "~/.emacs.d/lisp/")
-(load "~/.emacs.d/private.el")
-(setq backup-directory-alist
-      `(("." . ,(concat user-emacs-directory "backups"))))
+  (add-to-list 'load-path "~/.emacs.d/lisp/")
+  (load "~/.emacs.d/private.el")
+  (setq backup-directory-alist
+	`(("." . ,(concat user-emacs-directory "backups"))))
 #+end_src
 
 Turn into window manager if enabled
 #+begin_src emacs-lisp
-(if nixcfg-bundle-exwm
-    (progn
-      (require 'exwm)
-      (require 'exwm-config)
-      (exwm-config-example)))
+  (if nixcfg-bundle-exwm
+      (progn
+	(require 'exwm)
+	(require 'exwm-config)
+	(exwm-config-example)))
 #+end_src
 
 Default global variables
 #+begin_src emacs-lisp
-(setq default-family "Fira Code")
-(setq default-height 95)
+  (setq default-family "Fira Code")
+  (setq default-height 95)
 #+end_src
 
 * Packages
 #+begin_src emacs-lisp
-(require 'use-package)  
-;; Load general to use :general in use-package
-(require 'general)
+  (require 'use-package)  
+  ;; Load general to use :general in use-package
+  (require 'general)
 
-(setq use-package-compute-statistics t)
+  (setq use-package-compute-statistics t)
 #+end_src
 Speeding up again 🦼
 #+begin_src emacs-lisp
-(use-package gcmh
-  :init
-  (gcmh-mode 1))
+  (use-package gcmh
+    :init
+    (gcmh-mode 1))
 #+end_src
 Profile 🤔
 #+begin_src emacs-lisp
-(use-package esup
-  :if nixcfg-esup)
+  (use-package esup
+    :if nixcfg-esup)
 #+end_src
 ** Projects
 Projects management with ~counsel~ completion
 #+begin_src emacs-lisp
-(use-package projectile
-  :if nixcfg-projectile
-  :config
-  (projectile-mode)
-  :general
-  (
-   :states '(normal visual emacs insert treemacs)
-   :prefix "SPC"
-   :non-normal-prefix "M-SPC"
-   :keymaps 'override
-   "pc" 'projectile-compile-project
-   "pp" 'projectile-switch-project))
-(use-package counsel-projectile
-  :if nixcfg-counsel-projectile
-  :after (projectile counsel))
+  (use-package projectile
+    :if nixcfg-projectile
+    :config
+    (projectile-mode)
+    :general
+    (
+     :states '(normal visual emacs insert treemacs)
+     :prefix "SPC"
+     :non-normal-prefix "M-SPC"
+     :keymaps 'override
+     "pc" 'projectile-compile-project
+     "pp" 'projectile-switch-project))
+  (use-package counsel-projectile
+    :if nixcfg-counsel-projectile
+    :after (projectile counsel))
 #+end_src
 Support for nix environment variables
 #+begin_src emacs-lisp
-(use-package direnv
-  :if nixcfg-direnv
-  :config
-  (direnv-mode)) 
+  (use-package direnv
+    :if nixcfg-direnv
+    :config
+    (direnv-mode)) 
 #+end_src
 
 Amazing git tool
 #+begin_src emacs-lisp
-(use-package magit
-  :if nixcfg-magit
-  :general
-  (
-   :states '(normal visual emacs insert treemacs)
-   :prefix "SPC"
-   :non-normal-prefix "M-SPC"
-   :keymaps 'override
-   "og" 'magit))
+  (use-package magit
+    :if nixcfg-magit
+    :general
+    (
+     :states '(normal visual emacs insert treemacs)
+     :prefix "SPC"
+     :non-normal-prefix "M-SPC"
+     :keymaps 'override
+     "og" 'magit))
 #+end_src
 Project tree. Settings fonts for ~treemacs~
 #+begin_src emacs-lisp
-(use-package treemacs
-  :if nixcfg-treemacs
-  :config
-  (setq treemacs-read-string-input 'from-minibuffer)
+  (use-package treemacs
+    :if nixcfg-treemacs
+    :config
+    (setq treemacs-read-string-input 'from-minibuffer)
 
-  :general
-(
- :states '(normal visual emacs insert treemacs)
- :prefix "SPC"
- :non-normal-prefix "M-SPC"
- :keymaps 'override
- "op" 'treemacs
- "tt" 'treemacs-select-window))
-(use-package treemacs-evil
-  :if nixcfg-treemacs-evil
-  :after evil)
-(use-package treemacs-projectile
-  :if nixcfg-treemacs-projectile
-  :after (projectile treemacs))
+    :general
+    (
+     :states '(normal visual emacs insert treemacs)
+     :prefix "SPC"
+     :non-normal-prefix "M-SPC"
+     :keymaps 'override
+     "op" 'treemacs
+     "tt" 'treemacs-select-window))
+  (use-package treemacs-evil
+    :if nixcfg-treemacs-evil
+    :after evil)
+  (use-package treemacs-projectile
+    :if nixcfg-treemacs-projectile
+    :after (projectile treemacs))
 #+end_src
 ** Evil mode
 ~Evil~ with dependecies. Disable Evil mode for some modes
 #+begin_src emacs-lisp
-(use-package goto-chg
-  :if nixcfg-goto-chg)
-(use-package evil
-  :if nixcfg-evil
-  :init
-  (setq evil-want-keybinding nil)
-  (setq evil-want-integration t)
-  :config
-  (evil-mode 1)
-  (add-to-list 'evil-emacs-state-modes 'elfeed-search)
-  (cl-loop for (mode . state) in '(
-				   (dired-mode . emacs)
-				   (elfeed-search-mode . emacs)
-				   (magit-status-mode . emacs))
-	   do (evil-set-initial-state mode state))
-  )
-(use-package undo-tree
-  :if nixcfg-undo-tree
-  :config
-  (global-undo-tree-mode)
-  (evil-set-undo-system 'undo-tree)
-  :custom
-  (undo-tree-auto-save-history nil))
+  (use-package goto-chg
+    :if nixcfg-goto-chg)
+  (use-package evil
+    :if nixcfg-evil
+    :init
+    (setq evil-want-keybinding nil)
+    (setq evil-want-integration t)
+    :config
+    (evil-mode 1)
+    (add-to-list 'evil-emacs-state-modes 'elfeed-search)
+    (cl-loop for (mode . state) in '(
+				     (dired-mode . emacs)
+				     (elfeed-search-mode . emacs)
+				     (magit-status-mode . emacs))
+	     do (evil-set-initial-state mode state))
+    )
+  (use-package undo-tree
+    :if nixcfg-undo-tree
+    :config
+    (global-undo-tree-mode)
+    (evil-set-undo-system 'undo-tree)
+    :custom
+    (undo-tree-auto-save-history nil))
 #+end_src
 Collection of evil keybindings
 #+begin_src emacs-lisp
-(use-package evil-collection
-  :if nixcfg-evil-collection
-  :after evil
-  :config
-  (evil-collection-init))
+  (use-package evil-collection
+    :if nixcfg-evil-collection
+    :after evil
+    :config
+    (evil-collection-init))
 #+end_src
 Fast search
 #+begin_src emacs-lisp
-(use-package evil-snipe
-  :if nixcfg-evil-snipe
-  :config
-  (evil-snipe-mode +1)
-  (evil-snipe-override-mode +1))
+  (use-package evil-snipe
+    :if nixcfg-evil-snipe
+    :config
+    (evil-snipe-mode +1)
+    (evil-snipe-override-mode +1))
 #+end_src
 Change brakets in evil mode
 #+begin_src emacs-lisp
-(use-package evil-surround
-  :if nixcfg-evil-surround
-  :config
-  (global-evil-surround-mode 1))
+  (use-package evil-surround
+    :if nixcfg-evil-surround
+    :config
+    (global-evil-surround-mode 1))
 #+end_src
 Multicursor
 #+begin_src emacs-lisp
-(use-package evil-mc
-  :if nixcfg-evil-mc
-  :config
-  (global-evil-mc-mode 1)
-  :general
-  (
-   :states '(visual)
-   :keymap 'evil-mc-key-map
-   "A" 'evil-mc-make-cursor-in-visual-selection-end
-   "I" 'evil-mc-make-cursor-in-visual-selection-beg))
+  (use-package evil-mc
+    :if nixcfg-evil-mc
+    :config
+    (global-evil-mc-mode 1)
+    :general
+    (
+     :states '(visual)
+     :keymap 'evil-mc-key-map
+     "A" 'evil-mc-make-cursor-in-visual-selection-end
+     "I" 'evil-mc-make-cursor-in-visual-selection-beg))
 #+end_src
 ** Visual
 Tabs
 #+begin_src emacs-lisp
-(use-package centaur-tabs
-  :if nixcfg-centaur-tabs
-  :config
-  (centaur-tabs-mode t)
-  :custom
-  (centaur-tabs-style "bar")
-  (centaur-tabs-set-icons t)
-  (centaur-tabs-set-bar 'left)
-  (centaur-tabs-set-close-button nil)
-  (centaur-tabs-set-modified-market t)
-  :general
+  (use-package centaur-tabs
+    :if nixcfg-centaur-tabs
+    :config
+    (centaur-tabs-mode t)
+    :custom
+    (centaur-tabs-style "bar")
+    (centaur-tabs-set-icons t)
+    (centaur-tabs-set-bar 'left)
+    (centaur-tabs-set-close-button nil)
+    (centaur-tabs-set-modified-market t)
+    :general
 
-  (
-   :states '(normal visual)
-   :keymaps 'override
-   "gt"  'centaur-tabs-forward
-   "gT"  'centaur-tabs-backward))
+    (
+     :states '(normal visual)
+     :keymaps 'override
+     "gt"  'centaur-tabs-forward
+     "gT"  'centaur-tabs-backward))
 #+end_src
 
 Icons
 #+begin_src emacs-lisp
-(use-package all-the-icons
-  :if nixcfg-all-the-icons
-  :config
-  (setq all-the-icons-scale-factor 1.0))
+  (use-package all-the-icons
+    :if nixcfg-all-the-icons
+    :config
+    (setq all-the-icons-scale-factor 1.0))
 #+end_src
 HIghlight todo keywords
 #+begin_src emacs-lisp
-(use-package hl-todo
-  :if nixcfg-hl-todo
-  :config
-  (global-hl-todo-mode t))
+  (use-package hl-todo
+    :if nixcfg-hl-todo
+    :config
+    (global-hl-todo-mode t))
 #+end_src
 Colorize parenthesis
 #+begin_src emacs-lisp
-(use-package rainbow-delimiters
-  :if nixcfg-rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
+  (use-package rainbow-delimiters
+    :if nixcfg-rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
 #+end_src
 Searching
 #+begin_src emacs-lisp
-(use-package avy
-  :if nixcfg-avy
-  :general
+  (use-package avy
+    :if nixcfg-avy
+    :general
 
-  (
-   :states '(normal visual emacs insert treemacs)
-   :prefix "SPC"
-   :non-normal-prefix "M-SPC"
-   :keymaps 'override
-   "gl" 'avy-goto-line
-   "gs" 'avy-goto-char-timer))
+    (
+     :states '(normal visual emacs insert treemacs)
+     :prefix "SPC"
+     :non-normal-prefix "M-SPC"
+     :keymaps 'override
+     "gl" 'avy-goto-line
+     "gs" 'avy-goto-char-timer))
 #+end_src
 Windows hoping
 #+begin_src emacs-lisp
-(use-package ace-window
-  :if nixcfg-ace-window
-  :config
-  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-  :general
+  (use-package ace-window
+    :if nixcfg-ace-window
+    :config
+    (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+    :general
   
-  (
-   :states '(normal visual emacs insert treemacs)
-   :prefix "SPC"
-   :non-normal-prefix "M-SPC"
-   :keymaps 'override
-   "ww" 'ace-window))
+    (
+     :states '(normal visual emacs insert treemacs)
+     :prefix "SPC"
+     :non-normal-prefix "M-SPC"
+     :keymaps 'override
+     "ww" 'ace-window))
 #+end_src
 Dashboard showing on startup
 #+begin_src emacs-lisp
-(use-package dashboard
-  :if nixcfg-dashboard
-  :config
-  (dashboard-setup-startup-hook)
-  :config
-  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
-  (setq dashboard-center-content t)
-  (setq dashboard-startup-banner "~/Wallpapers/Emacs.png")
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
-  (setq dashboard-items '((recents  . 5)
-                                        ;(bookmarks . 5)
-                          (projects . 5)
-                          (agenda . 5)
-                          (registers . 5)))
+  (use-package dashboard
+    :if nixcfg-dashboard
+    :config
+    (dashboard-setup-startup-hook)
+    :config
+    (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+    (setq dashboard-center-content t)
+    (setq dashboard-startup-banner "~/Wallpapers/Emacs.png")
+    (setq dashboard-set-heading-icons t)
+    (setq dashboard-set-file-icons t)
+    (setq dashboard-items '((recents  . 5)
+					  ;(bookmarks . 5)
+			    (projects . 5)
+			    (agenda . 5)
+			    (registers . 5)))
 
-  )
+    )
 #+end_src
 Highlight lines chaned according to ~git~
 #+BEGIN_SRC emacs-lisp
-(use-package diff-hl
-  :if nixcfg-diff-hl
-  :config
-  (global-diff-hl-mode)) 
+  (use-package diff-hl
+    :if nixcfg-diff-hl
+    :config
+    (global-diff-hl-mode)) 
 #+END_SRC
 #+begin_src emacs-lisp
-(use-package minimap
-  :if nixcfg-minimap
-  :custom
-  (minimap-window-location "right")
+  (use-package minimap
+    :if nixcfg-minimap
+    :custom
+    (minimap-window-location "right")
 
-  :general
-  (
-   :states '(normal visual emacs insert treemacs)
-   :prefix "SPC"
-   :non-normal-prefix "M-SPC"
-   :keymaps 'override
-   "oi" 'minimap-mode)) 
+    :general
+    (
+     :states '(normal visual emacs insert treemacs)
+     :prefix "SPC"
+     :non-normal-prefix "M-SPC"
+     :keymaps 'override
+     "oi" 'minimap-mode)) 
 #+end_src
 *** Themes
 ~Doom-modeline~ as modeline
 #+begin_src emacs-lisp
-(use-package doom-modeline
-  :if nixcfg-doom-modeline
-  :init 
-  (doom-modeline-mode 1)
-  :config
-  (setq doom-modeline-icon t))
+  (use-package doom-modeline
+    :if nixcfg-doom-modeline
+    :init 
+    (doom-modeline-mode 1)
+    :config
+    (setq doom-modeline-icon t))
 #+end_src
 *Or* doom theme
 #+begin_src emacs-lisp
-(use-package doom-themes
-  :if nixcfg-doom-themes
-  :preface (defvar region-fg nil)
-  :config
-  (setq doom-themes-treemacs-theme "doom-colors")
-  (doom-themes-treemacs-config)
-  (doom-themes-org-config)
-  :init (load-theme nixcfg-theme t))
+  (use-package doom-themes
+    :if nixcfg-doom-themes
+    :preface (defvar region-fg nil)
+    :config
+    (setq doom-themes-treemacs-theme "doom-colors")
+    (doom-themes-treemacs-config)
+    (doom-themes-org-config)
+    :init (load-theme nixcfg-theme t))
 #+end_src
 *** Settings
 - Visual/behaviour
@@ -329,624 +329,628 @@ Highlight lines chaned according to ~git~
 - isearch
 - Treat =_= as word(~vim~ variant)
 #+BEGIN_SRC  emacs-lisp
-(defun init-hooks () (global-display-line-numbers-mode 1))
-(add-hook 'after-init-hook 'init-hooks)
-(scroll-bar-mode 0) ; no scroll bar
-(tool-bar-mode 0) ; no tool bar
-(menu-bar-mode 0) ; no menu bar
-(show-paren-mode 1) ; visualize matching parenthesees
-(global-hl-line-mode 1) ; highlight current line
-(eldoc-mode 1) ; enable docs in minibuffer
-(fset 'yes-or-no-p 'y-or-n-p)
-(setq ring-bell-function 'ignore)
-(setq case-fold-search t)
-(modify-syntax-entry ?_ "w")
-(setq display-line-numbers-type 'relative)
+  (defun init-hooks () (global-display-line-numbers-mode 1))
+  (add-hook 'after-init-hook 'init-hooks)
+  (scroll-bar-mode 0) ; no scroll bar
+  (tool-bar-mode 0) ; no tool bar
+  (menu-bar-mode 0) ; no menu bar
+  (show-paren-mode 1) ; visualize matching parenthesees
+  (global-hl-line-mode 1) ; highlight current line
+  (eldoc-mode 1) ; enable docs in minibuffer
+  (fset 'yes-or-no-p 'y-or-n-p)
+  (setq ring-bell-function 'ignore)
+  (setq case-fold-search t)
+  (modify-syntax-entry ?_ "w")
+  (setq display-line-numbers-type 'relative)
 #+end_src
 ** Programming
 Code::stats
 #+BEGIN_SRC emacs-lisp
-(use-package code-stats
-  :if nixcfg-code-stats
-  :config
-  (add-hook 'prog-mode-hook #'code-stats-mode)
-  (add-hook 'org-mode-hook #'code-stats-mode)
-  (run-with-idle-timer 30 t #'code-stats-sync)
-  (add-hook 'kill-emacs-hook (lambda () (code-stats-sync :wait))))
+  (use-package code-stats
+    :if nixcfg-code-stats
+    :config
+    (add-hook 'prog-mode-hook #'code-stats-mode)
+    (add-hook 'org-mode-hook #'code-stats-mode)
+    (run-with-idle-timer 30 t #'code-stats-sync)
+    (add-hook 'kill-emacs-hook (lambda () (code-stats-sync :wait))))
 #+END_SRC
 Lama mode
 #+begin_src emacs-lisp
-(require 'lama-mode) 
+  (require 'lama-mode) 
 #+end_src
 Solidity mode
 #+begin_src emacs-lisp
-(use-package solidity-mode
-  :if nixcfg-solidity-mode)
-(use-package company-solidity
-  :if nixcfg-company-solidity
-  :hook
-  (solidity-mode . iliayar/solidity-company-init)
+  (use-package solidity-mode
+    :if nixcfg-solidity-mode)
+  (use-package company-solidity
+    :if nixcfg-company-solidity
+    :hook
+    (solidity-mode . iliayar/solidity-company-init)
 
-  :config
+    :config
 
-  (defun iliayar/solidity-company-init ()
-    (set (make-local-variable 'company-backends)
-	 (append '((company-solidity)) company-backends))))
-(use-package solidity-flycheck
-  :if nixcfg-solidity-flycheck
-  :hook
-  (solidity-mode . flycheck-mode)
+    (defun iliayar/solidity-company-init ()
+      (set (make-local-variable 'company-backends)
+	   (append '((company-solidity)) company-backends))))
+  (use-package solidity-flycheck
+    :if nixcfg-solidity-flycheck
+    :hook
+    (solidity-mode . flycheck-mode)
 
-  :init
-  (setq solidity-flycheck-solc-checker-active t))
+    :init
+    (setq solidity-flycheck-solc-checker-active t))
 #+end_src
 
 Auto parenthesis
 #+begin_src emacs-lisp
-(use-package smartparens
-  :if nixcfg-smartparens
-  :init
-  (smartparens-global-mode))
+  (use-package smartparens
+    :if nixcfg-smartparens
+    :init
+    (smartparens-global-mode))
 #+end_src
 Editconfig support
 #+begin_src emacs-lisp
-(use-package editorconfig
-  :if nixcfg-editorconfig
-  :config
-  (editorconfig-mode 1))
+  (use-package editorconfig
+    :if nixcfg-editorconfig
+    :config
+    (editorconfig-mode 1))
 #+end_src
 Snippets
 #+begin_src emacs-lisp
-(use-package yasnippet
-  :if nixcfg-yasnippet
-  :init
-  (yas-global-mode 1))
-(use-package yasnippet-snippets
-  :if nixcfg-yasnippet-snippets)
+  (use-package yasnippet
+    :if nixcfg-yasnippet
+    :init
+    (yas-global-mode 1))
+  (use-package yasnippet-snippets
+    :if nixcfg-yasnippet-snippets)
 #+end_src
 Code formatting
 #+begin_src emacs-lisp
-(use-package format-all
-  :if nixcfg-format-all
-  :general
+  (use-package format-all
+    :if nixcfg-format-all
+    :general
 
-  (
-   :states '(normal visual)
-   :keymaps 'override
-   "C-=" 'format-all-buffer))
+    (
+     :states '(normal)
+     :keymaps 'override
+     "C-=" 'format-all-buffer)
+    (
+     :states '(visual)
+     :keymaps 'override
+     "C-=" 'format-all-region))
 #+end_src
 Dockerfile support
 #+BEGIN_SRC emacs-lisp
-(use-package dockerfile-mode
-  :if nixcfg-dockerfile-mode)
+  (use-package dockerfile-mode
+    :if nixcfg-dockerfile-mode)
 #+END_SRC
 Package for html live view
 #+begin_src emacs-lisp
-(use-package impatient-mode
-  :if nixcfg-impatient-mode)
+  (use-package impatient-mode
+    :if nixcfg-impatient-mode)
 #+end_src
 Cool web stuff
 #+BEGIN_SRC emacs-lisp
-(use-package web-mode
-  :if nixcfg-web-mode
-  :mode (("\\.js\\'" . web-mode)
-         ("\\.jsx\\'" . web-mode)
-         ("\\.ts\\'" . web-mode)
-         ("\\.tsx\\'" . web-mode)
-         ("\\.html\\'" . web-mode)
-         ("\\.vue\\'" . web-mode)
-	 ("\\.json\\'" . web-mode))
-  :commands web-mode
-  :config
-  (setq web-mode-content-types-alist
-	'(("jsx" . "\\.js[x]?\\'")))
-  )
+  (use-package web-mode
+    :if nixcfg-web-mode
+    :mode (("\\.js\\'" . web-mode)
+	   ("\\.jsx\\'" . web-mode)
+	   ("\\.ts\\'" . web-mode)
+	   ("\\.tsx\\'" . web-mode)
+	   ("\\.html\\'" . web-mode)
+	   ("\\.vue\\'" . web-mode)
+	   ("\\.json\\'" . web-mode))
+    :commands web-mode
+    :config
+    (setq web-mode-content-types-alist
+	  '(("jsx" . "\\.js[x]?\\'")))
+    )
 #+END_SRC
 Debugger
 #+begin_src emacs-lisp
-(use-package dap-mode
-  :if nixcfg-dap-mode
-  :config
-  (require 'dap-chrome)) 
+  (use-package dap-mode
+    :if nixcfg-dap-mode
+    :config
+    (require 'dap-chrome)) 
 #+end_src
 *** Auto completion
 Use ~company~ for autocompletion. Add snippets to company backends
 #+begin_src emacs-lisp
-(use-package company
-  :if nixcfg-company
-  :init
-  (add-hook 'after-init-hook 'global-company-mode)
-  :config
-  (setq company-dabbrev-downcase 0)
-  (setq company-idle-delay 0)
-  (setq company-minimum-prefix-length 2)
-  (setq company-tooltip-align-annotations t)
-  (setq company-auto-commit 'company-auto-commit-p)
-  (setq company-auto-complete nil)
+  (use-package company
+    :if nixcfg-company
+    :init
+    (add-hook 'after-init-hook 'global-company-mode)
+    :config
+    (setq company-dabbrev-downcase 0)
+    (setq company-idle-delay 0)
+    (setq company-minimum-prefix-length 2)
+    (setq company-tooltip-align-annotations t)
+    (setq company-auto-commit 'company-auto-commit-p)
+    (setq company-auto-complete nil)
 
-  (defun iliayar/company-complete-selection ()
-    "Insert the selected candidate or the first if none are selected."
-    (interactive)
-    (if company-selection
-	(company-complete-selection)
-      (company-complete-number 1)))
+    (defun iliayar/company-complete-selection ()
+      "Insert the selected candidate or the first if none are selected."
+      (interactive)
+      (if company-selection
+	  (company-complete-selection)
+	(company-complete-number 1)))
 
-  (setq company-backends 
-	'(company-capf 
-	  company-yasnippet))
+    (setq company-backends 
+	  '(company-capf 
+	    company-yasnippet))
 
-  (defun mars/company-backend-with-yas (backends)
-    "Add :with company-yasnippet to company BACKENDS.
-  Taken from https://github.com/syl20bnr/spacemacs/pull/179."
-    (if (and (listp backends) (memq 'company-yasnippet backends))
-	backends
-      (append (if (consp backends)
-		  backends
-		(list backends))
-	      '(:with company-yasnippet))))
+    (defun mars/company-backend-with-yas (backends)
+      "Add :with company-yasnippet to company BACKENDS.
+    Taken from https://github.com/syl20bnr/spacemacs/pull/179."
+      (if (and (listp backends) (memq 'company-yasnippet backends))
+	  backends
+	(append (if (consp backends)
+		    backends
+		  (list backends))
+		'(:with company-yasnippet))))
 
-  (defun add-yas-in-company ()
-    (setq company-backends
-	  (mapcar #'mars/company-backend-with-yas company-backends)))
+    (defun add-yas-in-company ()
+      (setq company-backends
+	    (mapcar #'mars/company-backend-with-yas company-backends)))
 
-  (add-yas-in-company)
+    (add-yas-in-company)
 
-  (setq company-math-allow-latex-symbols-in-faces t))
+    (setq company-math-allow-latex-symbols-in-faces t))
 #+end_src
 Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
 #+begin_src emacs-lisp
-(use-package counsel
-  :if nixcfg-counsel
-  :init
-  (ivy-mode 1)
-  :config
-  (require 'facemenu)
-  :config
-  (setq projectile-completion-system 'ivy)
-  (setq ivy-use-selectable-prompt t)
-  (setq ivy-initial-inputs-alist nil)
+  (use-package counsel
+    :if nixcfg-counsel
+    :init
+    (ivy-mode 1)
+    :config
+    (require 'facemenu)
+    :config
+    (setq projectile-completion-system 'ivy)
+    (setq ivy-use-selectable-prompt t)
+    (setq ivy-initial-inputs-alist nil)
 
-  :general
-  ("M-x" 'counsel-M-x)
+    :general
+    ("M-x" 'counsel-M-x)
 
-  (
-   :states '(normal visual emacs insert treemacs)
-   :prefix "SPC"
-   :non-normal-prefix "M-SPC"
-   :keymaps 'override
-   "bf" 'counsel-switch-buffer
-   "cc" 'counsel-compile
-   "ce" 'counsel-compilation-errors
-   "ff" 'counsel-find-file
-   "pf" 'counsel-projectile-find-file))
+    (
+     :states '(normal visual emacs insert treemacs)
+     :prefix "SPC"
+     :non-normal-prefix "M-SPC"
+     :keymaps 'override
+     "bf" 'counsel-switch-buffer
+     "cc" 'counsel-compile
+     "ce" 'counsel-compilation-errors
+     "ff" 'counsel-find-file
+     "pf" 'counsel-projectile-find-file))
 
-;; If vertico (consult) is enabled
-(use-package consult
-  :if nixcfg-consult
-  :general
-  (
-   :states '(normal visual emacs insert treemacs)
-   :prefix "SPC"
-   :non-normal-prefix "M-SPC"
-   :keymaps 'override
-   "bf" 'consult-buffer
-   "ce" 'consult-compile-error
-   "ff" 'find-file
-   "pf" 'consult-projectile))
-(use-package vertico
-  :if nixcfg-vertico
-  :init (vertico-mode))
-(use-package consult-projectile
-  :if nixcfg-consult-projectile
-  :after (consult projectile))
-(use-package marginalia
-  :if nixcfg-marginalia
-  :after vertico
-  :init
-  (marginalia-mode))
-(use-package orderless
-  :if nixcfg-orderless
-  :custom
-  (completion-styles '(orderless basic)))
+  ;; If vertico (consult) is enabled
+  (use-package consult
+    :if nixcfg-consult
+    :general
+    (
+     :states '(normal visual emacs insert treemacs)
+     :prefix "SPC"
+     :non-normal-prefix "M-SPC"
+     :keymaps 'override
+     "bf" 'consult-buffer
+     "ce" 'consult-compile-error
+     "ff" 'find-file
+     "pf" 'consult-projectile))
+  (use-package vertico
+    :if nixcfg-vertico
+    :init (vertico-mode))
+  (use-package consult-projectile
+    :if nixcfg-consult-projectile
+    :after (consult projectile))
+  (use-package marginalia
+    :if nixcfg-marginalia
+    :after vertico
+    :init
+    (marginalia-mode))
+  (use-package orderless
+    :if nixcfg-orderless
+    :custom
+    (completion-styles '(orderless basic)))
 #+end_src
 *** Languages and lsp
 Typescript
 #+begin_src emacs-lisp
-(use-package tide
-  :if nixcfg-tide
-  :after (typescript-mode company flycheck)
-  :hook ((typescript-mode . tide-setup)
-         (typescript-mode . tide-hl-identifier-mode)
-         (before-save . tide-format-before-save))
-  :config
-  (add-hook 'typescript-mode-hook #'setup-tide-mode)
-  (add-to-list 'company-backends '(company-tide)))
+  (use-package tide
+    :if nixcfg-tide
+    :after (typescript-mode company flycheck)
+    :hook ((typescript-mode . tide-setup)
+	   (typescript-mode . tide-hl-identifier-mode)
+	   (before-save . tide-format-before-save))
+    :config
+    (add-hook 'typescript-mode-hook #'setup-tide-mode)
+    (add-to-list 'company-backends '(company-tide)))
 
-(use-package typescript-mode
-  :if nixcfg-typescript-mode)
+  (use-package typescript-mode
+    :if nixcfg-typescript-mode)
 
-(use-package rjsx-mode
-  :if nixcfg-rjsx-mode)
+  (use-package rjsx-mode
+    :if nixcfg-rjsx-mode)
 #+end_src
 
 Coq, ...
 #+begin_src emacs-lisp
-(use-package proof-general
-  :if nixcfg-proof-general)
-(use-package company-coq
-  :if nixcfg-company-coq)
+  (use-package proof-general
+    :if nixcfg-proof-general)
+  (use-package company-coq
+    :if nixcfg-company-coq)
 #+end_src
 
 
 Bison, flex
 #+begin_src emacs-lisp
-(use-package bison-mode
-  :if nixcfg-bison-mode)
+  (use-package bison-mode
+    :if nixcfg-bison-mode)
 #+end_src
 
 Nix, and completion
 #+begin_src emacs-lisp
-(use-package nix-mode
-  :if nixcfg-nix-mode
-  :mode "\\.nix\\'") 
-(use-package nixos-options
-  :if nixcfg-nixos-options)
-(use-package company-nixos-options
-  :if nixcfg-company-nixos-options)
+  (use-package nix-mode
+    :if nixcfg-nix-mode
+    :mode "\\.nix\\'") 
+  (use-package nixos-options
+    :if nixcfg-nixos-options)
+  (use-package company-nixos-options
+    :if nixcfg-company-nixos-options)
 #+end_src
 
 Lsp client. Speeding up 🛹, adding folders to not track. \\
 Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/
 #+begin_src emacs-lisp
-(use-package lsp-mode
-  :if nixcfg-lsp-mode
-  :hook (
-	 (lsp-mode . lsp-enable-which-key-integration) 
-	 (c++-mode . lsp)
-	 )
-  :config
-  (setq read-process-output-max (* 1024 1024))
-  (setq lsp-file-watch-ignored
-	'("build"
-	  "out"
-	  "target"
-	  "release"
-	  ".git"
-	  ))
-  (setq lsp-log-io nil)
-  (setq lsp-idle-delay 0.500)
-  (setq lsp-lens-enable nil)
+  (use-package lsp-mode
+    :if nixcfg-lsp-mode
+    :hook (
+	   (lsp-mode . lsp-enable-which-key-integration) 
+	   (c++-mode . lsp)
+	   )
+    :config
+    (setq read-process-output-max (* 1024 1024))
+    (setq lsp-file-watch-ignored
+	  '("build"
+	    "out"
+	    "target"
+	    "release"
+	    ".git"
+	    ))
+    (setq lsp-log-io nil)
+    (setq lsp-idle-delay 0.500)
+    (setq lsp-lens-enable nil)
 
-  :general
+    :general
 
-  (
-   :states '(normal visual emacs insert treemacs)
-   :prefix "SPC"
-   :non-normal-prefix "M-SPC"
-   :keymaps 'override
-   "ca" 'lsp-execute-code-action
-   "cr" 'lsp-rename
-   "sl" 'lsp
-   "sr" 'lsp-workspace-restart
-   "ss" 'lsp-workspace-shutdown
-   "sd" 'lsp-describe-thing-at-point))
-(use-package lsp-ui
-  :if nixcfg-lsp-ui
-  :general
-  (
-   :states '(normal visual)
-   :keymaps 'override
-   "gsx" 'lsp-ui-peek-find-references
-   "gsd" 'lsp-ui-peek-find-definitions)
+    (
+     :states '(normal visual emacs insert treemacs)
+     :prefix "SPC"
+     :non-normal-prefix "M-SPC"
+     :keymaps 'override
+     "ca" 'lsp-execute-code-action
+     "cr" 'lsp-rename
+     "sl" 'lsp
+     "sr" 'lsp-workspace-restart
+     "ss" 'lsp-workspace-shutdown
+     "sd" 'lsp-describe-thing-at-point))
+  (use-package lsp-ui
+    :if nixcfg-lsp-ui
+    :general
+    (
+     :states '(normal visual)
+     :keymaps 'override
+     "gsx" 'lsp-ui-peek-find-references
+     "gsd" 'lsp-ui-peek-find-definitions)
 
-  (
-   :states '(normal visual emacs insert treemacs)
-   :prefix "SPC"
-   :non-normal-prefix "M-SPC"
-   :keymaps 'override
-   "se" 'lsp-ui-flycheck-list))
+    (
+     :states '(normal visual emacs insert treemacs)
+     :prefix "SPC"
+     :non-normal-prefix "M-SPC"
+     :keymaps 'override
+     "se" 'lsp-ui-flycheck-list))
 #+end_src
 Syntax checking and lsp related errors/warnings. Posfrmae stil sucks
 #+BEGIN_SRC emacs-lisp
-(use-package flycheck
-  :if nixcfg-flycheck)
+  (use-package flycheck
+    :if nixcfg-flycheck)
 #+END_SRC
 Lsp integration with several plugins
 #+begin_src emacs-lisp
-(use-package lsp-treemacs
-  :if nixcfg-lsp-treemacs)
-(use-package lsp-ivy
-  :if nixcfg-lsp-ivy)
+  (use-package lsp-treemacs
+    :if nixcfg-lsp-treemacs)
+  (use-package lsp-ivy
+    :if nixcfg-lsp-ivy)
 #+end_src
 C++ lsp \\
 In /build/ directory run =cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=YES ..=
 #+BEGIN_SRC emacs-lisp
-(use-package ccls
-  :if nixcfg-ccls
-  :config
-  (setq ccls-initialization-options
-        '(:compilationDatabaseDirectory "build"
-                                        :cache (:directory "build/.ccls-cache"))))
+  (use-package ccls
+    :if nixcfg-ccls
+    :config
+    (setq ccls-initialization-options
+	  '(:compilationDatabaseDirectory "build"
+					  :cache (:directory "build/.ccls-cache"))))
 #+END_SRC
 Haskell lsp
 #+begin_src emacs-lisp
-(use-package lsp-haskell
-  :if nixcfg-lsp-haskell)
+  (use-package lsp-haskell
+    :if nixcfg-lsp-haskell)
 #+end_src
 Python lsp
 #+begin_src emacs-lisp
-(use-package lsp-pyright
-  :if nixcfg-lsp-pyright
-  :hook (python-mode . (lambda ()
-                         (require 'lsp-pyright)
-                         (lsp))))  ; or lsp-deferred
-(use-package anaconda-mode
-  :if nixcfg-anaconda-mode)
-(use-package company-anaconda
-  :if nixcfg-company-anaconda)
+  (use-package lsp-pyright
+    :if nixcfg-lsp-pyright
+    :hook (python-mode . (lambda ()
+			   (require 'lsp-pyright)
+			   (lsp))))  ; or lsp-deferred
+  (use-package anaconda-mode
+    :if nixcfg-anaconda-mode)
+  (use-package company-anaconda
+    :if nixcfg-company-anaconda)
 #+end_src
 #+end_src
 Lsp for latex
 #+begin_src emacs-lisp
-(use-package lsp-latex
-  :if nixcfg-lsp-latex)
+  (use-package lsp-latex
+    :if nixcfg-lsp-latex)
 #+end_src
 Julia mode
 #+begin_src emacs-lisp
-(use-package julia-mode
-  :if nixcfg-julia-mode)
-(use-package lsp-julia
-  :if nixcfg-lsp-julia
-  :config
-  (setq lsp-julia-default-environment "~/.julia/environments/v1.7"))
+  (use-package julia-mode
+    :if nixcfg-julia-mode)
+  (use-package lsp-julia
+    :if nixcfg-lsp-julia
+    :config
+    (setq lsp-julia-default-environment "~/.julia/environments/v1.7"))
 #+end_src
 Rust mode
 #+begin_src emacs-lisp
-(use-package rustic
-  :if nixcfg-rustic
-  :general
+  (use-package rustic
+    :if nixcfg-rustic
+    :general
 
-  (
-   :states '(normal visual emacs insert treemacs)
-   :prefix "SPC"
-   :non-normal-prefix "M-SPC"
-   :keymaps 'override
-   "rr" 'rustic-cargo-run))
+    (
+     :states '(normal visual emacs insert treemacs)
+     :prefix "SPC"
+     :non-normal-prefix "M-SPC"
+     :keymaps 'override
+     "rr" 'rustic-cargo-run))
 #+end_src
 Go mode
 #+begin_src emacs-lisp
-(use-package go-mode
-  :if nixcfg-go-mode)
+  (use-package go-mode
+    :if nixcfg-go-mode)
 #+end_src
 Haskell mode
 #+begin_src emacs-lisp
-(use-package haskell-mode
-  :if nixcfg-haskell-mode)
+  (use-package haskell-mode
+    :if nixcfg-haskell-mode)
 #+end_src
 Yaml files
 #+begin_src emacs-lisp
-(use-package yaml-mode
-  :if nixcfg-yaml-mode)
+  (use-package yaml-mode
+    :if nixcfg-yaml-mode)
 #+end_src
 Kotlin
 #+BEGIN_SRC emacs-lisp
-(use-package kotlin-mode
-  :if nixcfg-kotlin-mode)
+  (use-package kotlin-mode
+    :if nixcfg-kotlin-mode)
 #+END_SRC
 Graphviz
 #+BEGIN_SRC emacs-lisp
-(use-package graphviz-dot-mode
-  :if nixcfg-graphviz-dot-mode)
+  (use-package graphviz-dot-mode
+    :if nixcfg-graphviz-dot-mode)
 #+END_SRC
 Java lsp
 #+BEGIN_SRC emacs-lisp
-(use-package lsp-java
-  :if nixcfg-lsp-java)
+  (use-package lsp-java
+    :if nixcfg-lsp-java)
 #+END_SRC
 *** Settings
 - C style settings
 - Scrool compilation buffer to the first error instead of end.
 #+BEGIN_SRC emacs-lisp
-(setq c-default-style "linux")
-(setq compilation-scroll-output 'first-error)
+  (setq c-default-style "linux")
+  (setq compilation-scroll-output 'first-error)
 #+END_SRC
 Compilation windows settings:
 - Enable colors in ~*compilation*~ buffer
 - Make ~*compilation*~ buffer spawn in bottom
 #+begin_src emacs-lisp
-(require 'ansi-color)
-(defun colorize-compilation-buffer ()
-  (toggle-read-only)
-  (ansi-color-apply-on-region compilation-filter-start (point))
-  (toggle-read-only))
-(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+  (require 'ansi-color)
+  (defun colorize-compilation-buffer ()
+    (toggle-read-only)
+    (ansi-color-apply-on-region compilation-filter-start (point))
+    (toggle-read-only))
+  (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 
-(defun my-compilation-hook ()
-  (when (not (get-buffer-window "*compilation*"))
-    (save-selected-window
-      (save-excursion
-        (let* ((w (split-window-vertically)))
-          (select-window w)
-          (switch-to-buffer "*compilation*"))))))
-(add-hook 'compilation-mode-hook 'my-compilation-hook)
+  (defun my-compilation-hook ()
+    (when (not (get-buffer-window "*compilation*"))
+      (save-selected-window
+	(save-excursion
+	  (let* ((w (split-window-vertically)))
+	    (select-window w)
+	    (switch-to-buffer "*compilation*"))))))
+  (add-hook 'compilation-mode-hook 'my-compilation-hook)
 
-(setq compilation-window-height 10)
+  (setq compilation-window-height 10)
 #+end_src
 
 ** [[file:org-v1.org][Org mode]]
 #+begin_src emacs-lisp
-(if nixcfg-bundle-org-style-v1 (org-babel-load-file "~/.emacs.d/org-v1.el"))
+  (if nixcfg-bundle-org-style-v1 (org-babel-load-file "~/.emacs.d/org-v1.el"))
 #+end_src
 
 *** Org Roam
 #+BEGIN_SRC emacs-lisp
-(use-package org-roam
-  :if nixcfg-org-roam
-  :init
-  (setq org-roam-v2-ack t)
-  :custom
-  (org-roam-directory "~/org/roam")
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-	 ("C-c n f" . org-roam-node-find)
-	 ("C-c n i" . org-roam-node-insert)
-	 ("C-c n d" . org-roam-dailies-capture-today)
-	 :map org-mode-map
-	 ("C-M-i" . completion-at-point))
-  :config
-  (setq org-roam-completion-everywhere t)
-  (setq org-roam-dailies-direcory "journal/")
-  (org-roam-setup))
-(use-package websocket
-  :if nixcfg-websocket)
+  (use-package org-roam
+    :if nixcfg-org-roam
+    :init
+    (setq org-roam-v2-ack t)
+    :custom
+    (org-roam-directory "~/org/roam")
+    :bind (("C-c n l" . org-roam-buffer-toggle)
+	   ("C-c n f" . org-roam-node-find)
+	   ("C-c n i" . org-roam-node-insert)
+	   ("C-c n d" . org-roam-dailies-capture-today)
+	   :map org-mode-map
+	   ("C-M-i" . completion-at-point))
+    :config
+    (setq org-roam-completion-everywhere t)
+    (setq org-roam-dailies-direcory "journal/")
+    (org-roam-setup))
+  (use-package websocket
+    :if nixcfg-websocket)
 
-(if nixcfg-org-roam-ui
-    (progn
-      (load-library "org-roam-ui")))
+  (if nixcfg-org-roam-ui
+      (progn
+	(load-library "org-roam-ui")))
 
 #+END_SRC
 ** [[file:latex.org][Latex]]
 #+begin_src emacs-lisp
-(if nixcfg-bundle-latex (org-babel-load-file "~/.emacs.d/latex.el"))
+  (if nixcfg-bundle-latex (org-babel-load-file "~/.emacs.d/latex.el"))
 #+end_src
 ** Common
 Emacs everywhere!
 #+begin_src emacs-lisp
-(use-package emacs-everywhere
-  :if nixcfg-emacs-everywhere)
+  (use-package emacs-everywhere
+    :if nixcfg-emacs-everywhere)
 #+end_src
 
 *** [[file:rss.org][RSS]]
 #+begin_src emacs-lisp
-(org-babel-load-file "~/.emacs.d/rss.el")
+  (org-babel-load-file "~/.emacs.d/rss.el")
 #+end_src
 
 * Keybindings
 #+begin_src emacs-lisp
-(general-define-key
- :keymaps 'company-active-map
- "<tab>"     'yas-expand
- "<backtab>" 'iliayar/company-complete-selection)
+  (general-define-key
+   :keymaps 'company-active-map
+   "<tab>"     'yas-expand
+   "<backtab>" 'iliayar/company-complete-selection)
 
-(general-define-key
- :map 'org-mode-map
- "C-c C-x i" 'my/org-insert-last-screenshot)
+  (general-define-key
+   :map 'org-mode-map
+   "C-c C-x i" 'my/org-insert-last-screenshot)
 
-(define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance)
-(define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat)
+  (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance)
+  (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat)
 #+end_src
 Helper functions for university labs
 #+begin_src emacs-lisp
-(defun run-nix-lab ()
-  (interactive)
-  (shell-command (concat "labRun "
-			 (if (eq lab-file nil)
-			     (buffer-file-name)
-			   lab-file))))
+  (defun run-nix-lab ()
+    (interactive)
+    (shell-command (concat "labRun "
+			   (if (eq lab-file nil)
+			       (buffer-file-name)
+			     lab-file))))
 
-(defun lab-init ()
-  (interactive)
-  (let
-      ((prog (selected-window)))
-    (setq lab-file (buffer-file-name))
-    (split-window-right)
-    (next-window-any-frame)
-    (find-file (getenv "inputFile"))
-    (split-window-below)
-    (next-window-any-frame)
-    (find-file (getenv "outputFile"))
-    (auto-revert-mode)
-    (select-window prog)))
+  (defun lab-init ()
+    (interactive)
+    (let
+	((prog (selected-window)))
+      (setq lab-file (buffer-file-name))
+      (split-window-right)
+      (next-window-any-frame)
+      (find-file (getenv "inputFile"))
+      (split-window-below)
+      (next-window-any-frame)
+      (find-file (getenv "outputFile"))
+      (auto-revert-mode)
+      (select-window prog)))
 
-(defun lab-reinit ()
-  (interactive)
-  (setq lab-file (buffer-file-name)))
+  (defun lab-reinit ()
+    (interactive)
+    (setq lab-file (buffer-file-name)))
 #+end_src
 
 #+begin_src emacs-lisp
-(general-define-key
- :state '(normal)
- :keymaps '(org-mode-map)
- "<tab>" 'org-cycle)
+  (general-define-key
+   :state '(normal)
+   :keymaps '(org-mode-map)
+   "<tab>" 'org-cycle)
 
-(general-define-key
- :states '(normal visual emacs insert treemacs)
- :prefix "SPC"
- :non-normal-prefix "M-SPC"
- :keymaps 'override
- "bb" 'ibuffer
- "ck" 'kill-compilation
- "cd" 'kill-compilation-buffer
- "cl" 'comment-or-uncomment-region
- "gr" 'revert-buffer
- "oa" 'org-agenda
- "pl" 'org-latex-preview
- "pi" 'org-toggle-inline-images
- "rl" 'run-nix-lab
- "wd" 'delete-window
- "wk" 'kill-buffer-and-window
- "wr" 'hydra-window-resize-menu/body)
+  (general-define-key
+   :states '(normal visual emacs insert treemacs)
+   :prefix "SPC"
+   :non-normal-prefix "M-SPC"
+   :keymaps 'override
+   "bb" 'ibuffer
+   "ck" 'kill-compilation
+   "cd" 'kill-compilation-buffer
+   "cl" 'comment-or-uncomment-region
+   "gr" 'revert-buffer
+   "oa" 'org-agenda
+   "pl" 'org-latex-preview
+   "pi" 'org-toggle-inline-images
+   "rl" 'run-nix-lab
+   "wd" 'delete-window
+   "wk" 'kill-buffer-and-window
+   "wr" 'hydra-window-resize-menu/body)
 
-(general-define-key
- :states '(normal visual insert)
- :prefix "SPC"
- :non-normal-prefix "M-SPC"
- :keymaps 'latex-mode-map
- "si" 'latex-insert-block
- )
+  (general-define-key
+   :states '(normal visual insert)
+   :prefix "SPC"
+   :non-normal-prefix "M-SPC"
+   :keymaps 'latex-mode-map
+   "si" 'latex-insert-block
+   )
 #+end_src
 Hydra
 #+begin_src emacs-lisp
-(defhydra hydra-window-resize-menu (:color red
-                                           :hint nil)
-  "
-    Window Resize
-    -------------
-         /\\
-          _k_
-    < _h_     _l_ >
-          _j_
-          v
+  (defhydra hydra-window-resize-menu (:color red
+					     :hint nil)
     "
-  ("h" evil-window-decrease-width)
-  ("l" evil-window-increase-width)
-  ("k" evil-window-decrease-height)
-  ("j" evil-window-increase-height)
-  ("c" nil "Cancel"))
+      Window Resize
+      -------------
+	   /\\
+	    _k_
+      < _h_     _l_ >
+	    _j_
+	    v
+      "
+    ("h" evil-window-decrease-width)
+    ("l" evil-window-increase-width)
+    ("k" evil-window-decrease-height)
+    ("j" evil-window-increase-height)
+    ("c" nil "Cancel"))
 #+end_src
 
 * Other
 ** Faces
 #+begin_src emacs-lisp
-(custom-set-faces
- `(default ((t (:family ,default-family :height ,default-height)))))
+  (custom-set-faces
+   `(default ((t (:family ,default-family :height ,default-height)))))
 
-;; (custom-set-faces
-;;  `(ivy-current-match ((t (:foreground "white smoke" :background "dark orange" :extend t))))
-;;  `(treemacs-root-face ((t (:family ,default-family :height ,default-height))))
-;;  `(treemacs-git-unmodified-face ((t (:family ,default-family :height ,default-height))))
-;;  `(treemacs-git-modified-face ((t (:family ,default-family :height ,default-height))))
-;;  `(treemacs-git-renamed-face ((t (:family ,default-family :height ,default-height))))
-;;  `(treemacs-git-ignored-face ((t (:family ,default-family :height ,default-height))))
-;;  `(treemacs-git-untracked-face ((t (:family ,default-family :height ,default-height))))
-;;  `(treemacs-git-added-face ((t (:family ,default-family :height ,default-height))))
-;;  `(treemacs-git-conflict-face ((t (:family ,default-family :height ,default-height))))
-;;  `(treemacs-directory-face ((t (:family ,default-family :height ,default-height))))
-;;  `(treemacs-directory-collapsed-face ((t (:family ,default-family :height ,default-height))))
-;;  `(treemacs-file-face ((t (:family ,default-family :height ,default-height))))
-;;  `(treemacs-tags-face ((t (:family ,default-family :height ,default-height))))
-;;  `(default ((t (:family ,default-family :height ,default-height))))
-;;  `(italic ((t (:slant italic :family "Ubuntu Mono" :height ,default-height))))
-;;  `(org-block ((t (:extend t))))
-;;  `(org-block-begin-line ((t (:extend t :overline nil :underline t))))
-;;  `(org-block-end-line ((t (:inherit org-block-begin-line :extend t :overline t :underline nil))))
-;;  `(org-document-title ((t (:weight bold :height 1.3))))
-;;  `(org-ellipsis ((t (:foreground "red"))))
-;;  `(org-footnote ((t (:weight extra-bold :height 0.7))))
-;;  `(org-latex-and-related ((t (:inherit nil :foreground "tomato" :weight bold))))
-;;  `(org-level-1 ((t (:inherit outline-1 :extend t :underline t :height 1.2))))
-;;  `(org-level-2 ((t (:inherit outline-2 :extend t :height 1.1))))
-;;  `(org-link ((t (:inherit link))))
-;;  `(org-tag ((t (:slant italic :weight normal :family "Ubuntu Mono"))))
-;;  `(org-verbatim ((t (:box (:line-width (2 . 2) :color "dim gray" :style released-button)))))
-;;  `(outline-1 ((t (:extend t :weight bold)))))
+  ;; (custom-set-faces
+  ;;  `(ivy-current-match ((t (:foreground "white smoke" :background "dark orange" :extend t))))
+  ;;  `(treemacs-root-face ((t (:family ,default-family :height ,default-height))))
+  ;;  `(treemacs-git-unmodified-face ((t (:family ,default-family :height ,default-height))))
+  ;;  `(treemacs-git-modified-face ((t (:family ,default-family :height ,default-height))))
+  ;;  `(treemacs-git-renamed-face ((t (:family ,default-family :height ,default-height))))
+  ;;  `(treemacs-git-ignored-face ((t (:family ,default-family :height ,default-height))))
+  ;;  `(treemacs-git-untracked-face ((t (:family ,default-family :height ,default-height))))
+  ;;  `(treemacs-git-added-face ((t (:family ,default-family :height ,default-height))))
+  ;;  `(treemacs-git-conflict-face ((t (:family ,default-family :height ,default-height))))
+  ;;  `(treemacs-directory-face ((t (:family ,default-family :height ,default-height))))
+  ;;  `(treemacs-directory-collapsed-face ((t (:family ,default-family :height ,default-height))))
+  ;;  `(treemacs-file-face ((t (:family ,default-family :height ,default-height))))
+  ;;  `(treemacs-tags-face ((t (:family ,default-family :height ,default-height))))
+  ;;  `(default ((t (:family ,default-family :height ,default-height))))
+  ;;  `(italic ((t (:slant italic :family "Ubuntu Mono" :height ,default-height))))
+  ;;  `(org-block ((t (:extend t))))
+  ;;  `(org-block-begin-line ((t (:extend t :overline nil :underline t))))
+  ;;  `(org-block-end-line ((t (:inherit org-block-begin-line :extend t :overline t :underline nil))))
+  ;;  `(org-document-title ((t (:weight bold :height 1.3))))
+  ;;  `(org-ellipsis ((t (:foreground "red"))))
+  ;;  `(org-footnote ((t (:weight extra-bold :height 0.7))))
+  ;;  `(org-latex-and-related ((t (:inherit nil :foreground "tomato" :weight bold))))
+  ;;  `(org-level-1 ((t (:inherit outline-1 :extend t :underline t :height 1.2))))
+  ;;  `(org-level-2 ((t (:inherit outline-2 :extend t :height 1.1))))
+  ;;  `(org-link ((t (:inherit link))))
+  ;;  `(org-tag ((t (:slant italic :weight normal :family "Ubuntu Mono"))))
+  ;;  `(org-verbatim ((t (:box (:line-width (2 . 2) :color "dim gray" :style released-button)))))
+  ;;  `(outline-1 ((t (:extend t :weight bold)))))
 #+end_src
