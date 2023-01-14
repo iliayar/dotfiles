@@ -276,7 +276,7 @@ let
     };
 
     langs-typescript-internal = {
-      auto-enable = builins.elem "typescript" cfg.langs;
+      auto-enable = builtins.elem "typescript" cfg.langs;
       packages = [ "tide" "rjsx-mode" "typescript-mode" ];
     };
 
