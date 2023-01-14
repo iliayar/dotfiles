@@ -36,7 +36,11 @@
         code = { enable = true; };
       };
 
-      langs = [ "nix" ];
+      langs = [ "nix" "python" ];
+
+      code-assist = {
+        enable = true;
+      };
 
       evil = { enable = true; };
 

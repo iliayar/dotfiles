@@ -139,7 +139,7 @@ let
 
     basic = {
       auto-enable = true;
-      packages = [ "use-package" "gcmh" "general" "hydra" ];
+      packages = [ "use-package" "gcmh" "general" "hydra" "direnv" ];
       config = {
         home.file.".emacs.d/private.el".text = ''
           ;; Some secret info here
@@ -158,6 +158,11 @@ let
         "esup"
         "which-key"
       ];
+    };
+
+    emacs-everywhere = {
+      packages = [ "emacs-everywhere" ];
+      config = { home.packages = with pkgs; [ xdotool xorg.xwininfo ]; };
     };
 
     misc-code-internal = {
@@ -232,6 +237,38 @@ let
       };
     };
 
+    lsp-internal = {
+      auto-enable = cfg.code-assist.enable;
+      packages = [ "lsp-mode" "flycheck" ];
+    };
+
+    lsp-ui-internal = {
+      auto-enable = cfg.code-assist.enable && cfg.code-assist.pretty.enable;
+      packages = [ "lsp-ui" "rainbow-delimiters" ];
+    };
+
+    lsp-misc-internal = {
+      auto-enable = cfg.bundles.lsp-internal.enable && cfg.misc.enable;
+      packages = [ "lsp-treemacs" ];
+    };
+
+    lsp-ivy-internal = {
+      auto-enable = cfg.bundles.lsp-internal.enable
+        && cfg.bundles.ivy-internal.enable;
+      packages = [ "lsp-ivy" ];
+    };
+
+    langs-python-internal = { auto-enable = builtins.elem "python" cfg.langs; };
+
+    langs-python-lsp-internal = {
+      auto-enable = cfg.bundles.lsp-internal.enable
+        && cfg.bundles.langs-python-internal.enable;
+      config = {
+        custom.dev.python.additionalPackages = pypkgs:
+          [ pypkgs.python-lsp-server ];
+      };
+    };
+
     dicts = { };
     latex = { };
 
@@ -281,7 +318,16 @@ in {
         code = { enable = mkOption { default = false; }; };
       };
 
-      langs = mkOption { default = [ ]; };
+      langs = mkOption {
+        default = [ ];
+        type = types.listOf (types.enum [ "nix" "python" "rust" ]);
+      };
+
+      code-assist = {
+        enable = mkOption { default = false; };
+
+        pretty.enable = mkOption { default = false; };
+      };
 
       org = {
         style = mkOption { default = null; };
@@ -299,11 +345,7 @@ in {
         extra = mkOption { default = true; };
       };
 
-      pretty = {
-        theme = mkOption { default = null; };
-      };
-
-      extra-packages = mkOption { default = [ ]; };
+      pretty = { theme = mkOption { default = null; }; };
     };
   };
 
@@ -382,34 +424,12 @@ in {
       };
     })
 
-    # (mkIf cfg.additional-motions {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-additional-motions t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     avy
-    #     ace-window
-    #     hydra
-    #     emacs-everywhere
-    #     minimap
-    #   ];
-
-    #   home.packages = with pkgs; [
-    #     xdotool
-    #     xorg.xwininfo
-    #   ];
-    # })
-
     # (mkIf cfg.visual {
     #   home.file.".emacs.d/nix-modules.el".text = ''
     #     (setq nix-visual t)
     #   '';
 
     #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     all-the-icons
-    #     hl-todo
-    #     rainbow-delimiters
     #     dashboard
     #     diff-hl
     #     doom-modeline
@@ -463,18 +483,6 @@ in {
     #   ];
     # })
 
-    # (mkIf cfg.lsp {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-lsp t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     lsp-mode
-    #     lsp-ui
-    #     flycheck
-    #   ];
-    # })
-
     # (mkIf cfg.cpp {
     #   home.file.".emacs.d/nix-modules.el".text = ''
     #     (setq nix-cpp t)
@@ -506,23 +514,6 @@ in {
 
     #   programs.emacs.extraPackages = epkgs: with epkgs; [
     #     lsp-haskell
-    #   ];
-    # })
-
-    # (mkIf cfg.python {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-python t)
-    #   '';
-
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     anaconda-mode
-    #     company-anaconda
-    #   ];
-    # })
-
-    # (mkIf (cfg.python && cfg.lsp) {
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     lsp-pyright
     #   ];
     # })
 
@@ -652,23 +643,5 @@ in {
     # #     }))
     # #   ];
     # # })
-
-    # (mkIf (cfg.misc.enable && cfg.lsp) {
-    #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    #     lsp-treemacs
-    #   ];
-    # })
-
-    # # (mkIf (cfg.misc.enable && !cfg.misc.vertico && cfg.lsp) {
-    # #   programs.emacs.extraPackages = epkgs: with epkgs; [
-    # #     lsp-ivy
-    # #   ];
-    # # })
-
-    # (mkIf cfg.dicts {
-    #   home.file.".emacs.d/nix-modules.el".text = ''
-    #     (setq nix-dicts t)
-    #   '';
-    # })
   ]);
 }
