@@ -4,11 +4,207 @@ with lib;
 
 let
   cfg = config.custom.editors.emacs;
+
+  makeEnableOption = name: {
+    "${name}".enable = mkOption {
+      default = false;
+    };
+  };
+
+  makePackagesDictId = foldl (acc: e: acc // { "${e}" = epkgs: [ epkgs.${e} ]; }) {};
+
+  makeEnableOptions =
+    foldl (acc: name: acc // (makeEnableOption name)) {};
+
+  enablePackages = pkgs: mkMerge (map (pkg: {
+    custom.editors.emacs.packages.${pkg}.enable = true;
+  }) pkgs);
+
+  allPackages = makePackagesDictId [
+    "use-package"
+    "gcmh"
+    "general"
+    "which-key"
+    "direnv"
+    "code-stats"
+    "projectile"
+    "magit"
+    "treemacs"
+    "counsel"
+    "counsel-projectile"
+    "treemacs-projectile"
+    "undo-tree"
+    "minimap"
+    "esup"
+    "vertico"
+    "consult"
+    "consult-projectile"
+    "marginalia"
+    "orderless"
+    "counsel"
+    "counsel-projectile"
+    "goto-chg"
+    "evil"
+    "evil-collection"
+    "evil-snipe"
+    "evil-surround"
+    "evil-multiedit"
+    "evil-mc"
+    "avy"
+    "ace-window"
+    "hydra"
+    "emacs-everywhere"
+    "minimap"
+    "all-the-icons"
+    "hl-todo"
+    "rainbow-delimiters"
+    "dashboard"
+    "diff-hl"
+    "doom-modeline"
+    "doom-themes"
+    "centaur-tabs"
+    "smartparens"
+    "editorconfig"
+    "yasnippet"
+    "yasnippet-snippets"
+    "format-all"
+    "company"
+    "dockerfile-mode"
+    "yaml-mode"
+    "graphviz-dot-mode"
+    "bison-mode"
+    "impatient-mode"
+    "web-mode"
+    "dap-mode"
+    "tide"
+    "rjsx-mode"
+    "typescript-mode"
+    "lsp-mode"
+    "lsp-ui"
+    "flycheck"
+    "ccls"
+    "haskell-mode"
+    "lsp-haskell"
+    "anaconda-mode"
+    "company-anaconda"
+    "lsp-pyright"
+    "org-special-block-extras"
+    "lsp-latex"
+    "rustic"
+    "go-mode"
+    "kotlin-mode"
+    "lsp-java"
+    "org-special-block-extras"
+    "ox-reveal"
+    "ox-json"
+    "org-bullets"
+    "org-special-block-extras"
+    "org-roam"
+    "org-roam-ui"
+    "websocket"
+    "elfeed"
+    "elfeed-org"
+    "elfeed-goodies"
+    "nix-mode"
+    "nixos-options"
+    "company-nixos-options"
+    "nix-sandbox"
+    "solidity-mode"
+    "solidity-flycheck"
+    "company-solidity"
+    "proof-general"
+    "company-coq"
+    "julia-mode"
+    "treemacs-evil"
+    "lsp-treemacs"
+    "lsp-ivy"
+    "exwm"
+  ] // {
+    "lsp-julia" = epkgs: [
+      (epkgs.lsp-julia.overrideAttrs (old: {
+        patches = [
+          ./lsp-julia.patch
+        ];
+      }))
+    ];
+  };
+
+  # TODO package:
+  # - which-key
+
+  bundles = {
+    # Example:
+    # julia-lsp = {
+    #   auto-enable = cfg.bundles.lsp.enable && cfg.bundles.julia.enable;
+    #   packages = [ "lsp-julia" ];
+    # };
+
+    basic = {
+      auto-enable = true;
+      packages = [
+        "use-package"
+        "gcmh"
+        "general"
+      ];
+      config = {
+        home.file.".emacs.d/private.el".text = ''
+          ;; Some secret info here
+        '';
+      };
+    };
+
+    org-additions-v1 = {
+      auto-enable = false;
+      packages = [];
+      config = {};
+    };
+
+    dicts = {
+      auto-enable = false;
+      packages = [];
+      config = {};
+    };
+
+    latex = {
+      auto-enable = false;
+      packages = [];
+      config = {};
+    };
+
+    rss-hydra = {
+      auto-enable = false;
+      packages = [];
+      config = {};
+    };
+
+    exwm = {
+      auto-enable = false;
+      packages = [ "exwm" ];
+      config = {
+        xsession = {
+          enable = true;
+        };
+      };
+    };
+
+    code-stats = {
+      auto-enable = false;
+      packages = [ "code-stats" ];
+      config = {
+        home.file.".emacs.d/private.el".text = ''
+          (setq code-stats-token "${secrets.code-stats-api-key}")
+        '';
+      };
+    };
+  };
 in
 
 {
   options = {
     custom.editors.emacs = {
+      packages = makeEnableOptions (attrNames allPackages);
+      bundles = makeEnableOptions (attrNames bundles);
+
       enable = mkOption {
         default = false;
         description = ''
@@ -23,10 +219,6 @@ in
         '';
       };
 
-
-      code-stats = mkOption {
-        default = false;
-      };
 
       misc = {
         enable = mkOption {
@@ -136,10 +328,6 @@ in
         default = false;
       };
 
-      exwm = mkOption {
-        default = false;
-      };
-
       dicts = mkOption {
         default = true;
       };
@@ -147,6 +335,35 @@ in
   };
 
   config = mkIf cfg.enable (mkMerge [
+    (mkMerge (map (name:
+      let
+        bundle = bundles.${name};
+        enabled = cfg.bundles.${name}.enable || bundle.auto-enable;
+        val = if enabled then "t" else "nil";
+      in mkMerge [
+        ({
+          home.file.".emacs.d/nixcfg.el".text = ''
+          (setq nixcfg-bundle-${name} ${val})
+        '';
+        })
+        (mkIf enabled (enablePackages bundle.packages))
+        (mkIf enabled (bundle.config))
+      ]
+    ) (attrNames bundles)))
+
+    (mkMerge (map (pkg:
+      let
+        enabled = cfg.packages.${pkg}.enable;
+        val = if enabled then "t" else "nil";
+      in {
+        home.file.".emacs.d/nixcfg.el".text = ''
+          (setq nixcfg-${pkg} ${val})
+        '';
+
+        programs.emacs.extraPackages = if enabled then allPackages.${pkg} else _: [];
+      }
+    ) (attrNames allPackages)))
+
     {
       home.sessionVariables = {
         VISUAL = "emacs";
@@ -170,21 +387,10 @@ in
         '';
       };
 
-      home.file.".emacs.d/nix-modules.el".text = ''
-        (setq nix-modules t)
-      '';
-
       programs.emacs = {
         enable = true;
         package = pkgs.emacsNativeComp;
         overrides = import ./overrides.nix inputs;
-        extraPackages = epkgs: with epkgs; [
-          use-package
-          gcmh
-          general
-          which-key
-          direnv
-        ];
       };
     }
 
@@ -196,20 +402,6 @@ in
           enable = true;
         };
       };
-    })
-
-    (mkIf cfg.code-stats {
-      home.file.".emacs.d/private.el".text = ''
-        (setq code-stats-token "${secrets.code-stats-api-key}")
-      '';
-
-      home.file.".emacs.d/nix-modules.el".text = ''
-        (setq nix-code-stats t)
-      '';
-
-      programs.emacs.extraPackages = epkgs: with epkgs; [
-        code-stats
-      ];
     })
 
     (mkIf cfg.misc.enable {
@@ -599,21 +791,6 @@ in
     (mkIf (cfg.misc.enable && !cfg.misc.vertico && cfg.lsp) {
       programs.emacs.extraPackages = epkgs: with epkgs; [
         lsp-ivy
-      ];
-    })
-
-    (mkIf cfg.exwm {
-      home.file.".emacs.d/nix-modules.el".text = ''
-        (setq nix-exwm t)
-      '';
-
-      xsession = {
-        enable = true;
-      };
-
-
-      programs.emacs.extraPackages = epkgs: with epkgs; [
-        exwm
       ];
     })
 

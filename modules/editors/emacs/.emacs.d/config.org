@@ -4,42 +4,9 @@ Using ~emacs-native-comp-git~ from AUR for improving
 performance. Consider running in _daemon mode_, because the startup time
 stil not very good.
 
-Nix Modules switches. Setting to default
+Load enabled packages and bundles
 #+begin_src emacs-lisp
-(setq nix-modules nil) 
-(setq nix-code-stats nil)
-(setq nix-misc nil)
-(setq nix-vertico nil)
-(setq nix-evil nil)
-(setq nix-additional-motions nil)
-(setq nix-visual nil)
-(setq nix-code-misc nil)
-(setq nix-prog-misc nil)
-(setq nix-web-misc nil)
-(setq nix-web-dap nil)
-(setq nix-ts-js nil)
-(setq nix-lsp nil)
-(setq nix-cpp nil)
-(setq nix-haskell nil)
-(setq nix-python nil)
-(setq nix-latex nil)
-(setq nix-rust nil)
-(setq nix-go nil)
-(setq nix-kotlin nil)
-(setq nix-java nil)
-(setq nix-org-additional nil)
-(setq nix-roam nil)
-(setq nix-rss nil)
-(setq nix-nix nil)
-(setq nix-solidity nil)
-(setq nix-proof-assist nil)
-(setq nix-julia nil)
-(setq nix-exwm nil)
-(setq nix-dicts nil)
-#+end_src
-And load actual enabled modules
-#+begin_src emacs-lisp
-(load "~/.emacs.d/nix-modules.el") 
+(load "~/.emacs.d/nixcfg.el") 
 #+end_src
 
 Speeding up 🐌
@@ -58,25 +25,22 @@ There is initializes package mangers and initializing ~use-package~ \\
 Package config -- see https://melpa.org/#/getting-started. No more
 needed because of managing packages using Nix's home-manager.
 #+begin_src emacs-lisp
-(if (not nix-modules)
-    (progn
-      (require 'package)
-      (add-to-list
-       'package-archives
-       '("melpa" . "https://melpa.org/packages/")
-       t)
-      (package-initialize)
+(require 'package)
+(add-to-list
+ 'package-archives
+ '("melpa" . "https://melpa.org/packages/")
+ t)
+(package-initialize)
 
-      (unless (package-installed-p 'use-package)
-	(package-refresh-contents)
-	(package-install 'use-package))))
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 #+end_src
 Adding folder with manually added packages, loading file private variables
 - store all backups in a single directory
 #+begin_src emacs-lisp
 (add-to-list 'load-path "~/.emacs.d/lisp/")
-(if nix-code-stats
-    (load "~/.emacs.d/private.el"))
+(load "~/.emacs.d/private.el")
 (setq user-init-file "~/.emacs.d/init.el")
 (setq backup-directory-alist
       `(("." . ,(concat user-emacs-directory "backups"))))
@@ -84,7 +48,7 @@ Adding folder with manually added packages, loading file private variables
 
 Turn into window manager if enabled
 #+begin_src emacs-lisp
-(if nix-exwm
+(if nixcfg-bundle-exwm
     (progn
       (require 'exwm)
       (require 'exwm-config)
@@ -105,22 +69,23 @@ Speeding up again 🦼
 Profile 🤔
 #+begin_src emacs-lisp
 (use-package esup
-  :if nix-misc)
+  :if nixcfg-esup)
 #+end_src
 ** Projects
 Projects management with ~counsel~ completion
 #+begin_src emacs-lisp
 (use-package projectile
-  :if nix-misc
+  :if nixcfg-projectile
   :config
   (projectile-mode))
 (use-package counsel-projectile
-  :if (and nix-misc (not nix-vertico))
+  :if nixcfg-counsel-projectile
   :after (projectile counsel))
 #+end_src
 Support for nix environment variables
 #+begin_src emacs-lisp
 (use-package direnv
+  :if nixcfg-direnv
   :config
   (direnv-mode)) 
 #+end_src
@@ -128,28 +93,28 @@ Support for nix environment variables
 Amazing git tool
 #+begin_src emacs-lisp
 (use-package magit
-  :if nix-misc)
+  :if nixcfg-magit)
 #+end_src
 Project tree. Settings fonts for ~treemacs~
 #+begin_src emacs-lisp
 (use-package treemacs
-  :if nix-misc
+  :if nixcfg-treemacs
   :config
   (setq treemacs-read-string-input 'from-minibuffer))
 (use-package treemacs-evil
-  :if (and nix-misc nix-evil)
+  :if nixcfg-treemacs-evil
   :after evil)
 (use-package treemacs-projectile
-  :if nix-misc
+  :if nixcfg-treemacs-projectile
   :after (projectile treemacs))
 #+end_src
 ** Evil mode
 ~Evil~ with dependecies. Disable Evil mode for some modes
 #+begin_src emacs-lisp
 (use-package goto-chg
-  :if nix-evil)
+  :if nixcfg-goto-chg)
 (use-package evil
-  :if nix-evil
+  :if nixcfg-evil
   :init
   (setq evil-want-keybinding nil)
   (setq evil-want-integration t)
@@ -163,7 +128,7 @@ Project tree. Settings fonts for ~treemacs~
 	   do (evil-set-initial-state mode state))
   )
 (use-package undo-tree
-  :if nix-misc
+  :if nixcfg-undo-tree
   :config
   (global-undo-tree-mode)
   (evil-set-undo-system 'undo-tree)
@@ -173,7 +138,7 @@ Project tree. Settings fonts for ~treemacs~
 Collection of evil keybindings
 #+begin_src emacs-lisp
 (use-package evil-collection
-  :if nix-evil
+  :if nixcfg-evil-collection
   :after evil
   :config
   (evil-collection-init))
@@ -181,7 +146,7 @@ Collection of evil keybindings
 Fast search
 #+begin_src emacs-lisp
 (use-package evil-snipe
-  :if nix-evil
+  :if nixcfg-evil-snipe
   :config
   (evil-snipe-mode +1)
   (evil-snipe-override-mode +1))
@@ -189,14 +154,14 @@ Fast search
 Change brakets in evil mode
 #+begin_src emacs-lisp
 (use-package evil-surround
-  :if nix-evil
+  :if nixcfg-evil-surround
   :config
   (global-evil-surround-mode 1))
 #+end_src
 Multicursor
 #+begin_src emacs-lisp
 (use-package evil-mc
-  :if nix-evil
+  :if nixcfg-evil-mc
   :config
   (global-evil-mc-mode 1))
 #+end_src
@@ -204,7 +169,7 @@ Multicursor
 Tabs
 #+begin_src emacs-lisp
 (use-package centaur-tabs
-  :if nix-visual
+  :if nixcfg-centaur-tabs
   :config
   (centaur-tabs-mode t)
   :custom
@@ -218,39 +183,39 @@ Tabs
 Icons
 #+begin_src emacs-lisp
 (use-package all-the-icons
-  :if nix-visual
+  :if nixcfg-all-the-icons
   :config
   (setq all-the-icons-scale-factor 1.0))
 #+end_src
 HIghlight todo keywords
 #+begin_src emacs-lisp
 (use-package hl-todo
-  :if nix-visual
+  :if nixcfg-hl-todo
   :config
   (global-hl-todo-mode t))
 #+end_src
 Colorize parenthesis
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
-  :if nix-visual
+  :if nixcfg-rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 #+end_src
 Searching
 #+begin_src emacs-lisp
 (use-package avy
-  :if nix-additional-motions)
+  :if nixcfg-avy)
 #+end_src
 Windows hoping
 #+begin_src emacs-lisp
 (use-package ace-window
-  :if nix-additional-motions
+  :if nixcfg-ace-window
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 #+end_src
 Dashboard showing on startup
 #+begin_src emacs-lisp
 (use-package dashboard
-  :if nix-visual
+  :if nixcfg-dashboard
   :config
   (dashboard-setup-startup-hook)
   :config
@@ -270,13 +235,13 @@ Dashboard showing on startup
 Highlight lines chaned according to ~git~
 #+BEGIN_SRC emacs-lisp
 (use-package diff-hl
-  :if nix-visual
+  :if nixcfg-diff-hl
   :config
   (global-diff-hl-mode)) 
 #+END_SRC
 #+begin_src emacs-lisp
 (use-package minimap
-  :if nix-additional-motions
+  :if nixcfg-minimap
   :custom
   (minimap-window-location "right")) 
 #+end_src
@@ -284,26 +249,16 @@ Highlight lines chaned according to ~git~
 ~Doom-modeline~ as modeline
 #+begin_src emacs-lisp
 (use-package doom-modeline
-  :if nix-visual
+  :if nixcfg-doom-modeline
   :init 
   (doom-modeline-mode 1)
   :config
   (setq doom-modeline-icon t))
 #+end_src
-Colors from pywal. /Disabled/
-#+begin_src emacs-lisp
-(use-package ewal
-  :if nil
-  :init (setq ewal-use-built-in-always nil
-              ewal-use-built-in-on-failure-p t
-              ewal-built-in-palette "doom-gruvbox"))
-(use-package ewal-doom-themes
-  :if nil)
-#+end_src
 *Or* doom theme
 #+begin_src emacs-lisp
 (use-package doom-themes
-  :if nix-visual
+  :if nixcfg-doom-themes
   :preface (defvar region-fg nil)
   :config
   (setq doom-themes-treemacs-theme "doom-colors")
@@ -338,13 +293,12 @@ Colors from pywal. /Disabled/
 Code::stats
 #+BEGIN_SRC emacs-lisp
 (use-package code-stats
-  :if nix-code-stats
+  :if nixcfg-code-stats
   :config
   (add-hook 'prog-mode-hook #'code-stats-mode)
   (add-hook 'org-mode-hook #'code-stats-mode)
   (run-with-idle-timer 30 t #'code-stats-sync)
-  (add-hook 'kill-emacs-hook (lambda () (code-stats-sync :wait)))  
-  )
+  (add-hook 'kill-emacs-hook (lambda () (code-stats-sync :wait))))
 #+END_SRC
 Lama mode
 #+begin_src emacs-lisp
@@ -353,9 +307,9 @@ Lama mode
 Solidity mode
 #+begin_src emacs-lisp
 (use-package solidity-mode
-  :if nix-solidity) 
+  :if nixcfg-solidity-mode)
 (use-package company-solidity
-  :if nix-solidity
+  :if nixcfg-company-solidity
   :hook
   (solidity-mode . iliayar/solidity-company-init)
 
@@ -365,7 +319,7 @@ Solidity mode
     (set (make-local-variable 'company-backends)
 	 (append '((company-solidity)) company-backends))))
 (use-package solidity-flycheck
-  :if nix-solidity
+  :if nixcfg-solidity-flycheck
   :hook
   (solidity-mode . flycheck-mode)
 
@@ -376,45 +330,45 @@ Solidity mode
 Auto parenthesis
 #+begin_src emacs-lisp
 (use-package smartparens
-  :if nix-code-misc
+  :if nixcfg-smartparens
   :init
   (smartparens-global-mode))
 #+end_src
 Editconfig support
 #+begin_src emacs-lisp
 (use-package editorconfig
-  :if nix-code-misc
+  :if nixcfg-editorconfig
   :config
   (editorconfig-mode 1))
 #+end_src
 Snippets
 #+begin_src emacs-lisp
 (use-package yasnippet
-  :if nix-code-misc
+  :if nixcfg-yasnippet
   :init
   (yas-global-mode 1))
 (use-package yasnippet-snippets
-  :if nix-code-misc)
+  :if nixcfg-yasnippet-snippets)
 #+end_src
 Code formatting
 #+begin_src emacs-lisp
 (use-package format-all
-  :if nix-code-misc)
+  :if nixcfg-format-all)
 #+end_src
 Dockerfile support
 #+BEGIN_SRC emacs-lisp
 (use-package dockerfile-mode
-  :if nix-prog-misc)
+  :if nixcfg-dockerfile-mode)
 #+END_SRC
 Package for html live view
 #+begin_src emacs-lisp
 (use-package impatient-mode
-  :if nix-web-misc)
+  :if nixcfg-impatient-mode)
 #+end_src
 Cool web stuff
 #+BEGIN_SRC emacs-lisp
 (use-package web-mode
-  :if nix-web-misc
+  :if nixcfg-web-mode
   :mode (("\\.js\\'" . web-mode)
          ("\\.jsx\\'" . web-mode)
          ("\\.ts\\'" . web-mode)
@@ -431,7 +385,7 @@ Cool web stuff
 Debugger
 #+begin_src emacs-lisp
 (use-package dap-mode
-  :if nix-web-dap
+  :if nixcfg-dap-mode
   :config
   (require 'dap-chrome)) 
 #+end_src
@@ -439,7 +393,7 @@ Debugger
 Use ~company~ for autocompletion. Add snippets to company backends
 #+begin_src emacs-lisp
 (use-package company
-  :if nix-code-misc
+  :if nixcfg-company
   :init
   (add-hook 'after-init-hook 'global-company-mode)
   :config
@@ -482,7 +436,7 @@ Use ~company~ for autocompletion. Add snippets to company backends
 Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
 #+begin_src emacs-lisp
 (use-package counsel
-  :if (and nix-misc (not nix-vertico))
+  :if nixcfg-counsel
   :init
   (ivy-mode 1)
   :config
@@ -508,7 +462,7 @@ Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
 
 ;; If vertico (consult) is enabled
 (use-package consult
-  :if (and nix-misc nix-vertico)
+  :if nixcfg-consult
   :general
   (
    :states '(normal visual emacs insert treemacs)
@@ -520,18 +474,18 @@ Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
    "ff" 'find-file
    "pf" 'consult-projectile))
 (use-package vertico
-  :if (and nix-misc nix-vertico)
+  :if nixcfg-vertico
   :init (vertico-mode))
 (use-package consult-projectile
-  :if (and nix-misc nix-vertico)
+  :if nixcfg-consult-projectile
   :after (consult projectile))
 (use-package marginalia
-  :if (and nix-misc nix-vertico)
+  :if nixcfg-marginalia
   :after vertico
   :init
   (marginalia-mode))
 (use-package orderless
-  :if (and nix-misc nix-vertico)
+  :if nixcfg-orderless
   :custom
   (completion-styles '(orderless basic)))
 #+end_src
@@ -539,7 +493,7 @@ Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
 Typescript
 #+begin_src emacs-lisp
 (use-package tide
-  :if nix-ts-js
+  :if nixcfg-tide
   :after (typescript-mode company flycheck)
   :hook ((typescript-mode . tide-setup)
          (typescript-mode . tide-hl-identifier-mode)
@@ -549,43 +503,43 @@ Typescript
   (add-to-list 'company-backends '(company-tide)))
 
 (use-package typescript-mode
-  :if nix-ts-js)
+  :if nixcfg-typescript-mode)
 
 (use-package rjsx-mode
-  :if nix-ts-js)
+  :if nixcfg-rjsx-mode)
 #+end_src
 
 Coq, ...
 #+begin_src emacs-lisp
 (use-package proof-general
-  :if nix-proof-assist)
+  :if nixcfg-proof-general)
 (use-package company-coq
-  :if nix-proof-assist)
+  :if nixcfg-company-coq)
 #+end_src
 
 
 Bison, flex
 #+begin_src emacs-lisp
 (use-package bison-mode
-  :if nix-prog-misc) 
+  :if nixcfg-bison-mode)
 #+end_src
 
 Nix, and completion
 #+begin_src emacs-lisp
 (use-package nix-mode
-  :if nix-nix
+  :if nixcfg-nix-mode
   :mode "\\.nix\\'") 
 (use-package nixos-options
-  :if nix-nix)
+  :if nixcfg-nixos-options)
 (use-package company-nixos-options
-  :if nix-nix)
+  :if nixcfg-company-nixos-options)
 #+end_src
 
 Lsp client. Speeding up 🛹, adding folders to not track. \\
 Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/
 #+begin_src emacs-lisp
-(use-package  lsp-mode
-  :if nix-lsp
+(use-package lsp-mode
+  :if nixcfg-lsp-mode
   :hook (
          (lsp-mode . lsp-enable-which-key-integration) 
          (c++-mode . lsp)
@@ -603,25 +557,25 @@ Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/
   (setq lsp-idle-delay 0.500)
   (setq lsp-lens-enable nil))
 (use-package lsp-ui
-  :if nix-lsp)
+  :if nixcfg-lsp-ui)
 #+end_src
 Syntax checking and lsp related errors/warnings. Posfrmae stil sucks
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck
-  :if nix-lsp)
+  :if nixcfg-flycheck)
 #+END_SRC
 Lsp integration with several plugins
 #+begin_src emacs-lisp
 (use-package lsp-treemacs
-  :if (and nix-lsp nix-misc))
+  :if nixcfg-lsp-treemacs)
 (use-package lsp-ivy
-  :if (and nix-lsp nix-misc (not nix-vertico)))
+  :if nixcfg-lsp-ivy)
 #+end_src
 C++ lsp \\
 In /build/ directory run =cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=YES ..=
 #+BEGIN_SRC emacs-lisp
 (use-package ccls
-  :if nix-cpp
+  :if nixcfg-ccls
   :config
   (setq ccls-initialization-options
         '(:compilationDatabaseDirectory "build"
@@ -630,69 +584,69 @@ In /build/ directory run =cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=YES ..=
 Haskell lsp
 #+begin_src emacs-lisp
 (use-package lsp-haskell
-  :if nix-haskell)
+  :if nixcfg-lsp-haskell)
 #+end_src
 Python lsp
 #+begin_src emacs-lisp
 (use-package lsp-pyright
-  :if nix-python
+  :if nixcfg-lsp-pyright
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
                          (lsp))))  ; or lsp-deferred
 (use-package anaconda-mode
-  :if nix-python)
+  :if nixcfg-anaconda-mode)
 (use-package company-anaconda
-  :if nix-python)
+  :if nixcfg-company-anaconda)
 #+end_src
 #+end_src
 Lsp for latex
 #+begin_src emacs-lisp
 (use-package lsp-latex
-  :if (and nix-latex nix-lsp))
+  :if nixcfg-lsp-latex)
 #+end_src
 Julia mode
 #+begin_src emacs-lisp
 (use-package julia-mode
-  :if nix-julia)
+  :if nixcfg-julia-mode)
 (use-package lsp-julia
-  :if (and nix-lsp nix-julia)
+  :if nixcfg-lsp-julia
   :config
   (setq lsp-julia-default-environment "~/.julia/environments/v1.7"))
 #+end_src
 Rust mode
 #+begin_src emacs-lisp
 (use-package rustic
-  :if nix-rust)
+  :if nixcfg-rustic)
 #+end_src
 Go mode
 #+begin_src emacs-lisp
 (use-package go-mode
-  :if nix-go)
+  :if nixcfg-go-mode)
 #+end_src
 Haskell mode
 #+begin_src emacs-lisp
 (use-package haskell-mode
-  :if nix-haskell)
+  :if nixcfg-haskell-mode)
 #+end_src
 Yaml files
 #+begin_src emacs-lisp
 (use-package yaml-mode
-  :if nix-prog-misc)
+  :if nixcfg-yaml-mode)
 #+end_src
 Kotlin
 #+BEGIN_SRC emacs-lisp
 (use-package kotlin-mode
-  :if nix-kotlin)
+  :if nixcfg-kotlin-mode)
 #+END_SRC
 Graphviz
 #+BEGIN_SRC emacs-lisp
 (use-package graphviz-dot-mode
-  :if nix-prog-misc)
+  :if nixcfg-graphviz-dot-mode)
 #+END_SRC
 Java lsp
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-java
-  :if (and nix-lsp nix-java))
+  :if nixcfg-lsp-java)
 #+END_SRC
 *** Settings
 - C style settings
@@ -740,12 +694,12 @@ Compilation windows settings:
 Export Org mode to Json
 #+BEGIN_SRC emacs-lisp
 (use-package ox-json
-  :if nix-org-additional)
+  :if nixcfg-ox-json)
 #+END_SRC
 Org headers icons
 #+begin_src emacs-lisp
 (use-package org-bullets
-  :if nix-org-additional)
+  :if nixcfg-org-bullets)
 #+end_src
 Loading Export backends
 #+BEGIN_SRC emacs-lisp
@@ -761,7 +715,7 @@ Loading Export backends
 Org Roam
 #+BEGIN_SRC emacs-lisp
 (use-package org-roam
-  :if nix-roam
+  :if nixcfg-org-roam
   :init
   (setq org-roam-v2-ack t)
   :custom
@@ -777,9 +731,9 @@ Org Roam
   (setq org-roam-dailies-direcory "journal/")
   (org-roam-setup))
 (use-package websocket
-  :if nix-roam)
+  :if nixcfg-websocket)
 
-(if nix-roam
+(if nixcfg-org-roam-ui
     (progn
       (load-library "org-roam-ui")))
 
@@ -826,7 +780,7 @@ Defining action to execute at entering org-mode, disable marking capture entry a
 #+begin_src emacs-lisp
 (add-hook 'org-mode-hook 
           (lambda () 
-            (if nix-org-additional
+            (if nixcfg-bundle-org-additions-v1
 		(progn
 		  (org-bullets-mode 1)))
             (org-indent-mode nil)
@@ -879,7 +833,7 @@ Export settings
 #+END_SRC
 Setting up spell checking. Working for both laguages, but only one in one buffer.
 #+BEGIN_SRC emacs-lisp
-(if nix-dicts
+(if nixcfg-bundle-dicts
   (progn
 (with-eval-after-load "ispell"
   (setq ispell-program-name "hunspell")
@@ -975,7 +929,7 @@ Publishing for:
 Org mode to LaTeX and pdf
 Setting packages
 #+BEGIN_SRC emacs-lisp
-(if nix-latex 
+(if nixcfg-bundle-latex 
   (progn
 (setq org-latex-packages-alist '(
                                  ("T1, T2A" "fontenc" t)
@@ -1064,7 +1018,7 @@ Setting packages
 RSS reader. Settings colors for each tag.
 #+begin_src emacs-lisp
 (use-package elfeed
-  :if nix-rss
+  :if nixcfg-elfeed
   :custom
   (rmh-elfeed-org-files (list "~/org/elfeed.org"))
   :config
@@ -1090,100 +1044,18 @@ RSS reader. Settings colors for each tag.
     (elfeed-expose #'elfeed-search-toggle-all 'starred))
   )
 (use-package elfeed-org
-  :if nix-rss
+  :if nixcfg-elfeed-org
   :init
   (elfeed-org))
 (use-package elfeed-goodies
-  :if nix-rss
+  :if nixcfg-elfeed-goodies
   :init
   (elfeed-goodies/setup))
 #+end_src
-Mail client
-#+BEGIN_SRC emacs-lisp
-(use-package mu4e
-  :if nil
-  :ensure nil
-  :config
-  (setq user-full-name "Ilya Yaroshevskiy")
-  
-  (setq mu4e-change-filenames-when-moving t)
-  (setq mu4e-update-interval (* 10 60))
-  (setq mu4e-maildir "~/Mail")
-  (setq mu4e-headers-skip-duplicates t)
-  (setq mu4e-attachment-dir "~/Downloads")
-  (setq mu4e-sent-messages-behavior 'delete)
-  (setq mu4e-use-fancy-chars t)
-  (setq message-send-mail-function 'smtpmail-send-it)
-  (setq mu4e-completing-read-function 'ivy-completing-read)
-
-  (setq mu4e-contexts
-        (list
-         ;; Personal context
-         (make-mu4e-context
-          :name "personal"
-          :match-func (lambda (msg) (when msg
-                                      (string-prefix-p "/personal" (mu4e-message-field msg :maildir))))
-          :vars '((mu4e-sent-folder . "/personal/[Gmail]/Sent Mail")
-                  (mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
-                  ;; (mu4e-refile-folder . "/personal/[Gmail]/All Mail")
-                  (mu4e-trash-folder . "/personal/[Gmail]/Trash")
-                  (user-mail-address . "iliayar3@gmail.com")
-                  (mu4e-get-mail-command . "mbsync personal")
-                  (smtpmail-smtp-server . "smtp.gmail.com")
-                  (smtpmail-smtp-service . 465)
-                  (smtpmail-stream-type . ssl)
-                  (smtpmail-smtp-user . "iliayar3@gmail.com")
-                  (mu4e-bookmarks . (("maildir:/personal/Inbox" "Inbox" ?i)
-                                     ("maildir:/personal/[Gmail]/Important" "Important" ?!)))
-                  ))
-         ;; Cock context
-         (make-mu4e-context
-          :name "cock"
-          :match-func (lambda (msg) (when msg
-                                      (string-prefix-p "/cock" (mu4e-message-field msg :maildir))))
-          :vars '(
-                  (mu4e-sent-folder . "/cock/Sent")
-                  ;; (mu4e-drafts-folder . "/cock/Drafts")
-                  (mu4e-refile-folder . "/cock/Junk")
-                  (mu4e-trash-folder . "/cock/Trash")
-                  (user-mail-address . "iliayar@cock.li")
-                  (mu4e-get-mail-command . "mbsync cock")
-                  (smtpmail-smtp-server . "mail.cock.li")
-                  (smtpmail-smtp-service . 465)
-                  (smtpmail-stream-type . ssl)
-                  (smtpmail-smtp-user . "iliayar@cock.li")
-                  (mu4e-bookmarks . (("maildir:/cock/Inbox" "Inbox" ?i)
-                                     ;; ("maildir:/personal/[Gmail]/Important" "Important" ?!)
-                                     ))
-                  ))
-         ;; University context
-         (make-mu4e-context
-          :name "university"
-          :match-func (lambda (msg) (when msg
-                                      (string-prefix-p "/university" (mu4e-message-field msg :maildir))))
-          :vars '(
-                  (mu4e-sent-folder . "/university/Sent")
-                  ;; (mu4e-drafts-folder . "/cock/Drafts")
-                  (mu4e-refile-folder . "/university/Junk")
-                  (mu4e-trash-folder . "/university/Trash")
-                  (user-mail-address . "iliayar@niuitmo.ru")
-                  (mu4e-get-mail-command . "mbsync university")
-                  (smtpmail-smtp-server . "smtp-mail.outlook.com")
-                  (smtpmail-smtp-service . 587)
-                  (smtpmail-stream-type . ssl)
-                  (smtpmail-smtp-user . "iliayar@niuitmo.ru")
-                  (mu4e-bookmarks . (("maildir:/cock/Inbox" "Inbox" ?i)
-                                     ;; ("maildir:/personal/[Gmail]/Important" "Important" ?!)
-                                     ))
-                  ))
-         )))
-#+END_SRC
-
-
-Emacs everywher!
+Emacs everywhere!
 #+begin_src emacs-lisp
 (use-package emacs-everywhere
-  :if nix-additional-motions)
+  :if nixcfg-emacs-everywhere)
 #+end_src
 
 * Keybindings
@@ -1202,7 +1074,7 @@ Emacs everywher!
 #+end_src
 Elfeed hydra binddings
 #+begin_src emacs-lisp
-(if (and nix-additional-motions nix-rss)
+(if nixcfg-bundle-rss-hydra
   (progn
 (defhydra elfeed-search-view-hydra (:color blue :hint t)
   ("d" (elfeed-search-set-filter nil) "Default")
@@ -1311,7 +1183,7 @@ Helper functions for university labs
 #+end_src
 Hydra
 #+begin_src emacs-lisp
-(if nix-additional-motions
+(if nixcfg-hydra
   (progn
 (defhydra hydra-window-resize-menu (:color red
                                            :hint nil)

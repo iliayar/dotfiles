@@ -29,7 +29,10 @@
       enable = true;
       server = true;
 
-      code-stats = true;
+      bundles = {
+        code-stats.enable = false; # FIXME
+      };
+
       misc = {
         enable = true;
       };
