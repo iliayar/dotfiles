@@ -28,22 +28,32 @@
 
     editors.emacs = {
       enable = true;
-      evil = true;
 
-      dicts = false;
+      bundles = {
+        evil-integrations.enable = true;
+        # exwm.enable = true;
+      };
 
       misc = {
         enable = true;
+        code = { enable = true; };
       };
 
-      nix = true;
-      exwm = true;
+      langs = [ "nix" "rust" ];
 
-      code-misc = true;
-      prog-misc = true;
+      code-assist = { enable = true; };
 
-      lsp = true;
-      rust = true;
+      evil = { enable = true; };
+
+      pretty = {
+        theme = "doom-gruvbox";
+      };
+
+      packages = {
+        ace-window.enable = true;
+        avy.enable = true;
+        hl-todo.enable = true;
+      };
     };
 
     de.terms.alacritty.enable = true;
