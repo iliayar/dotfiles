@@ -9,7 +9,7 @@ in
   options = {
     custom.de.pointer = {
       enable = mkOption {
-        default = true;
+        default = false;
       };
     };
   };

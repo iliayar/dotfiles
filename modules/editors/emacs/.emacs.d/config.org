@@ -41,7 +41,7 @@ Turn into window manager if enabled
 Default global variables
 #+begin_src emacs-lisp
   (setq default-family "Fira Code")
-  (setq default-height 95)
+  (setq default-height 110)
 #+end_src
 
 * Packages
@@ -476,26 +476,24 @@ Use ~company~ for autocompletion. Add snippets to company backends
 	(company-complete-number 1)))
 
     (setq company-backends 
-	  '(company-capf 
-	    company-yasnippet))
+	  '(company-capf :with company-yasnippet))
 
-    (defun mars/company-backend-with-yas (backends)
-      "Add :with company-yasnippet to company BACKENDS.
-    Taken from https://github.com/syl20bnr/spacemacs/pull/179."
-      (if (and (listp backends) (memq 'company-yasnippet backends))
-	  backends
-	(append (if (consp backends)
-		    backends
-		  (list backends))
-		'(:with company-yasnippet))))
+    (setq company-math-allow-latex-symbols-in-faces t)
 
-    (defun add-yas-in-company ()
-      (setq company-backends
-	    (mapcar #'mars/company-backend-with-yas company-backends)))
+    (if nixcfg-lsp-mode
+	(add-hook 'lsp-managed-mode-hook
+		  (lambda ()
+		    (setq-local company-backends
+				'((company-capf :with company-yasnippet))))))
 
-    (add-yas-in-company)
+    :general
 
-    (setq company-math-allow-latex-symbols-in-faces t))
+    (
+     :keymaps 'company-active-map
+     "<backtab>" 'iliayar/company-complete-selection
+     "C-n" 'company-select-next
+     "C-p" 'company-select-previous
+     ))
 #+end_src
 Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
 #+begin_src emacs-lisp
@@ -606,7 +604,6 @@ Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/
     :if nixcfg-lsp-mode
     :hook (
 	   (lsp-mode . lsp-enable-which-key-integration) 
-	   (c++-mode . lsp)
 	   )
     :config
     (setq read-process-output-max (* 1024 1024))
@@ -649,6 +646,14 @@ Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/
      :non-normal-prefix "M-SPC"
      :keymaps 'override
      "se" 'lsp-ui-flycheck-list))
+
+  (if (not nixcfg-lsp-ui)
+      (general-define-key
+       :states '(normal visual)
+       :keymaps 'override
+       "gsx" 'lsp-find-references
+       "gsd" 'lsp-find-definition
+       ))
 #+end_src
 Syntax checking and lsp related errors/warnings. Posfrmae stil sucks
 #+BEGIN_SRC emacs-lisp
@@ -953,4 +958,9 @@ Hydra
   ;;  `(org-tag ((t (:slant italic :weight normal :family "Ubuntu Mono"))))
   ;;  `(org-verbatim ((t (:box (:line-width (2 . 2) :color "dim gray" :style released-button)))))
   ;;  `(outline-1 ((t (:extend t :weight bold)))))
+#+end_src
+
+** Extra
+#+begin_src emacs-lisp
+  (load "~/.emacs.d/extra.el") 
 #+end_src

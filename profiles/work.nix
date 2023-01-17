@@ -7,7 +7,7 @@
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.username = "iliayar";
-  home.homeDirectory = "/home/iliayar";
+  home.homeDirectory = "/Users/iliayar";
 
 
   custom = {
@@ -23,7 +23,7 @@
 
     editors.nvim = {
       enable = true;
-      code-stats = false;
+      code-stats = true;
     };
 
     editors.emacs = {
@@ -31,7 +31,7 @@
 
       bundles = {
         evil-integrations.enable = true;
-        # exwm.enable = true;
+        code-stats.enable = true;
       };
 
       misc = {
@@ -39,7 +39,10 @@
         code = { enable = true; };
       };
 
-      langs.enable = [ "nix" "rust" ];
+      langs = {
+        enable = [ "nix" "cpp" ];
+        cpp.ls = "clangd";
+      };
 
       code-assist = { enable = true; };
 
@@ -54,6 +57,24 @@
         avy.enable = true;
         hl-todo.enable = true;
       };
+
+      extraConfig = ''
+        ; (setq ccls-initialization-options
+        ; '(:compilationDatabaseDirectory "/Users/iliayar/projects-build/.vscode"
+        ;             :cache (:directory "/Users/iliayar/projects-build/.vscode/.ccls-cache")))
+        (setq lsp-clients-clangd-args '(
+            "--background-index"
+            "--compile-commands-dir=/Users/iliayar/projects-build/.vscode" 
+            "--header-insertion=never" 
+            "--log=info"
+            "--pretty"
+            "-j=12"
+        ))
+
+        (setq projectile-indexing-method 'native)
+        (setq projectile-enable-caching t)
+        (setq trash-directory "~/.trash")
+      '';
     };
 
     de.terms.alacritty.enable = true;

@@ -166,7 +166,7 @@ let
     };
 
     langs-nix-internal = {
-      auto-enable = builtins.elem "nix" cfg.langs;
+      auto-enable = builtins.elem "nix" cfg.langs.enable;
       packages = [
         "nix-mode"
         # "nixos-options" # FIXME: Too slow on load
@@ -258,7 +258,7 @@ let
       packages = [ "lsp-ivy" ];
     };
 
-    langs-python-internal = { auto-enable = builtins.elem "python" cfg.langs; };
+    langs-python-internal = { auto-enable = builtins.elem "python" cfg.langs.enable; };
 
     langs-python-lsp-internal = {
       auto-enable = cfg.bundles.lsp-internal.enable
@@ -270,27 +270,35 @@ let
     };
 
     langs-misc-internal = {
-      auto-enable = builtins.elem "misc" cfg.langs;
+      auto-enable = builtins.elem "misc" cfg.langs.enable;
       packages =
         [ "dockerfile-mode" "yaml-mode" "graphviz-dot-mode" "bison-mode" ];
     };
 
     langs-typescript-internal = {
-      auto-enable = builtins.elem "typescript" cfg.langs;
+      auto-enable = builtins.elem "typescript" cfg.langs.enable;
       packages = [ "tide" "rjsx-mode" "typescript-mode" ];
     };
 
-    langs-cpp-internal = { auto-enable = builtins.elem "cpp" cfg.langs; };
+    langs-cpp-internal = { auto-enable = builtins.elem "cpp" cfg.langs.enable; };
 
-    langs-cpp-lsp-internal = {
+    langs-cpp-lsp-ccls-internal = {
       auto-enable = cfg.bundles.lsp-internal.enable
-        && cfg.bundles.langs-cpp-internal.enable;
+      && cfg.bundles.langs-cpp-internal.enable
+      && cfg.langs.cpp.ls == "ccls";
       packages = [ "ccls" ];
       config = { home.packages = [ pkgs.ccls ]; };
     };
 
+    langs-cpp-lsp-clangd-internal = {
+      auto-enable = cfg.bundles.lsp-internal.enable
+      && cfg.bundles.langs-cpp-internal.enable
+      && cfg.langs.cpp.ls == "clangd";
+      config = { home.packages = [ pkgs.clang ]; };
+    };
+
     langs-haskell-internal = {
-      auto-enable = builtins.elem "haskell" cfg.langs;
+      auto-enable = builtins.elem "haskell" cfg.langs.enable;
       packages = [ "haskell-mode" ];
     };
 
@@ -301,7 +309,7 @@ let
     };
 
     langs-latex-internal = {
-      auto-enable = builtins.elem "latex" cfg.langs;
+      auto-enable = builtins.elem "latex" cfg.langs.enable;
       packages = [ "org-special-block-extras" ];
     };
 
@@ -312,21 +320,21 @@ let
     };
 
     langs-rust-internal = {
-      auto-enable = builtins.elem "rust" cfg.langs;
+      auto-enable = builtins.elem "rust" cfg.langs.enable;
       packages = [ "rustic" ];
     };
 
     langs-go-internal = {
-      auto-enable = builtins.elem "go" cfg.langs;
+      auto-enable = builtins.elem "go" cfg.langs.enable;
       packages = [ "go-mode" ];
     };
 
     langs-kotlin-internal = {
-      auto-enable = builtins.elem "kotlin" cfg.langs;
+      auto-enable = builtins.elem "kotlin" cfg.langs.enable;
       packages = [ "kotlin-mode" ];
     };
 
-    langs-java-internal = { auto-enable = builtins.elem "java" cfg.langs; };
+    langs-java-internal = { auto-enable = builtins.elem "java" cfg.langs.enable; };
 
     langs-java-lsp-internal = {
       auto-enable = cfg.bundles.lsp-internal.enable
@@ -335,7 +343,7 @@ let
     };
 
     langs-solidity-internal = {
-      auto-enable = builtins.elem "solidity" cfg.langs;
+      auto-enable = builtins.elem "solidity" cfg.langs.enable;
       packages = [ "solidity-mode" ];
     };
 
@@ -354,7 +362,7 @@ let
     proof-assist = { packages = [ "proof-general" "company-coq" ]; };
 
     langs-julia-internal = {
-      auto-enable = builtins.elem "julia" cfg.langs;
+      auto-enable = builtins.elem "julia" cfg.langs.enable;
       packages = [ "solidity-mode" ];
     };
 
@@ -421,23 +429,30 @@ in {
         code = { enable = mkOption { default = false; }; };
       };
 
-      langs = mkOption {
-        default = [ "misc" ];
-        type = types.listOf (types.enum [
-          "nix"
-          "python"
-          "rust"
-          "typescript"
-          "cpp"
-          "haskell"
-          "latex"
-          "go"
-          "kotlin"
-          "java"
-          "solidity"
-          "julia"
-          "misc"
-        ]);
+      langs = {
+        enable = mkOption {
+          default = [ "misc" ];
+          type = types.listOf (types.enum [
+            "nix"
+            "python"
+            "rust"
+            "typescript"
+            "cpp"
+            "haskell"
+            "latex"
+            "go"
+            "kotlin"
+            "java"
+            "solidity"
+            "julia"
+            "misc"
+          ]);
+        };
+
+        cpp.ls = mkOption {
+          default = "ccls";
+          type = types.enum [ "ccls" "clangd" ];
+        };
       };
 
       code-assist = {
@@ -467,6 +482,12 @@ in {
       pretty = {
         theme = mkOption { default = null; };
         extra = { enable = mkOption { default = false; }; };
+      };
+
+      extraConfig = mkOption {
+        default = ''
+          ;; Extra config
+        '';
       };
     };
   };
@@ -528,6 +549,8 @@ in {
           [ -e ~/.emacs.d/config.el ] && rm ~/.emacs.d/config.el
         '';
       };
+
+      home.file.".emacs.d/extra.el".text = cfg.extraConfig;
 
       programs.emacs = {
         enable = true;

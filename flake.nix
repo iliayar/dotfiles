@@ -7,6 +7,8 @@
 
     nur.url = github:nix-community/NUR;
 
+    flake-utils.url = "github:numtide/flake-utils";
+
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -83,12 +85,16 @@
             , tlpui-src
             , rust-blocks
             , nur
+            , flake-utils
             , ...
             }
     @inputs: 
+    flake-utils.lib.eachSystem (with flake-utils.lib.system; [ 
+      x86_64-linux
+      x86_64-darwin
+    ])
+      (system:
       let
-        system = "x86_64-linux";
-
         overlays = [
           emacs-overlay.overlay
         ] ++ (import ./modules/overlays (inputs // { inherit system; }));
@@ -127,29 +133,24 @@
           themes = themes;
         };
 
-        homeConfigurations = {
-          heavy = home-manager.lib.homeManagerConfiguration rec {
-            inherit pkgs;
-            extraSpecialArgs = specialArgs // {
-              inherit pkgs system;
-            };
-            modules = [
-              ./modules
-              ./profiles/heavy.nix
-            ];
+        makeHomeProfile = name: home-manager.lib.homeManagerConfiguration rec {
+          inherit pkgs;
+          extraSpecialArgs = specialArgs // {
+            inherit pkgs system;
           };
+          modules = [
+            ./modules
+            ./profiles/${name}.nix
+          ];
+        };
 
-          ubuntu-virt = home-manager.lib.homeManagerConfiguration rec {
-            inherit pkgs;
-            extraSpecialArgs = specialArgs // {
-              inherit pkgs system;
-            };
-            modules = [
-              ./modules
-              ./profiles/ubuntu-virt.nix
-            ];
-          };
+        makeProfiles = pkgs.lib.foldl (acc: name: acc // { ${name} = makeHomeProfile name; }) {};
 
+        homeConfigurations = (makeProfiles [
+          "heavy"
+          "ubuntu-virt"
+          "work"
+        ]) // {
           wsl = home-manager.lib.homeManagerConfiguration rec {
             inherit pkgs;
             extraSpecialArgs = specialArgs // {
@@ -185,31 +186,33 @@
                 specialArgs;
             };
 
-        lenovoLaptop = 
-          let
-            modules = [
-              ./hosts/lenovoLaptop/configuration.nix
-              ./cachix.nix
-              {
-                nixpkgs = nixpkgs-config;
-                nix = {
-                  gc = {
-                    automatic = true;
-                    options = "--delete-older-than 3d";
+            lenovoLaptop = 
+            let
+              modules = [
+                ./hosts/lenovoLaptop/configuration.nix
+                ./cachix.nix
+                {
+                  nixpkgs = nixpkgs-config;
+                  nix = {
+                    gc = {
+                      automatic = true;
+                      options = "--delete-older-than 3d";
+                    };
                   };
-                };
-              }
-            ];
-          in
+                }
+              ];
+            in
             nixpkgs.lib.nixosSystem {
               inherit
-                system
-                modules
-                specialArgs;
+              system
+              modules
+              specialArgs;
             };
       in {
-        nixosConfigurations.NixLaptop = dellLaptop;
-        nixosConfigurations.NixLenovo = lenovoLaptop;
-        inherit homeConfigurations;
-      };
+        packages = {
+          nixosConfigurations.NixLaptop = dellLaptop;
+          nixosConfigurations.NixLenovo = lenovoLaptop;
+          inherit homeConfigurations;
+        };
+      });
 }

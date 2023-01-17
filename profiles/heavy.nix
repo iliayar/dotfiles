@@ -39,7 +39,7 @@
         code = { enable = true; };
       };
 
-      langs = [ "nix" "python" "misc" ];
+      langs.enable = [ "nix" "python" "misc" ];
 
       code-assist = { enable = true; };
 
@@ -111,6 +111,8 @@
       spotify.enable = true;
 
       zathura.enable = true;
+
+      pointer.enable = true;
     };
   };
 
