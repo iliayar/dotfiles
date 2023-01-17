@@ -533,6 +533,7 @@ Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
      :keymaps 'override
      "bf" 'consult-buffer
      "ce" 'consult-compile-error
+     "cc" 'compile
      "ff" 'find-file
      "pf" 'consult-projectile))
   (use-package vertico
@@ -694,7 +695,6 @@ Python lsp
   (use-package company-anaconda
     :if nixcfg-company-anaconda)
 #+end_src
-#+end_src
 Lsp for latex
 #+begin_src emacs-lisp
   (use-package lsp-latex
@@ -726,6 +726,11 @@ Go mode
 #+begin_src emacs-lisp
   (use-package go-mode
     :if nixcfg-go-mode)
+#+end_src
+Php mode
+#+begin_src emacs-lisp
+  (use-package php-mode
+    :if nixcfg-php-mode)
 #+end_src
 Haskell mode
 #+begin_src emacs-lisp
