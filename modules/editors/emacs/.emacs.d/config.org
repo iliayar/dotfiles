@@ -41,7 +41,7 @@ Turn into window manager if enabled
 Default global variables
 #+begin_src emacs-lisp
   (setq default-family "Fira Code")
-  (setq default-height 120)
+  (setq default-height nixcfg-font-size)
 #+end_src
 
 * Packages

@@ -518,7 +518,8 @@ myKeys = \conf -> let
                   "+ " ++ d ++ "\n" ++ getHelp m)
   dzenAllBindings = withDzenKeymapsPipe "Keybindings" keymap $ createSubmap []
   restartRecompile = wrapZsh $ (++" || (echo \"\x1b[31mFailed\x1b[m\"; echo Press Enter; read)") $ wrap "(" ")" $ intercalate " && "
-    [ "home-manager switch -j 8"
+    [ "cd ~/Repos/dotfiles"
+    , "home-manager switch --flake ./#heavy"
     , "xmonad --restart"
     , "echo \"\x1b[32mSucceed\x1b[m\""
     , "sleep 1"

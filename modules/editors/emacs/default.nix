@@ -359,7 +359,7 @@ let
     };
 
     langs-php-internal = {
-      auto-enable = builtins.elem "php" cfg.langs;
+      auto-enable = builtins.elem "php" cfg.langs.enable;
       packages = [ "php-mode" ];
     };
 
@@ -535,6 +535,7 @@ in {
       pretty = {
         theme = mkOption { default = null; };
         extra = { enable = mkOption { default = false; }; };
+        font-size = mkOption { default = 95; };
       };
 
       extraConfig = mkOption {
@@ -602,6 +603,10 @@ in {
           [ -e ~/.emacs.d/config.el ] && rm ~/.emacs.d/config.el
         '';
       };
+
+      home.file.".emacs.d/nixcfg.el".text = ''
+        (setq nixcfg-font-size ${toString cfg.pretty.font-size})
+      '';
 
       home.file.".emacs.d/extra.el".text = cfg.extraConfig;
 
