@@ -40,7 +40,7 @@
       };
 
       langs = {
-        enable = [ "nix" "cpp" ];
+        enable = [ "nix" "cpp" "python" "misc" ];
         cpp.ls = "clangd";
       };
 
