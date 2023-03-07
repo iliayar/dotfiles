@@ -18,7 +18,12 @@
 
     shell = {
       misc.enable = true;
-      zsh.enable = true;
+      zsh = {
+        enable = true;
+        extra = ''
+          [ -f ~/.tars.zsh ] && source ~/.tars.zsh
+        '';
+      };
     };
 
     editors.nvim = {

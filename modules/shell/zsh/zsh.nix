@@ -11,6 +11,9 @@ in
       enable = mkOption {
         default = false;
       };
+      extra = mkOption {
+        default = "";
+      };
     };
   };
 
@@ -33,6 +36,10 @@ in
       shellAliases = {
         magit = "emacsclient -t -e '(magit)'";
       };
+
+      initExtra = ''
+        ${cfg.extra}
+      '';
     };
   };
 }

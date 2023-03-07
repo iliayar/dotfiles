@@ -34,10 +34,29 @@ let
     "company-solidity"
     "consult"
     "consult-projectile"
-    "counsel"
-    "counsel"
-    "counsel-projectile"
     "dap-mode"
+    "counsel-projectile"
+    "corfu"
+    "marginalia"
+    "orderless"
+    "counsel"
+    "goto-chg"
+    "evil"
+    "evil-collection"
+    "evil-snipe"
+    "corfu-doc"
+    "kind-icon"
+    "evil-surround"
+    "evil-multiedit"
+    "evil-mc"
+    "avy"
+    "ace-window"
+    "hydra"
+    "emacs-everywhere"
+    "minimap"
+    "all-the-icons"
+    "hl-todo"
+    "rainbow-delimiters"
     "dashboard"
     "diff-hl"
     "direnv"
@@ -162,8 +181,19 @@ let
         "yasnippet"
         "yasnippet-snippets"
         "format-all"
-        "company"
       ];
+    };
+
+    misc-code-internal-company = {
+      auto-enable = cfg.bundles.misc-code-internal.enable
+        && cfg.misc.code.completion == "company";
+      packages = [ "company" ];
+    };
+
+    misc-code-internal-corfu = {
+      auto-enable = cfg.bundles.misc-code-internal.enable
+        && cfg.misc.code.completion == "corfu";
+      packages = [ "corfu" "kind-icon" "corfu-doc" ];
     };
 
     langs-nix-internal = {
@@ -259,7 +289,9 @@ let
       packages = [ "lsp-ivy" ];
     };
 
-    langs-python-internal = { auto-enable = builtins.elem "python" cfg.langs.enable; };
+    langs-python-internal = {
+      auto-enable = builtins.elem "python" cfg.langs.enable;
+    };
 
     langs-python-lsp-internal = {
       auto-enable = cfg.bundles.lsp-internal.enable
@@ -281,20 +313,21 @@ let
       packages = [ "tide" "rjsx-mode" "typescript-mode" ];
     };
 
-    langs-cpp-internal = { auto-enable = builtins.elem "cpp" cfg.langs.enable; };
+    langs-cpp-internal = {
+      auto-enable = builtins.elem "cpp" cfg.langs.enable;
+    };
 
     langs-cpp-lsp-ccls-internal = {
       auto-enable = cfg.bundles.lsp-internal.enable
-      && cfg.bundles.langs-cpp-internal.enable
-      && cfg.langs.cpp.ls == "ccls";
+        && cfg.bundles.langs-cpp-internal.enable && cfg.langs.cpp.ls == "ccls";
       packages = [ "ccls" ];
       config = { home.packages = [ pkgs.ccls ]; };
     };
 
     langs-cpp-lsp-clangd-internal = {
       auto-enable = cfg.bundles.lsp-internal.enable
-      && cfg.bundles.langs-cpp-internal.enable
-      && cfg.langs.cpp.ls == "clangd";
+        && cfg.bundles.langs-cpp-internal.enable && cfg.langs.cpp.ls
+        == "clangd";
       config = { home.packages = [ pkgs.clang ]; };
     };
 
@@ -340,7 +373,9 @@ let
       packages = [ "kotlin-mode" ];
     };
 
-    langs-java-internal = { auto-enable = builtins.elem "java" cfg.langs.enable; };
+    langs-java-internal = {
+      auto-enable = builtins.elem "java" cfg.langs.enable;
+    };
 
     langs-java-lsp-internal = {
       auto-enable = cfg.bundles.lsp-internal.enable
@@ -360,12 +395,18 @@ let
     };
 
     langs-solidity-misc-internal = {
-      auto-enable = cfg.misc.code.enable
-        && cfg.bundles.langs-solidity-internal.enable;
+      auto-enable = cfg.misc.code.enable && cfg.misc.code.completion
+        == "company" && cfg.bundles.langs-solidity-internal.enable;
       packages = [ "company-solidity" ];
     };
 
-    proof-assist = { packages = [ "proof-general" "company-coq" ]; };
+    proof-assist = { packages = [ "proof-general" ]; };
+
+    proff-assist-company = {
+      auto-enable = cfg.bundles.proof-assist.enable && cfg.misc.code.enable
+        && cfg.misc.code.completion == "company";
+      packages = [ "company-coq" ];
+    };
 
     langs-julia-internal = {
       auto-enable = builtins.elem "julia" cfg.langs.enable;
@@ -432,7 +473,13 @@ in {
           type = types.enum [ "vertico" "ivy" ];
         };
 
-        code = { enable = mkOption { default = false; }; };
+        code = {
+          enable = mkOption { default = false; };
+          completion = mkOption {
+            default = "corfu";
+            type = types.enum [ "company" "corfu" ];
+          };
+        };
       };
 
       langs = {

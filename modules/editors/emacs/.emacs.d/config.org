@@ -41,7 +41,7 @@ Turn into window manager if enabled
 Default global variables
 #+begin_src emacs-lisp
   (setq default-family "Fira Code")
-  (setq default-height 110)
+  (setq default-height 120)
 #+end_src
 
 * Packages
@@ -475,9 +475,6 @@ Use ~company~ for autocompletion. Add snippets to company backends
 	  (company-complete-selection)
 	(company-complete-number 1)))
 
-    (setq company-backends 
-	  '(company-capf :with company-yasnippet))
-
     (setq company-math-allow-latex-symbols-in-faces t)
 
     (if nixcfg-lsp-mode
@@ -494,6 +491,90 @@ Use ~company~ for autocompletion. Add snippets to company backends
      "C-n" 'company-select-next
      "C-p" 'company-select-previous
      ))
+#+end_src
+Use ~corfu~ for completion
+Mostly from this post https://kristofferbalintona.me/posts/202202270056/
+#+begin_src emacs-lisp
+  (use-package corfu
+    :if nixcfg-corfu
+    :config
+    (global-corfu-mode)
+
+    ;; Enable Corfu more generally for every minibuffer, as long as no other
+    ;; completion UI is active. If you use Mct or Vertico as your main minibuffer
+    ;; completion UI. From
+    ;; https://github.com/minad/corfu#completing-with-corfu-in-the-minibuffer
+    (defun corfu-enable-always-in-minibuffer ()
+      "Enable Corfu in the minibuffer if Vertico/Mct are not active."
+      (unless (or (bound-and-true-p mct--active) ; Useful if I ever use MCT
+		  (bound-and-true-p vertico--input))
+	(setq-local corfu-auto nil)       ; Ensure auto completion is disabled
+	(corfu-mode 1)))
+     (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
+
+    ;; Setup lsp to use corfu for lsp completion
+    (defun kb/corfu-setup-lsp ()
+      "Use orderless completion style with lsp-capf instead of the
+      default lsp-passthrough."
+      (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+	    '(orderless)))
+
+    (general-add-advice '(corfu--setup corfu--teardown) :after 'evil-normalize-keymaps)
+    (evil-make-overriding-map corfu-map)
+
+
+    :custom
+    (corfu-auto t)
+    (corfu-auto-prefix 2)
+    (corfu-auto-delay 0.2)
+    (corfu-preview-current nil)
+
+    (completion-cycle-threshold nil)
+
+    (lsp-completion-provider :none) ; Use corfu instead the default for lsp completions
+
+
+    :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
+
+    :general
+    (
+     :keymaps 'corfu-map
+     :states 'insert
+     "<backtab>" #'corfu-insert
+     "C-n" #'corfu-next
+     "C-p" #'corfu-previous
+     "C-l" #'corfu-show-location
+     ))
+
+  (use-package kind-icon
+    :if nixcfg-kind-icon
+    :after corfu
+    :custom
+    (kind-icon-use-icons t)
+    (kind-icon-default-face 'corfu-default) ; Have background color be the same as `corfu' face background
+    (kind-icon-blend-background nil)  ; Use midpoint color between foreground and background colors ("blended")?
+    (kind-icon-blend-frac 0.08)
+    :config
+    (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter) ; Enable `kind-icon'
+  )
+
+  (use-package corfu-doc
+    :if nixcfg-corfu-doc
+    :after corfu
+    :hook (corfu-mode . corfu-doc-mode)
+    :general (:keymaps 'corfu-map
+	      ;; This is a manual toggle for the documentation popup.
+	      "M-d" #'corfu-doc-toggle ; Remap the default doc command
+	      ;; Scroll in the documentation window
+	      "M-n" #'corfu-doc-scroll-up
+	      "M-p" #'corfu-doc-scroll-down)
+    :custom
+    (corfu-doc-delay 1)
+
+    ;; NOTE 2022-02-05: I've also set this in the `corfu' use-package to be
+    ;; extra-safe that this is set when corfu-doc is loaded. I do not want
+    ;; documentation shown in both the echo area and in the `corfu-doc' popup.
+    (corfu-echo-documentation nil))
 #+end_src
 Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
 #+begin_src emacs-lisp
@@ -836,11 +917,6 @@ Emacs everywhere!
 
 * Keybindings
 #+begin_src emacs-lisp
-  (general-define-key
-   :keymaps 'company-active-map
-   "<tab>"     'yas-expand
-   "<backtab>" 'iliayar/company-complete-selection)
-
   (general-define-key
    :map 'org-mode-map
    "C-c C-x i" 'my/org-insert-last-screenshot)
