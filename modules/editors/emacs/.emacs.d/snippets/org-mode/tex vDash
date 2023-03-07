@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: tex vDash
-# key: |=
+# name: tex Vdash
+# key: ||-
 # --
-\vDash
+\Vdash

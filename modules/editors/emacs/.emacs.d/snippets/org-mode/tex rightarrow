@@ -1,5 +1,4 @@
-# -*- mode: snippet -*-
-# name: tex rightarrow
-# key: ->
+# key: =>
+# name: tex Rightarrow
 # --
-\rightarrow
+\Rightarrow
