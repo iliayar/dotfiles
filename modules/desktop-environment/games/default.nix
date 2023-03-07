@@ -51,6 +51,8 @@ in
     (mkIf cfg.lutris.enable {
       home.packages = with pkgs; [
         lutris
+        # protonup-qt # TODO: Actualize nixpkgs revision
+        # osu-lazer   # TODO: Actualize nixpkgs revision
       ];
     })
   ];

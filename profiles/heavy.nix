@@ -9,11 +9,18 @@
   home.username = "iliayar";
   home.homeDirectory = "/home/iliayar";
 
+  home.packages = with pkgs; [
+    xournalpp
+    pkgs.gnome.adwaita-icon-theme
+  ];
+
   custom = {
     dev = {
       python.enable = true;
       cpp.enable = true;
       latex.enable = true;
+
+      embed.enable = true;
     };
 
     study.sage.enable = true;
@@ -39,7 +46,7 @@
         code = { enable = true; };
       };
 
-      langs.enable = [ "nix" "python" "misc" "haskell" ];
+      langs.enable = [ "nix" "python" "misc" "haskell" "rust" ];
 
       code-assist = { enable = true; };
 

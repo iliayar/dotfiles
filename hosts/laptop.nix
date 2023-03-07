@@ -20,14 +20,20 @@ in
     "BROWSER" = "brave";
   };
 
-  virtualisation.podman = {
+  # virtualisation.podman = {
+    # enable = true;
+    # dockerCompat = true;
+    # dockerSocket.enable = true;
+  # };
+  virtualisation.docker = {
     enable = true;
-    dockerCompat = true;
   };
+
   users.users."iliayar".extraGroups = [ "dialout" ];
 
   environment.systemPackages = with pkgs; [
-    podman-compose
+    docker-compose
+    # podman-compose
   ];
 
   systemd.services.logid = {

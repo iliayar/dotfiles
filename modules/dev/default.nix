@@ -8,6 +8,7 @@
     ./reverse.nix
     ./haskell.nix
     ./julia.nix
+    ./embed.nix
   ];
 
 }
