@@ -616,6 +616,9 @@ Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
      "ce" 'consult-compile-error
      "cc" 'compile
      "ff" 'find-file
+     "fr" 'consult-ripgrep
+     "fm" 'consult-global-mark
+     "fl" 'consult-line
      "pf" 'consult-projectile))
   (use-package vertico
     :if nixcfg-vertico
@@ -631,7 +634,10 @@ Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
   (use-package orderless
     :if nixcfg-orderless
     :custom
-    (completion-styles '(orderless basic)))
+    (completion-styles '(orderless basic))
+    (general-unbind
+      :keymaps 'yas-keymap
+      "<backtab>"))
 #+end_src
 *** Languages and lsp
 Typescript
@@ -910,6 +916,11 @@ Emacs everywhere!
     :if nixcfg-emacs-everywhere)
 #+end_src
 
+*FAST* Term?
+#+begin_src emacs-lisp
+    (use-package vterm
+      :if nixcfg-vterm)
+#+end_src
 *** [[file:rss.org][RSS]]
 #+begin_src emacs-lisp
   (org-babel-load-file "~/.emacs.d/rss.el")

@@ -23,6 +23,10 @@ in
       syncthing = mkOption {
         default = false;
       };
+
+      udiskie = mkOption {
+        default = true;
+      };
     };
   };
 
@@ -43,10 +47,17 @@ in
         du-dust
         tokei
         delta
+        hurl
       ];
     }
     (mkIf cfg.syncthing {
       services.syncthing.enable = true;
+    })
+    (mkIf cfg.udiskie {
+      services.udiskie = {
+        enable = true;
+        tray = "never";
+      };
     })
   ]);
 }

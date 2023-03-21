@@ -29,7 +29,7 @@ in
     enable = true;
   };
 
-  users.users."iliayar".extraGroups = [ "dialout" ];
+  users.users."iliayar".extraGroups = [ "dialout" "docker" ];
 
   environment.systemPackages = with pkgs; [
     docker-compose
@@ -45,4 +45,6 @@ in
     };
     wantedBy = [ "default.target" ];
   };
+
+  services.udisks2.enable = true;
 }

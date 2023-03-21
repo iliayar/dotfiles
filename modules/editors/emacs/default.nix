@@ -19,6 +19,7 @@ let
     (map (pkg: { custom.editors.emacs.packages.${pkg}.enable = true; }) pkgs);
 
   allPackages = makePackagesDictId [
+    "vterm"
     "ace-window"
     "all-the-icons"
     "anaconda-mode"
@@ -147,7 +148,7 @@ let
   bundles = {
     basic = {
       auto-enable = true;
-      packages = [ "use-package" "gcmh" "general" "hydra" "direnv" ];
+      packages = [ "use-package" "gcmh" "general" "hydra" "direnv" "vterm" ];
       config = {
         home.file.".emacs.d/private.el".text = ''
           ;; Some secret info here
