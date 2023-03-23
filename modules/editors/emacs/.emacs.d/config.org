@@ -706,6 +706,8 @@ Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/
     (setq lsp-idle-delay 0.500)
     (setq lsp-lens-enable nil)
 
+    (setq lsp-signature-doc-lines 5)
+
     :general
 
     (
