@@ -15,6 +15,11 @@
   ];
 
   custom = {
+  
+    settings = {
+      code-stats-machine = "DellLaptop";
+    };
+
     dev = {
       python.enable = true;
       cpp.enable = true;

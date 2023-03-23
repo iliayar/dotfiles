@@ -135,7 +135,7 @@ in
         ];
 
         extraConfig = ''
-      let g:codestats_api_key = "${secrets.code-stats-api-key}"
+      let g:codestats_api_key = "${secrets.code-stats-api-key.${config.custom.settings.code-stats-machine}}"
 
       " Airline code::stats
       let g:airline_section_x = airline#section#create_right(['tagbar', 'filetype', '%{CodeStatsXp()}'])

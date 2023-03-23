@@ -440,7 +440,7 @@ let
       packages = [ "code-stats" ];
       config = {
         home.file.".emacs.d/private.el".text = ''
-          (setq code-stats-token "${secrets.code-stats-api-key}")
+          (setq code-stats-token "${secrets.code-stats-api-key.${config.custom.settings.code-stats-machine}}")
         '';
       };
     };

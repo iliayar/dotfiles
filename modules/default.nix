@@ -9,5 +9,6 @@
     ./desktop-environment
     ./dev
     ./study
+    ./settings.nix
   ];
 }

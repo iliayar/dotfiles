@@ -11,9 +11,16 @@
 
 
   custom = {
+
+    settings = {
+      code-stats-machine = "Work";
+    };
+
     misc = {
       enable = true;
       git.enable = true;
+
+      udiskie = false;
     };
 
     shell = {
