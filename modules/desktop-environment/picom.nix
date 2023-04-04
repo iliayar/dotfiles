@@ -18,7 +18,6 @@ in
     services.picom = {
       enable = true;
       package = pkgs.picom-jonaburg;
-      experimentalBackends = true;
       vSync = true;
       settings = {
         blur = true;
