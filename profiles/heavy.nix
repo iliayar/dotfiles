@@ -90,6 +90,8 @@
       gpg.enable = true;
       pass.enable = true;
       ssh.enable = true;
+
+      zellij.enable = true;
     };
 
     shell = {

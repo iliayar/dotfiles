@@ -6,6 +6,13 @@ keybinds {
   unbind "Ctrl g"
 
   normal {
+    unbind "Ctrl g"
+    unbind "Ctrl p"
+    unbind "Ctrl n"
+
+    bind "Alt p" { SwitchToMode "pane"; }
+    bind "Alt r" { SwitchToMode "resize"; }
+
     bind "Alt k" { FocusNextPane; }
     bind "Alt j" { FocusPreviousPane; }
 
