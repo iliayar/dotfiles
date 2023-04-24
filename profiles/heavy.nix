@@ -67,6 +67,7 @@
       pretty = {
         theme = "doom-gruvbox";
         extra.enable = true;
+        font-size = 95;
       };
 
       packages = {

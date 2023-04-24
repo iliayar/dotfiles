@@ -41,7 +41,7 @@ Turn into window manager if enabled
 Default global variables
 #+begin_src emacs-lisp
   (setq default-family "Fira Code")
-  (setq default-height 95)
+  (setq default-height nixcfg-font-size)
 #+end_src
 
 * Packages
@@ -502,6 +502,7 @@ Mostly from this post https://kristofferbalintona.me/posts/202202270056/
 #+begin_src emacs-lisp
   (use-package corfu
     :if nixcfg-corfu
+    :hook (corfu-mode . corfu-popupinfo-mode)
     :config
     (global-corfu-mode)
 
@@ -549,6 +550,10 @@ Mostly from this post https://kristofferbalintona.me/posts/202202270056/
      "C-n" #'corfu-next
      "C-p" #'corfu-previous
      "C-l" #'corfu-show-location
+     ;; FIXME: Check default bindings and remove if exists
+     ;; "M-d" #'corfu-popupinfo-toggle
+     ;; "M-n" #'corfu-popupinfo-scroll-up
+     ;; "M-p" #'corfu-popupinfo-scroll-down
      ))
 
   (use-package kind-icon
@@ -562,24 +567,6 @@ Mostly from this post https://kristofferbalintona.me/posts/202202270056/
     :config
     (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter) ; Enable `kind-icon'
   )
-
-  (use-package corfu-doc
-    :if nixcfg-corfu-doc
-    :after corfu
-    :hook (corfu-mode . corfu-doc-mode)
-    :general (:keymaps 'corfu-map
-	      ;; This is a manual toggle for the documentation popup.
-	      "M-d" #'corfu-doc-toggle ; Remap the default doc command
-	      ;; Scroll in the documentation window
-	      "M-n" #'corfu-doc-scroll-up
-	      "M-p" #'corfu-doc-scroll-down)
-    :custom
-    (corfu-doc-delay 1)
-
-    ;; NOTE 2022-02-05: I've also set this in the `corfu' use-package to be
-    ;; extra-safe that this is set when corfu-doc is loaded. I do not want
-    ;; documentation shown in both the echo area and in the `corfu-doc' popup.
-    (corfu-echo-documentation nil))
 #+end_src
 Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
 #+begin_src emacs-lisp
@@ -622,7 +609,8 @@ Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
      "cc" 'compile
      "ff" 'find-file
      "fr" 'consult-ripgrep
-     "fm" 'consult-global-mark
+     "mg" 'consult-global-mark
+     "mm" 'consult-mark
      "fl" 'consult-line
      "pf" 'consult-projectile))
   (use-package vertico
@@ -638,6 +626,7 @@ Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
     (marginalia-mode))
   (use-package orderless
     :if nixcfg-orderless
+    :after (yasnippet)
     :custom
     (completion-styles '(orderless basic))
     (general-unbind

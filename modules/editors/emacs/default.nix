@@ -615,7 +615,7 @@ in {
 
       programs.emacs = {
         enable = true;
-        package = pkgs.emacsNativeComp;
+        package = pkgs.emacsUnstable;
         overrides = import ./overrides.nix inputs;
       };
     }
