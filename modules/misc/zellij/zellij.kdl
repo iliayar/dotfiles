@@ -1,0 +1,32 @@
+simplified_ui true
+
+
+keybinds {
+  unbind "Ctrl q"
+  unbind "Ctrl g"
+
+  normal {
+    bind "Alt k" { FocusNextPane; }
+    bind "Alt j" { FocusPreviousPane; }
+
+    bind "Alt q" { CloseFocus; }
+
+    bind "Alt l" { GoToNextTab; }
+    bind "Alt h" { GoToPreviousTab; }
+
+    bind "Alt t" { NewTab; }
+    bind "Alt w" { CloseTab; }
+
+    bind "Alt f" { ToggleFocusFullscreen; }
+
+    bind "Alt g" { SwitchToMode "locked"; }
+  }
+
+  session {
+    bind "q" { Quit; }
+  }
+
+  locked {
+    bind "Alt g" { SwitchToMode "normal"; }
+  }
+}

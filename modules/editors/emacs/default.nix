@@ -19,6 +19,7 @@ let
     (map (pkg: { custom.editors.emacs.packages.${pkg}.enable = true; }) pkgs);
 
   allPackages = makePackagesDictId [
+    "sdlang-mode"
     "vterm"
     "ace-window"
     "all-the-icons"
@@ -182,6 +183,7 @@ let
         "yasnippet"
         "yasnippet-snippets"
         "format-all"
+        "sdlang-mode"
       ];
     };
 

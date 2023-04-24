@@ -2,17 +2,15 @@
 
 with lib;
 
-let
-  cfg = config.custom.de.terms;
-in
-{
+let cfg = config.custom.de.terms;
+in {
 
   options = {
     custom.de.terms = {
       alacritty = {
-        enable = mkOption {
-          default = false;
-        };
+        enable = mkOption { default = false; };
+
+        option_as_alt = mkOption { default = false; };
       };
     };
   };
@@ -21,22 +19,24 @@ in
     programs.alacritty = {
       enable = true;
       settings = {
-        env = {
-          TERM = "xterm-256color";
-        };
+        env = { TERM = "xterm-256color"; };
+
         window = {
           padding = {
             x = 3;
             y = 3;
           };
           opacity = 0.85;
-        };
+        } // (if cfg.alacritty.option_as_alt then {
+          option_as_alt = "Both";
+        } else
+          { });
+
         font = {
-          normal = {
-            family = "Fira Code";
-          };
+          normal = { family = "Fira Code"; };
           size = 9.0;
         };
+
         colors = {
           primary = {
             background = "${themes.background}";

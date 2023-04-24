@@ -395,6 +395,11 @@ Editconfig support
     :config
     (editorconfig-mode 1))
 #+end_src
+KDL configs support
+#+begin_src emacs-lisp
+  (use-package sdlang-mode
+    :if nixcfg-sdlang-mode)
+#+end_src
 Snippets
 #+begin_src emacs-lisp
   (use-package yasnippet

@@ -19,6 +19,7 @@
     misc = {
       enable = true;
       git.enable = true;
+      zellij.enable = true;
 
       udiskie = false;
     };
@@ -52,7 +53,7 @@
       };
 
       langs = {
-        enable = [ "nix" "cpp" "python" "misc" ];
+        enable = [ "nix" "cpp" "python" "misc" "rust" ];
         cpp.ls = "clangd";
       };
 
@@ -89,7 +90,10 @@
       '';
     };
 
-    de.terms.alacritty.enable = true;
+    de.terms.alacritty = {
+      enable = true;
+      option_as_alt = true;
+    };
   };
 
   # This value determines the Home Manager release that your
