@@ -36,7 +36,7 @@
 
     editors.nvim = {
       enable = true;
-      code-stats = true;
+      code-stats = false;
     };
 
     editors.emacs = {

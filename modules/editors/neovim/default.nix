@@ -41,7 +41,7 @@ in
           vim-surround
           vim-gitgutter
           editorconfig-vim
-          nerdtree
+          # nerdtree
           rainbow_parentheses
           nerdcommenter
           gruvbox
@@ -111,7 +111,7 @@ in
       au Syntax * RainbowParenthesesLoadBraces
 
       nnoremap <ESC> :noh<CR>
-      nnoremap <leader>op :NERDTreeToggle<CR>
+      " nnoremap <leader>op :NERDTreeToggle<CR>
       nnoremap <leader>e :new COMMAND_OUTPUT<CR>:read !
 
       map! <S-Down> <Down>
