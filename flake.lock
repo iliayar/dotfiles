@@ -3,16 +3,16 @@
     "code-stats-vim": {
       "flake": false,
       "locked": {
-        "lastModified": 1643405747,
-        "narHash": "sha256-3a580/7gxSy6AFld1ZvsT78drOi4Qx9w1Swl8jtMaaM=",
-        "owner": "code-stats",
-        "repo": "code-stats-vim",
-        "rev": "621b52e271639b436e40ab5f5fd7ee70bbfe50c8",
+        "lastModified": 1682732863,
+        "narHash": "sha256-d77Elf1AlycN+0ndbVQa4qY0cWov/vuqwCT4/n+d2Dw=",
+        "owner": "iliayar",
+        "repo": "codestats.nvim",
+        "rev": "c4ad96fa1407b11a72ee8e22fec2f4502674585a",
         "type": "gitlab"
       },
       "original": {
-        "owner": "code-stats",
-        "repo": "code-stats-vim",
+        "owner": "iliayar",
+        "repo": "codestats.nvim",
         "type": "gitlab"
       }
     },

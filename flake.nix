@@ -15,7 +15,7 @@
     };
 
     code-stats-vim = {
-      url = "gitlab:code-stats/code-stats-vim";
+      url = "gitlab:iliayar/codestats.nvim";
       flake = false;
     };
 

@@ -58,6 +58,7 @@ in
       font-awesome
       symbola
       ubuntu_font_family
+      nerdfonts
     ];
   };
 }

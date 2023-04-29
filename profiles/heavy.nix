@@ -76,7 +76,10 @@
         hl-todo.enable = true;
       };
     };
-    editors.nvim.enable = true;
+    editors.nvim = {
+      enable = true;
+      code-stats = true;
+    };
 
     misc = {
       enable = true;

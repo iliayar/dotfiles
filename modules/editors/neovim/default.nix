@@ -12,8 +12,9 @@ in
         default = false;
       };
 
+      # FIXME: Slow startup
       code-stats = mkOption {
-        default = true;
+        default = false;
       };
     };
   };
@@ -61,6 +62,11 @@ in
           vim-gitgutter
           editorconfig-vim
           vim-easymotion
+
+          nvim-tree-lua
+          nvim-web-devicons
+
+          fzf-lua
         ];
 
         extraLuaConfig = ''
@@ -72,7 +78,7 @@ in
 
       programs.neovim = {
         plugins = with pkgs.vimPlugins; [
-          (pkgs.vimUtils.buildVimPluginFrom2Nix { name = "code-stats-vim"; src = code-stats-vim; })
+          (pkgs.vimUtils.buildVimPluginFrom2Nix { name = "codestats-nvim"; src = code-stats-vim; })
         ];
       };
     })
