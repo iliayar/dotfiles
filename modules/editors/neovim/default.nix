@@ -12,12 +12,10 @@ in
           default = false;
         };
 
-      # FIXME: Slow startup
       code-stats = mkOption {
         default = false;
       };
 
-      # FIXME: Slow startup
       lsp = mkOption {
         default = false;
       };
