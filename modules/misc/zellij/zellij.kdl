@@ -9,9 +9,13 @@ keybinds {
     unbind "Ctrl g"
     unbind "Ctrl p"
     unbind "Ctrl n"
+    unbind "Ctrl t"
+    unbind "Ctrl o"
 
     bind "Alt p" { SwitchToMode "pane"; }
+    bind "Alt t" { SwitchToMode "tab"; }
     bind "Alt r" { SwitchToMode "resize"; }
+    bind "Alt o" { SwitchToMode "session"; }
 
     bind "Alt k" { FocusNextPane; }
     bind "Alt j" { FocusPreviousPane; }
@@ -20,9 +24,6 @@ keybinds {
 
     bind "Alt l" { GoToNextTab; }
     bind "Alt h" { GoToPreviousTab; }
-
-    bind "Alt t" { NewTab; }
-    bind "Alt w" { CloseTab; }
 
     bind "Alt f" { ToggleFocusFullscreen; }
 
