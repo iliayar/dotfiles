@@ -5,15 +5,20 @@ with lib;
 let
   cfg = config.custom.editors.nvim;
 in
-{
-  options = {
-    custom.editors.nvim = {
-      enable = mkOption {
+  {
+    options = {
+      custom.editors.nvim = {
+        enable = mkOption {
+          default = false;
+        };
+
+      # FIXME: Slow startup
+      code-stats = mkOption {
         default = false;
       };
 
       # FIXME: Slow startup
-      code-stats = mkOption {
+      lsp = mkOption {
         default = false;
       };
     };
@@ -48,6 +53,14 @@ in
         nixcfg.codestats = {
           enable = false,
         }
+      '') + (if cfg.lsp then ''
+        nixcfg.lsp = {
+          enable = true,
+        }
+      '' else ''
+        nixcfg.lsp = {
+          enable = false,
+        }
       '') + ''
         return nixcfg
       '';
@@ -77,10 +90,20 @@ in
       };
     }
     (mkIf cfg.code-stats {
-
       programs.neovim = {
         plugins = with pkgs.vimPlugins; [
           (pkgs.vimUtils.buildVimPluginFrom2Nix { name = "codestats-nvim"; src = code-stats-vim; })
+        ];
+      };
+    })
+    (mkIf cfg.lsp {
+      programs.neovim = {
+        plugins = with pkgs.vimPlugins; [
+          nvim-lspconfig
+          nvim-cmp
+          cmp-nvim-lsp
+          nvim-snippy
+          cmp-snippy
         ];
       };
     })

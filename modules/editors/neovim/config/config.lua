@@ -64,14 +64,61 @@ vim.keymap.set('n', '<Leader>op', '<cmd>NvimTreeToggle<cr>')
 
 require("fzf-lua").setup()
 
+vim.keymap.set('n', '<Leader>fr', '<cmd>FzfLua live_grep<cr>')
+vim.keymap.set('n', '<Leader>ff', '<cmd>FzfLua files<cr>')
+vim.keymap.set('n', '<Leader>fb', '<cmd>FzfLua buffers<cr>')
+
 -- Comments
 require("nvim_comment").setup({
     operator_mapping = '<Leader>cl',
 })
 
-vim.keymap.set('n', '<Leader>fr', '<cmd>FzfLua live_grep<cr>')
-vim.keymap.set('n', '<Leader>ff', '<cmd>FzfLua files<cr>')
-vim.keymap.set('n', '<Leader>fb', '<cmd>FzfLua buffers<cr>')
+-- Snippets
+
+if nixcfg.lsp.enable then
+    snippy = require('snippy')
+    snippy.setup({
+        mappings = {
+            is = {
+                ['<Tab>'] = 'expand_or_advance',
+            },
+        },
+    })
+end
+-- Completion
+
+if nixcfg.lsp.enable then
+    local cmp = require('cmp')
+    cmp.setup({
+        snippet = {
+            expand = function(args)
+                snippy.expand_snippet(args.body)
+            end
+        },
+        mapping = cmp.mapping.preset.insert({
+            ['<S-Tab>'] = cmp.mapping.confirm({ select = true }),
+        }),
+        window = {
+            documentation = cmp.config.disable,
+        },
+        sources = cmp.config.sources({
+            { name = 'nvim_lsp' },
+        }),
+    })
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+    vim.keymap.set('n', '<Leader>ca', '<cmd>lua vim.lsp.buf.code_action()<cr>')
+end
+
+-- LSP
+
+if nixcfg.lsp.enable then
+    local lspconfig = require('lspconfig')
+    lspconfig.rust_analyzer.setup({
+        autostart = false,
+        capabilities = capabilities
+    })
+end
 
 -- Other
 

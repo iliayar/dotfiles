@@ -79,6 +79,7 @@
     editors.nvim = {
       enable = true;
       code-stats = true;
+      lsp = true;
     };
 
     misc = {
