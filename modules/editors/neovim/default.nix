@@ -67,6 +67,8 @@ in
           nvim-web-devicons
 
           fzf-lua
+
+          nvim-comment
         ];
 
         extraLuaConfig = ''
