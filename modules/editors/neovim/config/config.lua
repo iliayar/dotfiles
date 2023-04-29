@@ -62,11 +62,15 @@ vim.keymap.set('n', '<Leader>op', '<cmd>NvimTreeToggle<cr>')
 
 -- Search
 
-require("fzf-lua").setup()
+if nixcfg.search then
+    require("telescope").setup()
+    require("telescope").load_extension('fzf')
+    local builtin = require("telescope.builtin")
 
-vim.keymap.set('n', '<Leader>fr', '<cmd>FzfLua live_grep<cr>')
-vim.keymap.set('n', '<Leader>ff', '<cmd>FzfLua files<cr>')
-vim.keymap.set('n', '<Leader>fb', '<cmd>FzfLua buffers<cr>')
+    vim.keymap.set('n', '<Leader>fr', builtin.live_grep, {})
+    vim.keymap.set('n', '<Leader>ff', builtin.find_files, {})
+    vim.keymap.set('n', '<Leader>bf', builtin.buffers, {})
+end
 
 -- Comments
 require("nvim_comment").setup({

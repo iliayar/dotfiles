@@ -19,6 +19,10 @@ in
       lsp = mkOption {
         default = false;
       };
+
+      search = mkOption {
+        default = true;
+      };
     };
   };
 
@@ -59,6 +63,14 @@ in
         nixcfg.lsp = {
           enable = false,
         }
+      '') + (if cfg.search then ''
+        nixcfg.search = {
+          enable = true,
+        }
+      '' else ''
+        nixcfg.search = {
+          enable = false,
+        }
       '') + ''
         return nixcfg
       '';
@@ -76,8 +88,6 @@ in
 
           nvim-tree-lua
           nvim-web-devicons
-
-          fzf-lua
 
           nvim-comment
         ];
@@ -103,6 +113,17 @@ in
           nvim-snippy
           cmp-snippy
         ];
+      };
+    })
+    (mkIf cfg.search {
+      programs.neovim = {
+        plugins = with pkgs.vimPlugins; [
+          telescope-nvim
+          telescope-fzf-native-nvim
+          plenary-nvim
+        ];
+
+        extraPackages = with pkgs; [ ripgrep ];
       };
     })
   ]);
