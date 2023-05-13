@@ -9,6 +9,7 @@
     ./haskell.nix
     ./julia.nix
     ./embed.nix
+    ./uci.nix
   ];
 
 }

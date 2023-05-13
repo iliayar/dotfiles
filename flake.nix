@@ -67,6 +67,11 @@
       url = github:iliayar/rust-blocks;
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    uci = {
+      url = "git+ssh://git@github.com/iliayar/uci.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self
@@ -86,6 +91,7 @@
             , rust-blocks
             , nur
             , flake-utils
+            , uci
             , ...
             }
     @inputs: 

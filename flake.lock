@@ -97,11 +97,11 @@
     },
     "flake-utils_5": {
       "locked": {
-        "lastModified": 1678901627,
-        "narHash": "sha256-U02riOqrKKzwjsxc/400XnElV+UtPUQWpANPlyazjH0=",
+        "lastModified": 1667395993,
+        "narHash": "sha256-nuEHfE/LcWyuSWnS8t12N1wc105Qtau+/OdUAjtQ0rA=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "93a2b84fc4b70d9e089d029deacc3583435c2ed6",
+        "rev": "5aed5285a952e0b949eb3ba02c12fa4fcfef535f",
         "type": "github"
       },
       "original": {
@@ -111,6 +111,21 @@
       }
     },
     "flake-utils_6": {
+      "locked": {
+        "lastModified": 1659877975,
+        "narHash": "sha256-zllb8aq3YO3h8B/U0/J1WBgAL8EX5yWf5pMj3G0NAmc=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "c0e246b9b83f637f4681389ecabcb2681b4f3af0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_7": {
       "locked": {
         "lastModified": 1678901627,
         "narHash": "sha256-U02riOqrKKzwjsxc/400XnElV+UtPUQWpANPlyazjH0=",
@@ -125,7 +140,22 @@
         "type": "github"
       }
     },
-    "flake-utils_7": {
+    "flake-utils_8": {
+      "locked": {
+        "lastModified": 1678901627,
+        "narHash": "sha256-U02riOqrKKzwjsxc/400XnElV+UtPUQWpANPlyazjH0=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "93a2b84fc4b70d9e089d029deacc3583435c2ed6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_9": {
       "locked": {
         "lastModified": 1678901627,
         "narHash": "sha256-U02riOqrKKzwjsxc/400XnElV+UtPUQWpANPlyazjH0=",
@@ -398,6 +428,7 @@
         "rust-blocks": "rust-blocks",
         "secrets": "secrets",
         "tlpui-src": "tlpui-src",
+        "uci": "uci",
         "wakatime-cli": "wakatime-cli",
         "xmonad-contrib-newest": "xmonad-contrib-newest",
         "xmonad-newest": "xmonad-newest",
@@ -448,6 +479,28 @@
         "type": "github"
       }
     },
+    "rust-overlay_2": {
+      "inputs": {
+        "flake-utils": "flake-utils_6",
+        "nixpkgs": [
+          "uci",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1674095406,
+        "narHash": "sha256-RexH/1rZTiX4OhdYkuJP3MuANJ+JRgoLKL60iHm//T0=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "5f7315b9800e2e500e6834767a57e39f7dbfd495",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
     "secrets": {
       "inputs": {
         "nixpkgs": "nixpkgs_3"
@@ -480,6 +533,28 @@
         "owner": "d4nj1",
         "repo": "TLPUI",
         "type": "github"
+      }
+    },
+    "uci": {
+      "inputs": {
+        "flake-utils": "flake-utils_5",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": "rust-overlay_2"
+      },
+      "locked": {
+        "lastModified": 1683902160,
+        "narHash": "sha256-zQIy1u1K4DkwlfNEfcVeT9hYh4Y+8F3EDfnP3QajYSk=",
+        "ref": "refs/heads/master",
+        "rev": "796935a3db47fc29b286eeb4187fc71007d1216f",
+        "revCount": 134,
+        "type": "git",
+        "url": "ssh://git@github.com/iliayar/uci.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/iliayar/uci.git"
       }
     },
     "unstable": {
@@ -547,7 +622,7 @@
     },
     "xmonad": {
       "inputs": {
-        "flake-utils": "flake-utils_6",
+        "flake-utils": "flake-utils_8",
         "git-ignore-nix": "git-ignore-nix_2",
         "nixpkgs": "nixpkgs_6",
         "unstable": "unstable"
@@ -568,7 +643,7 @@
     },
     "xmonad-contrib-newest": {
       "inputs": {
-        "flake-utils": "flake-utils_5",
+        "flake-utils": "flake-utils_7",
         "git-ignore-nix": "git-ignore-nix",
         "nixpkgs": [
           "nixpkgs"
@@ -591,7 +666,7 @@
     },
     "xmonad-newest": {
       "inputs": {
-        "flake-utils": "flake-utils_7",
+        "flake-utils": "flake-utils_9",
         "git-ignore-nix": "git-ignore-nix_3",
         "nixpkgs": [
           "nixpkgs"
