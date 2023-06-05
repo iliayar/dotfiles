@@ -19,6 +19,7 @@ let
     (map (pkg: { custom.editors.emacs.packages.${pkg}.enable = true; }) pkgs);
 
   allPackages = makePackagesDictId [
+    "topsy"
     "cheat-sh"
     "protobuf-mode"
     "pyvenv"
@@ -635,7 +636,7 @@ in {
 
       programs.emacs = {
         enable = true;
-        package = pkgs.emacsUnstable;
+        package = pkgs.emacs-unstable;
         overrides = import ./overrides.nix inputs;
       };
     }

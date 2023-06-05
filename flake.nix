@@ -31,7 +31,10 @@
 
     secrets.url = "git+ssh://git@github.com/iliayar/dotfiles-secrets.git";
 
-    emacs-overlay.url = "github:nix-community/emacs-overlay";
+    emacs-overlay = {
+      url = "github:nix-community/emacs-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     libxft-bgra = {
       url = "github:uditkarode/libxft-bgra";

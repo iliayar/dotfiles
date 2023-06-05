@@ -344,6 +344,15 @@ Highlight lines chaned according to ~git~
   (setq display-line-numbers-type 'relative)
 #+end_src
 ** Programming
+Like ~context.vim~
+#+begin_src emacs-lisp
+  (use-package topsy
+    :if nixcfg-topsy
+    :hook
+    (prog-mode . topsy-mode)
+    (magit-section-mode . topsy-mode))
+#+end_src
+
 Code::stats
 #+BEGIN_SRC emacs-lisp
   (use-package code-stats
