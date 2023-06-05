@@ -50,7 +50,6 @@ let
     "evil"
     "evil-collection"
     "evil-snipe"
-    "corfu-doc"
     "kind-icon"
     "evil-surround"
     "evil-multiedit"
@@ -148,6 +147,10 @@ let
         (epkgs.lsp-julia.overrideAttrs
           (old: { patches = [ ./lsp-julia.patch ]; }))
       ];
+    "tree-sitter-grammars" = epkgs:
+      with epkgs; [
+        treesit-grammars.with-all-grammars
+      ];
   };
 
   bundles = {
@@ -189,6 +192,7 @@ let
         "format-all"
         "sdlang-mode"
         "protobuf-mode"
+        "tree-sitter-grammars"
 
         "cheat-sh"
       ];
@@ -203,7 +207,7 @@ let
     misc-code-internal-corfu = {
       auto-enable = cfg.bundles.misc-code-internal.enable
         && cfg.misc.code.completion == "corfu";
-      packages = [ "corfu" "kind-icon" "corfu-doc" ];
+      packages = [ "corfu" "kind-icon" ];
     };
 
     langs-nix-internal = {
@@ -275,7 +279,15 @@ let
 
     pretty-extra-internal = {
       auto-enable = cfg.pretty.extra.enable;
-      packages = [ "dashboard" "diff-hl" "doom-modeline" "centaur-tabs" ];
+      packages = [ 
+        "dashboard" 
+        "diff-hl" 
+
+        # FIXME: This crashes emacs
+        # "doom-modeline" 
+
+        "centaur-tabs" 
+      ];
     };
 
     lsp-internal = {
@@ -636,9 +648,13 @@ in {
 
       programs.emacs = {
         enable = true;
-        package = pkgs.emacs-unstable;
+        package = pkgs.emacs29;
         overrides = import ./overrides.nix inputs;
       };
+
+      home.packages = with pkgs; [
+        gsettings-desktop-schemas
+      ];
     }
 
     (mkIf cfg.server {

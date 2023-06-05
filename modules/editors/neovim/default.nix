@@ -90,6 +90,8 @@ in
           nvim-web-devicons
 
           nvim-comment
+
+          nvim-treesitter.withAllGrammars
         ];
 
         extraLuaConfig = ''

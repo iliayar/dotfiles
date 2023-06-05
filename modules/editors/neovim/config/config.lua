@@ -20,6 +20,13 @@ vim.opt.listchars['tab'] = '→'
 vim.opt.termguicolors = true
 vim.cmd('colorscheme monokai')
 
+-- tree-sitter
+
+require('nvim-treesitter.configs').setup({
+    highlight = {
+        enable = true,
+    },
+})
 
 -- Tree
 

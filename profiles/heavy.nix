@@ -27,7 +27,7 @@
 
       embed.enable = true;
 
-      uci.enable = true;
+      # uci.enable = true;
     };
 
     study.sage.enable = true;
@@ -49,16 +49,15 @@
 
       misc = {
         enable = true;
-
         code = { enable = true; };
       };
 
       langs.enable = [ "nix" "python" "misc" "haskell" "rust" ];
-
+    
       code-assist = { enable = true; };
 
       evil = { enable = true; };
-
+    
       org = {
         roam = {
           enable = true;
@@ -78,6 +77,7 @@
         hl-todo.enable = true;
       };
     };
+
     editors.nvim = {
       enable = true;
       code-stats = true;

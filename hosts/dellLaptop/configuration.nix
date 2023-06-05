@@ -19,7 +19,6 @@ in
   boot.supportedFilesystems = [ "ntfs" ];
 
   boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
   boot.loader.grub.device = "nodev";
   boot.loader.grub.efiSupport = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -103,6 +102,7 @@ in
       ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${pkgs.vanilla-dmz}/share/icons/Vanilla-DMZ/cursors/left_ptr 16
     '';
 
+    libinput.enable = false;
     synaptics = {
       enable = true;
       tapButtons = false;
@@ -155,9 +155,9 @@ in
 
   virtualisation.libvirtd.enable = true;
 
-  virtualisation.virtualbox.host.enable = true;
-  users.extraGroups.vboxusers.members = [ "iliayar" ];
-  virtualisation.virtualbox.host.enableExtensionPack = true;
+  # virtualisation.virtualbox.host.enable = true;
+  # users.extraGroups.vboxusers.members = [ "iliayar" ];
+  # virtualisation.virtualbox.host.enableExtensionPack = true;
 
   environment.systemPackages = with pkgs; [
     vim
