@@ -400,6 +400,11 @@ KDL configs support
   (use-package sdlang-mode
     :if nixcfg-sdlang-mode)
 #+end_src
+Protobufs support
+#+begin_src emacs-lisp
+  (use-package protobuf-mode
+    :if nixcfg-protobuf-mode)
+#+end_src
 Snippets
 #+begin_src emacs-lisp
   (use-package yasnippet
@@ -717,6 +722,10 @@ Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/
      "sd" 'lsp-describe-thing-at-point))
   (use-package lsp-ui
     :if nixcfg-lsp-ui
+    :config
+    (setq lsp-ui-doc-enable t)
+    (setq lsp-ui-doc-delay 2)
+    (setq lsp-ui-doc-show-with-cursor t)
     :general
     (
      :states '(normal visual)
@@ -769,14 +778,13 @@ Haskell lsp
 Python lsp
 #+begin_src emacs-lisp
   (use-package lsp-pyright
-    :if nixcfg-lsp-pyright
-    :hook (python-mode . (lambda ()
-			   (require 'lsp-pyright)
-			   (lsp))))  ; or lsp-deferred
+    :if nixcfg-lsp-pyright)
   (use-package anaconda-mode
     :if nixcfg-anaconda-mode)
   (use-package company-anaconda
     :if nixcfg-company-anaconda)
+  (use-package pyvenv
+    :if nixcfg-pyvenv)
 #+end_src
 Lsp for latex
 #+begin_src emacs-lisp

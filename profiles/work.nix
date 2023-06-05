@@ -36,7 +36,7 @@
 
     editors.nvim = {
       enable = true;
-      code-stats = false;
+      code-stats = true;
     };
 
     editors.emacs = {
@@ -55,6 +55,7 @@
       langs = {
         enable = [ "nix" "cpp" "python" "misc" "rust" ];
         cpp.ls = "clangd";
+        python.ls = "pyright";
       };
 
       code-assist = { enable = true; };
@@ -70,6 +71,7 @@
         ace-window.enable = true;
         avy.enable = true;
         hl-todo.enable = true;
+        lsp-ui.enable = true;
       };
 
       extraConfig = ''

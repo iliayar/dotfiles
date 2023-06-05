@@ -19,6 +19,8 @@ let
     (map (pkg: { custom.editors.emacs.packages.${pkg}.enable = true; }) pkgs);
 
   allPackages = makePackagesDictId [
+    "protobuf-mode"
+    "pyvenv"
     "sdlang-mode"
     "vterm"
     "ace-window"
@@ -184,6 +186,7 @@ let
         "yasnippet-snippets"
         "format-all"
         "sdlang-mode"
+        "protobuf-mode"
       ];
     };
 
@@ -294,15 +297,24 @@ let
 
     langs-python-internal = {
       auto-enable = builtins.elem "python" cfg.langs.enable;
+      packages = [ "pyvenv" ];
     };
 
-    langs-python-lsp-internal = {
+    langs-python-lsp-pylsp-internal = {
       auto-enable = cfg.bundles.lsp-internal.enable
-        && cfg.bundles.langs-python-internal.enable;
+        && cfg.bundles.langs-python-internal.enable
+      && cfg.langs.python.ls == "pylsp";
       config = {
         custom.dev.python.additionalPackages = pypkgs:
           [ pypkgs.python-lsp-server ];
       };
+    };
+
+    langs-python-lsp-pyright-internal = {
+      auto-enable = cfg.bundles.lsp-internal.enable
+      && cfg.bundles.langs-python-internal.enable 
+      && cfg.langs.python.ls == "pyright";
+      packages = [ "lsp-pyright" ];
     };
 
     langs-misc-internal = {
@@ -508,6 +520,11 @@ in {
         cpp.ls = mkOption {
           default = "ccls";
           type = types.enum [ "ccls" "clangd" ];
+        };
+
+        python.ls = mkOption {
+          default = "pylsp";
+          type = types.enum [ "pylsp" "pyright" ];
         };
       };
 
