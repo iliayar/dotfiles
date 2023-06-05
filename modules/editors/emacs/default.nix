@@ -19,6 +19,7 @@ let
     (map (pkg: { custom.editors.emacs.packages.${pkg}.enable = true; }) pkgs);
 
   allPackages = makePackagesDictId [
+    "cheat-sh"
     "protobuf-mode"
     "pyvenv"
     "sdlang-mode"
@@ -187,6 +188,8 @@ let
         "format-all"
         "sdlang-mode"
         "protobuf-mode"
+
+        "cheat-sh"
       ];
     };
 

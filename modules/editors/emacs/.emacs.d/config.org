@@ -925,6 +925,12 @@ Emacs everywhere!
     (use-package vterm
       :if nixcfg-vterm)
 #+end_src
+
+Cheatsheets
+#+begin_src emacs-lisp
+  (use-package cheat-sh
+    :if nixcfg-cheat-sh)
+#+end_src
 *** [[file:rss.org][RSS]]
 #+begin_src emacs-lisp
   (org-babel-load-file "~/.emacs.d/rss.el")
