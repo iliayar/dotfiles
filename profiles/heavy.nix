@@ -27,7 +27,7 @@
 
       embed.enable = true;
 
-      # uci.enable = true;
+      uci.enable = true;
     };
 
     study.sage.enable = true;
