@@ -71,6 +71,10 @@ in
         nixcfg.search = {
           enable = false,
         }
+      '') + (if pkgs.stdenv.isLinux then ''
+        nixcfg.linux = true
+      '' else ''
+        nixcfg.linux = false
       '') + ''
         return nixcfg
       '';

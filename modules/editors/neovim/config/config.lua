@@ -139,6 +139,8 @@ vim.api.nvim_create_autocmd({'VimEnter'}, {
     command = 'hi Normal guibg=NONE ctermbg=NONE',
 })
 
-vim.api.nvim_create_autocmd({'VimLeave'}, {
-    command = 'call system("xsel -ib", getreg("+"))',
-})
+if nixcfg.linux then
+    vim.api.nvim_create_autocmd({'VimLeave'}, {
+        command = 'call system("xsel -ib", getreg("+"))',
+    })
+end
