@@ -22,6 +22,7 @@ in
     ./conky.nix
     ./spotify.nix
     ./games
+    ./wayland
   ];
 
   options = {

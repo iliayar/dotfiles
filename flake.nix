@@ -75,6 +75,11 @@
       url = "git+ssh://git@github.com/iliayar/uci.git";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    hyprland = {
+      url = "github:hyprwm/Hyprland";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self
@@ -95,6 +100,7 @@
             , nur
             , flake-utils
             , uci
+            , hyprland
             , ...
             }
     @inputs: 
@@ -148,6 +154,7 @@
             inherit pkgs system;
           };
           modules = [
+            hyprland.homeManagerModules.default
             ./modules
             ./profiles/${name}.nix
           ];

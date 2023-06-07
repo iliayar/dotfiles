@@ -24,16 +24,14 @@ in
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/";
 
-  boot.kernelPackages = pkgs.linuxPackages_5_15;
-  boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
+  # boot.kernelPackages = pkgs.linuxPackages_5_15;
+  # boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
 
   time.timeZone = "Europe/Moscow";
 
-  hardware.pulseaudio = {
-    enable = false;
-    package = pkgs.pulseaudioFull;
-  };
+  security.polkit.enable = true;
   security.rtkit.enable = true;
+
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -47,15 +45,9 @@ in
     hostName = "NixLaptop";
     interfaces = {
       enp60s0.useDHCP = true;
-      wlp61s0.useDHCP = true;
     }; 
     networkmanager = {
       enable = true;
-    };
-
-    firewall = {
-      checkReversePath = false;
-      allowedTCPPorts = [ 1337 ];
     };
   };
 
@@ -73,63 +65,82 @@ in
     ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", MODE="0666", RUN+="${pkgs.coreutils}/bin/chmod a+w /sys/class/backlight/%k/brightness"
   '';
 
-  services.xserver = {
-    enable = true;
-    videoDrivers = [ "nvidia" ];
-    screenSection = ''
-      Option         "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
-      Option         "AllowIndirectGLXProtocol" "off"
-      Option         "TripleBuffer" "on"
-    '';
 
 
-    dpi = 96;
-    windowManager.xmonad.enable = true;
-    displayManager.defaultSession = "none+xmonad";
-    displayManager.lightdm.greeters.mini = {
-      enable = true;
-      user = "iliayar";
-      extraConfig = ''
-                [greeter]
-                show-password-label = false
-                password-alignment = left
-                [greeter-theme]
-                background-image = "${wallpapers}/HtmoocM.jpg"
-      '';
-    };
-
-    displayManager.sessionCommands = ''
-      ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${pkgs.vanilla-dmz}/share/icons/Vanilla-DMZ/cursors/left_ptr 16
-    '';
-
-    libinput.enable = false;
-    synaptics = {
-      enable = true;
-      tapButtons = false;
-      vertTwoFingerScroll = true;
-      horizTwoFingerScroll = true;
-      minSpeed = "0.6";
-      maxSpeed = "2.4";
-    };
-
-    autoRepeatInterval = 50;
-    autoRepeatDelay = 200;
-
-    xkbOptions = "grp:switch,grp:caps_toggle,altwin:swap_alt_win";
-    layout = "us,ru";
-  }; 
+  # services.xserver = {
+  #   enable = true;
+  #   videoDrivers = [ "nvidia" ];
+  #   screenSection = ''
+  #     Option         "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
+  #     Option         "AllowIndirectGLXProtocol" "off"
+  #     Option         "TripleBuffer" "on"
+  #   '';
+  #
+  #
+  #   dpi = 96;
+  #   windowManager.xmonad.enable = true;
+  #   displayManager.defaultSession = "none+xmonad";
+  #   displayManager.lightdm.greeters.mini = {
+  #     enable = true;
+  #     user = "iliayar";
+  #     extraConfig = ''
+  #               [greeter]
+  #               show-password-label = false
+  #               password-alignment = left
+  #               [greeter-theme]
+  #               background-image = "${wallpapers}/HtmoocM.jpg"
+  #     '';
+  #   };
+  #
+  #   displayManager.sessionCommands = ''
+  #     ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${pkgs.vanilla-dmz}/share/icons/Vanilla-DMZ/cursors/left_ptr 16
+  #   '';
+  #
+  #   libinput.enable = false;
+  #   synaptics = {
+  #     enable = true;
+  #     tapButtons = false;
+  #     vertTwoFingerScroll = true;
+  #     horizTwoFingerScroll = true;
+  #     minSpeed = "0.6";
+  #     maxSpeed = "2.4";
+  #   };
+  #
+  #   autoRepeatInterval = 50;
+  #   autoRepeatDelay = 200;
+  #
+  #   xkbOptions = "grp:switch,grp:caps_toggle,altwin:swap_alt_win";
+  #   layout = "us,ru";
+  # }; 
 
   services.blueman.enable = true;
   hardware.bluetooth.enable = true;
+
+  # It's also valid for wayland
+  services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware.nvidia.prime = {
     sync.enable = true;
     intelBusId = "PCI:0:2:0";
     nvidiaBusId = "PCI:1:0:0";
   };
-  hardware.opengl.enable = true;
-  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
+
   hardware.nvidia.modesetting.enable = true;
+  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
+
+  hardware = {
+    opengl = {
+      enable = true;
+      driSupport = true;
+    };
+  };
+
+  xdg = {
+    portal = {
+      enable = true;
+      wlr.enable = true;
+    };
+  };
 
   nix = {
     package = pkgs.nixFlakes;
@@ -150,14 +161,14 @@ in
   programs.zsh.enable = true;
 
   environment.variables = {
-    GDK_SCALE = "1";
+    # GDK_SCALE = "1";
   };
 
   virtualisation.libvirtd.enable = true;
 
-  virtualisation.virtualbox.host.enable = true;
-  users.extraGroups.vboxusers.members = [ "iliayar" ];
-  virtualisation.virtualbox.host.enableExtensionPack = true;
+  # virtualisation.virtualbox.host.enable = true;
+  # users.extraGroups.vboxusers.members = [ "iliayar" ];
+  # virtualisation.virtualbox.host.enableExtensionPack = true;
 
   environment.systemPackages = with pkgs; [
     vim

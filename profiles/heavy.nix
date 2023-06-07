@@ -120,20 +120,24 @@
         urxvt.enable = true;
       };
 
-      xmobar.enable = true;
-      xmonad.enable = true;
+      # xmobar.enable = true;
+      # xmonad.enable = true;
 
-      lock.enable = true;
-      conky.enable = true;
+      # lock.enable = true;
+      # conky.enable = true;
       dunst.enable = true;
-      picom.enable = true;
+      # picom.enable = true;
 
-      audio-utils.enable = true;
+      # audio-utils.enable = true;
       spotify.enable = true;
 
       zathura.enable = true;
 
-      pointer.enable = true;
+      # pointer.enable = true;
+
+      wayland.sway.enable = false;
+      wayland.river.enable = false;
+      wayland.hyprland.enable = true;
     };
   };
 
