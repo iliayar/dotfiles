@@ -144,7 +144,7 @@ Project tree. Settings fonts for ~treemacs~
     (evil-mode 1)
     (add-to-list 'evil-emacs-state-modes 'elfeed-search)
     (cl-loop for (mode . state) in '(
-				     (dired-mode . emacs)
+				     (dired-mode . normal)
 				     (elfeed-search-mode . emacs)
 				     (magit-status-mode . emacs))
 	     do (evil-set-initial-state mode state))
