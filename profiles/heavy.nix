@@ -36,6 +36,8 @@
       minecraft.enable = true;
       wine.enable = true;
       lutris.enable = true;
+
+      extra.enable = true;
     };
 
     editors.emacs = {
@@ -128,7 +130,7 @@
       dunst.enable = true;
       # picom.enable = true;
 
-      # audio-utils.enable = true;
+      audio-utils.enable = true;
       spotify.enable = true;
 
       zathura.enable = true;

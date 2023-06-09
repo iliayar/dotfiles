@@ -47,8 +47,10 @@ let
   defMap = s: f: th: { "${s}" = createMap f th; };
   withMaps = maps: th: foldl' (a: v: a // v) th (map (m: m th) maps);
   tsColor = alpha: c: "0x${mylib.decToHex2 alpha}${mylib.decToHex2 c.r}${mylib.decToHex2 c.g}${mylib.decToHex2 c.b}";
+  rgba = c: alpha: "rgba(${toString c.r}, ${toString c.g}, ${toString c.b}, ${toString alpha})";
 in
 withMaps [
   (defMap "ts" (tsColor 255))
   (defMap "tsTransparent" (tsColor 0))
+  (defMap "rgba" rgba)
 ] theme

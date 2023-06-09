@@ -49,6 +49,7 @@ in
         tokei
         delta
         hurl
+        jq
       ];
     }
     (mkIf cfg.syncthing {

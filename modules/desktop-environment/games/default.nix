@@ -29,6 +29,12 @@ in
           default = false;
         };
       };
+
+      extra = {
+        enable = mkOption {
+          default = false;
+        };
+      };
     };
   };
 
@@ -53,6 +59,13 @@ in
         lutris
         # protonup-qt # TODO: Actualize nixpkgs revision
         # osu-lazer   # TODO: Actualize nixpkgs revision
+      ];
+    })
+
+    (mkIf cfg.extra.enable {
+      home.packages = with pkgs; [
+        gamemode
+        mangohud
       ];
     })
   ];

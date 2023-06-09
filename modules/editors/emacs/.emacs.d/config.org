@@ -44,6 +44,12 @@ Default global variables
   (setq default-height nixcfg-font-size)
 #+end_src
 
+Smooth scrolling
+#+begin_src emacs-lisp
+  (setq scroll-step 1)
+  (setq scroll-margin 10)
+#+end_src
+
 * Packages
 #+begin_src emacs-lisp
   (require 'use-package)  
