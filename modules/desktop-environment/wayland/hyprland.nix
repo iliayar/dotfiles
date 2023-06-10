@@ -45,13 +45,40 @@ let
 
       $(echo ''${commands[@]} | tr ' ' '\n' | bemenu)
   '';
+
+  my-screenshot = pkgs.writeShellScriptBin "my-screenshot" ''
+    shdir="$HOME/Pictures/screenshots"
+    reg=$(slurp)
+    res=$(echo $reg | cut -d' ' -f2)
+    filename="$shdir/$(date +'%Y-%m-%d-%H%M%S')_''${res}_grim.png"
+    echo $filename
+    grim -g "$reg" -t png $filename
+
+    if [ $1 == "e" ]; then
+      cat $filename | swappy -f - -o $filename
+    fi
+
+    cat $filename | wl-copy -t "image/png"
+
+    notify-send -i $filename "$filename"
+  '';
 in {
   options = {
     custom.de.wayland.hyprland = { enable = mkOption { default = false; }; };
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [ bemenu hyprland-commands xorg.xrandr flameshot hyprpaper ];
+    home.packages = with pkgs; [
+      bemenu
+      hyprland-commands
+      xorg.xrandr
+      flameshot
+      hyprpaper
+      grim
+      slurp
+      wl-clipboard
+      swappy
+    ];
 
     programs.waybar = {
       package = pkgs.waybar.overrideAttrs
@@ -296,16 +323,28 @@ in {
       extraConfig = ''
         $mainMod = SUPER
 
+        bindm = $mainMod, mouse:272, movewindow
+        bindm = $mainMod, mouse:273, resizewindow
+
         bind = $mainMod, Return, exec, alacritty
         bind = $mainMod, D, exec, bemenu-run
         bind = $mainMod SHIFT, Q, killactive
         bind = $mainMod, F, fullscreen, 0
 
-        bind = $mainMod, K, cyclenext
-        bind = $mainMod, J, cyclenext, prev
+        general {
+          layout = master
 
-        bind = $mainMod SHIFT, K, swapnext
-        bind = $mainMod SHIFT, J, swapnext, prev
+          no_cursor_warps = true
+        }
+
+        bind = $mainMod, K, layoutmsg, cycleprev
+        bind = $mainMod, J, layoutmsg, cyclenext
+
+        bind = $mainMod SHIFT, K, layoutmsg, swapprev
+        bind = $mainMod SHIFT, J, layoutmsg, swapnext
+
+        bind = $mainMod SHIFT, Return, layoutmsg, swapwithmaster master
+        bind = $mainMod CTRL, Return, layoutmsg, focusmaster
 
         bind = $mainMod, bracketleft, focusmonitor, l
         bind = $mainMod, bracketright, focusmonitor, r
@@ -313,8 +352,10 @@ in {
         bind = $mainMod SHIFT, bracketleft, movewindow, mon:l
         bind = $mainMod SHIFT, bracketright, movewindow, mon:r
 
-        bind = $mainMod, c, exec, hyprland-commands
-        bind = $mainMod, PrintScreen, exec, flameshot
+        bind = $mainMod, C, exec, hyprland-commands
+        bind = $mainMod, T, togglespecialworkspace, term
+        bind = , print, exec, ${my-screenshot}/bin/my-screenshot
+        bind = $mainMod, print, exec, ${my-screenshot}/bin/my-screenshot e
 
         bind = $mainMod, 1, moveworkspacetomonitor, 1 current
         bind = $mainMod, 1, workspace, 1
@@ -369,7 +410,6 @@ in {
         binde=,K,resizeactive, 0 30
 
         bind=,escape,submap,reset
-
         submap = reset
 
         # Power Management Submap
@@ -393,19 +433,34 @@ in {
         bind=,R,submap,reset
 
         bind=,escape,submap,reset
-
         submap = reset
 
         # Notifications submap
         bind = $mainMod, N, submap, notifications
-
         submap = notifications
 
         bind=,a,exec,dunstctl close-all
         bind=,a,submap,reset
 
         bind=,escape,submap,reset
+        submap = reset
 
+        # Groups submap
+        bind = $mainMod, G, submap, groups
+        submap = groups
+
+        bind=,t,togglegroup
+        bind=,u,moveoutofgroup
+
+        bind=SHIFT,j,moveintogroup,d
+        bind=SHIFT,k,moveintogroup,u
+        bind=SHIFT,l,moveintogroup,r
+        bind=SHIFT,h,moveintogroup,l
+
+        bind=,j,changegroupactive,f
+        bind=,k,changegroupactive,b
+
+        bind=,escape,submap,reset
         submap = reset
 
         monitor = DP-5, preferred, auto, 1
@@ -419,21 +474,33 @@ in {
           kb_options = grp:switch,grp:caps_toggle,altwin:swap_alt_win
         }
 
+        misc {
+          groupbar_gradients = false
+          mouse_move_focuses_monitor = false
+        }
+
         windowrule = opacity 0.95 0.95, ^(Emacs)$
+        windowrule = opacity 0.9 0.9, ^(Spotify)$
 
         exec-once = xrandr --output DP-5 --primary
         exec-once = waybar & hyprpaper
+
+        exec-once = alacritty -T "term-quake"
+        windowrule = workspace special:term,title:^(term-quake)$
+        windowrule = size 100% 50%,title:^(term-quake)$
+        windowrule = move 0 0,title:^(term-quake)$
+        windowrule = float,title:^(term-quake)$
       '';
     };
 
-      xdg.configFile."hypr/hyprpaper.conf" = {
-        text = ''
+    xdg.configFile."hypr/hyprpaper.conf" = {
+      text = ''
         preload = /home/iliayar/Wallpapers/2moHU6q.jpg
         preload = /home/iliayar/Wallpapers/VCafhDy.jpg
 
         wallpaper = eDP-1,/home/iliayar/Wallpapers/2moHU6q.jpg
         wallpaper = DP-5,/home/iliayar/Wallpapers/VCafhDy.jpg
-        '';
-      };
+      '';
+    };
   };
 }
