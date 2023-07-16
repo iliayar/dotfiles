@@ -35,12 +35,12 @@ let
       }
 
       function select_audio_output() {
-        devices=$(pw-dump | jq 'map(select(.info.props."device.class" == "sound")) | map(select(.info.props."media.class" == "Audio/Sink")) | map({"name": .info.props."node.nick", "id": .info.props."object.serial"})')
+        devices=$(pw-dump | jq 'map(select(.info.props."device.class" == "sound")) | map(select(.info.props."media.class" == "Audio/Sink")) | map({"name": .info.props."node.nick", "id": .id})')
 
         selected=$(echo $devices | jq '.[].name' | bemenu)
         selected_id=$(echo $devices | jq "map(select(.name == $selected)) | .[].id")
 
-        pactl set-default-sink "$selected_id"
+        wpctl set-default "$selected_id"
       }
 
       $(echo ''${commands[@]} | tr ' ' '\n' | bemenu)
@@ -48,11 +48,16 @@ let
 
   my-screenshot = pkgs.writeShellScriptBin "my-screenshot" ''
     shdir="$HOME/Pictures/screenshots"
-    reg=$(slurp)
-    res=$(echo $reg | cut -d' ' -f2)
-    filename="$shdir/$(date +'%Y-%m-%d-%H%M%S')_''${res}_grim.png"
-    echo $filename
-    grim -g "$reg" -t png $filename
+
+    if [ $2 == "f" ]; then
+       filename="$shdir/$(date +'%Y-%m-%d-%H%M%S')_full_grim.png"
+       grim -t png $filename
+    else
+      reg=$(slurp)
+      res=$(echo $reg | cut -d' ' -f2)
+      filename="$shdir/$(date +'%Y-%m-%d-%H%M%S')_''${res}_grim.png"
+      grim -g "$reg" -t png $filename
+    fi
 
     if [ $1 == "e" ]; then
       cat $filename | swappy -f - -o $filename
@@ -70,6 +75,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
       bemenu
+      j4-dmenu-desktop
       hyprland-commands
       xorg.xrandr
       flameshot
@@ -78,6 +84,7 @@ in {
       slurp
       wl-clipboard
       swappy
+      playerctl
     ];
 
     programs.waybar = {
@@ -89,7 +96,7 @@ in {
           layer = "top";
           position = "bottom";
           height = 20;
-          output = [ "DP-5" ];
+          output = [ "DP-1" ];
           modules-left = [
             "hyprland/submap"
             "wlr/workspaces"
@@ -328,6 +335,7 @@ in {
 
         bind = $mainMod, Return, exec, alacritty
         bind = $mainMod, D, exec, bemenu-run
+        bind = $mainMod SHIFT, D, exec, j4-dmenu-desktop --dmenu=bemenu
         bind = $mainMod SHIFT, Q, killactive
         bind = $mainMod, F, fullscreen, 0
 
@@ -335,6 +343,13 @@ in {
           layout = master
 
           no_cursor_warps = true
+
+          gaps_in = 2;
+          gaps_out = 5;
+        }
+
+        master {
+          no_gaps_when_only = true
         }
 
         bind = $mainMod, K, layoutmsg, cycleprev
@@ -354,8 +369,10 @@ in {
 
         bind = $mainMod, C, exec, hyprland-commands
         bind = $mainMod, T, togglespecialworkspace, term
-        bind = , print, exec, ${my-screenshot}/bin/my-screenshot
+        bind = $mainMod SHIFT, print, exec, ${my-screenshot}/bin/my-screenshot e f
+        bind = SHIFT, print, exec, ${my-screenshot}/bin/my-screenshot n f
         bind = $mainMod, print, exec, ${my-screenshot}/bin/my-screenshot e
+        bind = , print, exec, ${my-screenshot}/bin/my-screenshot
 
         bind = $mainMod, 1, moveworkspacetomonitor, 1 current
         bind = $mainMod, 1, workspace, 1
@@ -432,6 +449,9 @@ in {
         bind=,R,exec,systemctl reboot
         bind=,R,submap,reset
 
+        bind=,E,exit
+        bind=,E,submap,reset
+
         bind=,escape,submap,reset
         submap = reset
 
@@ -463,7 +483,28 @@ in {
         bind=,escape,submap,reset
         submap = reset
 
-        monitor = DP-5, preferred, auto, 1
+        # Layout submap
+        bind = $mainMod, L, submap, layout
+        submap = layout
+
+        bind=,j, layoutmsg, orientationnext
+        bind=,k, layoutmsg, orientationprev
+
+        bind=,f,workspaceopt, allfloat
+
+        bind=,escape,submap,reset
+        submap = reset
+
+        bind=,XF86AudioMute, exec, wpctl set-mute '@DEFAULT_SINK@' toggle
+        bind=,XF86AudioLowerVolume, exec, wpctl set-volume '@DEFAULT_SINK@' 5%-
+        bind=,XF86AudioRaiseVolume, exec, wpctl set-volume '@DEFAULT_SINK@' 5%+
+
+        $player = spotify        
+        bind=,XF86AudioPlay, exec, playerctl -p $player play-pause
+        bind=,XF86AudioPrev, exec, playerctl -p $player previous
+        bind=,XF86AudioNext, exec, playerctl -p $player next
+
+        monitor = DP-1, preferred, auto, 1
         monitor = eDP-1, preferred, auto, 1
 
         input {
@@ -482,7 +523,7 @@ in {
         windowrule = opacity 0.95 0.95, ^(Emacs)$
         windowrule = opacity 0.9 0.9, ^(Spotify)$
 
-        exec-once = xrandr --output DP-5 --primary
+        exec-once = xrandr --output DP-1 --primary
         exec-once = waybar & hyprpaper
 
         exec-once = alacritty -T "term-quake"
@@ -497,9 +538,10 @@ in {
       text = ''
         preload = /home/iliayar/Wallpapers/2moHU6q.jpg
         preload = /home/iliayar/Wallpapers/VCafhDy.jpg
+        preload = /home/iliayar/Wallpapers/HtmoocM.jpg
 
         wallpaper = eDP-1,/home/iliayar/Wallpapers/2moHU6q.jpg
-        wallpaper = DP-5,/home/iliayar/Wallpapers/VCafhDy.jpg
+        wallpaper = DP-1,/home/iliayar/Wallpapers/HtmoocM.jpg
       '';
     };
   };

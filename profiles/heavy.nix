@@ -47,6 +47,7 @@
       bundles = {
         code-stats.enable = true;
         evil-integrations.enable = true;
+        web.enable = true;
       };
 
       misc = {
@@ -77,6 +78,7 @@
         ace-window.enable = true;
         avy.enable = true;
         hl-todo.enable = true;
+        lsp-ui.enable = true;
       };
     };
 
@@ -100,6 +102,8 @@
       ssh.enable = true;
 
       zellij.enable = true;
+
+      net.enable = true;
     };
 
     shell = {
@@ -119,6 +123,9 @@
 
       terms = {
         alacritty.enable = true;
+        # Moving to
+        wezterm.enable = true;
+        
         urxvt.enable = true;
       };
 

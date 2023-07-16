@@ -13,6 +13,7 @@ in
     ./password-store.nix
     ./mail.nix
     ./zellij
+    ./net.nix
   ];
 
   options = {

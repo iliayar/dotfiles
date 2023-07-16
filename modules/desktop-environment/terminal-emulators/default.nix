@@ -4,5 +4,6 @@
   imports = [
     ./alacritty.nix
     ./urxvt.nix
+    ./wezterm.nix
   ];
 }

@@ -139,7 +139,8 @@ vim.api.nvim_create_autocmd({'VimEnter'}, {
     command = 'hi Normal guibg=NONE ctermbg=NONE',
 })
 
-if nixcfg.linux then
+if nixcfg.linux and false then
+    -- Disable for a while. Using wayland(
     vim.api.nvim_create_autocmd({'VimLeave'}, {
         command = 'call system("xsel -ib", getreg("+"))',
     })
