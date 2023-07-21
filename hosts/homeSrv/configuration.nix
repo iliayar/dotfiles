@@ -61,7 +61,7 @@
         option subnet-mask 255.255.255.0;
         option broadcast-address 192.168.2.255;
         option routers 192.168.2.1;
-        option domain-name-servers 1.1.1.1,8.8.8.8,8.8.4.4
+        option domain-name-servers 1.1.1.1,8.8.8.8,8.8.4.4;
       }
     '';
   };
