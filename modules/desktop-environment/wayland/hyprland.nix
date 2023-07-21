@@ -333,7 +333,7 @@ in {
         bindm = $mainMod, mouse:272, movewindow
         bindm = $mainMod, mouse:273, resizewindow
 
-        bind = $mainMod, Return, exec, alacritty
+        bind = $mainMod, Return, exec, wezterm
         bind = $mainMod, D, exec, bemenu-run
         bind = $mainMod SHIFT, D, exec, j4-dmenu-desktop --dmenu=bemenu
         bind = $mainMod SHIFT, Q, killactive

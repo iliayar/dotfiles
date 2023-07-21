@@ -102,6 +102,7 @@ let
     "lsp-pyright"
     "lsp-treemacs"
     "lsp-ui"
+    "lua-mode"
     "magit"
     "marginalia"
     "minimap"
@@ -348,6 +349,11 @@ let
       auto-enable = builtins.elem "cpp" cfg.langs.enable;
     };
 
+    langs-lua-internal = {
+      auto-enable = builtins.elem "lua" cfg.langs.enable;
+      packages = [ "lua-mode" ];
+    };
+
     langs-cpp-lsp-ccls-internal = {
       auto-enable = cfg.bundles.lsp-internal.enable
         && cfg.bundles.langs-cpp-internal.enable && cfg.langs.cpp.ls == "ccls";
@@ -530,6 +536,7 @@ in {
             "solidity"
             "julia"
             "misc"
+            "lua"
           ]);
         };
 
