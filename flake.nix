@@ -224,10 +224,34 @@
               modules
               specialArgs;
             };
+
+            homeSrv = 
+            let
+              modules = [
+                ./hosts/homeSrv/configuration.nix
+                ./cachix.nix
+                {
+                  nixpkgs = nixpkgs-config;
+                  nix = {
+                    gc = {
+                      automatic = true;
+                      options = "--delete-older-than 3d";
+                    };
+                  };
+                }
+              ];
+            in
+            nixpkgs.lib.nixosSystem {
+              inherit
+              system
+              modules
+              specialArgs;
+            };
       in {
         packages = {
           nixosConfigurations.NixLaptop = dellLaptop;
           nixosConfigurations.NixLenovo = lenovoLaptop;
+          nixosConfigurations.NixServer = homeSrv;
           inherit homeConfigurations;
         };
       });

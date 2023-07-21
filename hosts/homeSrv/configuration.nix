@@ -1,13 +1,43 @@
-{ .. }:
+{ config, pkgs, ... }:
+
 {
+  imports =
+    [ 
+      ./hardware-configuration.nix
+    ];
+
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  networking.hostName = "NixOsSrv";
+  networking.networkmanager.enable = true;
+
+  time.timeZone = "Europe/Moscow";
+
+  i18n.defaultLocale = "en_US.UTF-8";
+
+  users.users.iliayar = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ];
+    packages = with pkgs; [
+      git
+    ];
+  };
+
+  environment.systemPackages = with pkgs; [
+    vim
+  ];
+
+  services.openssh.enable = true;
+
   networking = {
     nat = {
       enable = true;
       internalIPs = [ "192.168.2.0/24" ];
-      externalInterface = "TODO-external";
+      externalInterface = "enp2s0";
     };
 
-    interfaces."TODO-internal" = {
+    interfaces."enp4s0" = {
       ipv4.addresses = [
         {
           address = "192.168.2.1";
@@ -19,7 +49,7 @@
 
   services.dhcpd4 = {
     enable = true;
-    interfaces = [ "TODO-internal" ];
+    interfaces = [ "enp4s0" ];
     extraConfig = ''
       ddns-update-style none;
       one-lease-per-client true;
@@ -35,4 +65,7 @@
       }
     '';
   };
+
+  system.stateVersion = "22.05"; # Did you read the comment?
 }
+
