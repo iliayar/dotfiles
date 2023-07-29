@@ -50,6 +50,13 @@ Smooth scrolling
   (setq scroll-margin 10)
 #+end_src
 
+Browser fixes
+#+begin_src emacs-lisp
+  (setq browse-url-browser-function #'browse-url-chromium)
+  (setq browse-url-chromium-programm "brave")
+#+end_src
+
+
 * Packages
 #+begin_src emacs-lisp
   (require 'use-package)  
@@ -906,16 +913,20 @@ Compilation windows settings:
 
 *** Org Roam
 #+BEGIN_SRC emacs-lisp
+  (defun iliayar/consult-org-roam-ripgrep ()
+    (interactive)
+    (consult-ripgrep org-roam-directory))
   (use-package org-roam
     :if nixcfg-org-roam
     :init
     (setq org-roam-v2-ack t)
     :custom
-    (org-roam-directory "~/org/roam")
+    (org-roam-directory "~/org/roam-new")
     :bind (("C-c n l" . org-roam-buffer-toggle)
 	   ("C-c n f" . org-roam-node-find)
 	   ("C-c n i" . org-roam-node-insert)
 	   ("C-c n d" . org-roam-dailies-capture-today)
+	   ("C-c n r" . iliayar/consult-org-roam-ripgrep)
 	   :map org-mode-map
 	   ("C-M-i" . completion-at-point))
     :config
@@ -1026,6 +1037,11 @@ Helper functions for university labs
    "si" 'latex-insert-block
    )
 #+end_src
+
+#+begin_src emacs-lisp
+  (define-key yas-keymap (kbd "<backtab>") nil)
+#+end_src
+
 Hydra
 #+begin_src emacs-lisp
   (defhydra hydra-window-resize-menu (:color red

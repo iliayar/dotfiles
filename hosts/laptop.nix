@@ -29,12 +29,15 @@ in
     enable = true;
   };
 
-  users.users."iliayar".extraGroups = [ "dialout" "docker" ];
+  users.users."iliayar".extraGroups = [ "dialout" "docker" "audio" ];
 
   environment.systemPackages = with pkgs; [
     docker-compose
     # podman-compose
   ];
+
+  # hardware.logitech.wireless.enable = true;
+  # hardware.logitech.wireless.enableGraphical = true;
 
   systemd.services.logid = {
     serviceConfig = {

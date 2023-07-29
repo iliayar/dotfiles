@@ -55,7 +55,7 @@
         code = { enable = true; };
       };
 
-      langs.enable = [ "nix" "python" "misc" "haskell" "rust" "lua" ];
+      langs.enable = [ "nix" "python" "misc" "haskell" "rust" "lua" "go" ];
     
       code-assist = { enable = true; };
 

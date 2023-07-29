@@ -96,7 +96,7 @@ in {
           layer = "top";
           position = "bottom";
           height = 20;
-          output = [ "DP-1" ];
+          output = [ "DP-5" ];
           modules-left = [
             "hyprland/submap"
             "wlr/workspaces"
@@ -449,6 +449,9 @@ in {
         bind=,R,exec,systemctl reboot
         bind=,R,submap,reset
 
+        bind=SHIFT,S,exec,systemctl poweroff
+        bind=SHIFT,S,submap,reset
+
         bind=,E,exit
         bind=,E,submap,reset
 
@@ -504,7 +507,7 @@ in {
         bind=,XF86AudioPrev, exec, playerctl -p $player previous
         bind=,XF86AudioNext, exec, playerctl -p $player next
 
-        monitor = DP-1, preferred, auto, 1
+        monitor = DP-5, preferred, auto, 1
         monitor = eDP-1, preferred, auto, 1
 
         input {
@@ -523,7 +526,7 @@ in {
         windowrule = opacity 0.95 0.95, ^(Emacs)$
         windowrule = opacity 0.9 0.9, ^(Spotify)$
 
-        exec-once = xrandr --output DP-1 --primary
+        exec-once = xrandr --output DP-5 --primary
         exec-once = waybar & hyprpaper
 
         exec-once = alacritty -T "term-quake"
@@ -541,7 +544,7 @@ in {
         preload = /home/iliayar/Wallpapers/HtmoocM.jpg
 
         wallpaper = eDP-1,/home/iliayar/Wallpapers/2moHU6q.jpg
-        wallpaper = DP-1,/home/iliayar/Wallpapers/HtmoocM.jpg
+        wallpaper = DP-5,/home/iliayar/Wallpapers/VCafhDy.jpg
       '';
     };
   };
