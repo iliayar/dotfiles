@@ -93,9 +93,13 @@
       '';
     };
 
-    de.terms.alacritty = {
-      enable = true;
-      option_as_alt = true;
+    de.terms = {
+      alacritty = {
+        enable = true;
+        option_as_alt = true;
+      };
+
+      wezterm.enable = true;
     };
   };
 
