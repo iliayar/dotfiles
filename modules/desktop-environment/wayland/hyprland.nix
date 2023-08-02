@@ -85,6 +85,8 @@ in {
       wl-clipboard
       swappy
       playerctl
+
+      # python311Packages.pyprland
     ];
 
     programs.waybar = {
@@ -523,7 +525,6 @@ in {
           mouse_move_focuses_monitor = false
         }
 
-        windowrule = opacity 0.95 0.95, ^(Emacs)$
         windowrule = opacity 0.9 0.9, ^(Spotify)$
 
         exec-once = xrandr --output DP-5 --primary

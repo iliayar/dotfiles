@@ -18,6 +18,9 @@ Speeding up 🐌
   (setq gc-cons-threshold (* 100 1024 1024))
   (setq create-lockfiles nil)
   (define-key special-event-map [config-changed-event] 'ignore)
+
+  (set-frame-parameter nil 'alpha-background 90)
+  (add-to-list 'default-frame-alist '(alpha-background . 90))
 #+end_src
 * Main config
 Adding folder with manually added packages, loading file private variables
@@ -328,6 +331,8 @@ Highlight lines chaned according to ~git~
     :if nixcfg-doom-themes
     :preface (defvar region-fg nil)
     :config
+    (setq doom-themes-enable-bold t
+	  doom-themes-enable-italic t)
     (setq doom-themes-treemacs-theme "doom-colors")
     (doom-themes-treemacs-config)
     (doom-themes-org-config)
