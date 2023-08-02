@@ -346,8 +346,19 @@ in {
 
           no_cursor_warps = true
 
-          gaps_in = 2;
-          gaps_out = 5;
+          gaps_in = 0;
+          gaps_out = 0;
+          border_size = 1;
+        }
+
+        decoration {
+          rounding = 0;
+          blur = 0;
+          drop_shadow = 0;
+        }
+
+        animations {
+          enabled = 0;
         }
 
         master {
