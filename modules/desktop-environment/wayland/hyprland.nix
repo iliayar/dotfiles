@@ -1,4 +1,4 @@
-{ config, pkgs, lib, themes, ... }:
+{ config, pkgs, lib, themes, anyrun, ... }:
 
 with lib;
 
@@ -87,6 +87,24 @@ in {
       playerctl
       pyprland
     ];
+
+    programs.anyrun = {
+      # FIXME: not ready. gtk css is hard
+      enable = false;
+      config = {
+        layer = "overlay";
+        plugins = [
+          anyrun.packages.${pkgs.system}.applications
+        ];
+      };
+
+      extraCss = ''
+      window {
+        background-color: rgba(0, 0, 0, 0);
+      }
+
+      '';
+    };
 
     programs.waybar = {
       package = pkgs.waybar.overrideAttrs

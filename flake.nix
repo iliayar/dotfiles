@@ -85,6 +85,11 @@
       url = "github:iliayar/pyprland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    anyrun = {
+      url = "github:Kirottu/anyrun";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self
@@ -107,6 +112,7 @@
             , uci
             , hyprland
             , pyprland
+            , anyrun
             , ...
             }
     @inputs: 
@@ -148,6 +154,7 @@
             mylib
             tlpui-src
             system
+            anyrun
           ;
 
           secrets = import secrets;
@@ -161,6 +168,7 @@
           };
           modules = [
             hyprland.homeManagerModules.default
+            anyrun.homeManagerModules.default
             ./modules
             ./profiles/${name}.nix
           ];

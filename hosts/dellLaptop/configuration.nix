@@ -146,7 +146,7 @@ in
   nix = {
     package = pkgs.nixFlakes;
     settings = {
-      trusted-users = [ "root" ];
+      trusted-users = [ "root" "iliayar" ];
     };
     extraOptions = ''
       experimental-features = nix-command flakes
@@ -179,6 +179,7 @@ in
     pciutils
     nvidia-offload
     virt-manager
+    cachix
 
     config.boot.kernelPackages.vm-tools
     config.boot.kernelPackages.perf
