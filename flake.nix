@@ -80,6 +80,11 @@
       url = "github:hyprwm/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    pyprland = {
+      url = "github:iliayar/pyprland";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self
@@ -101,6 +106,7 @@
             , flake-utils
             , uci
             , hyprland
+            , pyprland
             , ...
             }
     @inputs: 

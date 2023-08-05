@@ -85,8 +85,7 @@ in {
       wl-clipboard
       swappy
       playerctl
-
-      # python311Packages.pyprland
+      pyprland
     ];
 
     programs.waybar = {
@@ -381,7 +380,6 @@ in {
         bind = $mainMod SHIFT, bracketright, movewindow, mon:r
 
         bind = $mainMod, C, exec, hyprland-commands
-        bind = $mainMod, T, togglespecialworkspace, term
         bind = $mainMod SHIFT, print, exec, ${my-screenshot}/bin/my-screenshot e f
         bind = SHIFT, print, exec, ${my-screenshot}/bin/my-screenshot n f
         bind = $mainMod, print, exec, ${my-screenshot}/bin/my-screenshot e
@@ -511,6 +509,25 @@ in {
         bind=,escape,submap,reset
         submap = reset
 
+        # Scratchpads
+        bind = $mainMod, S, submap, scratchpads
+        submap = scratchpads
+
+        bind = ,T, exec, pypr toggle term_quake
+        bind = ,T, submap, reset
+        $term_quake = ^(term_quake)$
+        windowrule = workspace special silent,$term_quake
+        windowrule = float,$term_quake
+
+        bind = ,N, exec, pypr toggle org_notes
+        bind = ,N, submap, reset
+        $org_notes = title:^(org_notes)$
+        windowrule = workspace special silent,$org_notes
+        windowrule = float,$org_notes
+
+        bind=,escape,submap,reset
+        submap = reset
+
         bind=,XF86AudioMute, exec, wpctl set-mute '@DEFAULT_SINK@' toggle
         bind=,XF86AudioLowerVolume, exec, wpctl set-volume '@DEFAULT_SINK@' 5%-
         bind=,XF86AudioRaiseVolume, exec, wpctl set-volume '@DEFAULT_SINK@' 5%+
@@ -539,13 +556,7 @@ in {
         windowrule = opacity 0.9 0.9, ^(Spotify)$
 
         exec-once = xrandr --output DP-5 --primary
-        exec-once = waybar & hyprpaper
-
-        exec-once = alacritty -T "term-quake"
-        windowrule = workspace special:term,title:^(term-quake)$
-        windowrule = size 100% 50%,title:^(term-quake)$
-        windowrule = move 0 0,title:^(term-quake)$
-        windowrule = float,title:^(term-quake)$
+        exec-once = waybar & hyprpaper & pypr
       '';
     };
 
@@ -558,6 +569,24 @@ in {
         wallpaper = eDP-1,/home/iliayar/Wallpapers/2moHU6q.jpg
         wallpaper = DP-5,/home/iliayar/Wallpapers/VCafhDy.jpg
       '';
+    };
+
+    xdg.configFile."hypr/pyprland.json" = {
+      text = builtins.toJSON {
+        pyprland.plugins = [ "scratchpads" ];
+        scratchpads = {
+          "term_quake" = {
+            command = "wezterm start --class term_quake";
+            position = "0 0";
+            size = "100 50";
+          };
+          "org_notes" = {
+            command = "emacs -T org_notes ~/org/Notes.org";
+            position = "10 10";
+            size = "80 80";
+          };
+        };
+      };
     };
   };
 }

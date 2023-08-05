@@ -1,4 +1,4 @@
-{ system, libxft-bgra, picom-jonaburg, wakatime-cli, tlpui-src, rust-blocks, uci, ... }@inputs:
+{ system, libxft-bgra, picom-jonaburg, wakatime-cli, tlpui-src, rust-blocks, uci, pyprland, ... }@inputs:
 
 final: prev: {
   libxft-bgra = prev.stdenv.mkDerivation {
@@ -33,4 +33,6 @@ final: prev: {
   };
 
   tlpui = prev.callPackage ../pkgs/tlpui { inherit tlpui-src; };
+
+  pyprland = pyprland.packages.${system}.default;
 }
