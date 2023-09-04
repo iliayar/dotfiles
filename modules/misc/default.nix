@@ -53,6 +53,7 @@ in
         delta
         hurl
         jq
+        parallel
       ];
     }
     (mkIf cfg.syncthing {
