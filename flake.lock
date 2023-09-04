@@ -80,6 +80,24 @@
         "type": "github"
       }
     },
+    "flake-parts_2": {
+      "inputs": {
+        "nixpkgs-lib": "nixpkgs-lib"
+      },
+      "locked": {
+        "lastModified": 1673362319,
+        "narHash": "sha256-Pjp45Vnj7S/b3BRpZEVfdu8sqqA6nvVjvYu59okhOyI=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "82c16f1682cf50c01cb0280b38a1eed202b3fe9f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -408,6 +426,24 @@
         "type": "github"
       }
     },
+    "nixpkgs-lib": {
+      "locked": {
+        "dir": "lib",
+        "lastModified": 1672350804,
+        "narHash": "sha256-jo6zkiCabUBn3ObuKXHGqqORUMH27gYDIFFfLq5P4wg=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "677ed08a50931e38382dbef01cba08a8f7eac8f6",
+        "type": "github"
+      },
+      "original": {
+        "dir": "lib",
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-stable": {
       "locked": {
         "lastModified": 1690558459,
@@ -509,6 +545,27 @@
         "type": "github"
       }
     },
+    "nwg-displays": {
+      "inputs": {
+        "flake-parts": "flake-parts_2",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1689211592,
+        "narHash": "sha256-Y405ZeOSpc1aPKEzFdvlgJgpGAi9HUR+Hvx63uYdp88=",
+        "owner": "nwg-piotr",
+        "repo": "nwg-displays",
+        "rev": "b863f7bddaada0e5403d59504ea53da7f82a7702",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nwg-piotr",
+        "repo": "nwg-displays",
+        "type": "github"
+      }
+    },
     "org-roam-ui": {
       "flake": false,
       "locked": {
@@ -549,11 +606,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1691169467,
-        "narHash": "sha256-8+OvSMyy+OiGshgi/Cv4htyWW+yMVGzOeypqJ8dEH+8=",
+        "lastModified": 1691330990,
+        "narHash": "sha256-cO/4KkqFytgJMLfIbZHICnQofhnibwY4GZb+rtl4W+s=",
         "owner": "iliayar",
         "repo": "pyprland",
-        "rev": "ecfade18ab0e94a85b554f06536f833057d2b777",
+        "rev": "d0fcbf123fd0ce40f995bebde7108300a5fe38c8",
         "type": "github"
       },
       "original": {
@@ -573,6 +630,7 @@
         "libxft-bgra": "libxft-bgra",
         "nixpkgs": "nixpkgs",
         "nur": "nur",
+        "nwg-displays": "nwg-displays",
         "org-roam-ui": "org-roam-ui",
         "picom-jonaburg": "picom-jonaburg",
         "pyprland": "pyprland",

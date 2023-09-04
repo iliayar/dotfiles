@@ -10,6 +10,7 @@
     ./julia.nix
     ./embed.nix
     ./uci.nix
+    ./train.nix
   ];
 
 }

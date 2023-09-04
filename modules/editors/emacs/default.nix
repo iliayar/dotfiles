@@ -19,6 +19,7 @@ let
     (map (pkg: { custom.editors.emacs.packages.${pkg}.enable = true; }) pkgs);
 
   allPackages = makePackagesDictId [
+    "obsidian"
     "topsy"
     "cheat-sh"
     "protobuf-mode"
@@ -240,6 +241,11 @@ let
     };
 
     org-style-v1 = { auto-enable = cfg.org.style == "v1"; };
+    org-style-v2 = { auto-enable = cfg.org.style == "v2"; };
+
+    obsidian = {
+      packages = [ "obsidian" ];
+    };
 
     org-roam-internal = {
       auto-enable = cfg.org.roam.enable;

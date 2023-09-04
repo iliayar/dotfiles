@@ -67,6 +67,8 @@ let
 
     notify-send -i $filename "$filename"
   '';
+
+  secondMon = "DP-5";
 in {
   options = {
     custom.de.wayland.hyprland = { enable = mkOption { default = false; }; };
@@ -86,6 +88,9 @@ in {
       swappy
       playerctl
       pyprland
+      nwg-displays
+      wlr-randr
+      wdisplays
     ];
 
     programs.anyrun = {
@@ -115,7 +120,7 @@ in {
           layer = "top";
           position = "bottom";
           height = 20;
-          output = [ "DP-5" ];
+          output = [ secondMon ];
           modules-left = [
             "hyprland/submap"
             "wlr/workspaces"
@@ -543,6 +548,12 @@ in {
         windowrule = workspace special silent,$org_notes
         windowrule = float,$org_notes
 
+        bind = ,O, exec, pypr toggle obsidian
+        bind = ,O, submap, reset
+        $obsidian = ^(obsidian)$
+        windowrule = workspace special silent,$obsidian
+        windowrule = float,$obsidian
+
         bind=,escape,submap,reset
         submap = reset
 
@@ -555,8 +566,9 @@ in {
         bind=,XF86AudioPrev, exec, playerctl -p $player previous
         bind=,XF86AudioNext, exec, playerctl -p $player next
 
-        monitor = DP-5, preferred, auto, 1
-        monitor = eDP-1, preferred, auto, 1
+        # monitor = ${secondMon}, preferred, auto, 1
+        # monitor = eDP-1, preferred, auto, 1
+        source = ~/.config/hypr/monitors.conf
 
         input {
           repeat_rate = 50
@@ -573,7 +585,7 @@ in {
 
         windowrule = opacity 0.9 0.9, ^(Spotify)$
 
-        exec-once = xrandr --output DP-5 --primary
+        exec-once = xrandr --output ${secondMon} --primary
         exec-once = waybar & hyprpaper & pypr
       '';
     };
@@ -585,7 +597,7 @@ in {
         preload = /home/iliayar/Wallpapers/HtmoocM.jpg
 
         wallpaper = eDP-1,/home/iliayar/Wallpapers/2moHU6q.jpg
-        wallpaper = DP-5,/home/iliayar/Wallpapers/VCafhDy.jpg
+        wallpaper = ${secondMon},/home/iliayar/Wallpapers/VCafhDy.jpg
       '';
     };
 
@@ -595,13 +607,18 @@ in {
         scratchpads = {
           "term_quake" = {
             command = "wezterm start --class term_quake";
-            position = "0 0";
-            size = "100 50";
+            position = "0% 0%";
+            size = "100% 50%";
           };
           "org_notes" = {
             command = "emacs -T org_notes ~/org/Notes.org";
-            position = "10 10";
-            size = "80 80";
+            position = "10% 10%";
+            size = "80% 80%";
+          };
+          "obsidian" = {
+            command = "obsidian";
+            position = "10% 10%";
+            size = "80% 80%";
           };
         };
       };

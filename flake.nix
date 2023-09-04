@@ -90,6 +90,11 @@
       url = "github:Kirottu/anyrun";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nwg-displays = {
+      url = "github:nwg-piotr/nwg-displays";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self
@@ -113,6 +118,7 @@
             , hyprland
             , pyprland
             , anyrun
+            , nwg-displays
             , ...
             }
     @inputs: 

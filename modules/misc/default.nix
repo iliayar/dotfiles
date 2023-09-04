@@ -40,6 +40,8 @@ in
         zip
         pandoc
         poppler_utils
+        htop
+        bottom
 
         ripgrep
         fd

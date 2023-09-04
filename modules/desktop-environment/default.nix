@@ -54,6 +54,8 @@ in
         scrot
         xclip
         slop
+
+        obsidian
       ];
 
       home.sessionVariables = {
@@ -115,7 +117,9 @@ in
     (mkIf cfg.social {
       home.packages = with pkgs; [
         tdesktop
-        discord
+        (discord.override {
+          withVencord = true;
+        })
         slack
         zoom-us
       ];

@@ -1,0 +1,46 @@
+* Org-mode
+** Settings
+Basic
+#+begin_src emacs-lisp
+  (setq org-directory "~/org"
+	org-agenda-files '("~/org" "~/org/roam"))
+#+end_src
+** Visual
+#+begin_src emacs-lisp
+  (setq org-startup-indented t)
+#+end_src
+** Custom tools
+Inserting last screenshot
+#+BEGIN_SRC emacs-lisp
+  (setq screenshots-dir "~/Pictures/screenshots/")
+
+  (defun iliayar/prompt-recent-screenshot (directory)
+    (interactive)
+    (let ((default-directory  directory))
+      (consult--read
+       (mapcar #'car
+               (sort (directory-files-and-attributes default-directory)
+                     #'(lambda (y x) (time-less-p (nth 6 x) (nth 6 y)))))
+       :state (consult--file-preview)
+       :sort nil
+       :prompt "Select screenshot"
+       :require-match t
+       :category 'file
+       :predicate (lambda (f) (not (or (string-equal f ".") (string-equal f "..")))))))
+
+  (defun iliayar/org--insert-last-screenshot (screenshot)
+    (interactive)
+    (let ((cur-dir (read-directory-name "Copy screenshot to: ")))
+      (copy-file (concat screenshots-dir screenshot) (concat cur-dir screenshot) t)
+      (org-insert-link nil (concat "./" (file-relative-name (concat cur-dir screenshot) default-directory))))
+    (org-redisplay-inline-images))
+
+  (defun iliayar/org-insert-screenshot ()
+    (interactive)
+    (let ((screenshot (iliayar/prompt-recent-screenshot screenshots-dir)))
+      (iliayar/org--insert-last-screenshot screenshot)))
+
+  (general-define-key
+   :map 'org-mode-map
+   "C-c C-x i" 'iliayar/org-insert-screenshot)
+#+END_SRC

@@ -12,6 +12,8 @@
   home.packages = with pkgs; [
     xournalpp
     pkgs.gnome.adwaita-icon-theme
+
+    teams
   ];
 
   custom = {
@@ -28,6 +30,8 @@
       embed.enable = true;
 
       uci.enable = true;
+
+      train.enable = true;
     };
 
     study.sage.enable = true;
@@ -48,6 +52,7 @@
         code-stats.enable = true;
         evil-integrations.enable = true;
         web.enable = true;
+        obsidian.enable = true;
       };
 
       misc = {
@@ -66,6 +71,7 @@
           enable = true;
           ui = true;
         };
+        style = "v2";
       };
 
       pretty = {

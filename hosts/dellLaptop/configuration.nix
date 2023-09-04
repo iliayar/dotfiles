@@ -25,7 +25,7 @@ in
   boot.loader.efi.efiSysMountPoint = "/boot/";
 
   # boot.kernelPackages = pkgs.linuxPackages_5_15;
-  # boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
+  boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
 
   time.timeZone = "Europe/Moscow";
 
@@ -77,25 +77,31 @@ in
   #     Option         "TripleBuffer" "on"
   #   '';
   #
+  #   displayManager.sddm.enable = false;
+  #   desktopManager.plasma5.enable = false;
+  #
+  #   # Conflicts with pipewire
+  #   desktopManager.gnome.enable = false;
   #
   #   dpi = 96;
-  #   windowManager.xmonad.enable = true;
-  #   displayManager.defaultSession = "none+xmonad";
-  #   displayManager.lightdm.greeters.mini = {
-  #     enable = true;
-  #     user = "iliayar";
-  #     extraConfig = ''
-  #               [greeter]
-  #               show-password-label = false
-  #               password-alignment = left
-  #               [greeter-theme]
-  #               background-image = "${wallpapers}/HtmoocM.jpg"
-  #     '';
-  #   };
+  #   # windowManager.xmonad.enable = true;
   #
-  #   displayManager.sessionCommands = ''
-  #     ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${pkgs.vanilla-dmz}/share/icons/Vanilla-DMZ/cursors/left_ptr 16
-  #   '';
+  #   # displayManager.defaultSession = "none+xmonad";
+  #   # displayManager.lightdm.greeters.mini = {
+  #   #   enable = true;
+  #   #   user = "iliayar";
+  #   #   extraConfig = ''
+  #   #             [greeter]
+  #   #             show-password-label = false
+  #   #             password-alignment = left
+  #   #             [greeter-theme]
+  #   #             background-image = "${wallpapers}/HtmoocM.jpg"
+  #   #   '';
+  #   # };
+  #   #  
+  #   # displayManager.sessionCommands = ''
+  #   #   ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${pkgs.vanilla-dmz}/share/icons/Vanilla-DMZ/cursors/left_ptr 16
+  #   # '';
   #
   #   libinput.enable = false;
   #   synaptics = {
@@ -135,6 +141,8 @@ in
       driSupport = true;
     };
   };
+
+  # hardware.pulseaudio.enable = false;
 
   xdg = {
     portal = {
