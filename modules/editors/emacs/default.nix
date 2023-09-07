@@ -468,7 +468,12 @@ let
 
     org-extra-internal = {
       auto-enable = cfg.org.extra.enable;
-      packages = [ "ox-reveal" "ox-json" "org-bullets" ];
+      packages = [ "ox-json" "org-bullets" ];
+    };
+
+    org-reveal-internal = {
+      auto-enable = cfg.org.reveal.enable;
+      packages = [ "ox-reveal" ];
     };
 
     dicts = { };
@@ -573,6 +578,8 @@ in {
         };
 
         extra = { enable = mkOption { default = false; }; };
+
+        reveal = { enable = mkOption { default = false; }; };
       };
 
       evil = {

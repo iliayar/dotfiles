@@ -44,3 +44,15 @@ Inserting last screenshot
    :map 'org-mode-map
    "C-c C-x i" 'iliayar/org-insert-screenshot)
 #+END_SRC
+
+** Startup settings
+#+begin_src  emacs-lisp
+  (eval-after-load "org"
+    '(progn
+       (require 'ox-md nil t)
+       (require 'ox-latex nil t)
+
+       (if nixcfg-ox-reveal
+           (require 'ox-reveal nil t))))
+#+end_src
+

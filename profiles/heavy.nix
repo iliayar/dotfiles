@@ -72,6 +72,8 @@
           ui = true;
         };
         style = "v2";
+
+        reveal.enable = true;
       };
 
       pretty = {
