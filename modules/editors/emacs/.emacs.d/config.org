@@ -489,6 +489,14 @@ Debugger
     :config
     (require 'dap-chrome)) 
 #+end_src
+Indent lines
+#+begin_src emacs-lisp
+  (use-package highlight-indent-guides
+    :if nixcfg-highlight-indent-guides
+    :custom
+    (highlight-indent-guides-method 'character)) 
+#+end_src
+
 *** Auto completion
 Use ~company~ for autocompletion. Add snippets to company backends
 #+begin_src emacs-lisp
@@ -977,9 +985,7 @@ Cheatsheets
 *** Obsidian
 #+begin_src emacs-lisp
   (use-package obsidian
-    :if nixcfg-obsidian
-    :ensure t
-    :demand t
+    :if nixcfg-bundle-obsidian
     :config
     (obsidian-specify-path "~/org/obsidian")
     (global-obsidian-mode t)

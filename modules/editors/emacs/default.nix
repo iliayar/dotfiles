@@ -19,6 +19,7 @@ let
     (map (pkg: { custom.editors.emacs.packages.${pkg}.enable = true; }) pkgs);
 
   allPackages = makePackagesDictId [
+    "highlight-indent-guides"
     "obsidian"
     "topsy"
     "cheat-sh"
@@ -195,6 +196,7 @@ let
         "sdlang-mode"
         "protobuf-mode"
         "tree-sitter-grammars"
+        "highlight-indent-guides"
 
         "cheat-sh"
       ];

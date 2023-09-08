@@ -52,6 +52,11 @@
         code = { enable = true; };
       };
 
+      org = {
+        roam.enable = true;
+        style = "v2";
+      };
+
       langs = {
         enable = [ "nix" "cpp" "python" "misc" "rust" ];
         cpp.ls = "clangd";
