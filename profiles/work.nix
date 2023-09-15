@@ -54,6 +54,7 @@
 
       org = {
         roam.enable = true;
+        reveal.enable = true;
         style = "v2";
       };
 
