@@ -46,13 +46,16 @@ Inserting last screenshot
 #+END_SRC
 
 ** Startup settings
-#+begin_src  emacs-lisp
-  (eval-after-load "org"
-    '(progn
-       (require 'ox-md nil t)
-       (require 'ox-latex nil t)
+#+begin_src emacs-lisp
+    (require 'ox-md nil t)
+    (require 'ox-latex nil t)
 
-       (if nixcfg-ox-reveal
-           (require 'ox-reveal nil t))))
+    (if nixcfg-ox-reveal
+        (require 'ox-reveal nil t))
+
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((sql . t)
+       (sqlite . t)))
 #+end_src
 

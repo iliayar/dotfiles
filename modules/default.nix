@@ -10,5 +10,6 @@
     ./dev
     ./study
     ./settings.nix
+    ./other.nix
   ];
 }
