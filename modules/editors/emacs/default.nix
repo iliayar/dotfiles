@@ -151,9 +151,8 @@ let
           (old: { patches = [ ./lsp-julia.patch ]; }))
       ];
     "tree-sitter-grammars" = epkgs:
-      with epkgs; [
-        treesit-grammars.with-all-grammars
-      ];
+      with epkgs;
+      [ treesit-grammars.with-all-grammars ];
   };
 
   bundles = {
@@ -188,7 +187,6 @@ let
     misc-code-internal = {
       auto-enable = cfg.misc.enable && cfg.misc.code.enable;
       packages = [
-        "smartparens"
         "editorconfig"
         "yasnippet"
         "yasnippet-snippets"
@@ -200,6 +198,12 @@ let
 
         "cheat-sh"
       ];
+    };
+
+    misc-code-internal = {
+      auto-enable = cfg.misc.enable && cfg.misc.code.enable
+                    && cfg.misc.code.auto-parens.enable;
+      packages = [ "smartparens" ];
     };
 
     misc-code-internal-company = {
@@ -245,9 +249,7 @@ let
     org-style-v1 = { auto-enable = cfg.org.style == "v1"; };
     org-style-v2 = { auto-enable = cfg.org.style == "v2"; };
 
-    obsidian = {
-      packages = [ "obsidian" ];
-    };
+    obsidian = { packages = [ "obsidian" ]; };
 
     org-roam-internal = {
       auto-enable = cfg.org.roam.enable;
@@ -288,14 +290,14 @@ let
 
     pretty-extra-internal = {
       auto-enable = cfg.pretty.extra.enable;
-      packages = [ 
-        "dashboard" 
-        "diff-hl" 
+      packages = [
+        "dashboard"
+        "diff-hl"
 
         # FIXME: This crashes emacs
         # "doom-modeline" 
 
-        "centaur-tabs" 
+        "centaur-tabs"
       ];
     };
 
@@ -327,8 +329,8 @@ let
 
     langs-python-lsp-pylsp-internal = {
       auto-enable = cfg.bundles.lsp-internal.enable
-        && cfg.bundles.langs-python-internal.enable
-      && cfg.langs.python.ls == "pylsp";
+        && cfg.bundles.langs-python-internal.enable && cfg.langs.python.ls
+        == "pylsp";
       config = {
         custom.dev.python.additionalPackages = pypkgs:
           [ pypkgs.python-lsp-server ];
@@ -337,8 +339,8 @@ let
 
     langs-python-lsp-pyright-internal = {
       auto-enable = cfg.bundles.lsp-internal.enable
-      && cfg.bundles.langs-python-internal.enable 
-      && cfg.langs.python.ls == "pyright";
+        && cfg.bundles.langs-python-internal.enable && cfg.langs.python.ls
+        == "pyright";
       packages = [ "lsp-pyright" ];
     };
 
@@ -489,7 +491,9 @@ let
       packages = [ "code-stats" ];
       config = {
         home.file.".emacs.d/private.el".text = ''
-          (setq code-stats-token "${secrets.code-stats-api-key.${config.custom.settings.code-stats-machine}}")
+          (setq code-stats-token "${
+            secrets.code-stats-api-key.${config.custom.settings.code-stats-machine}
+          }")
         '';
       };
     };
@@ -529,6 +533,8 @@ in {
             default = "corfu";
             type = types.enum [ "company" "corfu" ];
           };
+
+          auto-parens.enable = mkOption { default = false; };
         };
       };
 
@@ -674,9 +680,7 @@ in {
         overrides = import ./overrides.nix inputs;
       };
 
-      home.packages = with pkgs; [
-        gsettings-desktop-schemas
-      ];
+      home.packages = with pkgs; [ gsettings-desktop-schemas ];
     }
 
     (mkIf cfg.server {

@@ -12,6 +12,8 @@
 
   custom = {
 
+    hw.qmk.enable = true;
+
     settings = {
       code-stats-machine = "Work";
     };
