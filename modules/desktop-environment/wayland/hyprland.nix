@@ -575,7 +575,7 @@ in {
           repeat_delay = 200
           follow_mouse = 2
           kb_layout = us,ru
-          kb_options = grp:switch,grp:caps_toggle,altwin:swap_alt_win
+          kb_options = grp:switch,grp:caps_toggle
         }
 
         misc {

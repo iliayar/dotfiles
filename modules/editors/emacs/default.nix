@@ -200,7 +200,7 @@ let
       ];
     };
 
-    misc-code-internal = {
+    misc-code-internal-smart-parens = {
       auto-enable = cfg.misc.enable && cfg.misc.code.enable
                     && cfg.misc.code.auto-parens.enable;
       packages = [ "smartparens" ];
