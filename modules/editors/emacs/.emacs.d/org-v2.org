@@ -47,15 +47,17 @@ Inserting last screenshot
 
 ** Startup settings
 #+begin_src emacs-lisp
-    (require 'ox-md nil t)
-    (require 'ox-latex nil t)
+  (require 'ox-md nil t)
+  (require 'ox-latex nil t)
+  (require 'ob-mermaid nil t)
 
-    (if nixcfg-ox-reveal
-        (require 'ox-reveal nil t))
+  (if nixcfg-ox-reveal
+      (require 'ox-reveal nil t))
 
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((sql . t)
-       (sqlite . t)))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((sql . t)
+     (sqlite . t)
+     (mermaid . t))
 #+end_src
 

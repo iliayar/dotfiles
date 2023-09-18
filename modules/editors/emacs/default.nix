@@ -19,6 +19,7 @@ let
     (map (pkg: { custom.editors.emacs.packages.${pkg}.enable = true; }) pkgs);
 
   allPackages = makePackagesDictId [
+    "ob-mermaid"
     "highlight-indent-guides"
     "obsidian"
     "topsy"
@@ -144,6 +145,7 @@ let
     "yaml-mode"
     "yasnippet"
     "yasnippet-snippets"
+    "mermaid-mode"
   ] // {
     "lsp-julia" = epkgs:
       [
@@ -195,6 +197,7 @@ let
         "protobuf-mode"
         "tree-sitter-grammars"
         "highlight-indent-guides"
+        "mermaid-mode"
 
         "cheat-sh"
       ];
@@ -469,6 +472,11 @@ let
     web = { packages = [ "impatient-mode" "web-mode" ]; };
 
     rss = { packages = [ "elfeed" "elfeed-org" "elfeed-goodies" ]; };
+
+    org-misc-internal = {
+      auto-enable = true;
+      packages = [ "ob-mermaid" ];
+    };
 
     org-extra-internal = {
       auto-enable = cfg.org.extra.enable;

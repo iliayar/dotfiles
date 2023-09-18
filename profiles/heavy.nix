@@ -32,11 +32,13 @@
       embed.enable = true;
 
       uci.enable = true;
+      uci.daemon = true;
 
       train.enable = true;
     };
 
     study.sage.enable = true;
+    study.misc.enable = true;
 
     games = {
       minecraft.enable = true;

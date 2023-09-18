@@ -22,6 +22,10 @@ in
         default = false;
       };
     };
+
+    custom.study.misc = {
+      enable = mkOption { default = false; };
+    };
   };
 
   config = mkMerge [
@@ -33,6 +37,11 @@ in
     (mkIf cfg.idea.enable {
       home.packages = with pkgs; [
         jetbrains.idea-community
+      ];
+    })
+    (mkIf cfg.misc.enable {
+      home.packages = with pkgs; [
+        nodePackages.mermaid-cli
       ];
     })
   ];

@@ -431,6 +431,11 @@ Protobufs support
   (use-package protobuf-mode
     :if nixcfg-protobuf-mode)
 #+end_src
+Mermaid support
+#+begin_src emacs-lisp
+  (use-package mermaid-mode
+    :if nixcfg-mermaid-mode)
+#+end_src
 Snippets
 #+begin_src emacs-lisp
   (use-package yasnippet

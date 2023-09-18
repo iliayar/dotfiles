@@ -873,11 +873,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1690209764,
-        "narHash": "sha256-Q2tIofjPEbGAqrUMbKnOEPaearz3sySmiPPNPumVi3M=",
+        "lastModified": 1694872990,
+        "narHash": "sha256-+zCPd0kZZpkehQS4hMlsOntacRTo1JIkPHcCM4ltCG4=",
         "ref": "refs/heads/master",
-        "rev": "c047f087feaaccd41a833ab328d6a0a1997db1a0",
-        "revCount": 162,
+        "rev": "23a0e625120bfb8e40d865d6d0a31e9c2c2dbc71",
+        "revCount": 181,
         "type": "git",
         "url": "ssh://git@github.com/iliayar/uci.git"
       },
