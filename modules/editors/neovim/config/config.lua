@@ -1,7 +1,7 @@
 nixcfg = require('config.nix')
 
-if nixcfg.codestats.enable then
-  vim.env.CODESTATS_API_KEY = nixcfg.codestats.key
+if nixcfg.codeStats.enable then
+  vim.env.CODESTATS_API_KEY = nixcfg.codeStats.key
 end
 
 vim.g.mapleader = ' '
@@ -28,44 +28,41 @@ require('nvim-treesitter.configs').setup({
     },
 })
 
--- Tree
+-- icons
 
 require("nvim-web-devicons").setup()
 
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
+-- Tree
 
-vim.g.nvim_tree_icons = {
-  default = '',
-}
+if nixcfg.tree.enable then
+    require("nvim-tree").setup({
+        disable_netrw = true,
+        hijack_netrw = true,
+        hijack_directories = {
+            enable = true,
+            auto_open = true,
+        },
+    })
 
-require("nvim-tree").setup({
-    disable_netrw = true,
-    hijack_netrw = true,
-    hijack_directories = {
-        enable = true,
-        auto_open = true,
-    },
-})
+    local function open_nvim_tree(data)
 
-local function open_nvim_tree(data)
+        -- buffer is a directory
+        local directory = vim.fn.isdirectory(data.file) == 1
 
-  -- buffer is a directory
-  local directory = vim.fn.isdirectory(data.file) == 1
+        if not directory then
+            return
+        end
 
-  if not directory then
-    return
-  end
+        -- change to the directory
+        vim.cmd.cd(data.file)
 
-  -- change to the directory
-  vim.cmd.cd(data.file)
+        -- open the tree
+        require("nvim-tree.api").tree.open()
+    end
 
-  -- open the tree
-  require("nvim-tree.api").tree.open()
+    vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
+    vim.keymap.set('n', '<Leader>op', '<cmd>NvimTreeToggle<cr>')
 end
-
-vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
-vim.keymap.set('n', '<Leader>op', '<cmd>NvimTreeToggle<cr>')
 
 -- Search
 
@@ -75,7 +72,7 @@ if nixcfg.search then
     local builtin = require("telescope.builtin")
 
     vim.keymap.set('n', '<Leader>fr', builtin.live_grep, {})
-    vim.keymap.set('n', '<Leader>ff', builtin.find_files, {})
+    vim.keymap.set('n', '<Leader>fg', builtin.find_files, {})
     vim.keymap.set('n', '<Leader>bf', builtin.buffers, {})
 end
 

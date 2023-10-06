@@ -96,8 +96,12 @@
 
     editors.nvim = {
       enable = true;
-      code-stats = true;
-      lsp = true;
+      misc = {
+        code-stats.enable = true;
+      };
+      code = {
+        lsp.enable = true;
+      };
     };
 
     misc = {

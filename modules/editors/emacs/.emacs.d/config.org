@@ -29,16 +29,16 @@ Adding folder with manually added packages, loading file private variables
   (add-to-list 'load-path "~/.emacs.d/lisp/")
   (load "~/.emacs.d/private.el")
   (setq backup-directory-alist
-	`(("." . ,(concat user-emacs-directory "backups"))))
+        `(("." . ,(concat user-emacs-directory "backups"))))
 #+end_src
 
 Turn into window manager if enabled
 #+begin_src emacs-lisp
   (if nixcfg-bundle-exwm
       (progn
-	(require 'exwm)
-	(require 'exwm-config)
-	(exwm-config-example)))
+        (require 'exwm)
+        (require 'exwm-config)
+        (exwm-config-example)))
 #+end_src
 
 Default global variables
@@ -51,6 +51,8 @@ Smooth scrolling
 #+begin_src emacs-lisp
   (setq scroll-step 1)
   (setq scroll-margin 10)
+
+  (setq-default tab-width 4)
 #+end_src
 
 Browser fixes
