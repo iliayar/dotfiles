@@ -1,7 +1,7 @@
 nixcfg = require('config.nix')
 
 if nixcfg.codeStats.enable then
-  vim.env.CODESTATS_API_KEY = nixcfg.codeStats.key
+    vim.env.CODESTATS_API_KEY = nixcfg.codeStats.key
 end
 
 vim.g.mapleader = ' '
@@ -17,20 +17,62 @@ vim.opt.expandtab = true
 
 vim.opt.listchars['tab'] = '→'
 
+vim.opt.scrolloff = 10
+
 vim.opt.termguicolors = true
-vim.cmd('colorscheme monokai')
+
+if nixcfg.misc.enable then
+    require('nvim-surround').setup({})
+    require('hop').setup({})
+    require('nvim-web-devicons').setup()
+    require('gitsigns').setup()
+
+    vim.keymap.set('', '<leader>gs', function()
+        hop.hint_pattern({})
+    end, {})
+
+    vim.keymap.set('', '<leader>gl', function()
+        hop.hint_line({})
+    end, {})
+end
 
 -- tree-sitter
 
-require('nvim-treesitter.configs').setup({
-    highlight = {
+if nixcfg.codeMisc.enable then
+    require('nvim-treesitter.configs').setup({
+        highlight = {
+            enable = true,
+        },
+    })
+    require('treesitter-context').setup({
         enable = true,
-    },
-})
+        line_numbers = true,
+        max_lines = 5,
+        trim_scope = "outer",
+        mode = "topline",
+    })
 
--- icons
+    require('formatter').setup({
+        filetype = {
+            nix = {
+                require('formatter.defaults.nixfmt'),
+            },
+        },
+    })
 
-require("nvim-web-devicons").setup()
+    vim.keymap.set('n', '<C-=>', '<cmd>Format')
+end
+
+-- visual
+
+if nixcfg.prettyGruvbox then
+    require("gruvbox").setup({
+        transparent_mode = true,
+    })
+    vim.cmd("colorscheme gruvbox")
+else
+    vim.cmd("colorscheme monokai")
+end
 
 -- Tree
 
@@ -67,13 +109,45 @@ end
 -- Search
 
 if nixcfg.search then
-    require("telescope").setup()
-    require("telescope").load_extension('fzf')
-    local builtin = require("telescope.builtin")
+    local trouble = require('trouble.providers.telescope')
 
+    require('telescope').setup({
+        defaults = {
+            color_devicons = true,
+            mappings = {
+                i = { ["<c-t>"] = trouble.open_with_trouble },
+                n = { ["<c-t>"] = trouble.open_with_trouble },
+            },
+
+            theme = 'ivy',
+            -- layout_config = {
+            --     layout_strategy = 'vertical',
+            --     layout_config = {
+            --         height = vim.o.lines,
+            --         width = vim.o.columns,
+            --         prompt_position = 'bottom',
+            --         preview_height = 0.6,
+            --     },
+            -- },
+        },
+    })
+    require('telescope').load_extension('fzf')
+    require('telescope').load_extension('file_browser')
+
+
+    local builtin = require('telescope.builtin')
+
+    vim.keymap.set('n', '<Leader>ff', function()
+        require('telescope').extensions.file_browser.file_browser()
+    end, {})
     vim.keymap.set('n', '<Leader>fr', builtin.live_grep, {})
     vim.keymap.set('n', '<Leader>fg', builtin.find_files, {})
-    vim.keymap.set('n', '<Leader>bf', builtin.buffers, {})
+    vim.keymap.set('n', '<Leader>bf', function()
+        builtin.buffers({ sort_lastused = true, ignore_current_buffer = true, })
+    end, {})
+
+
+    vim.keymap.set("n", "<leader>ot", function() require("trouble").open() end)
 end
 
 -- Comments
@@ -115,7 +189,9 @@ if nixcfg.lsp.enable then
     })
     local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-    vim.keymap.set('n', '<Leader>ca', '<cmd>lua vim.lsp.buf.code_action()<cr>')
+    vim.keymap.set('n', '<Leader>ca', function() 
+        vim.lsp.buf.code_action() 
+    end)
 end
 
 -- LSP

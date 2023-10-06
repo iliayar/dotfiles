@@ -38,7 +38,12 @@
 
     editors.nvim = {
       enable = true;
-      code-stats = true;
+      misc = {
+        code-stats.enable = true;
+      };
+      code = {
+        lsp.enable = true;
+      };
     };
 
     editors.emacs = {

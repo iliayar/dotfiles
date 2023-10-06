@@ -9,30 +9,46 @@ let
     misc = {
       autoEnable = cfg.misc.enable;
       plugins = with pkgs.vimPlugins; [
-        vim-nix
-        vim-airline
-        vim-surround
-        vim-gitgutter
-        editorconfig-vim
-        vim-easymotion
-
+        nvim-surround
         nvim-web-devicons
-
-        nvim-comment
-
-        nvim-treesitter.withAllGrammars
+        hop-nvim
+        gitsigns-nvim
       ];
     };
-    linux = {
-      autoEnable = pkgs.stdenv.isLinux;
+
+    statusBar = {
+      autoEnable = cfg.pretty.status-bar.enable;
+      plugins = with pkgs.vimPlugins; [ vim-airline ];
     };
+
+    prettyGruvbox = {
+      autoEnable = cfg.pretty.theme == "gruvbox";
+      plugins = with pkgs.vimPlugins; [ gruvbox-nvim ];
+    };
+
+    codeMisc = {
+      autoEnable = cfg.code.misc.enable;
+      plugins = with pkgs.vimPlugins; [
+        nvim-comment
+        nvim-treesitter.withAllGrammars
+        nvim-treesitter-context
+        formatter-nvim
+      ];
+    };
+
+    linux = { autoEnable = pkgs.stdenv.isLinux; };
     codeStats = {
       autoEnable = cfg.misc.enable && cfg.misc.code-stats.enable;
-      plugins = with pkgs.vimPlugins; [
-          (pkgs.vimUtils.buildVimPluginFrom2Nix { name = "codestats-nvim"; src = code-stats-vim; })
-      ];
+      plugins = with pkgs.vimPlugins;
+        [
+          (pkgs.vimUtils.buildVimPluginFrom2Nix {
+            name = "codestats-nvim";
+            src = code-stats-vim;
+          })
+        ];
       extraParameters = {
-        key = "${secrets.code-stats-api-key.${config.custom.settings.code-stats-machine}}";
+        key =
+          "${secrets.code-stats-api-key.${config.custom.settings.code-stats-machine}}";
       };
     };
     lsp = {
@@ -51,53 +67,54 @@ let
       plugins = with pkgs.vimPlugins; [
         telescope-nvim
         telescope-fzf-native-nvim
+        telescope-file-browser-nvim
         plenary-nvim
+
+        trouble-nvim
       ];
 
       config = {
-        programs.neovim = {
-          extraPackages = with pkgs; [ ripgrep ];
-        };
+        programs.neovim = { extraPackages = with pkgs; [ ripgrep ]; };
       };
     };
     tree = {
       autoEnable = cfg.misc.enable && cfg.misc.tree.enable;
-      plugins = with pkgs.vimPlugins; [
-        nvim-tree-lua
-      ];
+      plugins = with pkgs.vimPlugins; [ nvim-tree-lua ];
     };
   };
-in
-  {
-    options = {
-      custom.editors.nvim = {
+in {
+  options = {
+    custom.editors.nvim = {
 
-        bundles = foldl (acc: name: acc // {
+      bundles = foldl (acc: name:
+        acc // {
           "${name}".enable = mkOption { default = false; };
         }) { } (attrNames bundles);
 
-        enable = mkOption {
-          default = false;
+      enable = mkOption { default = false; };
+
+      pretty = {
+        theme = mkOption {
+          default = "gruvbox";
+          type = types.enum [ "gruvbox" "monokai" ];
         };
 
-        misc = {
-          enable = mkOption { default = true; };
-          tree.enable = mkOption { default = false; };
-          search.enable = mkOption {
-            default = true;
-          };
-          code-stats.enable = mkOption {
-            default = false;
-          };
-        };
+        status-bar.enable = mkOption { default = false; };
+      };
 
-        code = {
-          lsp.enable = mkOption {
-            default = false;
-          };
-        };
+      misc = {
+        enable = mkOption { default = true; };
+        tree.enable = mkOption { default = false; };
+        search.enable = mkOption { default = true; };
+        code-stats.enable = mkOption { default = false; };
+      };
+
+      code = {
+        misc.enable = mkOption { default = true; };
+        lsp.enable = mkOption { default = false; };
       };
     };
+  };
 
   config = mkIf cfg.enable (mkMerge [
     {
@@ -136,14 +153,10 @@ in
             }
           '';
         })
-        (mkIf enabled {
-          programs.neovim = {
-            plugins = bundle.plugins;
-          };
-        })
+        (mkIf enabled { programs.neovim = { plugins = bundle.plugins; }; })
         (mkIf enabled (bundle.config))
       ]) (attrNames bundles)))
-        
+
     {
       xdg.configFile."nvim/colors" = {
         source = ./colors;
@@ -152,9 +165,7 @@ in
 
       home.packages = [ pkgs.xsel ];
 
-      home.sessionVariables = {
-        EDITOR = "vim";
-      };
+      home.sessionVariables = { EDITOR = "vim"; };
 
       xdg.configFile."nvim/lua/config" = {
         source = ./config;

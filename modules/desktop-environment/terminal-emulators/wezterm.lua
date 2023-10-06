@@ -32,7 +32,7 @@ end)
 
 config.disable_default_key_bindings = true
 config.keys = {
-   { key = '=', mods = 'CTRL', action = act.ResetFontSize },
+   { key = '0', mods = 'CTRL', action = act.ResetFontSize },
    { key = '-', mods = 'CTRL', action = act.DecreaseFontSize },
    { key = '+', mods = 'SHIFT|CTRL', action = act.IncreaseFontSize },
 
