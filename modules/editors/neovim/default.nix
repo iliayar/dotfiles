@@ -13,6 +13,7 @@ let
         nvim-web-devicons
         hop-nvim
         gitsigns-nvim
+        nvim-window-picker
       ];
     };
 
@@ -34,6 +35,9 @@ let
         nvim-treesitter-context
         formatter-nvim
       ];
+      config = {
+        programs.neovim = { extraPackages = with pkgs; [ tree-sitter ]; };
+      };
     };
 
     linux = { autoEnable = pkgs.stdenv.isLinux; };
@@ -41,7 +45,7 @@ let
       autoEnable = cfg.misc.enable && cfg.misc.code-stats.enable;
       plugins = with pkgs.vimPlugins;
         [
-          (pkgs.vimUtils.buildVimPluginFrom2Nix {
+          (pkgs.vimUtils.buildVimPlugin {
             name = "codestats-nvim";
             src = code-stats-vim;
           })
@@ -68,6 +72,7 @@ let
         telescope-nvim
         telescope-fzf-native-nvim
         telescope-file-browser-nvim
+        telescope-ui-select-nvim
         plenary-nvim
 
         trouble-nvim
@@ -80,6 +85,14 @@ let
     tree = {
       autoEnable = cfg.misc.enable && cfg.misc.tree.enable;
       plugins = with pkgs.vimPlugins; [ nvim-tree-lua ];
+    };
+    neogit = {
+      autoEnable = cfg.misc.enable && cfg.misc.git.enable;
+
+      plugins = with pkgs.vimPlugins; [
+        neogit
+        plenary-nvim
+      ];
     };
   };
 in {
@@ -107,6 +120,7 @@ in {
         tree.enable = mkOption { default = false; };
         search.enable = mkOption { default = true; };
         code-stats.enable = mkOption { default = false; };
+        git.enable = mkOption { default = false; };
       };
 
       code = {

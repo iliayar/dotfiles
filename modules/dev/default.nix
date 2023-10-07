@@ -11,6 +11,7 @@
     ./embed.nix
     ./uci.nix
     ./train.nix
+    ./js.nix
   ];
 
 }

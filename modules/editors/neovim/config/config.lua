@@ -26,14 +26,28 @@ if nixcfg.misc.enable then
     require('hop').setup({})
     require('nvim-web-devicons').setup()
     require('gitsigns').setup()
+    require('window-picker').setup({
+        hint = 'statusline-winbar';
+    })
 
-    vim.keymap.set('', '<leader>gs', function()
-        hop.hint_pattern({})
+    local hop = require('hop')
+
+    vim.keymap.set('', '<Leader>gs', function()
+        hop.hint_patterns({})
     end, {})
 
-    vim.keymap.set('', '<leader>gl', function()
-        hop.hint_line({})
+    vim.keymap.set('', '<Leader>gl', function()
+        hop.hint_lines({})
     end, {})
+
+    vim.keymap.set('', '<Leader>ww', function()
+        require('window-picker').pick_window()
+    end)
+
+    vim.keymap.set('', '<Leader>wd', function()
+        local winid = vim.api.nvim_get_current_win()
+        vim.api.nvim_win_close(winid, false)
+    end)
 end
 
 -- tree-sitter
@@ -60,7 +74,7 @@ if nixcfg.codeMisc.enable then
         },
     })
 
-    vim.keymap.set('n', '<C-=>', '<cmd>Format')
+    vim.keymap.set('n', '<C-=>', '<cmd>Format<CR>')
 end
 
 -- visual
@@ -103,51 +117,62 @@ if nixcfg.tree.enable then
     end
 
     vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
-    vim.keymap.set('n', '<Leader>op', '<cmd>NvimTreeToggle<cr>')
+    vim.keymap.set('n', '<Leader>op', '<Cmd>NvimTreeToggle<CR>')
 end
 
 -- Search
 
 if nixcfg.search then
     local trouble = require('trouble.providers.telescope')
+    local fb_actions = require('telescope').extensions.file_browser.actions
+    local actions = require('telescope.actions')
 
     require('telescope').setup({
         defaults = {
             color_devicons = true,
             mappings = {
-                i = { ["<c-t>"] = trouble.open_with_trouble },
-                n = { ["<c-t>"] = trouble.open_with_trouble },
+                i = { ['<C-t>'] = trouble.open_with_trouble },
+                n = { ['<C-t>'] = trouble.open_with_trouble },
             },
-
-            theme = 'ivy',
-            -- layout_config = {
-            --     layout_strategy = 'vertical',
-            --     layout_config = {
-            --         height = vim.o.lines,
-            --         width = vim.o.columns,
-            --         prompt_position = 'bottom',
-            --         preview_height = 0.6,
-            --     },
-            -- },
+            layout_strategy = 'flex',
+        },
+        pickers = {
+            buffers = {
+                mappings = {
+                    i = {
+                        ["<C-d>"] = actions.delete_buffer + actions.move_to_top,
+                    },
+                },
+            },
+        },
+        extensions = {
+            ['ui-select'] = {
+                require('telescope.themes').get_dropdown({})
+            },
         },
     })
+
     require('telescope').load_extension('fzf')
     require('telescope').load_extension('file_browser')
+    require('telescope').load_extension('ui-select')
 
-
+    local themes = require('telescope.themes')
     local builtin = require('telescope.builtin')
 
-    vim.keymap.set('n', '<Leader>ff', function()
-        require('telescope').extensions.file_browser.file_browser()
-    end, {})
+    vim.keymap.set('n', '<Leader>ff', 
+        require('telescope').extensions.file_browser.file_browser, 
+    {})
     vim.keymap.set('n', '<Leader>fr', builtin.live_grep, {})
     vim.keymap.set('n', '<Leader>fg', builtin.find_files, {})
     vim.keymap.set('n', '<Leader>bf', function()
-        builtin.buffers({ sort_lastused = true, ignore_current_buffer = true, })
+        builtin.buffers({ 
+            sort_lastused = true, 
+            ignore_current_buffer = true, 
+        })
     end, {})
 
 
-    vim.keymap.set("n", "<leader>ot", function() require("trouble").open() end)
+    vim.keymap.set("n", "<Leader>ot", function() require("trouble").open() end)
 end
 
 -- Comments
@@ -167,7 +192,8 @@ if nixcfg.lsp.enable then
         },
     })
 end
--- Completion
+
+-- LSP
 
 if nixcfg.lsp.enable then
     local cmp = require('cmp')
@@ -189,24 +215,63 @@ if nixcfg.lsp.enable then
     })
     local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-    vim.keymap.set('n', '<Leader>ca', function() 
-        vim.lsp.buf.code_action() 
-    end)
-end
-
--- LSP
-
-if nixcfg.lsp.enable then
     local lspconfig = require('lspconfig')
     lspconfig.rust_analyzer.setup({
         autostart = false,
         capabilities = capabilities
     })
+
+    local trouble = require('trouble')
+    local builtin = require('telescope.builtin')
+
+    vim.keymap.set('n', '<Leader>sl', '<Cmd>LspStart<CR>')
+    vim.keymap.set('n', '<Leader>ss', '<Cmd>LspStop<CR>')
+    vim.keymap.set('n', '<Leader>sr', '<Cmd>LspRestart<CR>')
+
+    vim.keymap.set({ 'n', 'i' }, '<C-e>', vim.diagnostic.open_float)
+    vim.keymap.set('n', '<Leader>ste', function() trouble.open('workspace_diagnostics') end)
+    vim.keymap.set('n', '<Leader>stl', function() trouble.open('loclist') end)
+    vim.keymap.set('n', '<Leader>se', function() builtin.diagnostics({}) end)
+
+    vim.api.nvim_create_autocmd('LspAttach', {
+        group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+        callback = function(ev)
+            vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+
+            local opts = { buffer = ev.buf }
+            vim.keymap.set('n', 'gsD', vim.lsp.buf.declaration, opts)
+            vim.keymap.set('n', 'gsd', builtin.lsp_definitions, opts)
+            vim.keymap.set('n', 'gsi', builtin.lsp_implementations, opts)
+            vim.keymap.set('n', 'gsx', builtin.lsp_references, opts)
+            vim.keymap.set('n', 'gst', builtin.lsp_type_definitions, opts)
+            vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+            vim.keymap.set('n', '<Leader>cr', vim.lsp.buf.rename, opts)
+            vim.keymap.set({ 'n', 'v' }, '<Leader>ca', vim.lsp.buf.code_action, opts)
+            vim.keymap.set('n', '<C-=>', function()
+                vim.lsp.buf.format { async = true }
+            end, opts)
+            vim.keymap.set({ 'n', 'i' }, '<C-k>', vim.lsp.buf.signature_help, opts)
+            vim.keymap.set('n', '<Leader>swa', vim.lsp.buf.add_workspace_folder, opts)
+            vim.keymap.set('n', '<Leader>swr', vim.lsp.buf.remove_workspace_folder, opts)
+            vim.keymap.set('n', '<Leader>swl', function()
+                print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+            end, opts)
+        end,
+    })
 end
 
 -- Other
 
-vim.keymap.set('n', '<ESC>', '<cmd>noh<cr>')
+if nixcfg.neogit.enable then
+    require('neogit').setup({})
+
+    local neogit = require('neogit')
+    vim.keymap.set('n', '<Leader>og', function()
+        neogit.open()
+    end)
+end
+
+vim.keymap.set('n', '<Esc>', '<Cmd>noh<CR>')
 
 vim.api.nvim_create_autocmd({'VimEnter'}, {
     command = 'hi Normal guibg=NONE ctermbg=NONE',

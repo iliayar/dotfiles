@@ -12,8 +12,6 @@
   home.packages = with pkgs; [
     xournalpp
     pkgs.gnome.adwaita-icon-theme
-
-    teams
   ];
 
   custom = {
@@ -27,6 +25,7 @@
     dev = {
       python.enable = true;
       cpp.enable = true;
+      js.enable = true;
       latex.enable = true;
 
       embed.enable = true;
@@ -98,6 +97,7 @@
       enable = true;
       misc = {
         code-stats.enable = true;
+        git.enable = true;
       };
       code = {
         lsp.enable = true;
