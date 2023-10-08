@@ -70,6 +70,8 @@ in
         (if cfg.web then [ requests ] else []) ++
         (cfg.additionalPackages ps)
       ))
+      nodePackages.pyright
+      black
     ];
   };
 

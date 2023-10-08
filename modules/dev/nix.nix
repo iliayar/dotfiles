@@ -3,11 +3,11 @@
 with lib;
 
 let
-  cfg = config.custom.dev.cpp;
+  cfg = config.custom.dev.nix;
 in
 {
   options = {
-    custom.dev.cpp = {
+    custom.dev.nix = {
       enable = mkOption {
         default = false;
       };
@@ -17,8 +17,8 @@ in
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
-        clang
-        clang-tools
+        nixfmt
+        nixd
     ];
   };
 }

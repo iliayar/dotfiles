@@ -1,11 +1,10 @@
-{ 
+{
   description = "My NixOs Configuration using home-manager with flakes";
-
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    nur.url = github:nix-community/NUR;
+    nur.url = "github:nix-community/NUR";
 
     flake-utils.url = "github:numtide/flake-utils";
 
@@ -67,7 +66,7 @@
     };
 
     rust-blocks = {
-      url = github:iliayar/rust-blocks;
+      url = "github:iliayar/rust-blocks";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -95,42 +94,23 @@
       url = "github:nwg-piotr/nwg-displays";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self
-            , home-manager
-            , nixpkgs
-            , code-stats-vim
-            , secrets
-            , emacs-overlay
-            , libxft-bgra
-            , xmonad-contrib-newest
-            , xmonad-newest
-            , org-roam-ui
-            , picom-jonaburg
-            , wakatime-cli
-            , zsh-wakatime
-            , tlpui-src
-            , rust-blocks
-            , nur
-            , flake-utils
-            , uci
-            , hyprland
-            , pyprland
-            , anyrun
-            , nwg-displays
-            , ...
-            }
-    @inputs: 
-    flake-utils.lib.eachSystem (with flake-utils.lib.system; [ 
-      x86_64-linux
-      x86_64-darwin
-    ])
-      (system:
+  outputs = { self, home-manager, nixpkgs, code-stats-vim, secrets
+    , emacs-overlay, libxft-bgra, xmonad-contrib-newest, xmonad-newest
+    , org-roam-ui, picom-jonaburg, wakatime-cli, zsh-wakatime, tlpui-src
+    , rust-blocks, nur, flake-utils, uci, hyprland, pyprland, anyrun
+    , nwg-displays, rust-overlay, ... }@inputs:
+    flake-utils.lib.eachSystem
+    (with flake-utils.lib.system; [ x86_64-linux x86_64-darwin ]) (system:
       let
-        overlays = [
-          emacs-overlay.overlay
-        ] ++ (import ./modules/overlays (inputs // { inherit system; }));
+        overlays = [ emacs-overlay.overlay rust-overlay.overlays.default ]
+          ++ (import ./modules/overlays (inputs // { inherit system; }));
 
         nixpkgs-config = {
           inherit system overlays;
@@ -141,132 +121,93 @@
 
         mylib = import ./modules/lib.nix { inherit pkgs; };
 
-        wallpapers = import ./modules/themes/wallpapers.nix { inherit pkgs mylib; };
+        wallpapers =
+          import ./modules/themes/wallpapers.nix { inherit pkgs mylib; };
 
         themes = import ./modules/themes { inherit mylib; };
 
         specialArgs = {
-          inherit
-            home-manager
-            code-stats-vim
-            libxft-bgra
-            xmonad-contrib-newest
-            xmonad-newest
-            org-roam-ui
-            picom-jonaburg
-            wakatime-cli
-            zsh-wakatime
-            wallpapers
-            mylib
-            tlpui-src
-            system
-            anyrun
-          ;
+          inherit home-manager code-stats-vim libxft-bgra xmonad-contrib-newest
+            xmonad-newest org-roam-ui picom-jonaburg wakatime-cli zsh-wakatime
+            wallpapers mylib tlpui-src system anyrun;
 
           secrets = import secrets;
           themes = themes;
         };
 
-        makeHomeProfile = name: home-manager.lib.homeManagerConfiguration rec {
-          inherit pkgs;
-          extraSpecialArgs = specialArgs // {
-            inherit pkgs system;
-          };
-          modules = [
-            hyprland.homeManagerModules.default
-            anyrun.homeManagerModules.default
-            ./modules
-            ./profiles/${name}.nix
-          ];
-        };
-
-        makeProfiles = pkgs.lib.foldl (acc: name: acc // { ${name} = makeHomeProfile name; }) {};
-
-        homeConfigurations = (makeProfiles [
-          "heavy"
-          "ubuntu-virt"
-          "work"
-        ]) // {
-          wsl = home-manager.lib.homeManagerConfiguration rec {
+        makeHomeProfile = name:
+          home-manager.lib.homeManagerConfiguration rec {
             inherit pkgs;
-            extraSpecialArgs = specialArgs // {
-              inherit pkgs system;
-            };
+            extraSpecialArgs = specialArgs // { inherit pkgs system; };
             modules = [
-              ./hosts/wsl/home.nix
+              hyprland.homeManagerModules.default
+              anyrun.homeManagerModules.default
+              ./modules
+              ./profiles/${name}.nix
             ];
           };
-        };
 
-        dellLaptop = 
-          let
-            modules = [
-              nur.nixosModules.nur
-              ./hosts/dellLaptop/configuration.nix
-              ./cachix.nix
-              {
-                nixpkgs = nixpkgs-config;
-                nix = {
-                  gc = {
-                    automatic = true;
-                    options = "--delete-older-than 3d";
-                  };
+        makeProfiles =
+          pkgs.lib.foldl (acc: name: acc // { ${name} = makeHomeProfile name; })
+          { };
+
+        homeConfigurations = (makeProfiles [ "heavy" "ubuntu-virt" "work" ])
+          // {
+            wsl = home-manager.lib.homeManagerConfiguration rec {
+              inherit pkgs;
+              extraSpecialArgs = specialArgs // { inherit pkgs system; };
+              modules = [ ./hosts/wsl/home.nix ];
+            };
+          };
+
+        dellLaptop = let
+          modules = [
+            nur.nixosModules.nur
+            ./hosts/dellLaptop/configuration.nix
+            ./cachix.nix
+            {
+              nixpkgs = nixpkgs-config;
+              nix = {
+                gc = {
+                  automatic = true;
+                  options = "--delete-older-than 3d";
                 };
-              }
-            ];
-          in
-            nixpkgs.lib.nixosSystem {
-              inherit
-                system
-                modules
-                specialArgs;
-            };
+              };
+            }
+          ];
+        in nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
 
-            lenovoLaptop = 
-            let
-              modules = [
-                ./hosts/lenovoLaptop/configuration.nix
-                ./cachix.nix
-                {
-                  nixpkgs = nixpkgs-config;
-                  nix = {
-                    gc = {
-                      automatic = true;
-                      options = "--delete-older-than 3d";
-                    };
-                  };
-                }
-              ];
-            in
-            nixpkgs.lib.nixosSystem {
-              inherit
-              system
-              modules
-              specialArgs;
-            };
+        lenovoLaptop = let
+          modules = [
+            ./hosts/lenovoLaptop/configuration.nix
+            ./cachix.nix
+            {
+              nixpkgs = nixpkgs-config;
+              nix = {
+                gc = {
+                  automatic = true;
+                  options = "--delete-older-than 3d";
+                };
+              };
+            }
+          ];
+        in nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
 
-            homeSrv = 
-            let
-              modules = [
-                ./hosts/homeSrv/configuration.nix
-                ./cachix.nix
-                {
-                  nixpkgs = nixpkgs-config;
-                  nix = {
-                    gc = {
-                      automatic = true;
-                      options = "--delete-older-than 3d";
-                    };
-                  };
-                }
-              ];
-            in
-            nixpkgs.lib.nixosSystem {
-              inherit
-              system
-              modules
-              specialArgs;
-            };
+        homeSrv = let
+          modules = [
+            ./hosts/homeSrv/configuration.nix
+            ./cachix.nix
+            {
+              nixpkgs = nixpkgs-config;
+              nix = {
+                gc = {
+                  automatic = true;
+                  options = "--delete-older-than 3d";
+                };
+              };
+            }
+          ];
+        in nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
       in {
         packages = {
           nixosConfigurations.NixLaptop = dellLaptop;

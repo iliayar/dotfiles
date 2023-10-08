@@ -19,7 +19,10 @@ let
 
     statusBar = {
       autoEnable = cfg.pretty.status-bar.enable;
-      plugins = with pkgs.vimPlugins; [ vim-airline ];
+      plugins = with pkgs.vimPlugins; [ 
+        lualine-nvim
+        lualine-lsp-progress
+      ];
     };
 
     prettyGruvbox = {

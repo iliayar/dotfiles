@@ -2,8 +2,8 @@
 
 {
   imports = [
-    ./python
-    ./cxx
+    ./python.nix
+    ./cxx.nix
     ./latex.nix
     ./reverse.nix
     ./haskell.nix
@@ -12,6 +12,10 @@
     ./uci.nix
     ./train.nix
     ./js.nix
+    ./rust.nix
+    ./nix.nix
+    ./lua.nix
+    ./go.nix
   ];
 
 }

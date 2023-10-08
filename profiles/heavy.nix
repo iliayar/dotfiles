@@ -9,24 +9,23 @@
   home.username = "iliayar";
   home.homeDirectory = "/home/iliayar";
 
-  home.packages = with pkgs; [
-    xournalpp
-    pkgs.gnome.adwaita-icon-theme
-  ];
+  home.packages = with pkgs; [ xournalpp pkgs.gnome.adwaita-icon-theme ];
 
   custom = {
-  
+
     hw.qmk.enable = true;
 
-    settings = {
-      code-stats-machine = "DellLaptop";
-    };
+    settings = { code-stats-machine = "DellLaptop"; };
 
     dev = {
       python.enable = true;
       cpp.enable = true;
       js.enable = true;
       latex.enable = true;
+      rust.enable = true;
+      nix.enable = true;
+      lua.enable = true;
+      go.enable = true;
 
       embed.enable = true;
 
@@ -64,11 +63,11 @@
       };
 
       langs.enable = [ "nix" "python" "misc" "haskell" "rust" "lua" "go" ];
-    
+
       code-assist = { enable = true; };
 
       evil = { enable = true; };
-    
+
       org = {
         roam = {
           enable = true;
@@ -99,9 +98,8 @@
         code-stats.enable = true;
         git.enable = true;
       };
-      code = {
-        lsp.enable = true;
-      };
+      code = { lsp.enable = true; };
+      pretty = { status-bar.enable = true; };
     };
 
     misc = {
@@ -141,7 +139,7 @@
         alacritty.enable = true;
         # Moving to
         wezterm.enable = true;
-        
+
         urxvt.enable = true;
       };
 
