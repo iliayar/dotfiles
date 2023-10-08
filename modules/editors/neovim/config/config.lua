@@ -266,6 +266,7 @@ if nixcfg.lsp.enable then
     )
 
     local cmp = require("cmp")
+    local snippy = require("snippy")
     cmp.setup(
         {
             snippet = {
