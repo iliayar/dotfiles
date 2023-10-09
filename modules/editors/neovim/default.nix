@@ -13,16 +13,27 @@ let
         nvim-web-devicons
         hop-nvim
         gitsigns-nvim
-        nvim-window-picker
+        nvim-comment
+
+        telescope-nvim
+        telescope-fzf-native-nvim
+        telescope-file-browser-nvim
+        telescope-ui-select-nvim
+        plenary-nvim
+
+        trouble-nvim
+
+        neogit
       ];
+
+      config = {
+        programs.neovim = { extraPackages = with pkgs; [ ripgrep ]; };
+      };
     };
 
     statusBar = {
       autoEnable = cfg.pretty.status-bar.enable;
-      plugins = with pkgs.vimPlugins; [ 
-        lualine-nvim
-        lualine-lsp-progress
-      ];
+      plugins = with pkgs.vimPlugins; [ lualine-nvim lualine-lsp-progress ];
     };
 
     prettyGruvbox = {
@@ -31,12 +42,15 @@ let
     };
 
     codeMisc = {
-      autoEnable = cfg.code.misc.enable;
+      autoEnable = cfg.misc.code.enable;
       plugins = with pkgs.vimPlugins; [
-        nvim-comment
         nvim-treesitter.withAllGrammars
         nvim-treesitter-context
         formatter-nvim
+        nvim-cmp
+
+        nvim-snippy
+        cmp-snippy
       ];
       config = {
         programs.neovim = { extraPackages = with pkgs; [ tree-sitter ]; };
@@ -44,8 +58,8 @@ let
     };
 
     linux = { autoEnable = pkgs.stdenv.isLinux; };
+
     codeStats = {
-      autoEnable = cfg.misc.enable && cfg.misc.code-stats.enable;
       plugins = with pkgs.vimPlugins;
         [
           (pkgs.vimUtils.buildVimPlugin {
@@ -58,45 +72,22 @@ let
           "${secrets.code-stats-api-key.${config.custom.settings.code-stats-machine}}";
       };
     };
+
     lsp = {
-      autoEnable = cfg.code.lsp.enable;
+      autoEnable = cfg.code-assist.enable;
       plugins = with pkgs.vimPlugins; [
         nvim-lspconfig
-        nvim-cmp
         cmp-nvim-lsp
-        nvim-snippy
-        cmp-snippy
       ];
     };
-    search = {
-      autoEnable = cfg.misc.enable && cfg.misc.search.enable;
 
-      plugins = with pkgs.vimPlugins; [
-        telescope-nvim
-        telescope-fzf-native-nvim
-        telescope-file-browser-nvim
-        telescope-ui-select-nvim
-        plenary-nvim
+    langMisc = { autoEnable = builtins.elem "misc" cfg.langs.enable; };
+    langNix = { autoEnable = builtins.elem "nix" cfg.langs.enable; };
+    langPython = { autoEnable = builtins.elem "python" cfg.langs.enable; };
+    langRust = { autoEnable = builtins.elem "rust" cfg.langs.enable; };
+    langGo = { autoEnable = builtins.elem "go" cfg.langs.enable; };
+    langLua = { autoEnable = builtins.elem "lua" cfg.langs.enable; };
 
-        trouble-nvim
-      ];
-
-      config = {
-        programs.neovim = { extraPackages = with pkgs; [ ripgrep ]; };
-      };
-    };
-    tree = {
-      autoEnable = cfg.misc.enable && cfg.misc.tree.enable;
-      plugins = with pkgs.vimPlugins; [ nvim-tree-lua ];
-    };
-    neogit = {
-      autoEnable = cfg.misc.enable && cfg.misc.git.enable;
-
-      plugins = with pkgs.vimPlugins; [
-        neogit
-        plenary-nvim
-      ];
-    };
   };
 in {
   options = {
@@ -109,6 +100,22 @@ in {
 
       enable = mkOption { default = false; };
 
+      misc = {
+        enable = mkOption { default = false; };
+
+        code = { enable = mkOption { default = false; }; };
+      };
+
+      langs = {
+        enable = mkOption {
+          default = [ "misc" ];
+          type = types.listOf
+            (types.enum [ "misc" "nix" "python" "rust" "go" "lua" ]);
+        };
+      };
+
+      code-assist = { enable = mkOption { default = false; }; };
+
       pretty = {
         theme = mkOption {
           default = "gruvbox";
@@ -116,19 +123,6 @@ in {
         };
 
         status-bar.enable = mkOption { default = false; };
-      };
-
-      misc = {
-        enable = mkOption { default = true; };
-        tree.enable = mkOption { default = false; };
-        search.enable = mkOption { default = true; };
-        code-stats.enable = mkOption { default = false; };
-        git.enable = mkOption { default = false; };
-      };
-
-      code = {
-        misc.enable = mkOption { default = true; };
-        lsp.enable = mkOption { default = false; };
       };
     };
   };

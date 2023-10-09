@@ -93,12 +93,15 @@
     };
 
     editors.nvim = {
+      bundles = { codeStats.enable = true; };
+
       enable = true;
       misc = {
-        code-stats.enable = true;
-        git.enable = true;
+        enable = true;
+        code = { enable = true; };
       };
-      code = { lsp.enable = true; };
+      langs.enable = [ "misc" "nix" "python" "rust" "go" "lua" ];
+      code-assist = { enable = true; };
       pretty = { status-bar.enable = true; };
     };
 

@@ -21,14 +21,16 @@ vim.opt.scrolloff = 10
 
 vim.opt.termguicolors = true
 
+vim.keymap.set("n", "<Esc>", "<Cmd>noh<CR>")
+
 if nixcfg.misc.enable then
     require("nvim-surround").setup({})
     require("hop").setup({})
     require("nvim-web-devicons").setup()
     require("gitsigns").setup()
-    require("window-picker").setup(
+    require("nvim_comment").setup(
         {
-            hint = "statusline-winbar"
+            operator_mapping = "<Leader>cl"
         }
     )
 
@@ -68,108 +70,7 @@ if nixcfg.misc.enable then
             vim.api.nvim_win_close(winid, false)
         end
     )
-end
 
--- tree-sitter
-
-if nixcfg.codeMisc.enable then
-    require("nvim-treesitter.configs").setup(
-        {
-            highlight = {
-                enable = true
-            }
-        }
-    )
-    require("treesitter-context").setup(
-        {
-            enable = true,
-            line_numbers = true,
-            max_lines = 5,
-            trim_scope = "outer",
-            mode = "topline"
-        }
-    )
-
-    require("formatter").setup(
-        {
-            filetype = {
-                nix = {
-                    require("formatter.defaults.nixfmt")
-                },
-                lua = {
-                    require("formatter.filetypes.lua").luafmt
-                },
-                python = {
-                    require("formatter.filetypes.python").black
-                }
-            }
-        }
-    )
-
-    vim.keymap.set("n", "<C-=>", "<cmd>Format<CR>")
-end
-
--- visual
-
-if nixcfg.prettyGruvbox then
-    require("gruvbox").setup(
-        {
-            transparent_mode = true
-        }
-    )
-    vim.cmd("colorscheme gruvbox")
-else
-    vim.cmd("colorscheme monokai")
-end
-
-if nixcfg.statusBar then
-    require("lualine").setup(
-        {
-            sections = {
-                lualine_c = {
-                    "lsp_progress"
-                }
-            }
-        }
-    )
-end
-
--- Tree
-
-if nixcfg.tree.enable then
-    require("nvim-tree").setup(
-        {
-            disable_netrw = true,
-            hijack_netrw = true,
-            hijack_directories = {
-                enable = true,
-                auto_open = true
-            }
-        }
-    )
-
-    local function open_nvim_tree(data)
-        -- buffer is a directory
-        local directory = vim.fn.isdirectory(data.file) == 1
-
-        if not directory then
-            return
-        end
-
-        -- change to the directory
-        vim.cmd.cd(data.file)
-
-        -- open the tree
-        require("nvim-tree.api").tree.open()
-    end
-
-    vim.api.nvim_create_autocmd({"VimEnter"}, {callback = open_nvim_tree})
-    vim.keymap.set("n", "<Leader>op", "<Cmd>NvimTreeToggle<CR>")
-end
-
--- Search
-
-if nixcfg.search.enable then
     local trouble = require("trouble.providers.telescope")
     local fb_actions = require("telescope").extensions.file_browser.actions
     local actions = require("telescope.actions")
@@ -244,17 +145,61 @@ if nixcfg.search.enable then
             require("trouble").open()
         end
     )
+
+    require("neogit").setup({})
+
+    local neogit = require("neogit")
+    vim.keymap.set(
+        "n",
+        "<Leader>og",
+        function()
+            neogit.open()
+        end
+    )
 end
 
--- Comments
-require("nvim_comment").setup(
-    {
-        operator_mapping = "<Leader>cl"
-    }
-)
--- LSP
+if nixcfg.codeMisc.enable then
+    require("nvim-treesitter.configs").setup(
+        {
+            highlight = {
+                enable = true
+            }
+        }
+    )
+    require("treesitter-context").setup(
+        {
+            enable = true,
+            line_numbers = true,
+            max_lines = 5,
+            trim_scope = "outer",
+            mode = "topline"
+        }
+    )
 
-if nixcfg.lsp.enable then
+    params = {filetype = {}}
+
+    if nixcfg.langNix.enable then
+        params.filetype["nix"] = {
+            require("formatter.defaults.nixfmt")
+        }
+    end
+
+    if nixcfg.langLua.enable then
+        params.filetype["lua"] = {
+            require("formatter.filetypes.lua").luafmt
+        }
+    end
+
+    if nixcfg.langPython.enable then
+        params.filetype["python"] = {
+            require("formatter.filetypes.python").black
+        }
+    end
+
+    require("formatter").setup(params)
+
+    vim.keymap.set("n", "<C-=>", "<cmd>Format<CR>")
+
     require("snippy").setup(
         {
             mappings = {
@@ -267,6 +212,18 @@ if nixcfg.lsp.enable then
 
     local cmp = require("cmp")
     local snippy = require("snippy")
+
+    cmp_sources = {}
+
+    if nixcfg.lsp.enable then
+        table.insert(
+            cmp_sources,
+            {
+                name = "nvim_lsp"
+            }
+        )
+    end
+
     cmp.setup(
         {
             snippet = {
@@ -282,14 +239,41 @@ if nixcfg.lsp.enable then
             window = {
                 documentation = cmp.config.disable
             },
-            sources = cmp.config.sources(
-                {
-                    {name = "nvim_lsp"}
-                }
-            )
+            sources = cmp.config.sources(cmp_sources)
         }
     )
+end
 
+if nixcfg.prettyGruvbox.enable then
+    require("gruvbox").setup(
+        {
+            transparent_mode = true
+        }
+    )
+    vim.cmd("colorscheme gruvbox")
+else
+    vim.cmd("colorscheme monokai")
+end
+
+vim.api.nvim_create_autocmd(
+    {"VimEnter"},
+    {
+        command = "hi Normal guibg=NONE ctermbg=NONE"
+    }
+)
+
+
+if nixcfg.statusBar.enable then
+    params = {sections = {lualine_c = {}}}
+
+    if nixcfg.lsp.enable then
+        table.insert(params.sections.lualine_c, "lsp_progress")
+    end
+
+    require("lualine").setup(params)
+end
+
+if nixcfg.lsp.enable then
     local trouble = require("trouble")
     local builtin = require("telescope.builtin")
 
@@ -361,57 +345,45 @@ if nixcfg.lsp.enable then
     local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
     local lspconfig = require("lspconfig")
-    lspconfig.rust_analyzer.setup(
-        {
-            capabilities = capabilities,
-            on_attach = common_on_attach
-        }
-    )
-    lspconfig.nixd.setup(
-        {
-            autostart = false,
-            capabilities = capabilities,
-            on_attach = common_on_attach
-        }
-    )
-    lspconfig.gopls.setup(
-        {
-            capabilities = capabilities,
-            on_attach = common_on_attach
-        }
-    )
-    lspconfig.pyright.setup(
-        {
-            autostart = false,
-            capabilities = capabilities,
-            on_attach = common_on_attach
-        }
-    )
+
+    if nixcfg.langRust.enable then
+        lspconfig.rust_analyzer.setup(
+            {
+                capabilities = capabilities,
+                on_attach = common_on_attach
+            }
+        )
+    end
+
+    if nixcfg.langNix.enable then
+        lspconfig.nixd.setup(
+            {
+                autostart = false,
+                capabilities = capabilities,
+                on_attach = common_on_attach
+            }
+        )
+    end
+
+    if nixcfg.langGo.enable then
+        lspconfig.gopls.setup(
+            {
+                capabilities = capabilities,
+                on_attach = common_on_attach
+            }
+        )
+    end
+
+    if nixcfg.langPython then
+        lspconfig.pyright.setup(
+            {
+                autostart = false,
+                capabilities = capabilities,
+                on_attach = common_on_attach
+            }
+        )
+    end
 end
-
--- Other
-
-if nixcfg.neogit.enable then
-    require("neogit").setup({})
-
-    local neogit = require("neogit")
-    vim.keymap.set(
-        "n",
-        "<Leader>og",
-        function()
-            neogit.open()
-        end
-    )
-end
-
-vim.keymap.set("n", "<Esc>", "<Cmd>noh<CR>")
-
-vim.api.nvim_create_autocmd(
-    {"VimEnter"},
-    {
-        command = "hi Normal guibg=NONE ctermbg=NONE"
-    }
-)
 
 if nixcfg.linux and false then
     -- Disable for a while. Using wayland(
