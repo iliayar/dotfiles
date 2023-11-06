@@ -520,6 +520,10 @@ in {
         '';
       };
 
+      package = mkOption {
+        default = pkgs.emacs29-pgtk;
+      };
+
       server = mkOption {
         default = false;
         description = ''
@@ -684,7 +688,7 @@ in {
 
       programs.emacs = {
         enable = true;
-        package = pkgs.emacs29-pgtk;
+        package = cfg.package;
         overrides = import ./overrides.nix inputs;
       };
 

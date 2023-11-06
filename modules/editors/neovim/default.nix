@@ -5,6 +5,8 @@ with lib;
 let
   cfg = config.custom.editors.nvim;
 
+  toLuaArray = l: "{ " + (foldl (acc: e: acc + ''"${e}", '') "" l) + "}";
+
   bundles = {
     misc = {
       autoEnable = cfg.misc.enable;
@@ -69,8 +71,10 @@ let
           })
         ];
       extraParameters = {
-        key =
-          "${secrets.code-stats-api-key.${config.custom.settings.code-stats-machine}}";
+        key = ''
+          "${
+            secrets.code-stats-api-key.${config.custom.settings.code-stats-machine}
+          }"; '';
       };
     };
 
@@ -88,6 +92,10 @@ let
     langOcaml = { autoEnable = builtins.elem "ocaml" cfg.langs.enable; };
     langSql = { autoEnable = builtins.elem "sql" cfg.langs.enable; };
     langLatex = { autoEnable = builtins.elem "latex" cfg.langs.enable; };
+    langCpp = {
+      autoEnable = builtins.elem "cpp" cfg.langs.enable;
+      extraParameters = { command = toLuaArray cfg.langs.cpp.clangdCommand; };
+    };
   };
 in {
   options = {
@@ -110,8 +118,10 @@ in {
         enable = mkOption {
           default = [ "misc" ];
           type = types.listOf
-            (types.enum [ "misc" "nix" "python" "rust" "go" "lua" "ocaml" "sql" "latex" ]);
+            (types.enum [ "misc" "nix" "python" "rust" "go" "lua" "cpp" "ocaml" "sql" "latex" ]);
         };
+
+        cpp = { clangdCommand = mkOption { default = [ "clangd" ]; }; };
       };
 
       code-assist = { enable = mkOption { default = false; }; };
@@ -150,8 +160,8 @@ in {
         bundle = bundleDefault // bundles.${name};
         enabled = cfg.bundles.${name}.enable;
         val = if enabled then "true" else "false";
-        extraParametersConfig = foldl (acc: param: ''
-          nixcfg.${name}.${param} = "${bundle.extraParameters.${param}}"
+        extraParametersConfig = foldl (acc: param: acc + ''
+          nixcfg.${name}.${param} = ${bundle.extraParameters.${param}}
         '') "" (attrNames bundle.extraParameters);
       in mkMerge [
         (mkIf enabled {

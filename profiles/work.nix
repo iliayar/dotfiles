@@ -9,14 +9,11 @@
   home.username = "iliayar";
   home.homeDirectory = "/Users/iliayar";
 
-
   custom = {
 
     hw.qmk.enable = true;
 
-    settings = {
-      code-stats-machine = "Work";
-    };
+    settings = { code-stats-machine = "Work"; };
 
     misc = {
       enable = true;
@@ -37,17 +34,30 @@
     };
 
     editors.nvim = {
+      bundles = { codeStats.enable = true; };
+
       enable = true;
       misc = {
-        code-stats.enable = true;
+        enable = true;
+        code = { enable = true; };
       };
-      code = {
-        lsp.enable = true;
-      };
+      langs.enable = [ "misc" "nix" "python" "rust" "go" "lua" "cpp" ];
+      code-assist = { enable = true; };
+      pretty = { status-bar.enable = true; };
+
+      langs.cpp.clangdCommand = [
+        "clangd"
+        "--background-index"
+        "--header-insertion=never"
+        "--log=info"
+        "--pretty"
+        "-j=12"
+      ];
     };
 
     editors.emacs = {
       enable = true;
+      package = pkgs.emacs29-macport;
 
       bundles = {
         evil-integrations.enable = true;

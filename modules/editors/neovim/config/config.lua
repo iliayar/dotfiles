@@ -284,7 +284,7 @@ vim.api.nvim_create_autocmd(
 
 
 if nixcfg.statusBar.enable then
-    params = {sections = {lualine_c = {}}}
+    params = {sections = {lualine_c = { "filename" }}}
 
     if nixcfg.lsp.enable then
         table.insert(params.sections.lualine_c, "lsp_progress")
@@ -412,6 +412,20 @@ if nixcfg.lsp.enable then
                 on_attach = common_on_attach
             }
         )
+    end
+
+    if nixcfg.langCpp.enable then
+        cfg = {
+                autostart = false,
+                capabilities = capabilities,
+                on_attach = common_on_attach
+            }
+
+        if nixcfg.langCpp.command then
+            cfg.cmd = nixcfg.langCpp.command
+        end
+
+        lspconfig.clangd.setup(cfg)
     end
 end
 
