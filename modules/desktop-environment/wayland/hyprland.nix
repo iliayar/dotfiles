@@ -82,6 +82,8 @@ in {
       xorg.xrandr
       flameshot
       hyprpaper
+      waypaper
+      wallutils
       grim
       slurp
       wl-clipboard

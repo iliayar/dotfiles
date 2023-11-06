@@ -48,6 +48,10 @@ in
       additionalPackages = mkOption {
         default = (ps: with ps; [
           ipython
+
+          # FIXME: Remove. Trying fix platformio
+          setuptools
+          pip
         ]);
         description = ''
           additional python packages to include in systemwide installation

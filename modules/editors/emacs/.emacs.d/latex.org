@@ -2,7 +2,7 @@
   (setq org-latex-packages-alist '(
 				   ("T1, T2A" "fontenc" t)
 				   ("lutf8" "luainputenc" t)
-				   ("english,russian" "babel" t)
+				   ("american,russian" "babel" t)
 				   ("" "minted" t)
 				   ("" "graphicx" t)
 				   ("" "longtable" t)

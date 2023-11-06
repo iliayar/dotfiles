@@ -48,6 +48,7 @@ let
         nvim-treesitter-context
         formatter-nvim
         nvim-cmp
+        vim-visual-multi
 
         nvim-snippy
         cmp-snippy
@@ -75,10 +76,7 @@ let
 
     lsp = {
       autoEnable = cfg.code-assist.enable;
-      plugins = with pkgs.vimPlugins; [
-        nvim-lspconfig
-        cmp-nvim-lsp
-      ];
+      plugins = with pkgs.vimPlugins; [ nvim-lspconfig cmp-nvim-lsp ];
     };
 
     langMisc = { autoEnable = builtins.elem "misc" cfg.langs.enable; };
@@ -87,7 +85,9 @@ let
     langRust = { autoEnable = builtins.elem "rust" cfg.langs.enable; };
     langGo = { autoEnable = builtins.elem "go" cfg.langs.enable; };
     langLua = { autoEnable = builtins.elem "lua" cfg.langs.enable; };
-
+    langOcaml = { autoEnable = builtins.elem "ocaml" cfg.langs.enable; };
+    langSql = { autoEnable = builtins.elem "sql" cfg.langs.enable; };
+    langLatex = { autoEnable = builtins.elem "latex" cfg.langs.enable; };
   };
 in {
   options = {
@@ -110,7 +110,7 @@ in {
         enable = mkOption {
           default = [ "misc" ];
           type = types.listOf
-            (types.enum [ "misc" "nix" "python" "rust" "go" "lua" ]);
+            (types.enum [ "misc" "nix" "python" "rust" "go" "lua" "ocaml" "sql" "latex" ]);
         };
       };
 

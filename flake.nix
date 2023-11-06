@@ -99,13 +99,18 @@
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    denv = {
+      url = "github:iliayar/env.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, home-manager, nixpkgs, code-stats-vim, secrets
     , emacs-overlay, libxft-bgra, xmonad-contrib-newest, xmonad-newest
     , org-roam-ui, picom-jonaburg, wakatime-cli, zsh-wakatime, tlpui-src
     , rust-blocks, nur, flake-utils, uci, hyprland, pyprland, anyrun
-    , nwg-displays, rust-overlay, ... }@inputs:
+    , nwg-displays, rust-overlay, denv, ... }@inputs:
     flake-utils.lib.eachSystem
     (with flake-utils.lib.system; [ x86_64-linux x86_64-darwin ]) (system:
       let
@@ -140,6 +145,7 @@
             inherit pkgs;
             extraSpecialArgs = specialArgs // { inherit pkgs system; };
             modules = [
+              denv.homeManagerModules.default
               hyprland.homeManagerModules.default
               anyrun.homeManagerModules.default
               ./modules

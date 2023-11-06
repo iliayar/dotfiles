@@ -50,6 +50,7 @@ in
     networkmanager = {
       enable = true;
     };
+    firewall.checkReversePath = false;
   };
 
   i18n = {

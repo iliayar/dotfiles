@@ -11,6 +11,8 @@
 
   home.packages = with pkgs; [ xournalpp pkgs.gnome.adwaita-icon-theme ];
 
+  denv.programs.hello.enable = true;
+
   custom = {
 
     hw.qmk.enable = true;
@@ -26,6 +28,8 @@
       nix.enable = true;
       lua.enable = true;
       go.enable = true;
+      ocaml.enable = true;
+      sql.enable = true;
 
       embed.enable = true;
 
@@ -62,7 +66,7 @@
         code = { enable = true; };
       };
 
-      langs.enable = [ "nix" "python" "misc" "haskell" "rust" "lua" "go" ];
+      langs.enable = [ "nix" "python" "misc" "haskell" "rust" "lua" "go" "latex" ];
 
       code-assist = { enable = true; };
 
@@ -100,7 +104,7 @@
         enable = true;
         code = { enable = true; };
       };
-      langs.enable = [ "misc" "nix" "python" "rust" "go" "lua" ];
+      langs.enable = [ "misc" "nix" "python" "rust" "go" "lua" "ocaml" "sql" "latex" ];
       code-assist = { enable = true; };
       pretty = { status-bar.enable = true; };
     };

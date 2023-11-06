@@ -18,13 +18,14 @@ in {
   config = mkIf cfg.enable (mkMerge [
     (mkIf (cfg.compiler == "clang") {
       home.packages = with pkgs; [
-        clang
+        (hiPrio clang)
         clang-tools
+        gcc
       ];
     })
     (mkIf (cfg.compiler == "gcc") {
       home.packages = with pkgs; [
-        gcc
+        (gcc)
         ccls
       ];
     })

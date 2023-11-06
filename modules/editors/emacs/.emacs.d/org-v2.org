@@ -1,4 +1,5 @@
 * Org-mode
+\(x = \)
 ** Settings
 Basic
 #+begin_src emacs-lisp
@@ -8,6 +9,11 @@ Basic
 ** Visual
 #+begin_src emacs-lisp
   (setq org-startup-indented t)
+
+  (setq
+    ;; org-pretty-entities t
+    prettify-symbols-unprettify-at-point 'right-edge
+    org-highlight-latex-and-related '(latex entities))
 #+end_src
 ** Custom tools
 Inserting last screenshot

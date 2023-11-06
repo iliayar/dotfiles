@@ -6,3 +6,6 @@ for more options.
 */
 
 #define SPLIT_USB_DETECT
+
+#undef ENCODER_RESOLUTIONS
+#define ENCODER_RESOLUTIONS { 4 }

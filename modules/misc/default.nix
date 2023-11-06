@@ -54,6 +54,7 @@ in
         hurl
         jq
         parallel
+        mprocs
       ];
     }
     (mkIf cfg.syncthing {

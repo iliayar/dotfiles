@@ -196,6 +196,24 @@ if nixcfg.codeMisc.enable then
         }
     end
 
+    if nixcfg.langOcaml.enable then
+        params.filetype["ocaml"] = {
+            require("formatter.filetypes.ocaml").ocamlformat
+        }
+    end
+
+    if nixcfg.langSql.enable then
+        params.filetype["sql"] = {
+            require("formatter.filetypes.sql").pgformat
+        }
+    end
+
+    if nixcfg.langLatex.enable then
+        params.filetype["latex"] = {
+            require("formatter.filetypes.latex").latexindent
+        }
+    end
+
     require("formatter").setup(params)
 
     vim.keymap.set("n", "<C-=>", "<cmd>Format<CR>")
@@ -213,7 +231,9 @@ if nixcfg.codeMisc.enable then
     local cmp = require("cmp")
     local snippy = require("snippy")
 
-    cmp_sources = {}
+    cmp_sources = {{
+        name = "snippy",
+    }}
 
     if nixcfg.lsp.enable then
         table.insert(
@@ -237,7 +257,7 @@ if nixcfg.codeMisc.enable then
                 }
             ),
             window = {
-                documentation = cmp.config.disable
+                -- documentation = cmp.config.disable
             },
             sources = cmp.config.sources(cmp_sources)
         }
@@ -374,8 +394,18 @@ if nixcfg.lsp.enable then
         )
     end
 
-    if nixcfg.langPython then
+    if nixcfg.langPython.enable then
         lspconfig.pyright.setup(
+            {
+                autostart = false,
+                capabilities = capabilities,
+                on_attach = common_on_attach
+            }
+        )
+    end
+
+    if nixcfg.langOcaml.enable then
+        lspconfig.ocamllsp.setup(
             {
                 autostart = false,
                 capabilities = capabilities,

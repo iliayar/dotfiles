@@ -16,6 +16,8 @@
     ./nix.nix
     ./lua.nix
     ./go.nix
+    ./ocaml.nix
+    ./sql.nix
   ];
 
 }
