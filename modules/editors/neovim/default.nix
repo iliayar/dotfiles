@@ -94,7 +94,10 @@ let
     langLatex = { autoEnable = builtins.elem "latex" cfg.langs.enable; };
     langCpp = {
       autoEnable = builtins.elem "cpp" cfg.langs.enable;
-      extraParameters = { command = toLuaArray cfg.langs.cpp.clangdCommand; };
+      extraParameters = {
+        command = toLuaArray cfg.langs.cpp.clangdCommand;
+        lsp = "\"${cfg.langs.cpp.lsp}\"";
+      };
     };
   };
 in {
@@ -117,11 +120,27 @@ in {
       langs = {
         enable = mkOption {
           default = [ "misc" ];
-          type = types.listOf
-            (types.enum [ "misc" "nix" "python" "rust" "go" "lua" "cpp" "ocaml" "sql" "latex" ]);
+          type = types.listOf (types.enum [
+            "misc"
+            "nix"
+            "python"
+            "rust"
+            "go"
+            "lua"
+            "cpp"
+            "ocaml"
+            "sql"
+            "latex"
+          ]);
         };
 
-        cpp = { clangdCommand = mkOption { default = [ "clangd" ]; }; };
+        cpp = {
+          lsp = mkOption {
+            default = "clangd";
+            type = types.enum [ "clangd" "ccls" ];
+          };
+          clangdCommand = mkOption { default = [ "clangd" ]; };
+        };
       };
 
       code-assist = { enable = mkOption { default = false; }; };
@@ -160,9 +179,10 @@ in {
         bundle = bundleDefault // bundles.${name};
         enabled = cfg.bundles.${name}.enable;
         val = if enabled then "true" else "false";
-        extraParametersConfig = foldl (acc: param: acc + ''
-          nixcfg.${name}.${param} = ${bundle.extraParameters.${param}}
-        '') "" (attrNames bundle.extraParameters);
+        extraParametersConfig = foldl (acc: param:
+          acc + ''
+            nixcfg.${name}.${param} = ${bundle.extraParameters.${param}}
+          '') "" (attrNames bundle.extraParameters);
       in mkMerge [
         (mkIf enabled {
           xdg.configFile."nvim/lua/config/nix.lua".text = extraParametersConfig;

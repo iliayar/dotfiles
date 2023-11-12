@@ -21,6 +21,19 @@ in {
       settings = {
         env = { TERM = "xterm-256color"; };
 
+        key_bindings = [
+            {
+                key = "Equals";
+                mods = "Control";
+                action = "None";
+            }
+            {
+                key = 13;
+                mods = "Control|Shift";
+                action = "IncreaseFontSize";
+            }
+        ];
+
         window = {
           padding = {
             x = 3;
@@ -33,8 +46,10 @@ in {
           { });
 
         font = {
-          normal = { family = "Fira Code"; };
-          size = 9.0;
+          normal = { family = "FiraCode Nerd Font"; style = "Regular"; };
+          bold = { family = "FiraCode Nerd Font"; style = "Bold"; };
+          italic = { family = "FiraCode Nerd Font"; style = "Italic"; };
+          size = 12.0;
         };
 
         colors = {

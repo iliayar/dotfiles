@@ -104,7 +104,8 @@
         enable = true;
         code = { enable = true; };
       };
-      langs.enable = [ "misc" "nix" "python" "rust" "go" "lua" "ocaml" "sql" "latex" ];
+      langs.enable = [ "misc" "nix" "python" "rust" "go" "lua" "ocaml" "sql" "latex" "cpp" ];
+      langs.cpp.lsp = "ccls";
       code-assist = { enable = true; };
       pretty = { status-bar.enable = true; };
     };

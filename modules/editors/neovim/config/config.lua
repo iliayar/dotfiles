@@ -80,10 +80,16 @@ if nixcfg.misc.enable then
             defaults = {
                 color_devicons = true,
                 mappings = {
-                    i = {["<C-t>"] = trouble.open_with_trouble},
+                    i = {
+                        ["<C-t>"] = trouble.open_with_trouble,
+                        ["<C-S-o>"] = require("telescope.actions.layout").toggle_preview
+                    },
                     n = {["<C-t>"] = trouble.open_with_trouble}
                 },
-                layout_strategy = "flex"
+                layout_strategy = "flex",
+                preview = {
+                    hide_on_startup = true
+                },
             },
             pickers = {
                 buffers = {
@@ -216,7 +222,7 @@ if nixcfg.codeMisc.enable then
 
     require("formatter").setup(params)
 
-    vim.keymap.set("n", "<C-=>", "<cmd>Format<CR>")
+    vim.keymap.set("n", "<C-_>", "<cmd>Format<CR>")
 
     require("snippy").setup(
         {
@@ -231,9 +237,11 @@ if nixcfg.codeMisc.enable then
     local cmp = require("cmp")
     local snippy = require("snippy")
 
-    cmp_sources = {{
-        name = "snippy",
-    }}
+    cmp_sources = {
+        {
+            name = "snippy"
+        }
+    }
 
     if nixcfg.lsp.enable then
         table.insert(
@@ -256,9 +264,7 @@ if nixcfg.codeMisc.enable then
                     ["<S-Tab>"] = cmp.mapping.confirm({select = true})
                 }
             ),
-            window = {
-                -- documentation = cmp.config.disable
-            },
+            window = {},
             sources = cmp.config.sources(cmp_sources)
         }
     )
@@ -282,9 +288,8 @@ vim.api.nvim_create_autocmd(
     }
 )
 
-
 if nixcfg.statusBar.enable then
-    params = {sections = {lualine_c = { "filename" }}}
+    params = {sections = {lualine_c = {"filename"}}}
 
     if nixcfg.lsp.enable then
         table.insert(params.sections.lualine_c, "lsp_progress")
@@ -416,16 +421,22 @@ if nixcfg.lsp.enable then
 
     if nixcfg.langCpp.enable then
         cfg = {
-                autostart = false,
-                capabilities = capabilities,
-                on_attach = common_on_attach
-            }
+            autostart = false,
+            capabilities = capabilities,
+            on_attach = common_on_attach
+        }
 
-        if nixcfg.langCpp.command then
-            cfg.cmd = nixcfg.langCpp.command
+        if nixcfg.langCpp.lsp == "clangd" then
+            if nixcfg.langCpp.command then
+                cfg.cmd = nixcfg.langCpp.command
+            end
+
+            lspconfig.clangd.setup(cfg)
         end
 
-        lspconfig.clangd.setup(cfg)
+        if nixcfg.langCpp.lsp == "ccls" then
+            lspconfig.ccls.setup(cfg)
+        end
     end
 end
 

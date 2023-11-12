@@ -21,11 +21,12 @@ in {
         (hiPrio clang)
         clang-tools
         gcc
+        ccls
       ];
     })
     (mkIf (cfg.compiler == "gcc") {
       home.packages = with pkgs; [
-        (gcc)
+        gcc
         ccls
       ];
     })

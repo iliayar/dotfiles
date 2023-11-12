@@ -80,11 +80,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    pyprland = {
-      url = "github:iliayar/pyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     anyrun = {
       url = "github:Kirottu/anyrun";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -104,13 +99,18 @@
       url = "github:iliayar/env.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    wezterm-newest = {
+      url = "git+https://github.com/wez/wezterm.git?submodules=1";
+      flake = false;
+    };
   };
 
   outputs = { self, home-manager, nixpkgs, code-stats-vim, secrets
     , emacs-overlay, libxft-bgra, xmonad-contrib-newest, xmonad-newest
     , org-roam-ui, picom-jonaburg, wakatime-cli, zsh-wakatime, tlpui-src
-    , rust-blocks, nur, flake-utils, uci, hyprland, pyprland, anyrun
-    , nwg-displays, rust-overlay, denv, ... }@inputs:
+    , rust-blocks, nur, flake-utils, uci, hyprland, anyrun, nwg-displays
+    , rust-overlay, denv, wezterm-newest, ... }@inputs:
     flake-utils.lib.eachSystem
     (with flake-utils.lib.system; [ x86_64-linux x86_64-darwin ]) (system:
       let
@@ -134,7 +134,7 @@
         specialArgs = {
           inherit home-manager code-stats-vim libxft-bgra xmonad-contrib-newest
             xmonad-newest org-roam-ui picom-jonaburg wakatime-cli zsh-wakatime
-            wallpapers mylib tlpui-src system anyrun;
+            wallpapers mylib tlpui-src system anyrun wezterm-newest;
 
           secrets = import secrets;
           themes = themes;

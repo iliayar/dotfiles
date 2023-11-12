@@ -84,6 +84,7 @@ in {
       hyprpaper
       waypaper
       wallutils
+      swww
       grim
       slurp
       wl-clipboard
@@ -582,25 +583,24 @@ in {
         }
 
         misc {
-          groupbar_gradients = false
+          # groupbar_gradients = false
           mouse_move_focuses_monitor = false
         }
 
         windowrule = opacity 0.9 0.9, ^(Spotify)$
 
         exec-once = xrandr --output ${secondMon} --primary
-        exec-once = waybar & hyprpaper & pypr
+        exec-once = waypaper --restore
+        exec-once = waybar & pypr
       '';
     };
 
     xdg.configFile."hypr/hyprpaper.conf" = {
       text = ''
         preload = /home/iliayar/Wallpapers/2moHU6q.jpg
-        preload = /home/iliayar/Wallpapers/VCafhDy.jpg
-        preload = /home/iliayar/Wallpapers/HtmoocM.jpg
 
-        wallpaper = eDP-1,/home/iliayar/Wallpapers/2moHU6q.jpg
-        wallpaper = ${secondMon},/home/iliayar/Wallpapers/VCafhDy.jpg
+        wallpaper = eDP-1,/home/iliayar/Wallpapers/mon0.jpg
+        wallpaper = ${secondMon},/home/iliayar/Wallpapers/mon1.jpg
       '';
     };
 
