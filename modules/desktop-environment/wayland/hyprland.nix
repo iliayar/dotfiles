@@ -9,29 +9,14 @@ let
     commands=(
       toggle_float
 
-      gaming
-      nogaming
-
       select_audio_output
+
+      vpn_on
+      vpn_off
       )
 
       function toggle_float() {
         hyprctl dispatch workspaceopt allfloat 
-      }
-
-      function gaming() {
-        hyprctl --batch "\
-        keyword animations:enabled 0;\
-        keyword decoration:drop_shadow 0;\
-        keyword decoration:blur:enable 0;\
-        keyword general:gaps_in 0;\
-        keyword general:gaps_out 0;\
-        keyword general:border_size 1;\
-        keyword decoration:rounding 0"
-      }
-
-      function nogaming() {
-        hyprctl reload
       }
 
       function select_audio_output() {
@@ -41,6 +26,14 @@ let
         selected_id=$(echo $devices | jq "map(select(.name == $selected)) | .[].id")
 
         wpctl set-default "$selected_id"
+      }
+
+      function vnp_on() {
+         nmcli connection up DellLaptop
+      }
+
+      function vnp_off() {
+         nmcli connection down DellLaptop
       }
 
       $(echo ''${commands[@]} | tr ' ' '\n' | bemenu)
@@ -350,7 +343,6 @@ in {
       xwayland = {
         enable = true;
       };
-      enableNvidiaPatches = true;
 
       extraConfig = ''
         $mainMod = SUPER
@@ -371,7 +363,9 @@ in {
 
           gaps_in = 0;
           gaps_out = 0;
-          border_size = 1;
+          # border_size = 5;
+
+          allow_tearing = true
         }
 
         decoration {
@@ -390,6 +384,10 @@ in {
         master {
           no_gaps_when_only = true
         }
+
+        env = WLR_DRM_NO_ATOMIC,1
+
+        windowrulev2 = immediate, class:^(cs2)$
 
         bind = $mainMod, K, layoutmsg, cycleprev
         bind = $mainMod, J, layoutmsg, cyclenext
@@ -540,15 +538,15 @@ in {
         bind = $mainMod, S, submap, scratchpads
         submap = scratchpads
 
-        bind = ,T, exec, pypr toggle term_quake
+        bind = ,T, exec, pypr toggle term-quake
         bind = ,T, submap, reset
-        $term_quake = ^(term_quake)$
+        $term_quake = ^(term-quake)$
         windowrule = workspace special silent,$term_quake
         windowrule = float,$term_quake
 
-        bind = ,N, exec, pypr toggle org_notes
+        bind = ,N, exec, pypr toggle org-notes
         bind = ,N, submap, reset
-        $org_notes = title:^(org_notes)$
+        $org_notes = title:^(org-notes)$
         windowrule = workspace special silent,$org_notes
         windowrule = float,$org_notes
 
@@ -580,6 +578,11 @@ in {
           follow_mouse = 2
           kb_layout = us,ru
           kb_options = grp:switch,grp:caps_toggle
+
+          tablet {
+            transform = 0
+            output = ${secondMon}
+          }
         }
 
         misc {
@@ -604,27 +607,19 @@ in {
       '';
     };
 
-    xdg.configFile."hypr/pyprland.json" = {
-      text = builtins.toJSON {
-        pyprland.plugins = [ "scratchpads" ];
-        scratchpads = {
-          "term_quake" = {
-            command = "wezterm start --class term_quake";
-            position = "0% 0%";
-            size = "100% 50%";
-          };
-          "org_notes" = {
-            command = "emacs -T org_notes ~/org/Notes.org";
-            position = "10% 10%";
-            size = "80% 80%";
-          };
-          "obsidian" = {
-            command = "obsidian";
-            position = "10% 10%";
-            size = "80% 80%";
-          };
-        };
-      };
-    };
+    xdg.configFile."hypr/pyprland.toml".text = ''
+      [pyprland]
+      plugins = ["scratchpads"]
+      
+      [scratchpads.term-quake]
+      command = "wezterm start --class term-quake"
+      position = "0% 0%"
+      size = "100% 50%"
+      
+      [scratchpads.org-notes]
+      command = "emacs -T org-notes ~/org/Notes.org"
+      position = "10% 10%"
+      size = "80% 80%"
+    '';
   };
 }

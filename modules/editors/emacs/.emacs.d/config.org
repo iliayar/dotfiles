@@ -43,7 +43,7 @@ Turn into window manager if enabled
 
 Default global variables
 #+begin_src emacs-lisp
-  (setq default-family "Fira Code")
+  (setq default-family "FiraCode Nerd Font")
   (setq default-height nixcfg-font-size)
 #+end_src
 
@@ -443,7 +443,12 @@ Snippets
   (use-package yasnippet
     :if nixcfg-yasnippet
     :init
-    (yas-global-mode 1))
+    (yas-global-mode 1)
+    :general
+    (
+     :states '(insert)
+     :keymaps 'override
+     "<tab>" 'yas-expand))
   (use-package yasnippet-snippets
     :if nixcfg-yasnippet-snippets)
 #+end_src
@@ -1135,4 +1140,13 @@ Hydra
 ** Extra
 #+begin_src emacs-lisp
   (load "~/.emacs.d/extra.el") 
+#+end_src
+
+* Terminal Emacs
+#+begin_src emacs-lisp
+  (defun on-after-init ()
+    (unless (display-graphic-p (selected-frame))
+      (set-face-background 'default "unspecified-bg" (selected-frame))))
+
+  (add-hook 'window-setup-hook 'on-after-init)
 #+end_src

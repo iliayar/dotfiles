@@ -28,10 +28,26 @@ if nixcfg.misc.enable then
     require("hop").setup({})
     require("nvim-web-devicons").setup()
     require("gitsigns").setup()
-    require("nvim_comment").setup(
+    require("Comment").setup(
         {
-            operator_mapping = "<Leader>cl"
+            mappings = {
+                basic = false,
+                extra = false
+            }
         }
+    )
+
+    local commentApi = require("Comment.api")
+
+    local esc = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+
+    vim.keymap.set(
+        "x",
+        "<Leader>cl",
+        function()
+            vim.api.nvim_feedkeys(esc, "nx", false)
+            commentApi.toggle.linewise(vim.fn.visualmode())
+        end
     )
 
     local hop = require("hop")
@@ -89,7 +105,7 @@ if nixcfg.misc.enable then
                 layout_strategy = "flex",
                 preview = {
                     hide_on_startup = true
-                },
+                }
             },
             pickers = {
                 buffers = {
@@ -220,9 +236,15 @@ if nixcfg.codeMisc.enable then
         }
     end
 
+    if nixcfg.langCpp.enable then
+        params.filetype["cpp"] = {
+            require("formatter.filetypes.cpp").clangformat
+        }
+    end
+
     require("formatter").setup(params)
 
-    vim.keymap.set("n", "<C-_>", "<cmd>Format<CR>")
+    vim.keymap.set("n", "<C-=>", "<cmd>Format<CR>")
 
     require("snippy").setup(
         {
@@ -438,6 +460,22 @@ if nixcfg.lsp.enable then
             lspconfig.ccls.setup(cfg)
         end
     end
+end
+
+if nixcfg.obsidian.enable then
+    require("obsidian").setup(
+        {
+            workspaces = {
+                {
+                    name = "notes",
+                    path = "~/org/obsidian/notes"
+                }
+            }
+        }
+    )
+
+    vim.keymap.set("n", "<C-c>nf", "<Cmd>ObsidianQuickSwitch<CR>")
+    vim.keymap.set("n", "<C-c>nr", "<Cmd>ObsidianSearch<CR>")
 end
 
 if nixcfg.linux and false then

@@ -97,7 +97,7 @@
     };
 
     editors.nvim = {
-      bundles = { codeStats.enable = true; };
+      bundles = { codeStats.enable = true; obsidian.enable = true; };
 
       enable = true;
       misc = {

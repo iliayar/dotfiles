@@ -8,13 +8,8 @@ let
     export __VK_LAYER_NV_optimus=NVIDIA_only
     exec -a "$0" "$@"
   '';
-in
-{
-  imports =
-    [
-      ./hardware-configuration.nix
-      ../laptop.nix
-    ];
+in {
+  imports = [ ./hardware-configuration.nix ../laptop.nix ];
 
   boot.supportedFilesystems = [ "ntfs" ];
 
@@ -44,21 +39,14 @@ in
 
   networking = {
     hostName = "NixLaptop";
-    interfaces = {
-      enp60s0.useDHCP = true;
-    }; 
-    networkmanager = {
-      enable = true;
-    };
+    interfaces = { enp60s0.useDHCP = true; };
+    networkmanager = { enable = true; };
     firewall.checkReversePath = false;
   };
 
   i18n = {
     defaultLocale = "en_US.UTF-8";
-    supportedLocales = [
-      "en_US.UTF-8/UTF-8"
-      "ru_RU.UTF-8/UTF-8"
-    ];
+    supportedLocales = [ "en_US.UTF-8/UTF-8" "ru_RU.UTF-8/UTF-8" ];
   };
 
   programs.steam.enable = true;
@@ -66,8 +54,6 @@ in
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", MODE="0666", RUN+="${pkgs.coreutils}/bin/chmod a+w /sys/class/backlight/%k/brightness"
   '';
-
-
 
   # services.xserver = {
   #   enable = true;
@@ -150,18 +136,18 @@ in
     portal = {
       enable = true;
       wlr.enable = true;
+      extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
+      config.common.default = "*";
     };
   };
 
   nix = {
     package = pkgs.nixFlakes;
-    settings = {
-      trusted-users = [ "root" "iliayar" ];
-    };
+    settings = { trusted-users = [ "root" "iliayar" ]; };
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
-  };  
+  };
 
   users.users.iliayar = {
     isNormalUser = true;
@@ -193,6 +179,8 @@ in
 
     config.boot.kernelPackages.vm-tools
     config.boot.kernelPackages.perf
+
+    xdg-utils
   ];
 
   security.sudo = {
@@ -211,4 +199,3 @@ in
   system.stateVersion = "22.05"; # Did you read the comment?
 
 }
-

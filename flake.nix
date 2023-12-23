@@ -40,16 +40,6 @@
       flake = false;
     };
 
-    xmonad-newest = {
-      url = "github:xmonad/xmonad";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    xmonad-contrib-newest = {
-      url = "github:xmonad/xmonad-contrib";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     org-roam-ui = {
       url = "github:org-roam/org-roam-ui";
       flake = false;
@@ -80,6 +70,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    pyprland = {
+      url = "github:hyprland-community/pyprland";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     anyrun = {
       url = "github:Kirottu/anyrun";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -104,13 +99,18 @@
       url = "git+https://github.com/wez/wezterm.git?submodules=1";
       flake = false;
     };
+
+    obsidian-nvim = {
+      url = "github:epwalsh/obsidian.nvim";
+      flake = false;
+    };
   };
 
   outputs = { self, home-manager, nixpkgs, code-stats-vim, secrets
-    , emacs-overlay, libxft-bgra, xmonad-contrib-newest, xmonad-newest
-    , org-roam-ui, picom-jonaburg, wakatime-cli, zsh-wakatime, tlpui-src
-    , rust-blocks, nur, flake-utils, uci, hyprland, anyrun, nwg-displays
-    , rust-overlay, denv, wezterm-newest, ... }@inputs:
+    , emacs-overlay, libxft-bgra, org-roam-ui, picom-jonaburg, wakatime-cli
+    , zsh-wakatime, tlpui-src, rust-blocks, nur, flake-utils, uci, hyprland
+    , anyrun, nwg-displays, rust-overlay, denv, wezterm-newest, pyprland
+    , obsidian-nvim, ... }@inputs:
     flake-utils.lib.eachSystem
     (with flake-utils.lib.system; [ x86_64-linux x86_64-darwin ]) (system:
       let
@@ -126,15 +126,12 @@
 
         mylib = import ./modules/lib.nix { inherit pkgs; };
 
-        wallpapers =
-          import ./modules/themes/wallpapers.nix { inherit pkgs mylib; };
-
         themes = import ./modules/themes { inherit mylib; };
 
         specialArgs = {
-          inherit home-manager code-stats-vim libxft-bgra xmonad-contrib-newest
-            xmonad-newest org-roam-ui picom-jonaburg wakatime-cli zsh-wakatime
-            wallpapers mylib tlpui-src system anyrun wezterm-newest;
+          inherit home-manager code-stats-vim libxft-bgra org-roam-ui
+            picom-jonaburg wakatime-cli zsh-wakatime mylib tlpui-src system
+            anyrun wezterm-newest pyprland obsidian-nvim;
 
           secrets = import secrets;
           themes = themes;

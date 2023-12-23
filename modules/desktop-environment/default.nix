@@ -1,4 +1,4 @@
-{ config, lib, pkgs, wallpapers, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -88,11 +88,6 @@ in
       qt = {
         enable = true;
         platformTheme = "gtk";
-      };
-
-      home.file."Wallpapers" = {
-        source = wallpapers;
-        recursive = true;
       };
 
       xdg.mimeApps = {

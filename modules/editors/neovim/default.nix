@@ -1,8 +1,14 @@
-{ config, lib, pkgs, code-stats-vim, secrets, ... }:
+{ config, lib, pkgs, code-stats-vim, secrets, obsidian-nvim, ... }:
 
 with lib;
 
 let
+  obsidian-nvim-pkg = pkgs.vimUtils.buildVimPlugin {
+    pname = "obsidian.nvim";
+    version = "2023-12-23";
+    src = obsidian-nvim;
+  };
+
   cfg = config.custom.editors.nvim;
 
   toLuaArray = l: "{ " + (foldl (acc: e: acc + ''"${e}", '') "" l) + "}";
@@ -15,7 +21,7 @@ let
         nvim-web-devicons
         hop-nvim
         gitsigns-nvim
-        nvim-comment
+        comment-nvim
 
         telescope-nvim
         telescope-fzf-native-nvim
@@ -96,9 +102,11 @@ let
       autoEnable = builtins.elem "cpp" cfg.langs.enable;
       extraParameters = {
         command = toLuaArray cfg.langs.cpp.clangdCommand;
-        lsp = "\"${cfg.langs.cpp.lsp}\"";
+        lsp = ''"${cfg.langs.cpp.lsp}"'';
       };
     };
+
+    obsidian = { plugins = with pkgs.vimPlugins; [ obsidian-nvim-pkg ]; };
   };
 in {
   options = {
