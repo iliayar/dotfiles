@@ -9,6 +9,12 @@
   home.username = "iliayar";
   home.homeDirectory = "/Users/iliayar";
 
+  denv = {
+    langs.protobuf.enable = true;
+    langs.nix.enable = true;
+    langs.lua.enable = true;
+  };
+
   custom = {
 
     hw.qmk.enable = true;
@@ -41,9 +47,13 @@
         enable = true;
         code = { enable = true; };
       };
-      langs.enable = [ "misc" "nix" "python" "rust" "go" "lua" "cpp" ];
+      langs.enable =
+        [ "misc" "nix" "python" "rust" "go" "lua" "cpp" "protobuf" ];
       code-assist = { enable = true; };
-      pretty = { status-bar.enable = true; };
+      pretty = {
+        status-bar.enable = true;
+        todo-comments.enable = true;
+      };
 
       langs.cpp.clangdCommand = [
         "clangd"
@@ -59,29 +69,15 @@
       enable = true;
       package = pkgs.emacs29-macport;
 
-      bundles = {
-        evil-integrations.enable = true;
-        code-stats.enable = true;
-      };
+      bundles = { code-stats.enable = true; };
 
-      misc = {
-        enable = true;
-        code = { enable = true; };
-      };
+      misc = { enable = true; };
 
       org = {
         roam.enable = true;
         reveal.enable = true;
         style = "v2";
       };
-
-      langs = {
-        enable = [ "nix" "cpp" "python" "misc" "rust" ];
-        cpp.ls = "clangd";
-        python.ls = "pyright";
-      };
-
-      code-assist = { enable = true; };
 
       evil = { enable = true; };
 
@@ -94,26 +90,7 @@
         ace-window.enable = true;
         avy.enable = true;
         hl-todo.enable = true;
-        lsp-ui.enable = true;
       };
-
-      extraConfig = ''
-        ; (setq ccls-initialization-options
-        ; '(:compilationDatabaseDirectory "/Users/iliayar/projects-build/.vscode"
-        ;             :cache (:directory "/Users/iliayar/projects-build/.vscode/.ccls-cache")))
-        (setq lsp-clients-clangd-args '(
-            "--background-index"
-            "--compile-commands-dir=/Users/iliayar/projects-build/.vscode" 
-            "--header-insertion=never" 
-            "--log=info"
-            "--pretty"
-            "-j=12"
-        ))
-
-        (setq projectile-indexing-method 'native)
-        (setq projectile-enable-caching t)
-        (setq trash-directory "~/.trash")
-      '';
     };
 
     de.terms = {
@@ -124,7 +101,9 @@
 
       wezterm = {
         enable = true;
-        package = pkgs.wezterm;
+        # FIXME: wezterm completely broken
+        package = pkgs.hello;
+        enableShellIntegration = false;
       };
     };
   };

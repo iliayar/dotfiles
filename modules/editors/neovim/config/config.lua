@@ -178,6 +178,23 @@ if nixcfg.misc.enable then
             neogit.open()
         end
     )
+
+    linters_by_ft = {}
+
+    if nixcfg.langProtobuf.enable then
+        linters_by_ft["protobuf"] = {"buf_lint"}
+    end
+
+    require("lint").linters_by_ft = linters_by_ft
+
+    vim.api.nvim_create_autocmd(
+        {"BufWritePost"},
+        {
+            callback = function()
+                require("lint").try_lint()
+            end
+        }
+    )
 end
 
 if nixcfg.codeMisc.enable then
@@ -318,6 +335,10 @@ if nixcfg.statusBar.enable then
     end
 
     require("lualine").setup(params)
+end
+
+if nixcfg.todoComments.enable then
+    require("todo-comments").setup({})
 end
 
 if nixcfg.lsp.enable then

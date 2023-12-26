@@ -12,6 +12,8 @@ in {
         package = mkOption {
             default = pkgs.wezterm-fixed;
         };
+
+        enableShellIntegration = mkOption { default = true; };
       };
     };
   };
@@ -20,6 +22,9 @@ in {
     programs.wezterm = {
       package = cfg.wezterm.package;
       enable = true;
+
+      enableBashIntegration = cfg.wezterm.enableShellIntegration;
+      enableZshIntegration = cfg.wezterm.enableShellIntegration;
 
       colorSchemes = {
         my-theme = {

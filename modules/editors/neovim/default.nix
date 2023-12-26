@@ -44,6 +44,11 @@ let
       plugins = with pkgs.vimPlugins; [ lualine-nvim lualine-lsp-progress ];
     };
 
+    todoComments = {
+      autoEnable = cfg.pretty.todo-comments.enable;
+      plugins = with pkgs.vimPlugins; [ todo-comments-nvim ];
+    };
+
     prettyGruvbox = {
       autoEnable = cfg.pretty.theme == "gruvbox";
       plugins = with pkgs.vimPlugins; [ gruvbox-nvim ];
@@ -60,6 +65,7 @@ let
 
         nvim-snippy
         cmp-snippy
+        nvim-lint
       ];
       config = {
         programs.neovim = { extraPackages = with pkgs; [ tree-sitter ]; };
@@ -98,6 +104,7 @@ let
     langOcaml = { autoEnable = builtins.elem "ocaml" cfg.langs.enable; };
     langSql = { autoEnable = builtins.elem "sql" cfg.langs.enable; };
     langLatex = { autoEnable = builtins.elem "latex" cfg.langs.enable; };
+    langProtobuf = { autoEnable = builtins.elem "protobuf" cfg.langs.enable; };
     langCpp = {
       autoEnable = builtins.elem "cpp" cfg.langs.enable;
       extraParameters = {
@@ -139,6 +146,7 @@ in {
             "ocaml"
             "sql"
             "latex"
+            "protobuf"
           ]);
         };
 
@@ -160,6 +168,8 @@ in {
         };
 
         status-bar.enable = mkOption { default = false; };
+
+        todo-comments.enable = mkOption { default = false; };
       };
     };
   };
