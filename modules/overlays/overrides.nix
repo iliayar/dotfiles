@@ -14,7 +14,7 @@ final: prev: {
   pyprland = pyprland.packages.${system}.default;
 
   # FIXME: wezterm broken now
-  wezterm = prev.wezterm.override {
+  wezterm-fixed = prev.wezterm.override {
     rustPlatform = prev.rustPlatform // {
       buildRustPackage = args:
         prev.rustPlatform.buildRustPackage (args // rec {

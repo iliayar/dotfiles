@@ -9,12 +9,16 @@ in {
     custom.de.terms = {
       wezterm = {
         enable = mkOption { default = false; };
+        package = mkOption {
+            default = pkgs.wezterm-fixed;
+        };
       };
     };
   };
 
-  config = mkIf cfg.alacritty.enable {
+  config = mkIf cfg.wezterm.enable {
     programs.wezterm = {
+      package = cfg.wezterm.package;
       enable = true;
 
       colorSchemes = {

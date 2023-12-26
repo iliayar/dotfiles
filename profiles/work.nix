@@ -122,7 +122,10 @@
         option_as_alt = true;
       };
 
-      wezterm.enable = true;
+      wezterm = {
+        enable = true;
+        package = pkgs.wezterm;
+      };
     };
   };
 
