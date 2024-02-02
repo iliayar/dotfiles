@@ -179,10 +179,11 @@ if nixcfg.misc.enable then
         end
     )
 
-    linters_by_ft = {}
+    require("config.linters").setup()
+    local linters_by_ft = {}
 
     if nixcfg.langProtobuf.enable then
-        linters_by_ft["protobuf"] = {"buf_lint"}
+        linters_by_ft["proto"] = {"proto_api_linter"}
     end
 
     require("lint").linters_by_ft = linters_by_ft
@@ -263,6 +264,12 @@ if nixcfg.codeMisc.enable then
     if nixcfg.langCpp.enable then
         params.filetype["cpp"] = {
             require("formatter.filetypes.cpp").clangformat
+        }
+    end
+
+    if nixcfg.langProtobuf.enable then
+        params.filetype["proto"] = {
+            require("formatter.filetypes.proto").buf_format
         }
     end
 
