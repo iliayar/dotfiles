@@ -221,5 +221,7 @@
           nixosConfigurations.NixServer = homeSrv;
           inherit homeConfigurations;
         };
+
+        homeManagerModules.default = import ./modules (specialArgs // { inherit pkgs system; });
       });
 }
