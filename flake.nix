@@ -140,7 +140,7 @@
           themes = themes;
         };
 
-        makeHomeProfile = name:
+        makeHomeProfileImpl = profile:
           home-manager.lib.homeManagerConfiguration rec {
             inherit pkgs;
             extraSpecialArgs = specialArgs // { inherit pkgs system; };
@@ -149,9 +149,11 @@
               hyprland.homeManagerModules.default
               anyrun.homeManagerModules.default
               ./modules
-              ./profiles/${name}.nix
+              profile
             ];
           };
+
+        makeHomeProfile = name: makeHomeProfileImpl ./profiles/${name}.nix;
 
         makeProfiles =
           pkgs.lib.foldl (acc: name: acc // { ${name} = makeHomeProfile name; })
@@ -222,6 +224,6 @@
           inherit homeConfigurations;
         };
 
-        homeManagerModules.default = import ./modules (specialArgs // { inherit pkgs system; });
+        makeHomeConfiguration = makeHomeProfileImpl;
       });
 }
