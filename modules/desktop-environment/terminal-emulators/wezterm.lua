@@ -4,8 +4,8 @@ local config = {}
 
 config.color_scheme = 'my-theme'
 config.window_background_opacity = 0.85
-config.font = wezterm.font 'FiraCode Nerd Font'
-config.font_size = 10
+config.font = wezterm.font 'FiraCode Nerd Font Mono'
+config.font_size = 12
 
 config.hide_tab_bar_if_only_one_tab = false
 config.tab_bar_at_bottom = true

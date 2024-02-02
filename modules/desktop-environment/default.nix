@@ -49,7 +49,7 @@ in
         nitrogen
         pcmanfm
         arandr
-        tlpui
+        # tlpui
 
         scrot
         xclip

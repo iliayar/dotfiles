@@ -22,6 +22,8 @@ in {
     programs.wezterm = {
       package = cfg.wezterm.package;
       enable = true;
+      enableZshIntegration = false;
+      enableBashIntegration = false;
 
       enableBashIntegration = cfg.wezterm.enableShellIntegration;
       enableZshIntegration = cfg.wezterm.enableShellIntegration;

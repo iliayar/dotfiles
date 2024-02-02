@@ -96,8 +96,8 @@
     };
 
     wezterm-newest = {
-      url = "git+https://github.com/wez/wezterm.git?submodules=1";
-      flake = false;
+      url = "git+https://github.com/wez/wezterm.git?dir=nix";
+      flake = true;
     };
 
     obsidian-nvim = {
@@ -120,6 +120,9 @@
         nixpkgs-config = {
           inherit system overlays;
           config.allowUnfree = true;
+          config.permittedInsecurePackages = [
+            "electron-25.9.0"
+          ];
         };
 
         pkgs = import nixpkgs nixpkgs-config;

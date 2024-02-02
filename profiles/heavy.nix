@@ -46,6 +46,7 @@
       minecraft.enable = true;
       wine.enable = true;
       lutris.enable = true;
+      click-the-circles.enable = true;
 
       extra.enable = true;
     };
@@ -66,7 +67,8 @@
         code = { enable = true; };
       };
 
-      langs.enable = [ "nix" "python" "misc" "haskell" "rust" "lua" "go" "latex" ];
+      langs.enable =
+        [ "nix" "python" "misc" "haskell" "rust" "lua" "go" "latex" ];
 
       code-assist = { enable = true; };
 
@@ -97,14 +99,19 @@
     };
 
     editors.nvim = {
-      bundles = { codeStats.enable = true; obsidian.enable = true; };
+      bundles = {
+        codeStats.enable = true;
+        obsidian.enable = true;
+        orgmode.enable = true;
+      };
 
       enable = true;
       misc = {
         enable = true;
         code = { enable = true; };
       };
-      langs.enable = [ "misc" "nix" "python" "rust" "go" "lua" "ocaml" "sql" "latex" "cpp" ];
+      langs.enable =
+        [ "misc" "nix" "python" "rust" "go" "lua" "ocaml" "sql" "latex" "cpp" ];
       langs.cpp.lsp = "ccls";
       code-assist = { enable = true; };
       pretty = { status-bar.enable = true; };

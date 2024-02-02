@@ -114,6 +114,7 @@ let
     };
 
     obsidian = { plugins = with pkgs.vimPlugins; [ obsidian-nvim-pkg ]; };
+    orgmode = { plugins = with pkgs.vimPlugins; [ orgmode ]; };
   };
 in {
   options = {

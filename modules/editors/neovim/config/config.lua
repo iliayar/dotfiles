@@ -198,13 +198,20 @@ if nixcfg.misc.enable then
 end
 
 if nixcfg.codeMisc.enable then
-    require("nvim-treesitter.configs").setup(
-        {
-            highlight = {
-                enable = true
-            }
-        }
-    )
+    treesitterConfig = {
+        highlight = {
+            enable = true,
+            additional_vim_regex_highlighting = {}
+        },
+        ensure_installed = {}
+    }
+
+    if nixcfg.orgmode.enable then
+        require("orgmode").setup_ts_grammar()
+        table.insert(treesitterConfig.highlight.additional_vim_regex_highlighting, "org")
+    end
+
+    require("nvim-treesitter.configs").setup(treesitterConfig)
     require("treesitter-context").setup(
         {
             enable = true,
@@ -497,6 +504,15 @@ if nixcfg.obsidian.enable then
 
     vim.keymap.set("n", "<C-c>nf", "<Cmd>ObsidianQuickSwitch<CR>")
     vim.keymap.set("n", "<C-c>nr", "<Cmd>ObsidianSearch<CR>")
+end
+
+if nixcfg.orgmode.enable then
+    require("orgmode").setup(
+        {
+            org_agenda_files = {"~/org/**/*"},
+            org_default_notes_file = "~/org/Notes.org"
+        }
+    )
 end
 
 if nixcfg.linux and false then

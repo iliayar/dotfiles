@@ -30,6 +30,12 @@ in
         };
       };
 
+      click-the-circles = {
+        enable = mkOption {
+          default = false;
+        };
+      };
+
       extra = {
         enable = mkOption {
           default = false;
@@ -39,6 +45,12 @@ in
   };
 
   config = mkMerge [
+    (mkIf cfg.click-the-circles.enable {
+      home.packages = with pkgs; [
+        osu-lazer-bin
+      ];
+    })
+
     (mkIf cfg.steam.tui {
       home.packages = with pkgs; [
         steam-tui
