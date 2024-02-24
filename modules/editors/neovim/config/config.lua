@@ -23,6 +23,8 @@ vim.opt.termguicolors = true
 
 vim.keymap.set("n", "<Esc>", "<Cmd>noh<CR>")
 
+vim.api.nvim_create_augroup("UserGroup", {})
+
 if nixcfg.misc.enable then
     require("nvim-surround").setup({})
     require("hop").setup({})
@@ -196,6 +198,43 @@ if nixcfg.misc.enable then
             end
         }
     )
+
+    
+    local harpoon_mark = require("harpoon.mark")
+    local harpoon_ui = require("harpoon.ui")
+    vim.keymap.set(
+        "n",
+        "<Leader>hh",
+        harpoon_ui.toggle_quick_menu
+    )
+    vim.keymap.set(
+        "n",
+        "<Leader>ha",
+        harpoon_mark.add_file
+    )
+    vim.keymap.set(
+        "n",
+        "<Leader>j",
+        harpoon_ui.nav_next
+    )
+    vim.keymap.set(
+        "n",
+        "<Leader>k",
+        harpoon_ui.nav_prev
+    )
+    for i=1,10 do
+        local key = ""
+        if i == 10 then
+            key = "0"
+        else
+            key = tostring(i)
+        end
+        vim.keymap.set(
+            "n",
+            "<Leader>h" .. key,
+            function() harpoon_ui.nav_file(i) end
+        )
+    end
 end
 
 if nixcfg.codeMisc.enable then
@@ -521,6 +560,18 @@ if nixcfg.orgmode.enable then
         }
     )
 end
+
+vim.api.nvim_create_autocmd('BufReadPost', {
+  group = "UserGroup",
+  callback = function(args)
+    local valid_line = vim.fn.line([['"]]) >= 1 and vim.fn.line([['"]]) < vim.fn.line('$')
+    local not_commit = vim.b[args.buf].filetype ~= 'commit'
+
+    if valid_line and not_commit then
+      vim.cmd([[normal! g`"]])
+    end
+  end,
+})
 
 if nixcfg.linux and false then
     -- Disable for a while. Using wayland(

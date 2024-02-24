@@ -10,9 +10,6 @@ let
       toggle_float
 
       select_audio_output
-
-      vpn_on
-      vpn_off
       )
 
       function toggle_float() {
@@ -26,14 +23,6 @@ let
         selected_id=$(echo $devices | jq "map(select(.name == $selected)) | .[].id")
 
         wpctl set-default "$selected_id"
-      }
-
-      function vnp_on() {
-         nmcli connection up DellLaptop
-      }
-
-      function vnp_off() {
-         nmcli connection down DellLaptop
       }
 
       $(echo ''${commands[@]} | tr ' ' '\n' | bemenu)
@@ -61,10 +50,23 @@ let
     notify-send -i $filename "$filename"
   '';
 
-  secondMon = "DP-5";
+  my-lock = pkgs.writeShellScriptBin "my-lock" ''
+    swayidle -w timeout 300 'swaylock -f -c 000000' \
+                timeout 600 'systemctl suspend' \
+                before-sleep 'swaylock -f -c 000000' &
+  '';
 in {
   options = {
-    custom.de.wayland.hyprland = { enable = mkOption { default = false; }; };
+    custom.de.wayland.hyprland = {
+      enable = mkOption { default = false; };
+      termCmd = mkOption { default = "wezterm"; };
+      kbOptions = mkOption { default = "grp:switch,grp:caps_toggle"; };
+      lock.enable = mkOption { default = false; };
+      startupExtra = mkOption {
+        default = [ ];
+        type = types.listOf types.str;
+      };
+    };
   };
 
   config = mkIf cfg.enable {
@@ -74,9 +76,7 @@ in {
       hyprland-commands
       xorg.xrandr
       flameshot
-      hyprpaper
       waypaper
-      wallutils
       swww
       grim
       slurp
@@ -87,270 +87,28 @@ in {
       nwg-displays
       wlr-randr
       wdisplays
+      brightnessctl
+      swayidle
+      hyprshade
     ];
-
-    programs.anyrun = {
-      # FIXME: not ready. gtk css is hard
-      enable = false;
-      config = {
-        layer = "overlay";
-        plugins = [
-          anyrun.packages.${pkgs.system}.applications
-        ];
-      };
-
-      extraCss = ''
-      window {
-        background-color: rgba(0, 0, 0, 0);
-      }
-
-      '';
-    };
-
-    programs.waybar = {
-      package = pkgs.waybar.overrideAttrs
-        (old: { mesonFlags = old.mesonFlags ++ [ "-Dexperimental=true" ]; });
-      enable = true;
-      settings = {
-        bottom = {
-          layer = "top";
-          position = "bottom";
-          height = 20;
-          output = [ secondMon ];
-          modules-left = [
-            "hyprland/submap"
-            "hyprland/workspaces"
-            "wlr/taskbar"
-            "hyprland/window"
-          ];
-          modules-center = [ "mpris" ];
-          modules-right = [
-            "network"
-            "pulseaudio"
-            "disk#ssd"
-            "disk#hdd"
-            "cpu"
-            "memory"
-            "temperature"
-            "battery"
-            "hyprland/language"
-            "clock"
-            "tray"
-          ];
-
-          "clock" = {
-            format = " {:%F (%a) %T}";
-            interval = 1;
-          };
-
-          "hyprland/language" = { format = "{short}"; };
-
-          "hyprland/submap" = { format = "submap: {}"; };
-
-          "hyprland/workspaces" = {
-            format = "{name}";
-            all-outputs = true;
-            active-only = false;
-          };
-
-          "wlr/taskbar" = {
-            icon-size = 16;
-            on-click = "activate";
-          };
-
-          "battery" = { format = " {capacity}%"; };
-
-          "temperature" = {
-            iterval = 1;
-            thermal-zone = 1;
-            format = " {temperatureC}°C";
-          };
-
-          "memory" = {
-            interval = 1;
-            format = " {avail:0.3f}G";
-          };
-
-          "cpu" = {
-            interval = 1;
-            format = " {usage}%";
-          };
-
-          "network" = {
-            interval = 1;
-            format = "{ifname}: {bandwidthDownBits} {bandwidthUpBits}";
-          };
-
-          "disk#ssd" = {
-            # FIXME: Take username from somewhere
-            path = "/home/iliayar";
-            format = "hdd: {percentage_used}%";
-          };
-
-          "disk#hdd" = {
-            path = "/";
-            format = "ssd: {percentage_used}%";
-          };
-
-          "pulseaudio" = {
-            format = " {volume}";
-            format-muted = "";
-          };
-
-          "mpris" = {
-            player = "spotify";
-            format = "{artist} - {title}";
-          };
-        };
-      };
-
-      style = ''
-        * {
-          /* `otf-font-awesome` is required to be installed for icons */
-          font-family: "FiraCode", FontAwesome;
-          font-size: 14px;
-          font-weight: bold;
-          padding: 0;
-          margin: 0;
-          border: none;
-          min-height: 0;
-          border-radius: 0px;
-        }
-
-        window#waybar {
-          background-color: ${themes.rgba.background 0.5};
-          color: ${themes.foreground};
-        }
-
-        #workspaces button {
-          color: ${themes.foreground};
-        }
-
-        #workspaces button.hidden {
-          color: ${themes.brightBlack};
-        }
-
-        #workspaces button.active {
-          box-shadow: inset 0 -3px ${themes.blue};
-        }
-
-        #workspaces button.urgent {
-          box-shadow: inset 0 -3px ${themes.red};
-        }
-
-        button:hover {
-          background: inherit;
-          box-shadow: inset 0 -3px ${themes.foreground};
-        }
-
-        #clock {
-          margin-right: 5px;
-          box-shadow: inset 0 -3px ${themes.foreground};
-        }
-
-        #submap {
-          margin-right: 5px;
-          box-shadow: inset 0 -3px ${themes.red};
-        }
-
-        #language {
-          margin-right: 5px;
-          box-shadow: inset 0 -3px ${themes.foreground};
-        }
-
-        #battery {
-          margin-right: 5px;
-          box-shadow: inset 0 -3px ${themes.green};
-        }
-
-        #temperature {
-          margin-right: 5px;
-          box-shadow: inset 0 -3px ${themes.green};
-        }
-
-        #temperature.critical {
-          box-shadow: inset 0 -3px ${themes.red};
-        }
-
-        #memory {
-          margin-right: 5px;
-          box-shadow: inset 0 -3px ${themes.foreground};
-        }
-
-        #cpu {
-          margin-right: 5px;
-          box-shadow: inset 0 -3px ${themes.foreground};
-        }
-
-        #network {
-          margin-right: 5px;
-          box-shadow: inset 0 -3px ${themes.foreground};
-        }
-
-        #disk {
-          margin-right: 5px;
-          box-shadow: inset 0 -3px ${themes.foreground};
-        }
-
-        #mpris {
-          box-shadow: inset 0 -3px ${themes.foreground};
-        }
-
-        #mpris.playing {
-          box-shadow: inset 0 -3px ${themes.green};
-        }
-
-        #mpris.paused {
-          box-shadow: inset 0 -3px ${themes.yellow};
-        }
-
-        #mpris.stopped {
-          box-shadow: inset 0 -3px ${themes.red};
-        }
-
-        #pulseaudio {
-          margin-right: 5px;
-          box-shadow: inset 0 -3px ${themes.green};
-        }
-
-        #pulseaudio.muted {
-          box-shadow: inset 0 -3px ${themes.red};
-        }
-
-        #tray > .passive {
-          -gtk-icon-effect: dim;
-        }
-
-        #tray > .needs-attention {
-          -gtk-icon-effect: highlight;
-          box-shadow: inset 0 -3px ${themes.red};
-        }
-
-        #taskbar .active {
-          box-shadow: inset 0 -3px ${themes.blue};
-        }
-
-        #window {
-          margin-left: 5px;
-          box-shadow: inset 0 -3px ${themes.foreground};
-        }
-      '';
-    };
 
     wayland.windowManager.hyprland = {
       enable = true;
 
-      xwayland = {
-        enable = true;
-      };
+      xwayland = { enable = true; };
 
-      extraConfig = ''
+      extraConfig = let
+        startupExtra = foldr (cmd: a: ''
+          exec-once = ${cmd}
+          ${a}
+        '') "" cfg.startupExtra;
+      in ''
         $mainMod = SUPER
 
         bindm = $mainMod, mouse:272, movewindow
         bindm = $mainMod, mouse:273, resizewindow
 
-        bind = $mainMod, Return, exec, wezterm
+        bind = $mainMod, Return, exec, ${cfg.termCmd}
         bind = $mainMod, D, exec, bemenu-run
         bind = $mainMod SHIFT, D, exec, j4-dmenu-desktop --dmenu=bemenu
         bind = $mainMod SHIFT, Q, killactive
@@ -386,8 +144,6 @@ in {
         }
 
         env = WLR_DRM_NO_ATOMIC,1
-
-        windowrulev2 = immediate, class:^(cs2)$
 
         bind = $mainMod, K, layoutmsg, cycleprev
         bind = $mainMod, J, layoutmsg, cyclenext
@@ -472,21 +228,17 @@ in {
         bind=,S,exec,systemctl suspend
         bind=,S,submap,reset
 
-        bind=,escape,submap,reset
-        submap = reset
-
-        # Power Management Submap
-        bind = $mainMod SHIFT, E, submap, power
-        submap = power
-
-        bind=,S,exec,systemctl suspend
-        bind=,S,submap,reset
-
         bind=,R,exec,systemctl reboot
         bind=,R,submap,reset
 
         bind=SHIFT,S,exec,systemctl poweroff
         bind=SHIFT,S,submap,reset
+
+        ${if cfg.lock.enable then ''
+          bind=,L,exec, swaylock -f -c 000000
+          bind=,L,submap,reset
+        '' else
+          ""}
 
         bind=,E,exit
         bind=,E,submap,reset
@@ -562,64 +314,61 @@ in {
         bind=,XF86AudioMute, exec, wpctl set-mute '@DEFAULT_SINK@' toggle
         bind=,XF86AudioLowerVolume, exec, wpctl set-volume '@DEFAULT_SINK@' 5%-
         bind=,XF86AudioRaiseVolume, exec, wpctl set-volume '@DEFAULT_SINK@' 5%+
+        bind=,XF86AudioMicMute, exec, wpctl set-mute '@DEFAULT_SOURCE@' toggle
+
+        bind=,XF86MonBrightnessUp, exec, brightnessctl set +10%
+        bind=,XF86MonBrightnessDown, exec, brightnessctl set 10%-
 
         $player = spotify        
         bind=,XF86AudioPlay, exec, playerctl -p $player play-pause
         bind=,XF86AudioPrev, exec, playerctl -p $player previous
         bind=,XF86AudioNext, exec, playerctl -p $player next
 
-        # monitor = ${secondMon}, preferred, auto, 1
-        # monitor = eDP-1, preferred, auto, 1
-        source = ~/.config/hypr/monitors.conf
+        monitor = ,prefrerred, auto, 1
 
         input {
           repeat_rate = 50
           repeat_delay = 200
           follow_mouse = 2
           kb_layout = us,ru
-          kb_options = grp:switch,grp:caps_toggle
+          kb_options = ${cfg.kbOptions}
 
           tablet {
             transform = 0
-            output = ${secondMon}
           }
         }
 
         misc {
           # groupbar_gradients = false
           mouse_move_focuses_monitor = false
+          disable_hyprland_logo = true
+          force_default_wallpaper = 0
         }
 
         windowrule = opacity 0.9 0.9, ^(Spotify)$
+        windowrule = float, ^(Zoom)$
 
-        exec-once = xrandr --output ${secondMon} --primary
         exec-once = waypaper --restore
         exec-once = waybar & pypr
-      '';
-    };
 
-    xdg.configFile."hypr/hyprpaper.conf" = {
-      text = ''
-        preload = /home/iliayar/Wallpapers/2moHU6q.jpg
+        # Extra startup
+        ${startupExtra}
 
-        wallpaper = eDP-1,/home/iliayar/Wallpapers/mon0.jpg
-        wallpaper = ${secondMon},/home/iliayar/Wallpapers/mon1.jpg
+        ${if cfg.lock.enable then "exec-once = ${my-lock}/bin/my-lock" else ""}
       '';
     };
 
     xdg.configFile."hypr/pyprland.toml".text = ''
       [pyprland]
-      plugins = ["scratchpads"]
-      
+      plugins = ["scratchpads", "monitors"]
+
       [scratchpads.term-quake]
       command = "wezterm start --class term-quake"
       position = "0% 0%"
       size = "100% 50%"
-      
-      [scratchpads.org-notes]
-      command = "emacs -T org-notes ~/org/Notes.org"
-      position = "10% 10%"
-      size = "80% 80%"
+
+      [monitors.placement."Samsung"]
+      rightOf = "(eDP-1)"
     '';
   };
 }

@@ -4,5 +4,6 @@
     ./sway.nix
     ./river.nix
     ./hyprland.nix
+    ./waybar.nix
   ];
 }

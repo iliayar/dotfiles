@@ -10,7 +10,7 @@ in {
       wezterm = {
         enable = mkOption { default = false; };
         package = mkOption {
-            default = pkgs.wezterm-fixed;
+            default = pkgs.wezterm;
         };
 
         enableShellIntegration = mkOption { default = true; };

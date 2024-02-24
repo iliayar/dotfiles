@@ -13,7 +13,6 @@
     langs.protobuf.enable = true;
     langs.nix.enable = true;
     langs.lua.enable = true;
-
     tools.grpc.enable = true;
   };
 

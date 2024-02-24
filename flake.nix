@@ -70,7 +70,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    pyprland = {
+    pyprland-newest = {
       url = "github:hyprland-community/pyprland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -109,7 +109,7 @@
   outputs = { self, home-manager, nixpkgs, code-stats-vim, secrets
     , emacs-overlay, libxft-bgra, org-roam-ui, picom-jonaburg, wakatime-cli
     , zsh-wakatime, tlpui-src, rust-blocks, nur, flake-utils, uci, hyprland
-    , anyrun, nwg-displays, rust-overlay, denv, wezterm-newest, pyprland
+    , anyrun, nwg-displays, rust-overlay, denv, wezterm-newest, pyprland-newest
     , obsidian-nvim, ... }@inputs:
     flake-utils.lib.eachSystem
     (with flake-utils.lib.system; [ x86_64-linux x86_64-darwin ]) (system:
@@ -134,7 +134,7 @@
         specialArgs = {
           inherit home-manager code-stats-vim libxft-bgra org-roam-ui
             picom-jonaburg wakatime-cli zsh-wakatime mylib tlpui-src system
-            anyrun wezterm-newest pyprland obsidian-nvim;
+            anyrun wezterm-newest pyprland-newest obsidian-nvim;
 
           secrets = import secrets;
           themes = themes;
@@ -159,7 +159,7 @@
           pkgs.lib.foldl (acc: name: acc // { ${name} = makeHomeProfile name; })
           { };
 
-        homeConfigurations = (makeProfiles [ "heavy" "ubuntu-virt" "work" ])
+        homeConfigurations = (makeProfiles [ "heavy" "ubuntu-virt" "work" "work-linux" ])
           // {
             wsl = home-manager.lib.homeManagerConfiguration rec {
               inherit pkgs;

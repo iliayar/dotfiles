@@ -28,6 +28,7 @@ let
         telescope-file-browser-nvim
         telescope-ui-select-nvim
         plenary-nvim
+        harpoon
 
         trouble-nvim
 
