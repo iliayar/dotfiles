@@ -13,7 +13,7 @@ in {
             default = pkgs.wezterm;
         };
 
-        enableShellIntegration = mkOption { default = true; };
+        enableShellIntegration = mkOption { default = false; };
       };
     };
   };

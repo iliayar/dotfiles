@@ -536,6 +536,16 @@ if nixcfg.lsp.enable then
             lspconfig.ccls.setup(cfg)
         end
     end
+
+    if nixcfg.langTypst.enable then
+        lspconfig.typst_lsp.setup(
+            {
+                autostart = true,
+                capabilities = capabilities,
+                on_attach = common_on_attach
+            }
+        )
+    end
 end
 
 if nixcfg.obsidian.enable then

@@ -113,6 +113,10 @@ let
         lsp = ''"${cfg.langs.cpp.lsp}"'';
       };
     };
+    langTypst = {
+      autoEnable = builtins.elem "typst" cfg.langs.enable;
+      plugins = with pkgs.vimPlugins; [ typst-vim ];
+    };
 
     obsidian = {
       autoEnable = cfg.obsidian.enable;
@@ -153,6 +157,7 @@ in {
             "sql"
             "latex"
             "protobuf"
+            "typst"
           ]);
         };
 

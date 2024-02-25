@@ -12,4 +12,5 @@ final: prev: {
   });
 
   # pyprland = pyprland-newest.packages.${system}.pyprland;
+  # wezterm = wezterm-newest.packages.${system}.default;
 }

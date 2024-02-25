@@ -18,6 +18,7 @@
     ./go.nix
     ./ocaml.nix
     ./sql.nix
+    ./typst.nix
   ];
 
 }

@@ -12,6 +12,7 @@ config.tab_bar_at_bottom = true
 config.use_fancy_tab_bar = false
 config.show_new_tab_button_in_tab_bar = false
 config.audible_bell = "Disabled"
+config.check_for_updates = false
 
 config.hide_mouse_cursor_when_typing = false
 

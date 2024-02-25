@@ -30,6 +30,7 @@
       go.enable = true;
       ocaml.enable = true;
       sql.enable = true;
+      typst.enable = true;
 
       embed.enable = true;
 
@@ -111,7 +112,7 @@
         code = { enable = true; };
       };
       langs.enable =
-        [ "misc" "nix" "python" "rust" "go" "lua" "ocaml" "sql" "latex" "cpp" ];
+        [ "misc" "nix" "python" "rust" "go" "lua" "ocaml" "sql" "latex" "cpp" "typst" ];
       langs.cpp.lsp = "ccls";
       code-assist = { enable = true; };
       pretty = { status-bar.enable = true; };
