@@ -5,8 +5,8 @@ with lib;
 let
   cfg = config.custom.de;
 
-  zoom-fixed = pkgs.writeShellScriptBin "zoom-us" ''
-    QT_XCB_GL_INTEGRATION=xcb_egl ${pkgs.zoom-us}/bin/zoom-us
+  zoom-fixed = pkgs.writeShellScriptBin "zoom" ''
+    QT_XCB_GL_INTEGRATION=xcb_egl QT_QPA_PLATFORM=xcb XDG_CURRENT_DESKTOP=GNOME ${pkgs.zoom-us}/bin/zoom $@
   '';
 in {
   imports = [
@@ -51,8 +51,6 @@ in {
         scrot
         xclip
         slop
-
-        obsidian
       ];
 
       home.sessionVariables = { TERM = "xterm-256color"; };
@@ -102,16 +100,21 @@ in {
         tdesktop
         (discord.override { withVencord = true; })
         # slack
-        zoom
+        # zoom-us
         zoom-fixed
       ];
-
       xdg.desktopEntries = {
         zoom = {
           name = "Zoom";
-          exec = "zoom-us %U";
+          exec = "zoom %U";
+          type = "Application";
           terminal = false;
-          mimeType = [ "x-scheme-handler/zoommtg" "application/x-zoom" ];
+          mimeType = [
+            "x-scheme-handler/zoommtg"
+            "application/x-zoom"
+            "x-scheme-handler/zoomus"
+            "x-scheme-handler/zoomphonecall"
+          ];
         };
       };
 
@@ -120,6 +123,7 @@ in {
           "x-scheme-handler/tg" = [ "telegramdesktop.desktop" ];
           "x-scheme-handler/zoommtg" = [ "zoom.desktop" ];
           "application/x-zoom" = [ "zoom.desktop" ];
+          "x-scheme-handler/zoomus" = [ "zoom.desktop" ];
         };
       };
     })

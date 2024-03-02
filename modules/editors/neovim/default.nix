@@ -114,7 +114,12 @@ let
       };
     };
 
-    obsidian = { plugins = with pkgs.vimPlugins; [ obsidian-nvim-pkg ]; };
+    obsidian = {
+      autoEnable = cfg.obsidian.enable;
+      plugins = with pkgs.vimPlugins; [ obsidian-nvim-pkg ];
+      extraParameters = { path = ''"${cfg.obsidian.path}"''; };
+    };
+
     orgmode = { plugins = with pkgs.vimPlugins; [ orgmode ]; };
   };
 in {
@@ -130,7 +135,6 @@ in {
 
       misc = {
         enable = mkOption { default = false; };
-
         code = { enable = mkOption { default = false; }; };
       };
 
@@ -172,6 +176,14 @@ in {
         status-bar.enable = mkOption { default = false; };
 
         todo-comments.enable = mkOption { default = false; };
+      };
+
+      obsidian = {
+        enable = mkOption { default = false; };
+        path = mkOption {
+          default = "~/org/obsidian/notes";
+          type = types.str;
+        };
       };
     };
   };

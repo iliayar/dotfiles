@@ -21,6 +21,8 @@ vim.opt.scrolloff = 10
 
 vim.opt.termguicolors = true
 
+vim.opt.conceallevel = 1
+
 vim.keymap.set("n", "<Esc>", "<Cmd>noh<CR>")
 
 vim.api.nvim_create_augroup("UserGroup", {})
@@ -542,7 +544,7 @@ if nixcfg.obsidian.enable then
             workspaces = {
                 {
                     name = "notes",
-                    path = "~/org/obsidian/notes"
+                    path = nixcfg.obsidian.path,
                 }
             }
         }

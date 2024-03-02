@@ -154,8 +154,8 @@ in {
         bind = $mainMod SHIFT, Return, layoutmsg, swapwithmaster master
         bind = $mainMod CTRL, Return, layoutmsg, focusmaster
 
-        bind = $mainMod, bracketleft, focusmonitor, l
-        bind = $mainMod, bracketright, focusmonitor, r
+        bind = $mainMod, bracketleft, focusmonitor, +1
+        bind = $mainMod, bracketright, focusmonitor, -1
 
         bind = $mainMod SHIFT, bracketleft, movewindow, mon:l
         bind = $mainMod SHIFT, bracketright, movewindow, mon:r
@@ -166,26 +166,16 @@ in {
         bind = $mainMod, print, exec, ${my-screenshot}/bin/my-screenshot e
         bind = , print, exec, ${my-screenshot}/bin/my-screenshot
 
-        bind = $mainMod, 1, moveworkspacetomonitor, 1 current
-        bind = $mainMod, 1, workspace, 1
-        bind = $mainMod, 2, moveworkspacetomonitor, 2 current
-        bind = $mainMod, 2, workspace, 2
-        bind = $mainMod, 3, moveworkspacetomonitor, 3 current
-        bind = $mainMod, 3, workspace, 3
-        bind = $mainMod, 4, moveworkspacetomonitor, 4 current
-        bind = $mainMod, 4, workspace, 4
-        bind = $mainMod, 5, moveworkspacetomonitor, 5 current
-        bind = $mainMod, 5, workspace, 5
-        bind = $mainMod, 6, moveworkspacetomonitor, 6 current
-        bind = $mainMod, 6, workspace, 6
-        bind = $mainMod, 7, moveworkspacetomonitor, 7 current
-        bind = $mainMod, 7, workspace, 7
-        bind = $mainMod, 8, moveworkspacetomonitor, 8 current
-        bind = $mainMod, 8, workspace, 8
-        bind = $mainMod, 9, moveworkspacetomonitor, 9 current
-        bind = $mainMod, 9, workspace, 9
-        bind = $mainMod, 0, moveworkspacetomonitor, 10 current
-        bind = $mainMod, 0, workspace, 10
+        bind = $mainMod, 1, focusworkspaceoncurrentmonitor, 1
+        bind = $mainMod, 2, focusworkspaceoncurrentmonitor, 2
+        bind = $mainMod, 3, focusworkspaceoncurrentmonitor, 3
+        bind = $mainMod, 4, focusworkspaceoncurrentmonitor, 4
+        bind = $mainMod, 5, focusworkspaceoncurrentmonitor, 5
+        bind = $mainMod, 6, focusworkspaceoncurrentmonitor, 6
+        bind = $mainMod, 7, focusworkspaceoncurrentmonitor, 7
+        bind = $mainMod, 8, focusworkspaceoncurrentmonitor, 8
+        bind = $mainMod, 9, focusworkspaceoncurrentmonitor, 9
+        bind = $mainMod, 0, focusworkspaceoncurrentmonitor, 10
 
         bind = $mainMod SHIFT, 1, movetoworkspace, 1
         bind = $mainMod SHIFT, 2, movetoworkspace, 2
@@ -346,7 +336,7 @@ in {
         }
 
         windowrule = opacity 0.9 0.9, ^(Spotify)$
-        windowrule = float, ^(Zoom)$
+        # windowrule = float, ^(Zoom)$
 
         exec-once = waypaper --restore
         exec-once = waybar & pypr
@@ -368,7 +358,10 @@ in {
       size = "100% 50%"
 
       [monitors.placement."Samsung"]
-      rightOf = "(eDP-1)"
+      rightOf = "California Institute"
+
+      [monitors.placement."Dell"]
+      topOf = "California Institute"
     '';
   };
 }
