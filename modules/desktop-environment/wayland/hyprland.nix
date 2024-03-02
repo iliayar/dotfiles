@@ -60,7 +60,7 @@ in {
     custom.de.wayland.hyprland = {
       enable = mkOption { default = false; };
       termCmd = mkOption { default = "wezterm"; };
-      kbOptions = mkOption { default = "grp:switch,grp:caps_toggle"; };
+      kbOptions = mkOption { default = "grp:toggle,grp:caps_toggle"; };
       lock.enable = mkOption { default = false; };
       startupExtra = mkOption {
         default = [ ];

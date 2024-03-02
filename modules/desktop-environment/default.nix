@@ -100,8 +100,8 @@ in {
         tdesktop
         (discord.override { withVencord = true; })
         # slack
-        # zoom-us
-        zoom-fixed
+        zoom-us
+        # zoom-fixed
       ];
       xdg.desktopEntries = {
         zoom = {

@@ -111,8 +111,19 @@
         enable = true;
         code = { enable = true; };
       };
-      langs.enable =
-        [ "misc" "nix" "python" "rust" "go" "lua" "ocaml" "sql" "latex" "cpp" "typst" ];
+      langs.enable = [
+        "misc"
+        "nix"
+        "python"
+        "rust"
+        "go"
+        "lua"
+        "ocaml"
+        "sql"
+        "latex"
+        "cpp"
+        "typst"
+      ];
       langs.cpp.lsp = "ccls";
       code-assist = { enable = true; };
       pretty = { status-bar.enable = true; };
@@ -175,9 +186,40 @@
 
       # pointer.enable = true;
 
-      wayland.sway.enable = false;
-      wayland.river.enable = false;
       wayland.hyprland.enable = true;
+      wayland.waybar = {
+        enable = true;
+        modules = {
+          left = ms:
+            with ms; [
+              hyprland-submap
+              hyprland-workspaces
+              wlr-taskbar
+              hyprland-window
+            ];
+          center = ms: with ms; [ mpris ];
+          right = ms:
+            with ms; [
+              network
+              pulseaudio
+              (disk {
+                name = "ssd";
+                path = "/";
+              })
+              (disk {
+                name = "hdd";
+                path = "/home/";
+              })
+              cpu
+              memory
+              temperature
+              battery
+              hyprland-language
+              clock
+              tray
+            ];
+        };
+      };
     };
   };
 

@@ -55,6 +55,16 @@ in {
     ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", MODE="0666", RUN+="${pkgs.coreutils}/bin/chmod a+w /sys/class/backlight/%k/brightness"
   '';
 
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet -t -r -c Hyprland";
+        user = "greeter";
+      };
+    };
+  };
+
   # services.xserver = {
   #   enable = true;
   #   videoDrivers = [ "nvidia" ];

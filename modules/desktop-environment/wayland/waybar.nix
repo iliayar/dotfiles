@@ -136,7 +136,7 @@ let
       id = "disk#${name}";
       config = {
         path = path;
-        format = " {percentage_used}%";
+        format = " ${name}: {percentage_used}%";
       };
       style = ''
         #disk {
