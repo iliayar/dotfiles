@@ -9,7 +9,11 @@
   home.username = "iliayar";
   home.homeDirectory = "/home/iliayar";
 
-  home.packages = with pkgs; [ xournalpp pkgs.gnome.adwaita-icon-theme obsidian ];
+  home.packages = with pkgs; [
+    xournalpp
+    pkgs.gnome.adwaita-icon-theme
+    obsidian
+  ];
 
   denv.programs.hello.enable = true;
 
@@ -186,7 +190,11 @@
 
       # pointer.enable = true;
 
-      wayland.hyprland.enable = true;
+      wayland.hyprland = {
+        enable = true;
+        portals.enable = true;
+      };
+
       wayland.waybar = {
         enable = true;
         modules = {
