@@ -592,6 +592,22 @@
     },
     "nixpkgs_4": {
       "locked": {
+        "lastModified": 1709218635,
+        "narHash": "sha256-nytX/MkfqeTD4z7bMq4QRXcHxO9B3vRo9tM6fMtPFA8=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "068d4db604958d05d0b46c47f79b507d84dbc069",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-23.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_5": {
+      "locked": {
         "lastModified": 1705403940,
         "narHash": "sha256-bl7E3w35Bleiexg01WsN0RuAQEL23HaQeNBC2zjt+9w=",
         "owner": "NixOS",
@@ -1118,17 +1134,15 @@
     "uci": {
       "inputs": {
         "flake-utils": "flake-utils_8",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
+        "nixpkgs": "nixpkgs_4",
         "rust-overlay": "rust-overlay_4"
       },
       "locked": {
-        "lastModified": 1699062058,
-        "narHash": "sha256-7O7bQo6mEGgcwzerGq+qroAfe6qFCDMrFg7EGimFZMU=",
+        "lastModified": 1709375594,
+        "narHash": "sha256-Tpc5Cd3nH04wdQT2JS0CVxOIdz8RS4jcpgtalzZiG3U=",
         "ref": "refs/heads/master",
-        "rev": "e48646629b530049f5246801a414d86c02b0d67d",
-        "revCount": 185,
+        "rev": "e8ce0905e6db21e7cb8c5073f8f09de7d0cd4826",
+        "revCount": 190,
         "type": "git",
         "url": "ssh://git@github.com/iliayar/uci.git"
       },
@@ -1159,7 +1173,7 @@
         "freetype2": "freetype2",
         "harfbuzz": "harfbuzz",
         "libpng": "libpng",
-        "nixpkgs": "nixpkgs_4",
+        "nixpkgs": "nixpkgs_5",
         "rust-overlay": "rust-overlay_5",
         "zlib": "zlib"
       },

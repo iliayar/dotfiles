@@ -55,6 +55,7 @@ in
         jq
         parallel
         mprocs
+        just
       ];
     }
     (mkIf cfg.syncthing {

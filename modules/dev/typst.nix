@@ -21,6 +21,8 @@ in
         typstfmt
         typst-lsp
         typst-live
+        polylux2pdfpc
+        pdfpc
     ];
   };
 }

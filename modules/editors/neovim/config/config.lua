@@ -243,7 +243,7 @@ if nixcfg.codeMisc.enable then
     treesitterConfig = {
         highlight = {
             enable = true,
-            additional_vim_regex_highlighting = {}
+            additional_vim_regex_highlighting = { "markdown" }
         },
         ensure_installed = {}
     }

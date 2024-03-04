@@ -9,7 +9,7 @@
   home.username = "iliayar";
   home.homeDirectory = "/home/iliayar";
 
-  home.packages = with pkgs; [ xournalpp pkgs.gnome.adwaita-icon-theme ];
+  home.packages = with pkgs; [ xournalpp pkgs.gnome.adwaita-icon-theme obsidian ];
 
   denv.programs.hello.enable = true;
 

@@ -142,15 +142,6 @@ in {
   # hardware.pulseaudio.enable = false;
   hardware.keyboard.qmk.enable = true;
 
-  xdg = {
-    portal = {
-      enable = true;
-      wlr.enable = true;
-      extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
-      config.common.default = "*";
-    };
-  };
-
   nix = {
     package = pkgs.nixFlakes;
     settings = { trusted-users = [ "root" "iliayar" ]; };

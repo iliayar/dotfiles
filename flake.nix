@@ -62,7 +62,7 @@
 
     uci = {
       url = "git+ssh://git@github.com/iliayar/uci.git";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
 
     hyprland = {

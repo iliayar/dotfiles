@@ -33,6 +33,8 @@ let
         trouble-nvim
 
         neogit
+
+        vim-just
       ];
 
       config = {
@@ -58,7 +60,8 @@ let
     codeMisc = {
       autoEnable = cfg.misc.code.enable;
       plugins = with pkgs.vimPlugins; [
-        nvim-treesitter.withAllGrammars
+        (nvim-treesitter.withPlugins
+          (ps: with ps; nvim-treesitter.allGrammars ++ [ ]))
         nvim-treesitter-context
         formatter-nvim
         nvim-cmp
