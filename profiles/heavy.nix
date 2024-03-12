@@ -13,6 +13,8 @@
     xournalpp
     pkgs.gnome.adwaita-icon-theme
     obsidian
+    aichat
+    d2
   ];
 
   denv.programs.hello.enable = true;
@@ -108,6 +110,7 @@
         codeStats.enable = true;
         obsidian.enable = true;
         orgmode.enable = true;
+        agi.enable = true;
       };
 
       enable = true;

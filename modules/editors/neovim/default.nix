@@ -128,6 +128,8 @@ let
     };
 
     orgmode = { plugins = with pkgs.vimPlugins; [ orgmode ]; };
+
+    agi = { plugins = with pkgs.vimPlugins; [ ChatGPT-nvim ]; };
   };
 in {
   options = {

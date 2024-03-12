@@ -59,6 +59,7 @@ in
       symbola
       ubuntu_font_family
       nerdfonts
+      corefonts
     ];
   };
 }

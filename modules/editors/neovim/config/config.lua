@@ -540,7 +540,7 @@ if nixcfg.lsp.enable then
     if nixcfg.langTypst.enable then
         lspconfig.typst_lsp.setup(
             {
-                autostart = true,
+                autostart = false,
                 capabilities = capabilities,
                 on_attach = common_on_attach
             }
@@ -593,4 +593,11 @@ if nixcfg.linux and false then
             command = 'call system("xsel -ib", getreg("+"))'
         }
     )
+end
+
+if nixcfg.agi then
+    local home = vim.fn.expand("$HOME")
+    require("chatgpt").setup({
+        api_key_cmd = "cat " .. home .. "/.chatgpt-key"
+    })
 end

@@ -23,6 +23,10 @@ in
       };
     };
 
+    home.packages = with pkgs; [
+        tessen
+    ];
+
     # FIXME: Seems broken
     # services.password-store-sync = {
     #   enable = true;
