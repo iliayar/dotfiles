@@ -59,7 +59,7 @@ in {
   options = {
     custom.de.wayland.hyprland = {
       enable = mkOption { default = false; };
-      termCmd = mkOption { default = "wezterm"; };
+      termCmd = mkOption { default = "WAYLAND_DISPLAY= wezterm"; };
       kbOptions = mkOption { default = "grp:toggle,grp:caps_toggle"; };
       lock.enable = mkOption { default = false; };
       startupExtra = mkOption {
@@ -96,6 +96,16 @@ in {
 
       wayland.windowManager.hyprland = {
         enable = true;
+        # wlr.enable = true;
+        extraPortals = with pkgs; [
+          xdg-desktop-portal-gtk
+          # xdg-desktop-portal-hyprland
+          xdg-desktop-portal-wlr
+        ];
+        configPackages = with pkgs; [ xdg-desktop-portal-wlr ];
+        config.common.default = "*";
+      };
+    };
 
         xwayland = { enable = true; };
 
@@ -128,22 +138,22 @@ in {
             allow_tearing = true
           }
 
-          decoration {
-            rounding = 0;
-            drop_shadow = 0;
+        decoration {
+          rounding = false;
+          drop_shadow = false;
 
-            blur {
-              enabled = 0;
-            }
-          }
-
-          animations {
-            enabled = 0;
+          blur {
+            enabled = false;
           }
 
           master {
             no_gaps_when_only = true
           }
+        }
+
+        animations {
+          enabled = false;
+        }
 
           env = WLR_DRM_NO_ATOMIC,1
 

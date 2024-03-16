@@ -63,6 +63,21 @@ in {
         user = "greeter";
       };
     };
+    vt = 6;
+  };
+
+  services.xserver = {
+    enable = false;
+    desktopManager.plasma5.enable = false;
+    displayManager.sddm.enable = false;
+
+    dpi = 96;
+
+    autoRepeatInterval = 50;
+    autoRepeatDelay = 200;
+
+    xkb.options = "grp:switch,grp:caps_toggle,altwin:swap_alt_win";
+    xkb.layout = "us,ru";
   };
 
   # services.xserver = {
@@ -178,7 +193,7 @@ in {
     virt-manager
     cachix
 
-    config.boot.kernelPackages.vm-tools
+    # config.boot.kernelPackages.vm-tools
     config.boot.kernelPackages.perf
 
     xdg-utils

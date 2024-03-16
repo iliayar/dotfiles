@@ -120,6 +120,10 @@ let
       autoEnable = builtins.elem "typst" cfg.langs.enable;
       plugins = with pkgs.vimPlugins; [ typst-vim ];
     };
+    langPlantuml = {
+      autoEnable = builtins.elem "plantuml" cfg.langs.enable;
+      plugins = with pkgs.vimPlugins; [ plantuml-syntax ];
+    };
 
     obsidian = {
       autoEnable = cfg.obsidian.enable;
@@ -163,6 +167,7 @@ in {
             "latex"
             "protobuf"
             "typst"
+            "plantuml"
           ]);
         };
 

@@ -15,6 +15,8 @@
     obsidian
     aichat
     d2
+    graphviz
+    plantuml-c4
   ];
 
   denv.programs.hello.enable = true;
@@ -110,7 +112,7 @@
         codeStats.enable = true;
         obsidian.enable = true;
         orgmode.enable = true;
-        agi.enable = true;
+        agi.enable = false;
       };
 
       enable = true;
@@ -130,6 +132,7 @@
         "latex"
         "cpp"
         "typst"
+        "plantuml"
       ];
       langs.cpp.lsp = "ccls";
       code-assist = { enable = true; };

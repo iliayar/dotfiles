@@ -595,7 +595,7 @@ if nixcfg.linux and false then
     )
 end
 
-if nixcfg.agi then
+if nixcfg.agi.enable then
     local home = vim.fn.expand("$HOME")
     require("chatgpt").setup({
         api_key_cmd = "cat " .. home .. "/.chatgpt-key"
