@@ -14,7 +14,6 @@
     pkgs.gnome.adwaita-icon-theme
     obsidian
     aichat
-    d2
     graphviz
     plantuml-c4
   ];
