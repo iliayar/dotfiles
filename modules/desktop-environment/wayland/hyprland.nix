@@ -1,4 +1,4 @@
-{ config, pkgs, lib, themes, anyrun, ... }:
+{ hyprland, config, pkgs, lib, themes, anyrun, system, ... }:
 
 with lib;
 
@@ -106,6 +106,7 @@ in {
 
       wayland.windowManager.hyprland = {
         enable = true;
+        package = hyprland.packages.${system}.default;
         xwayland = { enable = true; };
 
         extraConfig = let
@@ -295,9 +296,9 @@ in {
 
             bind = ,T, exec, pypr toggle term-quake
             bind = ,T, submap, reset
-            $term_quake = ^(term-quake)$
-            windowrule = workspace special silent,$term_quake
-            windowrule = float,$term_quake
+            # $term_quake = ^(term-quake)$
+            # windowrule = workspace special silent,$term_quake
+            # windowrule = float,$term_quake
 
             bind = ,N, exec, pypr toggle org-notes
             bind = ,N, submap, reset

@@ -67,7 +67,7 @@
 
     hyprland = {
       url = "github:hyprwm/Hyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
 
     pyprland-newest = {
@@ -134,7 +134,7 @@
         specialArgs = {
           inherit home-manager code-stats-vim libxft-bgra org-roam-ui
             picom-jonaburg wakatime-cli zsh-wakatime mylib tlpui-src system
-            anyrun wezterm-newest pyprland-newest obsidian-nvim;
+            anyrun wezterm-newest pyprland-newest obsidian-nvim hyprland;
 
           secrets = import secrets;
           themes = themes;
