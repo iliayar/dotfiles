@@ -164,7 +164,7 @@
     de = {
       misc = true;
       media = true;
-      social = true;
+      social.enable = true;
 
       browsers = {
         brave.enable = true;

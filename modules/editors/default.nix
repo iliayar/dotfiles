@@ -4,6 +4,7 @@
   imports = [
     ./neovim
     ./emacs
+    ./vscode
   ];
 
   home.packages = with pkgs; [

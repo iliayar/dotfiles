@@ -5,8 +5,12 @@ with lib;
 let
   cfg = config.custom.de;
 
-  zoom-fixed = pkgs.writeShellScriptBin "zoom" ''
-    QT_XCB_GL_INTEGRATION=xcb_egl QT_QPA_PLATFORM=xcb XDG_CURRENT_DESKTOP=GNOME ${pkgs.zoom-us}/bin/zoom $@
+  zoom-fixed = pkgs.writeShellScriptBin "zoom-fixed" ''
+    if [[ -z $WAYLAND_DISPLAY ]]; then
+        zoom $@
+    else
+        QT_XCB_GL_INTEGRATION=xcb_egl QT_QPA_PLATFORM=xcb XDG_CURRENT_DESKTOP=GNOME ${pkgs.zoom-us}/bin/zoom $@
+    fi
   '';
 in {
   imports = [
@@ -34,7 +38,10 @@ in {
 
       media = mkOption { default = false; };
 
-      social = mkOption { default = false; };
+      social = {
+        enable = mkOption { default = false; };
+        fix-zoom-non-nixos = mkOption { default = false; };
+      };
     };
   };
 
@@ -103,18 +110,16 @@ in {
       };
     })
 
-    (mkIf cfg.social {
+    (mkIf cfg.social.enable {
       home.packages = with pkgs; [
         tdesktop
         (discord.override { withVencord = true; })
-        # slack
-        zoom-us
-        # zoom-fixed
+        (if cfg.social.fix-zoom-non-nixos then zoom-fixed else zoom-us)
       ];
       xdg.desktopEntries = {
         zoom = {
           name = "Zoom";
-          exec = "zoom %U";
+          exec = "zoom-fixed %U";
           type = "Application";
           terminal = false;
           mimeType = [
