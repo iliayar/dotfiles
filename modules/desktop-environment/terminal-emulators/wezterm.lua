@@ -15,6 +15,7 @@ config.audible_bell = "Disabled"
 config.check_for_updates = false
 
 config.hide_mouse_cursor_when_typing = false
+-- config.enable_wayland = false
 
 config.window_close_confirmation = 'AlwaysPrompt'
 

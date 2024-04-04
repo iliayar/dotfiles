@@ -9,7 +9,7 @@ let
     if [[ -z $WAYLAND_DISPLAY ]]; then
         zoom $@
     else
-        QT_XCB_GL_INTEGRATION=xcb_egl QT_QPA_PLATFORM=xcb XDG_CURRENT_DESKTOP=GNOME ${pkgs.zoom-us}/bin/zoom $@
+        env -i HOME=$HOME WAYLAND_DISPLAY=$WAYLAND_DISPLAY DISPLAY=$DISPLAY XDG_SESSION_TYPE=$XDG_SESSION_TYPE DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS XDG_CURRENT_DESKTOP=GNOME zoom $@
     fi
   '';
 in {
@@ -119,7 +119,7 @@ in {
       xdg.desktopEntries = {
         zoom = {
           name = "Zoom";
-          exec = "zoom-fixed %U";
+          exec = "${zoom-fixed}/bin/zoom-fixed %U";
           type = "Application";
           terminal = false;
           mimeType = [

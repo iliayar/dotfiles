@@ -321,6 +321,7 @@ if nixcfg.codeMisc.enable then
     require("formatter").setup(params)
 
     vim.keymap.set("n", "<C-=>", "<cmd>Format<CR>")
+    vim.keymap.set("n", "<Leader>ad", "<cmd>Format<CR>")
 
     require("snippy").setup(
         {

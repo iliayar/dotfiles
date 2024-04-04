@@ -9,7 +9,6 @@ in {
     custom.de.terms = {
       alacritty = {
         enable = mkOption { default = false; };
-
         option_as_alt = mkOption { default = false; };
       };
     };
@@ -20,18 +19,17 @@ in {
       enable = true;
       settings = {
         env = { TERM = "xterm-256color"; };
-
-        key_bindings = [
-            {
-                key = "Equals";
-                mods = "Control";
-                action = "None";
-            }
-            {
-                key = 13;
-                mods = "Control|Shift";
-                action = "IncreaseFontSize";
-            }
+        keyboard.bindings = [
+          {
+            key = "Equals";
+            mods = "Control";
+            action = "None";
+          }
+          {
+            key = 13;
+            mods = "Control|Shift";
+            action = "IncreaseFontSize";
+          }
         ];
 
         window = {
@@ -46,9 +44,18 @@ in {
           { });
 
         font = {
-          normal = { family = "FiraCode Nerd Font"; style = "Regular"; };
-          bold = { family = "FiraCode Nerd Font"; style = "Bold"; };
-          italic = { family = "FiraCode Nerd Font"; style = "Italic"; };
+          normal = {
+            family = "FiraCode Nerd Font";
+            style = "Regular";
+          };
+          bold = {
+            family = "FiraCode Nerd Font";
+            style = "Bold";
+          };
+          italic = {
+            family = "FiraCode Nerd Font";
+            style = "Italic";
+          };
           size = 12.0;
         };
 
