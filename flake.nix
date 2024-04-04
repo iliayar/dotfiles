@@ -96,7 +96,7 @@
     };
 
     wezterm-newest = {
-      url = "git+https://github.com/wez/wezterm.git?dir=nix";
+      url = "git+https://github.com/fioncat/wezterm.git?dir=nix";
       flake = true;
     };
 

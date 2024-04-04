@@ -92,7 +92,15 @@ in {
     })
 
     (mkIf cfg.media {
-      home.packages = with pkgs; [ gimp vlc mpv deluge obs-studio ];
+      home.packages = with pkgs; [ gimp vlc mpv deluge ];
+      programs.obs-studio = {
+        enable = true;
+        plugins = with pkgs.obs-studio-plugins; [
+            wlrobs
+            obs-backgroundremoval
+            obs-pipewire-audio-capture
+        ];
+      };
     })
 
     (mkIf cfg.social {

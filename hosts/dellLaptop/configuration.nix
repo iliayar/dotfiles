@@ -20,7 +20,8 @@ in {
   boot.loader.efi.efiSysMountPoint = "/boot/";
 
   # boot.kernelPackages = pkgs.linuxPackages_5_15;
-  boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
+  boot.extraModulePackages = with config.boot.kernelPackages; [ nvidia_x11 v4l2loopback  ];
+  boot.kernelModules = [ "v4l2loopback" ];
 
   time.timeZone = "Europe/Moscow";
 

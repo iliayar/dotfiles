@@ -1262,18 +1262,18 @@
       },
       "locked": {
         "dir": "nix",
-        "lastModified": 1711384507,
-        "narHash": "sha256-XjNzpcgqKuz6It6wBPJYtbieFglN4KqEKB306Qvpue0=",
+        "lastModified": 1712242353,
+        "narHash": "sha256-CTNGHSRMl0EEAMWMHFpD/m12VT4JoCiOEpJ+mmf3m0s=",
         "ref": "refs/heads/main",
-        "rev": "e5ac32f297cf3dd8f6ea280c130103f3cac4dddb",
-        "revCount": 7868,
+        "rev": "c440b1dffaa0be90dd567e248163770c78781b32",
+        "revCount": 7871,
         "type": "git",
-        "url": "https://github.com/wez/wezterm.git?dir=nix"
+        "url": "https://github.com/fioncat/wezterm.git?dir=nix"
       },
       "original": {
         "dir": "nix",
         "type": "git",
-        "url": "https://github.com/wez/wezterm.git?dir=nix"
+        "url": "https://github.com/fioncat/wezterm.git?dir=nix"
       }
     },
     "wlroots": {

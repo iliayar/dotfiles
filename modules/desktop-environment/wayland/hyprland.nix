@@ -59,7 +59,7 @@ in {
   options = {
     custom.de.wayland.hyprland = {
       enable = mkOption { default = false; };
-      termCmd = mkOption { default = "WAYLAND_DISPLAY= wezterm"; };
+      termCmd = mkOption { default = "wezterm"; };
       kbOptions = mkOption { default = "grp:toggle,grp:caps_toggle"; };
       lock.enable = mkOption { default = false; };
       startupExtra = mkOption {
@@ -373,7 +373,7 @@ in {
 
         # FIXME: Not working
         [scratchpads.term-quake]
-        command = "WAYLAND_DISPLAY= wezterm start --class term-quake"
+        command = "wezterm start --class term-quake"
         class = "term-quake"
         position = "0% 0%"
         size = "100% 50%"
@@ -394,9 +394,12 @@ in {
           # wlr.enable = true;
           extraPortals = with pkgs; [
             xdg-desktop-portal-gtk
-            xdg-desktop-portal-wlr
+            # xdg-desktop-portal-wlr
+            xdg-desktop-portal-hyprland
           ];
-          configPackages = with pkgs; [ xdg-desktop-portal-wlr ];
+          configPackages = with pkgs; [ 
+            xdg-desktop-portal-hyprland 
+          ];
           config.common.default = "*";
         };
       };
