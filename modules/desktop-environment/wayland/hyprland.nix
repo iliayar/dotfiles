@@ -55,6 +55,15 @@ let
                 timeout 600 'systemctl suspend' \
                 before-sleep 'swaylock -f -c 000000' &
   '';
+
+  last-screenshot = pkgs.writeShellScriptBin "last-screenshot" ''
+    set -e
+
+    SCREENSHOTS_DIR=$HOME/Pictures/screenshots
+    FILENAME=$(ls "$SCREENSHOTS_DIR/" | sort -r | head -n 1)
+
+    echo "$SCREENSHOTS_DIR/$FILENAME"
+  '';
 in {
   options = {
     custom.de.wayland.hyprland = {
@@ -92,6 +101,7 @@ in {
         brightnessctl
         swayidle
         hyprshade
+        last-screenshot
       ];
 
       wayland.windowManager.hyprland = {
