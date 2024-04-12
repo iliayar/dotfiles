@@ -62,8 +62,8 @@ config.keys = {
 
    { key = 'p', mods = 'SHIFT|CTRL', action = act.ActivateCommandPalette },
 
-   { key = 'v', mods = 'SHIFT|CTRL', action = act.PasteFrom 'PrimarySelection' },
-   { key = 'c', mods = 'SHIFT|CTRL', action = act.CopyTo 'PrimarySelection' },
+   { key = 'v', mods = 'SHIFT|CTRL', action = act.PasteFrom 'Clipboard' },
+   { key = 'c', mods = 'SHIFT|CTRL', action = act.CopyTo 'Clipboard' },
 
    { key = 'Space', mods = 'SHIFT|CTRL', action = act.ActivateCopyMode },
 

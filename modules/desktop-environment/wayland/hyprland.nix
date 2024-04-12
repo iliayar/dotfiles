@@ -42,7 +42,7 @@ let
     fi
 
     if [ $1 == "e" ]; then
-      cat $filename | swappy -f - -o $filename
+      cat $filename | satty -f - --output-filename $filename
     fi
 
     cat $filename | wl-copy -t "image/png"
@@ -92,7 +92,7 @@ in {
         grim
         slurp
         wl-clipboard
-        swappy
+        satty
         playerctl
         pyprland
         nwg-displays
@@ -362,6 +362,12 @@ in {
             ""}
         '';
       };
+
+      xdg.configFile."satty/config.toml".text = ''
+        [general]
+        early-exit = true
+        annotation-size-factor = 1
+      '';
 
       xdg.configFile."hypr/pyprland.toml".text = ''
         [pyprland]

@@ -16,6 +16,10 @@
     aichat
     graphviz
     plantuml-c4
+
+    sonic-pi
+    pipewire.jack
+    qpwgraph
   ];
 
   denv.programs.hello.enable = true;
