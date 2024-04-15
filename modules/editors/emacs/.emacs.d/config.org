@@ -155,11 +155,14 @@ Project tree. Settings fonts for ~treemacs~
     (evil-mode 1)
     (add-to-list 'evil-emacs-state-modes 'elfeed-search)
     (cl-loop for (mode . state) in '(
-				     (dired-mode . normal)
-				     (elfeed-search-mode . emacs)
-				     (magit-status-mode . emacs))
-	     do (evil-set-initial-state mode state))
+                     (dired-mode . normal)
+                     (elfeed-search-mode . emacs)
+                     (magit-status-mode . emacs))
+         do (evil-set-initial-state mode state))
     )
+
+    (add-hook 'evil-insert-state-entry-hook (lambda () (send-string-to-terminal "\033[5 q")))
+    (add-hook 'evil-insert-state-exit-hook  (lambda () (send-string-to-terminal "\033[2 q")))
   (use-package undo-tree
     :if nixcfg-undo-tree
     :config
@@ -564,9 +567,9 @@ Mostly from this post https://kristofferbalintona.me/posts/202202270056/
     (defun corfu-enable-always-in-minibuffer ()
       "Enable Corfu in the minibuffer if Vertico/Mct are not active."
       (unless (or (bound-and-true-p mct--active) ; Useful if I ever use MCT
-		  (bound-and-true-p vertico--input))
-	(setq-local corfu-auto nil)       ; Ensure auto completion is disabled
-	(corfu-mode 1)))
+          (bound-and-true-p vertico--input))
+    (setq-local corfu-auto nil)       ; Ensure auto completion is disabled
+    (corfu-mode 1)))
      (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
 
     ;; Setup lsp to use corfu for lsp completion
@@ -574,10 +577,10 @@ Mostly from this post https://kristofferbalintona.me/posts/202202270056/
       "Use orderless completion style with lsp-capf instead of the
       default lsp-passthrough."
       (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-	    '(orderless)))
+        '(orderless)))
 
-    (general-add-advice '(corfu--setup corfu--teardown) :after 'evil-normalize-keymaps)
-    (evil-make-overriding-map corfu-map)
+    ;; (general-add-advice '(corfu--setup corfu--teardown) :after 'evil-normalize-keymaps)
+    ;; (evil-make-overriding-map corfu-map)
 
 
     :custom
@@ -617,6 +620,15 @@ Mostly from this post https://kristofferbalintona.me/posts/202202270056/
     (kind-icon-blend-frac 0.08)
     :config
     (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter) ; Enable `kind-icon'
+  )
+
+
+  (use-package corfu-terminal
+    :if nixcfg-corfu-terminal
+    :after corfu
+    :config
+    (unless (display-graphic-p)
+      (corfu-terminal-mode +1))
   )
 #+end_src
 Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.

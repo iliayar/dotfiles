@@ -46,6 +46,7 @@ let
     "dap-mode"
     "counsel-projectile"
     "corfu"
+    "corfu-terminal"
     "marginalia"
     "orderless"
     "counsel"
@@ -173,10 +174,10 @@ let
       packages = [
         "projectile"
         "magit"
-        "treemacs"
-        "treemacs-projectile"
-        "minimap"
-        "esup"
+        # "treemacs"
+        # "treemacs-projectile"
+        # "minimap"
+        # "esup"
         "which-key"
       ];
     };
@@ -196,10 +197,10 @@ let
         "sdlang-mode"
         "protobuf-mode"
         "tree-sitter-grammars"
-        "highlight-indent-guides"
-        "mermaid-mode"
+        # "highlight-indent-guides"
+        # "mermaid-mode"
 
-        "cheat-sh"
+        # "cheat-sh"
       ];
     };
 
@@ -218,7 +219,7 @@ let
     misc-code-internal-corfu = {
       auto-enable = cfg.bundles.misc-code-internal.enable
         && cfg.misc.code.completion == "corfu";
-      packages = [ "corfu" "kind-icon" ];
+      packages = [ "corfu" "kind-icon" "corfu-terminal" ];
     };
 
     langs-nix-internal = {
@@ -278,7 +279,9 @@ let
 
     evil-treemacs-internal = {
       auto-enable = cfg.evil.enable && cfg.misc.enable;
-      packages = [ "treemacs-evil" ];
+      packages = [ 
+        # "treemacs-evil" 
+      ];
     };
 
     theme-internal = {

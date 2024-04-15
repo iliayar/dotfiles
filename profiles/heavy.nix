@@ -65,13 +65,13 @@
 
     editors.emacs = {
       enable = true;
-      server = true;
+      server = false;
 
       bundles = {
         code-stats.enable = true;
         evil-integrations.enable = true;
-        web.enable = true;
-        obsidian.enable = true;
+        web.enable = false;
+        obsidian.enable = false;
       };
 
       misc = {
@@ -80,7 +80,7 @@
       };
 
       langs.enable =
-        [ "nix" "python" "misc" "haskell" "rust" "lua" "go" "latex" ];
+        [ "nix" "misc" "go" ];
 
       code-assist = { enable = true; };
 
@@ -93,20 +93,20 @@
         };
         style = "v2";
 
-        reveal.enable = true;
+        reveal.enable = false;
       };
 
       pretty = {
         theme = "doom-gruvbox";
-        extra.enable = true;
+        extra.enable = false;
         font-size = 95;
       };
 
       packages = {
-        ace-window.enable = true;
-        avy.enable = true;
-        hl-todo.enable = true;
-        lsp-ui.enable = true;
+        ace-window.enable = false;
+        avy.enable = false;
+        hl-todo.enable = false;
+        lsp-ui.enable = false;
       };
     };
 

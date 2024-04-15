@@ -14,6 +14,8 @@ config.show_new_tab_button_in_tab_bar = false
 config.audible_bell = "Disabled"
 config.check_for_updates = false
 
+config.automatically_reload_config = false
+
 config.hide_mouse_cursor_when_typing = false
 -- config.enable_wayland = false
 
