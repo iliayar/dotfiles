@@ -60,8 +60,10 @@ let
     codeMisc = {
       autoEnable = cfg.misc.code.enable;
       plugins = with pkgs.vimPlugins; [
-        (nvim-treesitter.withPlugins
-          (ps: with ps; nvim-treesitter.allGrammars ++ [ ]))
+        (nvim-treesitter.withPlugins (ps:
+          with ps;
+          nvim-treesitter.allGrammars
+          ++ cfg.misc.code.treeSitterExtraGrammars))
         nvim-treesitter-context
         formatter-nvim
         nvim-cmp
@@ -139,6 +141,9 @@ in {
   options = {
     custom.editors.nvim = {
 
+      extraPlugins = mkOption { default = []; };
+      extraConfig = mkOption { default = ""; };
+
       bundles = foldl (acc: name:
         acc // {
           "${name}".enable = mkOption { default = false; };
@@ -148,7 +153,10 @@ in {
 
       misc = {
         enable = mkOption { default = false; };
-        code = { enable = mkOption { default = false; }; };
+        code = {
+          enable = mkOption { default = false; };
+          treeSitterExtraGrammars = mkOption { default = [ ]; };
+        };
       };
 
       langs = {
@@ -267,8 +275,11 @@ in {
       programs.neovim = {
         enable = true;
         vimAlias = true;
+        plugins = cfg.extraPlugins;
         extraLuaConfig = ''
           require('config/config')
+
+          ${cfg.extraConfig}
         '';
       };
     }

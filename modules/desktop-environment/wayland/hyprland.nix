@@ -5,6 +5,7 @@ with lib;
 let
   cfg = config.custom.de.wayland.hyprland;
 
+  # TODO: Remove it and move to pypr menu
   hyprland-commands = pkgs.writeShellScriptBin "hyprland-commands" ''
     commands=(
       toggle_float
@@ -172,7 +173,7 @@ in {
           bind = $mainMod SHIFT, bracketleft, movewindow, mon:l
           bind = $mainMod SHIFT, bracketright, movewindow, mon:r
 
-          bind = $mainMod, C, exec, hyprland-commands
+          bind = $mainMod, C, exec, pypr menu
           bind = $mainMod SHIFT, print, exec, ${my-screenshot}/bin/my-screenshot e f
           bind = SHIFT, print, exec, ${my-screenshot}/bin/my-screenshot n f
           bind = $mainMod, print, exec, ${my-screenshot}/bin/my-screenshot e
@@ -371,9 +372,18 @@ in {
 
       xdg.configFile."hypr/pyprland.toml".text = ''
         [pyprland]
-        plugins = ["scratchpads", "monitors"]
+        plugins = ["scratchpads", "monitors", "shortcuts_menu"]
 
-        # FIXME: Not working
+        [shortcuts_menu]
+        engine = "bemenu"
+        parameters = "-l 10 -p '[prompt]'"
+
+        [shortcuts_menu.entries]
+        # TODO: Move from top one
+
+        "[TF] Toggle Float" = "hyprctl dispatch workspaceopt allfloat"
+        "[E] Emoji" = "${pkgs.bemoji}/bin/bemoji"
+
         [scratchpads.term-quake]
         command = "wezterm start --class term-quake"
         class = "term-quake"
@@ -387,6 +397,9 @@ in {
 
         [monitors.placement."Dell"]
         topOf = "California Institute"
+
+        [monitors.placement."Acer"]
+        rightOf = "California Institute"
       '';
     })
     (mkIf (cfg.enable && cfg.portals.enable) {

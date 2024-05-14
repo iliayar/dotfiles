@@ -168,6 +168,7 @@
     de = {
       misc = true;
       media = true;
+      obs.enable = true;
       social.enable = true;
 
       browsers = {

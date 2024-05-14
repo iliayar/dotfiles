@@ -37,6 +37,7 @@ in {
       misc = mkOption { default = false; };
 
       media = mkOption { default = false; };
+      obs.enable = mkOption { default = false; };
 
       social = {
         enable = mkOption { default = false; };
@@ -100,6 +101,9 @@ in {
 
     (mkIf cfg.media {
       home.packages = with pkgs; [ gimp vlc mpv deluge ];
+    })
+
+    (mkIf cfg.obs.enable {
       programs.obs-studio = {
         enable = true;
         plugins = with pkgs.obs-studio-plugins; [
