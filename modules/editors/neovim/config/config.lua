@@ -6,6 +6,7 @@ end
 
 vim.g.mapleader = " "
 
+vim.opt.number = true
 vim.opt.rnu = true
 vim.opt.clipboard = "unnamedplus"
 vim.opt.formatoptions = {n = true, j = true, t = true}

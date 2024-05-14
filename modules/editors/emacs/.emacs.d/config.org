@@ -579,8 +579,10 @@ Mostly from this post https://kristofferbalintona.me/posts/202202270056/
       (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
         '(orderless)))
 
-    ;; (general-add-advice '(corfu--setup corfu--teardown) :after 'evil-normalize-keymaps)
-    ;; (evil-make-overriding-map corfu-map)
+
+    (if (display-graphic-p)
+      (general-add-advice '(corfu--setup corfu--teardown) :after 'evil-normalize-keymaps)
+      (evil-make-overriding-map corfu-map))
 
 
     :custom
