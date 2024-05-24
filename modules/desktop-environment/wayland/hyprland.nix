@@ -5,29 +5,16 @@ with lib;
 let
   cfg = config.custom.de.wayland.hyprland;
 
-  # TODO: Remove it and move to pypr menu
-  hyprland-commands = pkgs.writeShellScriptBin "hyprland-commands" ''
-    commands=(
-      toggle_float
+  tools = {
+    select_audio_output = pkgs.writeShellScriptBin "select_audio_output" ''
+      devices=$(pw-dump | jq 'map(select(.info.props."device.class" == "sound")) | map(select(.info.props."media.class" == "Audio/Sink")) | map({"name": .info.props."node.nick", "id": .id})')
 
-      select_audio_output
-      )
+      selected=$(echo $devices | jq '.[].name' | bemenu)
+      selected_id=$(echo $devices | jq "map(select(.name == $selected)) | .[].id")
 
-      function toggle_float() {
-        hyprctl dispatch workspaceopt allfloat 
-      }
-
-      function select_audio_output() {
-        devices=$(pw-dump | jq 'map(select(.info.props."device.class" == "sound")) | map(select(.info.props."media.class" == "Audio/Sink")) | map({"name": .info.props."node.nick", "id": .id})')
-
-        selected=$(echo $devices | jq '.[].name' | bemenu)
-        selected_id=$(echo $devices | jq "map(select(.name == $selected)) | .[].id")
-
-        wpctl set-default "$selected_id"
-      }
-
-      $(echo ''${commands[@]} | tr ' ' '\n' | bemenu)
-  '';
+      wpctl set-default "$selected_id"
+    '';
+  };
 
   my-screenshot = pkgs.writeShellScriptBin "my-screenshot" ''
     shdir="$HOME/Pictures/screenshots"
@@ -85,7 +72,6 @@ in {
       home.packages = with pkgs; [
         bemenu
         j4-dmenu-desktop
-        hyprland-commands
         xorg.xrandr
         flameshot
         waypaper
@@ -383,6 +369,7 @@ in {
 
         "[TF] Toggle Float" = "hyprctl dispatch workspaceopt allfloat"
         "[E] Emoji" = "${pkgs.bemoji}/bin/bemoji"
+        "[AO] select Audio Output" = "${tools.select_audio_output}/bin/select_audio_output"
 
         [scratchpads.term-quake]
         command = "wezterm start --class term-quake"
@@ -411,9 +398,7 @@ in {
             # xdg-desktop-portal-wlr
             xdg-desktop-portal-hyprland
           ];
-          configPackages = with pkgs; [ 
-            xdg-desktop-portal-hyprland 
-          ];
+          configPackages = with pkgs; [ xdg-desktop-portal-hyprland ];
           config.common.default = "*";
         };
       };
