@@ -236,7 +236,7 @@ let
       packages = [
         # "company-nixos-options" # FIXME: nixos-options too slow on load
       ];
-      config = { home.packages = [ pkgs.nixfmt ]; };
+      config = { home.packages = [ pkgs.nixfmt-classic ]; };
     };
 
     vertico-internal = {

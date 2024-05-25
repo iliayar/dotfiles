@@ -1,4 +1,4 @@
-{ hyprland, config, pkgs, lib, themes, anyrun, system, ... }:
+{ config, pkgs, lib, themes, anyrun, system, ... }:
 
 with lib;
 
@@ -93,7 +93,7 @@ in {
 
       wayland.windowManager.hyprland = {
         enable = true;
-        package = hyprland.packages.${system}.default;
+        # package = hyprland.packages.${system}.default;
         xwayland = { enable = true; };
 
         extraConfig = let
@@ -115,8 +115,6 @@ in {
 
           general {
             layout = master
-
-            no_cursor_warps = true
 
             gaps_in = 0;
             gaps_out = 0;
@@ -142,6 +140,10 @@ in {
             enabled = false;
           }
 
+          cursor {
+            no_warps = true;
+          }
+
           env = WLR_DRM_NO_ATOMIC,1
 
           bind = $mainMod, K, layoutmsg, cycleprev
@@ -160,6 +162,7 @@ in {
           bind = $mainMod SHIFT, bracketright, movewindow, mon:r
 
           bind = $mainMod, C, exec, pypr menu
+          bind = $mainMod, T, exec, pypr toggle term-quake
           bind = $mainMod SHIFT, print, exec, ${my-screenshot}/bin/my-screenshot e f
           bind = SHIFT, print, exec, ${my-screenshot}/bin/my-screenshot n f
           bind = $mainMod, print, exec, ${my-screenshot}/bin/my-screenshot e
@@ -376,8 +379,6 @@ in {
         class = "term-quake"
         position = "0% 0%"
         size = "100% 50%"
-        maring = 0
-        preserve_aspect = true
 
         [monitors.placement."Samsung"]
         rightOf = "California Institute"

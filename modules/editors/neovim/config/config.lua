@@ -254,7 +254,7 @@ if nixcfg.codeMisc.enable then
     }
 
     if nixcfg.orgmode.enable then
-        require("orgmode").setup_ts_grammar()
+        -- require("orgmode").setup_ts_grammar()
         table.insert(treesitterConfig.highlight.additional_vim_regex_highlighting, "org")
     end
 

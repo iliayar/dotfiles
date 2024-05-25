@@ -65,11 +65,6 @@
       # inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hyprland = {
-      url = "github:hyprwm/Hyprland";
-      # inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     pyprland-newest = {
       url = "github:hyprland-community/pyprland";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -96,7 +91,7 @@
     };
 
     wezterm-newest = {
-      url = "git+https://github.com/fioncat/wezterm.git?dir=nix";
+      url = "github:wez/wezterm?dir=nix";
       flake = true;
     };
 
@@ -108,8 +103,8 @@
 
   outputs = { self, home-manager, nixpkgs, code-stats-vim, secrets
     , emacs-overlay, libxft-bgra, org-roam-ui, picom-jonaburg, wakatime-cli
-    , zsh-wakatime, tlpui-src, rust-blocks, nur, flake-utils, uci, hyprland
-    , anyrun, nwg-displays, rust-overlay, denv, wezterm-newest, pyprland-newest
+    , zsh-wakatime, tlpui-src, rust-blocks, nur, flake-utils, uci, anyrun
+    , nwg-displays, rust-overlay, denv, wezterm-newest, pyprland-newest
     , obsidian-nvim, ... }@inputs:
     flake-utils.lib.eachSystem
     (with flake-utils.lib.system; [ x86_64-linux x86_64-darwin ]) (system:
@@ -120,9 +115,7 @@
         nixpkgs-config = {
           inherit system overlays;
           config.allowUnfree = true;
-          config.permittedInsecurePackages = [
-            "electron-25.9.0"
-          ];
+          config.permittedInsecurePackages = [ "electron-25.9.0" ];
         };
 
         pkgs = import nixpkgs nixpkgs-config;
@@ -134,7 +127,7 @@
         specialArgs = {
           inherit home-manager code-stats-vim libxft-bgra org-roam-ui
             picom-jonaburg wakatime-cli zsh-wakatime mylib tlpui-src system
-            anyrun wezterm-newest pyprland-newest obsidian-nvim hyprland;
+            anyrun wezterm-newest pyprland-newest obsidian-nvim;
 
           secrets = import secrets;
           themes = themes;
@@ -146,7 +139,6 @@
             extraSpecialArgs = specialArgs // { inherit pkgs system; };
             modules = [
               denv.homeManagerModules.default
-              hyprland.homeManagerModules.default
               anyrun.homeManagerModules.default
               ./modules
               profile
@@ -159,8 +151,8 @@
           pkgs.lib.foldl (acc: name: acc // { ${name} = makeHomeProfile name; })
           { };
 
-        homeConfigurations = (makeProfiles [ "heavy" "ubuntu-virt" "work" "work-linux" ])
-          // {
+        homeConfigurations =
+          (makeProfiles [ "heavy" "ubuntu-virt" "work" "work-linux" ]) // {
             wsl = home-manager.lib.homeManagerConfiguration rec {
               inherit pkgs;
               extraSpecialArgs = specialArgs // { inherit pkgs system; };
