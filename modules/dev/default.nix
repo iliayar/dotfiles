@@ -19,6 +19,7 @@
     ./ocaml.nix
     ./sql.nix
     ./typst.nix
+    ./lean.nix
   ];
 
 }

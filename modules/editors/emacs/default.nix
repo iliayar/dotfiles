@@ -123,9 +123,11 @@ let
     "org-special-block-extras"
     "ox-json"
     "ox-reveal"
+    "ox-gfm"
     "php-mode"
     "projectile"
     "proof-general"
+    "lean4-mode"
     "rainbow-delimiters"
     "rjsx-mode"
     "rustic"
@@ -453,7 +455,7 @@ let
       packages = [ "company-solidity" ];
     };
 
-    proof-assist = { packages = [ "proof-general" ]; };
+    proof-assist = { packages = [ "proof-general" "lean4-mode" ]; };
 
     proff-assist-company = {
       auto-enable = cfg.bundles.proof-assist.enable && cfg.misc.code.enable
@@ -478,7 +480,7 @@ let
 
     org-misc-internal = {
       auto-enable = true;
-      packages = [ "ob-mermaid" ];
+      packages = [ "ob-mermaid" "ox-gfm" ];
     };
 
     org-extra-internal = {

@@ -206,30 +206,13 @@ if nixcfg.misc.enable then
         }
     )
 
-    
     local harpoon_mark = require("harpoon.mark")
     local harpoon_ui = require("harpoon.ui")
-    vim.keymap.set(
-        "n",
-        "<Leader>hh",
-        harpoon_ui.toggle_quick_menu
-    )
-    vim.keymap.set(
-        "n",
-        "<Leader>ha",
-        harpoon_mark.add_file
-    )
-    vim.keymap.set(
-        "n",
-        "<Leader>j",
-        harpoon_ui.nav_next
-    )
-    vim.keymap.set(
-        "n",
-        "<Leader>k",
-        harpoon_ui.nav_prev
-    )
-    for i=1,10 do
+    vim.keymap.set("n", "<Leader>hh", harpoon_ui.toggle_quick_menu)
+    vim.keymap.set("n", "<Leader>ha", harpoon_mark.add_file)
+    vim.keymap.set("n", "<Leader>j", harpoon_ui.nav_next)
+    vim.keymap.set("n", "<Leader>k", harpoon_ui.nav_prev)
+    for i = 1, 10 do
         local key = ""
         if i == 10 then
             key = "0"
@@ -239,7 +222,9 @@ if nixcfg.misc.enable then
         vim.keymap.set(
             "n",
             "<Leader>h" .. key,
-            function() harpoon_ui.nav_file(i) end
+            function()
+                harpoon_ui.nav_file(i)
+            end
         )
     end
 end
@@ -248,7 +233,7 @@ if nixcfg.codeMisc.enable then
     treesitterConfig = {
         highlight = {
             enable = true,
-            additional_vim_regex_highlighting = { "markdown" }
+            additional_vim_regex_highlighting = {"markdown"}
         },
         ensure_installed = {}
     }
@@ -552,6 +537,23 @@ if nixcfg.lsp.enable then
             }
         )
     end
+
+    if nixcfg.langHaskell.enable then
+        lspconfig.hls.setup(
+            {
+                autostart = false,
+                capabilities = capabilities,
+                on_attach = common_on_attach
+            }
+        )
+    end
+
+    if nixcfg.langLean.enable then
+        require("lean").setup {
+            lsp = {on_attach = common_on_attach},
+            mappings = true
+        }
+    end
 end
 
 if nixcfg.obsidian.enable then
@@ -560,7 +562,7 @@ if nixcfg.obsidian.enable then
             workspaces = {
                 {
                     name = "notes",
-                    path = nixcfg.obsidian.path,
+                    path = nixcfg.obsidian.path
                 }
             }
         }
@@ -579,17 +581,20 @@ if nixcfg.orgmode.enable then
     )
 end
 
-vim.api.nvim_create_autocmd('BufReadPost', {
-  group = "UserGroup",
-  callback = function(args)
-    local valid_line = vim.fn.line([['"]]) >= 1 and vim.fn.line([['"]]) < vim.fn.line('$')
-    local not_commit = vim.b[args.buf].filetype ~= 'commit'
+vim.api.nvim_create_autocmd(
+    "BufReadPost",
+    {
+        group = "UserGroup",
+        callback = function(args)
+            local valid_line = vim.fn.line([['"]]) >= 1 and vim.fn.line([['"]]) < vim.fn.line("$")
+            local not_commit = vim.b[args.buf].filetype ~= "commit"
 
-    if valid_line and not_commit then
-      vim.cmd([[normal! g`"]])
-    end
-  end,
-})
+            if valid_line and not_commit then
+                vim.cmd([[normal! g`"]])
+            end
+        end
+    }
+)
 
 if nixcfg.linux and false then
     -- Disable for a while. Using wayland(
@@ -603,7 +608,9 @@ end
 
 if nixcfg.agi.enable then
     local home = vim.fn.expand("$HOME")
-    require("chatgpt").setup({
-        api_key_cmd = "cat " .. home .. "/.chatgpt-key"
-    })
+    require("chatgpt").setup(
+        {
+            api_key_cmd = "cat " .. home .. "/.chatgpt-key"
+        }
+    )
 end

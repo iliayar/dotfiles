@@ -62,8 +62,7 @@ let
       plugins = with pkgs.vimPlugins; [
         (nvim-treesitter.withPlugins (ps:
           with ps;
-          nvim-treesitter.allGrammars
-          ++ cfg.misc.code.treeSitterExtraGrammars))
+          nvim-treesitter.allGrammars ++ cfg.misc.code.treeSitterExtraGrammars))
         nvim-treesitter-context
         formatter-nvim
         nvim-cmp
@@ -126,6 +125,12 @@ let
       autoEnable = builtins.elem "plantuml" cfg.langs.enable;
       plugins = with pkgs.vimPlugins; [ plantuml-syntax ];
     };
+    langHaskell = { autoEnable = builtins.elem "haskell" cfg.langs.enable; };
+
+    langLean = { 
+        autoEnable = builtins.elem "lean" cfg.langs.enable; 
+        plugins = with pkgs.vimPlugins; [ lean-nvim ];
+    };
 
     obsidian = {
       autoEnable = cfg.obsidian.enable;
@@ -141,7 +146,7 @@ in {
   options = {
     custom.editors.nvim = {
 
-      extraPlugins = mkOption { default = []; };
+      extraPlugins = mkOption { default = [ ]; };
       extraConfig = mkOption { default = ""; };
 
       bundles = foldl (acc: name:
@@ -176,6 +181,8 @@ in {
             "protobuf"
             "typst"
             "plantuml"
+            "haskell"
+            "lean"
           ]);
         };
 

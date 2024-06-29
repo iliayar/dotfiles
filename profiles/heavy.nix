@@ -22,7 +22,7 @@
     qpwgraph
   ];
 
-  denv.programs.hello.enable = true;
+  denv = { langs.haskell.enable = true; };
 
   custom = {
 
@@ -49,6 +49,8 @@
       uci.daemon = true;
 
       train.enable = true;
+
+      lean.enable = true;
     };
 
     study.sage.enable = true;
@@ -72,6 +74,8 @@
         evil-integrations.enable = true;
         web.enable = false;
         obsidian.enable = false;
+
+        proof-assist.enable = true;
       };
 
       misc = {
@@ -79,10 +83,12 @@
         code = { enable = true; };
       };
 
-      langs.enable =
-        [ "nix" "misc" "go" ];
+      langs.enable = [ "nix" "misc" "go" "haskell" ];
 
-      code-assist = { enable = true; };
+      code-assist = {
+        enable = true;
+        pretty.enable = true;
+      };
 
       evil = { enable = true; };
 
@@ -99,7 +105,7 @@
       pretty = {
         theme = "doom-gruvbox";
         extra.enable = false;
-        font-size = 95;
+        font-size = 120;
       };
 
       packages = {
@@ -136,6 +142,8 @@
         "cpp"
         "typst"
         "plantuml"
+        "haskell"
+        "lean"
       ];
       langs.cpp.lsp = "ccls";
       code-assist = { enable = true; };

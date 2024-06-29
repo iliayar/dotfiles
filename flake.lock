@@ -46,17 +46,14 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1707818659,
-        "narHash": "sha256-LTWqD2RYvJt7rRG8WvSJw8Yldf38G4eB9x4HMi/+xWs=",
-        "owner": "iliayar",
-        "repo": "env.nix",
-        "rev": "cfb6ccf27443149ac4ec63debd3e2a8dadaf98b9",
-        "type": "github"
+        "lastModified": 1716670403,
+        "narHash": "sha256-BhMxDpdFEkcgAPbpVaudR8/OBjOUGdMkc+ClhSwt/Qs=",
+        "path": "/home/iliayar/Repos/env.nix",
+        "type": "path"
       },
       "original": {
-        "owner": "iliayar",
-        "repo": "env.nix",
-        "type": "github"
+        "path": "/home/iliayar/Repos/env.nix",
+        "type": "path"
       }
     },
     "emacs-overlay": {
@@ -382,6 +379,22 @@
         "type": "github"
       }
     },
+    "lean4-mode": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1715638931,
+        "narHash": "sha256-U6MJIcBZf1XrUnssipgEy0BhF4/zhKVWblUvNqKNQe0=",
+        "owner": "leanprover-community",
+        "repo": "lean4-mode",
+        "rev": "da7b63d854d010d621e2c82a53d6ae2d94dd53b0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "leanprover-community",
+        "repo": "lean4-mode",
+        "type": "github"
+      }
+    },
     "libpng": {
       "flake": false,
       "locked": {
@@ -691,6 +704,7 @@
         "emacs-overlay": "emacs-overlay",
         "flake-utils": "flake-utils_3",
         "home-manager": "home-manager",
+        "lean4-mode": "lean4-mode",
         "libxft-bgra": "libxft-bgra",
         "nixpkgs": "nixpkgs",
         "nur": "nur",

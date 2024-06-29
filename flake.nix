@@ -45,6 +45,11 @@
       flake = false;
     };
 
+    lean4-mode = {
+      url = "github:leanprover-community/lean4-mode";
+      flake = false;
+    };
+
     picom-jonaburg = {
       url = "github:jonaburg/picom";
       flake = false;
@@ -86,7 +91,8 @@
     };
 
     denv = {
-      url = "github:iliayar/env.nix";
+      # url = "github:iliayar/env.nix";
+      url = "path:/home/iliayar/Repos/env.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -105,7 +111,7 @@
     , emacs-overlay, libxft-bgra, org-roam-ui, picom-jonaburg, wakatime-cli
     , zsh-wakatime, tlpui-src, rust-blocks, nur, flake-utils, uci, anyrun
     , nwg-displays, rust-overlay, denv, wezterm-newest, pyprland-newest
-    , obsidian-nvim, ... }@inputs:
+    , obsidian-nvim, lean4-mode, ... }@inputs:
     flake-utils.lib.eachSystem
     (with flake-utils.lib.system; [ x86_64-linux x86_64-darwin ]) (system:
       let
@@ -127,7 +133,7 @@
         specialArgs = {
           inherit home-manager code-stats-vim libxft-bgra org-roam-ui
             picom-jonaburg wakatime-cli zsh-wakatime mylib tlpui-src system
-            anyrun wezterm-newest pyprland-newest obsidian-nvim;
+            anyrun wezterm-newest pyprland-newest obsidian-nvim lean4-mode;
 
           secrets = import secrets;
           themes = themes;

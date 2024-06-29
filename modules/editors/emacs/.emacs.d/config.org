@@ -161,8 +161,10 @@ Project tree. Settings fonts for ~treemacs~
          do (evil-set-initial-state mode state))
     )
 
+  (unless (display-graphic-p)
     (add-hook 'evil-insert-state-entry-hook (lambda () (send-string-to-terminal "\033[5 q")))
-    (add-hook 'evil-insert-state-exit-hook  (lambda () (send-string-to-terminal "\033[2 q")))
+    (add-hook 'evil-insert-state-exit-hook  (lambda () (send-string-to-terminal "\033[2 q"))))
+
   (use-package undo-tree
     :if nixcfg-undo-tree
     :config
@@ -448,10 +450,11 @@ Snippets
     :init
     (yas-global-mode 1)
     :general
-    (
-     :states '(insert)
-     :keymaps 'override
-     "<tab>" 'yas-expand))
+    ;; (
+    ;;  :states '(insert)
+    ;;  :keymaps 'override
+    ;;  "TAB" 'yas-expand)
+    )
   (use-package yasnippet-snippets
     :if nixcfg-yasnippet-snippets)
 #+end_src
@@ -557,6 +560,7 @@ Mostly from this post https://kristofferbalintona.me/posts/202202270056/
   (use-package corfu
     :if nixcfg-corfu
     :hook (corfu-mode . corfu-popupinfo-mode)
+    :after (evil)
     :config
     (global-corfu-mode)
 
@@ -578,11 +582,6 @@ Mostly from this post https://kristofferbalintona.me/posts/202202270056/
       default lsp-passthrough."
       (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
         '(orderless)))
-
-
-    (if (display-graphic-p)
-      (general-add-advice '(corfu--setup corfu--teardown) :after 'evil-normalize-keymaps)
-      (evil-make-overriding-map corfu-map))
 
 
     :custom
@@ -610,7 +609,8 @@ Mostly from this post https://kristofferbalintona.me/posts/202202270056/
      ;; "M-d" #'corfu-popupinfo-toggle
      ;; "M-n" #'corfu-popupinfo-scroll-up
      ;; "M-p" #'corfu-popupinfo-scroll-down
-     ))
+     )
+  )
 
   (use-package kind-icon
     :if nixcfg-kind-icon
@@ -727,6 +727,11 @@ Coq, ...
     :if nixcfg-company-coq)
 #+end_src
 
+#+begin_src emacs-lisp
+  (use-package lean4-mode
+    :if nixcfg-lean4-mode)
+#+end_src
+
 
 Bison, flex
 #+begin_src emacs-lisp
@@ -748,66 +753,66 @@ Nix, and completion
 Lsp client. Speeding up 🛹, adding folders to not track. \\
 Add to hook =(XXX-mode . lsp)= for auto enabling lsp on /XXX-mode/
 #+begin_src emacs-lisp
-  (use-package lsp-mode
-    :if nixcfg-lsp-mode
-    :hook (
-	   (lsp-mode . lsp-enable-which-key-integration) 
-	   )
-    :config
-    (setq read-process-output-max (* 1024 1024))
-    (setq lsp-file-watch-ignored
-	  '("build"
-	    "out"
-	    "target"
-	    "release"
-	    ".git"
-	    ))
-    (setq lsp-log-io nil)
-    (setq lsp-idle-delay 0.500)
-    (setq lsp-lens-enable nil)
+    (use-package lsp-mode
+      :if nixcfg-lsp-mode
+      :hook (
+         (lsp-mode . lsp-enable-which-key-integration) 
+         )
+      :config
+      (setq read-process-output-max (* 1024 1024))
+      (setq lsp-file-watch-ignored
+        '("build"
+          "out"
+          "target"
+          "release"
+          ".git"
+          ))
+      (setq lsp-log-io nil)
+      (setq lsp-idle-delay 0.500)
+      (setq lsp-lens-enable nil)
 
-    (setq lsp-signature-doc-lines 5)
+      (setq lsp-signature-doc-lines 5)
 
-    :general
+      :general
 
-    (
-     :states '(normal visual emacs insert treemacs)
-     :prefix "SPC"
-     :non-normal-prefix "M-SPC"
-     :keymaps 'override
-     "ca" 'lsp-execute-code-action
-     "cr" 'lsp-rename
-     "sl" 'lsp
-     "sr" 'lsp-workspace-restart
-     "ss" 'lsp-workspace-shutdown
-     "sd" 'lsp-describe-thing-at-point))
-  (use-package lsp-ui
-    :if nixcfg-lsp-ui
-    :config
-    (setq lsp-ui-doc-enable t)
-    (setq lsp-ui-doc-delay 2)
-    (setq lsp-ui-doc-show-with-cursor t)
-    :general
-    (
-     :states '(normal visual)
-     :keymaps 'override
-     "gsx" 'lsp-ui-peek-find-references
-     "gsd" 'lsp-ui-peek-find-definitions)
-
-    (
-     :states '(normal visual emacs insert treemacs)
-     :prefix "SPC"
-     :non-normal-prefix "M-SPC"
-     :keymaps 'override
-     "se" 'lsp-ui-flycheck-list))
-
-  (if (not nixcfg-lsp-ui)
-      (general-define-key
+      (
+       :states '(normal visual emacs insert treemacs)
+       :prefix "SPC"
+       :non-normal-prefix "M-SPC"
+       :keymaps 'override
+       "ca" 'lsp-execute-code-action
+       "cr" 'lsp-rename
+       "sl" 'lsp
+       "sr" 'lsp-workspace-restart
+       "ss" 'lsp-workspace-shutdown
+       "sd" 'lsp-describe-thing-at-point))
+    (use-package lsp-ui
+      :if nixcfg-lsp-ui
+      :config
+      (setq lsp-ui-doc-enable nil)
+      :general
+      (
        :states '(normal visual)
        :keymaps 'override
-       "gsx" 'lsp-find-references
-       "gsd" 'lsp-find-definition
-       ))
+       "gsx" 'lsp-ui-peek-find-references
+       "gsd" 'lsp-ui-peek-find-definitions
+       "K" 'lsp-ui-doc-glance
+      )
+
+      (
+       :states '(normal visual emacs insert treemacs)
+       :prefix "SPC"
+       :non-normal-prefix "M-SPC"
+       :keymaps 'override
+       "se" 'lsp-ui-flycheck-list))
+
+    (if (not nixcfg-lsp-ui)
+        (general-define-key
+         :states '(normal visual)
+         :keymaps 'override
+         "gsx" 'lsp-find-references
+         "gsd" 'lsp-find-definition
+         ))
 #+end_src
 Syntax checking and lsp related errors/warnings. Posfrmae stil sucks
 #+BEGIN_SRC emacs-lisp
@@ -1059,11 +1064,6 @@ Helper functions for university labs
 
 #+begin_src emacs-lisp
   (general-define-key
-   :state '(normal)
-   :keymaps '(org-mode-map)
-   "<tab>" 'org-cycle)
-
-  (general-define-key
    :states '(normal visual emacs insert treemacs)
    :prefix "SPC"
    :non-normal-prefix "M-SPC"
@@ -1101,11 +1101,11 @@ Hydra
     "
       Window Resize
       -------------
-	   /\\
-	    _k_
+	      /\\
+	       _k_
       < _h_     _l_ >
-	    _j_
-	    v
+	      _j_
+	      v
       "
     ("h" evil-window-decrease-width)
     ("l" evil-window-increase-width)
@@ -1119,36 +1119,6 @@ Hydra
 #+begin_src emacs-lisp
   (custom-set-faces
    `(default ((t (:family ,default-family :height ,default-height)))))
-
-  ;; (custom-set-faces
-  ;;  `(ivy-current-match ((t (:foreground "white smoke" :background "dark orange" :extend t))))
-  ;;  `(treemacs-root-face ((t (:family ,default-family :height ,default-height))))
-  ;;  `(treemacs-git-unmodified-face ((t (:family ,default-family :height ,default-height))))
-  ;;  `(treemacs-git-modified-face ((t (:family ,default-family :height ,default-height))))
-  ;;  `(treemacs-git-renamed-face ((t (:family ,default-family :height ,default-height))))
-  ;;  `(treemacs-git-ignored-face ((t (:family ,default-family :height ,default-height))))
-  ;;  `(treemacs-git-untracked-face ((t (:family ,default-family :height ,default-height))))
-  ;;  `(treemacs-git-added-face ((t (:family ,default-family :height ,default-height))))
-  ;;  `(treemacs-git-conflict-face ((t (:family ,default-family :height ,default-height))))
-  ;;  `(treemacs-directory-face ((t (:family ,default-family :height ,default-height))))
-  ;;  `(treemacs-directory-collapsed-face ((t (:family ,default-family :height ,default-height))))
-  ;;  `(treemacs-file-face ((t (:family ,default-family :height ,default-height))))
-  ;;  `(treemacs-tags-face ((t (:family ,default-family :height ,default-height))))
-  ;;  `(default ((t (:family ,default-family :height ,default-height))))
-  ;;  `(italic ((t (:slant italic :family "Ubuntu Mono" :height ,default-height))))
-  ;;  `(org-block ((t (:extend t))))
-  ;;  `(org-block-begin-line ((t (:extend t :overline nil :underline t))))
-  ;;  `(org-block-end-line ((t (:inherit org-block-begin-line :extend t :overline t :underline nil))))
-  ;;  `(org-document-title ((t (:weight bold :height 1.3))))
-  ;;  `(org-ellipsis ((t (:foreground "red"))))
-  ;;  `(org-footnote ((t (:weight extra-bold :height 0.7))))
-  ;;  `(org-latex-and-related ((t (:inherit nil :foreground "tomato" :weight bold))))
-  ;;  `(org-level-1 ((t (:inherit outline-1 :extend t :underline t :height 1.2))))
-  ;;  `(org-level-2 ((t (:inherit outline-2 :extend t :height 1.1))))
-  ;;  `(org-link ((t (:inherit link))))
-  ;;  `(org-tag ((t (:slant italic :weight normal :family "Ubuntu Mono"))))
-  ;;  `(org-verbatim ((t (:box (:line-width (2 . 2) :color "dim gray" :style released-button)))))
-  ;;  `(outline-1 ((t (:extend t :weight bold)))))
 #+end_src
 
 ** Extra
