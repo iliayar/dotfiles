@@ -67,10 +67,11 @@ in {
     vt = 6;
   };
 
+
+  services.displayManager.sddm.enable = false;
   services.xserver = {
     enable = false;
     desktopManager.plasma5.enable = false;
-    displayManager.sddm.enable = false;
 
     dpi = 96;
 
@@ -149,9 +150,8 @@ in {
   hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
 
   hardware = {
-    opengl = {
+    graphics = {
       enable = true;
-      driSupport = true;
     };
   };
 

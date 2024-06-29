@@ -92,7 +92,7 @@ if nixcfg.misc.enable then
         end
     )
 
-    local trouble = require("trouble.providers.telescope")
+    local trouble = require("trouble.sources.telescope")
     local fb_actions = require("telescope").extensions.file_browser.actions
     local actions = require("telescope.actions")
 
@@ -102,10 +102,10 @@ if nixcfg.misc.enable then
                 color_devicons = true,
                 mappings = {
                     i = {
-                        ["<C-t>"] = trouble.open_with_trouble,
+                        ["<C-t>"] = trouble.open,
                         ["<C-S-o>"] = require("telescope.actions.layout").toggle_preview
                     },
-                    n = {["<C-t>"] = trouble.open_with_trouble}
+                    n = {["<C-t>"] = trouble.open}
                 },
                 layout_strategy = "flex",
                 preview = {
