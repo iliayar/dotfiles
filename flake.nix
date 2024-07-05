@@ -75,6 +75,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    pyprland-my = {
+      url = "github:iliayar/pyprland";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     anyrun = {
       url = "github:Kirottu/anyrun";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -111,7 +116,7 @@
     , emacs-overlay, libxft-bgra, org-roam-ui, picom-jonaburg, wakatime-cli
     , zsh-wakatime, tlpui-src, rust-blocks, nur, flake-utils, uci, anyrun
     , nwg-displays, rust-overlay, denv, wezterm-newest, pyprland-newest
-    , obsidian-nvim, lean4-mode, ... }@inputs:
+    , obsidian-nvim, lean4-mode, pyprland-my, ... }@inputs:
     flake-utils.lib.eachSystem
     (with flake-utils.lib.system; [ x86_64-linux x86_64-darwin ]) (system:
       let
@@ -133,7 +138,8 @@
         specialArgs = {
           inherit home-manager code-stats-vim libxft-bgra org-roam-ui
             picom-jonaburg wakatime-cli zsh-wakatime mylib tlpui-src system
-            anyrun wezterm-newest pyprland-newest obsidian-nvim lean4-mode;
+            anyrun wezterm-newest pyprland-newest obsidian-nvim lean4-mode
+            pyprland-my;
 
           secrets = import secrets;
           themes = themes;

@@ -1,4 +1,4 @@
-{ wezterm-newest, nixpkgs, pyprland-newest, system, ... }@inputs:
+{ wezterm-newest, nixpkgs, pyprland-newest, system, pyprland-my, ... }@inputs:
 final: prev: {
   inkscape = (prev.inkscape.override {
     python3 = {
@@ -11,6 +11,11 @@ final: prev: {
       ++ (with prev; [ gobject-introspection gtk3 ]);
   });
 
-  # pyprland = pyprland-newest.packages.${system}.pyprland;
+  pyprland = pyprland-my.packages.${system}.pyprland;
   wezterm = wezterm-newest.packages.${system}.default;
+
+  # FIXME: Remove on next update
+  eza = prev.eza.overrideAttrs (old: {
+    patches = old.patches ++ [ ./eza-fix.patch ];
+  });
 }

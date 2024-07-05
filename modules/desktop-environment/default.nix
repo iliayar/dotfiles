@@ -117,7 +117,7 @@ in {
     (mkIf cfg.social.enable {
       home.packages = with pkgs; [
         tdesktop
-        (discord.override { withVencord = true; })
+        (discord.override { withVencord = false; })
         (if cfg.social.fix-zoom-non-nixos then zoom-fixed else zoom-us)
       ];
       xdg.desktopEntries = {
