@@ -96,8 +96,8 @@
     };
 
     denv = {
-      # url = "github:iliayar/env.nix";
-      url = "path:/home/iliayar/Repos/env.nix";
+      url = "github:iliayar/env.nix";
+      # url = "path:/home/iliayar/Repos/env.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

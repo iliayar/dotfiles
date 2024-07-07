@@ -38,10 +38,16 @@ let
     notify-send -i $filename "$filename"
   '';
 
-  my-lock = pkgs.writeShellScriptBin "my-lock" ''
-    swayidle -w timeout 300 'swaylock -f -c 000000' \
+  my-lock = pkgs.writeShellScriptBin "lock" ''
+    pidof swaylock && exit 0
+
+    swaylock -e -f -i ~/Pictures/wallpapers/lock.jpg
+  '';
+
+  my-autolock = pkgs.writeShellScriptBin "my-autolock" ''
+    swayidle -w timeout 300 '${my-lock}/bin/lock' \
                 timeout 600 'systemctl suspend' \
-                before-sleep 'swaylock -f -c 000000' &
+                before-sleep '${my-lock}/bin/lock' &
   '';
 
   last-screenshot = pkgs.writeShellScriptBin "last-screenshot" ''
@@ -73,7 +79,6 @@ in {
         bemenu
         j4-dmenu-desktop
         xorg.xrandr
-        flameshot
         waypaper
         swww
         grim
@@ -227,7 +232,7 @@ in {
           bind=SHIFT,S,submap,reset
 
           ${if cfg.lock.enable then ''
-            bind=,L,exec, swaylock -f -c 000000
+            bind=,L,exec, ${my-lock}/bin/lock
             bind=,L,submap,reset
           '' else
             ""}
@@ -347,7 +352,7 @@ in {
           ${startupExtra}
 
           ${if cfg.lock.enable then
-            "exec-once = ${my-lock}/bin/my-lock"
+            "exec-once = ${my-autolock}/bin/my-autolock"
           else
             ""}
         '';

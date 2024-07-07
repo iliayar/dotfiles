@@ -47,14 +47,17 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1718998411,
-        "narHash": "sha256-nm2lm35Uh+hnyqR/PM/gdE7/VkhGxaQ9c0MFkeXFb64=",
-        "path": "/home/iliayar/Repos/env.nix",
-        "type": "path"
+        "lastModified": 1718998405,
+        "narHash": "sha256-xgAVqxdOs/RzPAwbK/jWvkY0xlXAoGJXBCMqQS7wK0M=",
+        "owner": "iliayar",
+        "repo": "env.nix",
+        "rev": "d0873aa39ab712019482527e865bca5ca2906b84",
+        "type": "github"
       },
       "original": {
-        "path": "/home/iliayar/Repos/env.nix",
-        "type": "path"
+        "owner": "iliayar",
+        "repo": "env.nix",
+        "type": "github"
       }
     },
     "emacs-overlay": {
