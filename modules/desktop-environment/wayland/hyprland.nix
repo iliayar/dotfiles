@@ -41,7 +41,8 @@ let
   my-lock = pkgs.writeShellScriptBin "lock" ''
     pidof swaylock && exit 0
 
-    swaylock -e -f -i ~/Pictures/wallpapers/lock.jpg
+    swaylock -e -f -c 000000
+    # -i ~/Pictures/wallpapers/lock.jpg
   '';
 
   my-autolock = pkgs.writeShellScriptBin "my-autolock" ''
