@@ -64,6 +64,6 @@ Inserting last screenshot
    'org-babel-load-languages
    '((sql . t)
      (sqlite . t)
-     (mermaid . t))
+     (mermaid . t)))
 #+end_src
 

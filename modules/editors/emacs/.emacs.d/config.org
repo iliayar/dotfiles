@@ -1010,7 +1010,7 @@ Cheatsheets
 #+end_src
 *** [[file:rss.org][RSS]]
 #+begin_src emacs-lisp
-  (org-babel-load-file "~/.emacs.d/rss.el")
+  (org-babel-load-file "~/.emacs.d/rss.org")
 #+end_src
 
 *** Obsidian

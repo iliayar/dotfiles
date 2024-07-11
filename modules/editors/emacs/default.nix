@@ -695,6 +695,10 @@ in {
         enable = true;
         package = cfg.package;
         overrides = import ./overrides.nix inputs;
+        extraConfig = ''
+          (setq comp-deferred-compilation t)
+          (org-babel-load-file "~/.emacs.d/config.org")
+        '';
       };
 
       home.packages = with pkgs; [ gsettings-desktop-schemas ];
