@@ -9,18 +9,26 @@ in {
     custom.de.terms = {
       wezterm = {
         enable = mkOption { default = false; };
-        package = mkOption {
-            default = pkgs.wezterm;
-        };
+        package = mkOption { default = pkgs.wezterm; };
 
         enableShellIntegration = mkOption { default = false; };
+        useNvidia = mkOption { default = false; };
       };
     };
   };
 
   config = mkIf cfg.wezterm.enable {
     programs.wezterm = {
-      package = cfg.wezterm.package;
+      package = let
+        withNvidia = pkgs.writeShellScriptBin "wezterm" ''
+          export __NV_PRIME_RENDER_OFFLOAD=1
+          export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
+          export __GLX_VENDOR_LIBRARY_NAME=nvidia
+          export __VK_LAYER_NV_optimus=NVIDIA_only
+          exec ${cfg.wezterm.package}/bin/wezterm "$@"
+        '';
+      in if cfg.wezterm.useNvidia then withNvidia else cfg.wezterm.package;
+
       enable = true;
       enableBashIntegration = cfg.wezterm.enableShellIntegration;
       enableZshIntegration = cfg.wezterm.enableShellIntegration;

@@ -140,23 +140,24 @@ in {
   # It's also valid for wayland
   services.xserver.videoDrivers = [ "nvidia" ];
 
-  hardware.nvidia.prime = {
-    sync.enable = true;
-    intelBusId = "PCI:0:2:0";
-    nvidiaBusId = "PCI:1:0:0";
-  };
-
-  hardware.nvidia.modesetting.enable = true;
-  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
-
   hardware = {
     graphics = {
       enable = true;
     };
+    nvidia = {
+      prime = {
+        sync.enable = true;
+        intelBusId = "PCI:0:2:0";
+        nvidiaBusId = "PCI:1:0:0";
+      };
+      modesetting.enable = true;
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+    };
+
+    keyboard.qmk.enable = true;
   };
 
   # hardware.pulseaudio.enable = false;
-  hardware.keyboard.qmk.enable = true;
 
   nix = {
     package = pkgs.nixFlakes;

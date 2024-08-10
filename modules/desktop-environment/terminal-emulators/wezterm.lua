@@ -17,7 +17,11 @@ config.check_for_updates = false
 config.automatically_reload_config = false
 
 config.hide_mouse_cursor_when_typing = false
--- config.enable_wayland = false
+
+
+config.front_end = "WebGpu"
+-- config.prefer_egl = true
+config.enable_wayland = true
 
 config.window_close_confirmation = 'AlwaysPrompt'
 

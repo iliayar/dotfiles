@@ -188,7 +188,10 @@
       terms = {
         alacritty.enable = true;
         # Moving to
-        wezterm.enable = true;
+        wezterm = {
+          enable = true;
+          useNvidia = true;
+        };
 
         urxvt.enable = true;
       };
