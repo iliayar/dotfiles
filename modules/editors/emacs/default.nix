@@ -208,7 +208,7 @@ let
 
     misc-code-internal-smart-parens = {
       auto-enable = cfg.misc.enable && cfg.misc.code.enable
-                    && cfg.misc.code.auto-parens.enable;
+        && cfg.misc.code.auto-parens.enable;
       packages = [ "smartparens" ];
     };
 
@@ -281,7 +281,7 @@ let
 
     evil-treemacs-internal = {
       auto-enable = cfg.evil.enable && cfg.misc.enable;
-      packages = [ 
+      packages = [
         # "treemacs-evil" 
       ];
     };
@@ -500,6 +500,8 @@ let
       config = { xsession = { enable = true; }; };
     };
 
+    wayland = { };
+
     code-stats = {
       packages = [ "code-stats" ];
       config = {
@@ -525,9 +527,7 @@ in {
         '';
       };
 
-      package = mkOption {
-        default = pkgs.emacs29-pgtk;
-      };
+      package = mkOption { default = pkgs.emacs29-pgtk; };
 
       server = mkOption {
         default = false;

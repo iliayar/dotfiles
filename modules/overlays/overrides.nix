@@ -13,9 +13,4 @@ final: prev: {
 
   pyprland = pyprland-my.packages.${system}.pyprland;
   wezterm = wezterm-newest.packages.${system}.default;
-
-  # FIXME: Remove on next update
-  eza = prev.eza.overrideAttrs (old: {
-    patches = old.patches ++ [ ./eza-fix.patch ];
-  });
 }

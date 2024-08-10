@@ -76,6 +76,7 @@
         obsidian.enable = false;
 
         proof-assist.enable = true;
+        wayland.enable = true;
       };
 
       misc = {
@@ -226,7 +227,7 @@
           center = ms: with ms; [ mpris ];
           right = ms:
             with ms; [
-              network
+              # network
               pulseaudio
               (disk {
                 name = "ssd";
