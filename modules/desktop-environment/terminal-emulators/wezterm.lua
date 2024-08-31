@@ -18,9 +18,8 @@ config.automatically_reload_config = false
 
 config.hide_mouse_cursor_when_typing = false
 
-
--- config.front_end = "WebGpu"
-config.prefer_egl = true
+-- NOTE: WebGpu is broken
+config.front_end = "OpenGL"
 config.enable_wayland = true
 
 config.window_close_confirmation = 'AlwaysPrompt'

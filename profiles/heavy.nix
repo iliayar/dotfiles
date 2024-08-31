@@ -190,7 +190,7 @@
         # Moving to
         wezterm = {
           enable = true;
-          useNvidia = true;
+          useNvidia = false;
         };
 
         urxvt.enable = true;
