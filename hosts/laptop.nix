@@ -4,7 +4,7 @@ let
     devices: ({
       name: "Wireless Mouse MX Master 3";
 
-      smartshift: { on: true; threshold: 50; };
+      smartshift: { on: false; threshold: 50; };
       hiresscroll: { hires: true; invert: true; target: false; };
       dpi: 1500;
     

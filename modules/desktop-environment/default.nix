@@ -12,6 +12,10 @@ let
         env -i HOME=$HOME WAYLAND_DISPLAY=$WAYLAND_DISPLAY DISPLAY=$DISPLAY XDG_SESSION_TYPE=$XDG_SESSION_TYPE DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS XDG_CURRENT_DESKTOP=GNOME XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR zoom $@
     fi
   '';
+
+  zoom-fixed-nixos = pkgs.writeShellScriptBin "zoom-fixed" ''
+    XDG_CURRENT_DESKTOP=GNOME ${pkgs.zoom-us}/bin/zoom $@
+  '';
 in {
   imports = [
     ./xsession.nix
@@ -99,17 +103,15 @@ in {
       };
     })
 
-    (mkIf cfg.media {
-      home.packages = with pkgs; [ gimp vlc mpv deluge ];
-    })
+    (mkIf cfg.media { home.packages = with pkgs; [ gimp vlc mpv deluge ]; })
 
     (mkIf cfg.obs.enable {
       programs.obs-studio = {
         enable = true;
         plugins = with pkgs.obs-studio-plugins; [
-            wlrobs
-            obs-backgroundremoval
-            obs-pipewire-audio-capture
+          wlrobs
+          obs-backgroundremoval
+          obs-pipewire-audio-capture
         ];
       };
     })
@@ -117,13 +119,18 @@ in {
     (mkIf cfg.social.enable {
       home.packages = with pkgs; [
         tdesktop
-        (discord.override { withVencord = false; })
-        (if cfg.social.fix-zoom-non-nixos then zoom-fixed else zoom-us)
+        (discord.override { withVencord = true; })
+        (if cfg.social.fix-zoom-non-nixos then zoom-fixed else zoom-fixed-nixos)
       ];
       xdg.desktopEntries = {
         zoom = {
           name = "Zoom";
-          exec = "${zoom-fixed}/bin/zoom-fixed %U";
+          exec = let
+            zoom-bin = if cfg.social.fix-zoom-non-nixos then
+              "${zoom-fixed}/bin/zoom-fixed"
+            else
+              "${zoom-fixed-nixos}/bin/zoom-fixed";
+          in "${zoom-bin} %U";
           type = "Application";
           terminal = false;
           mimeType = [
