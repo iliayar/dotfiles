@@ -110,6 +110,10 @@ in {
         in ''
           $mainMod = SUPER
 
+          debug {
+           disable_logs = false 
+          }
+
           bindm = $mainMod, mouse:272, movewindow
           bindm = $mainMod, mouse:273, resizewindow
 

@@ -56,7 +56,7 @@ in
       noto-fonts-emoji
       fira-code
       font-awesome
-      symbola
+      # symbola
       ubuntu_font_family
       nerdfonts
       corefonts

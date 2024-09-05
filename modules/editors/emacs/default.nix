@@ -672,8 +672,11 @@ in {
           if enabled then allPackages.${pkg} else _: [ ];
       }) (attrNames allPackages)))
 
+    (mkIf cfg.useAsVisual {
+      home.sessionVariables = { VISUAL = "emacs"; };
+    })
+
     {
-      home.sessionVariables = optional cfg.useAsVisual { VISUAL = "emacs"; };
 
       xdg.mimeApps = {
         defaultApplications = { "text/plain" = [ "emacsclient.desktop" ]; };
