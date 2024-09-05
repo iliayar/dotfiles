@@ -392,6 +392,9 @@ in {
         [monitors.placement."Dell"]
         topOf = "California Institute"
 
+        [monitors.placement."Lenovo"]
+        topOf = "California Institute"
+
         [monitors.placement."Acer"]
         rightOf = "California Institute"
       '';

@@ -527,7 +527,13 @@ in {
         '';
       };
 
-      package = mkOption { default = pkgs.emacs29-pgtk; };
+      useAsVisual = mkOption {
+        default = false;
+      };
+
+      package = mkOption {
+        default = pkgs.emacs29-pgtk;
+      };
 
       server = mkOption {
         default = false;
@@ -667,7 +673,7 @@ in {
       }) (attrNames allPackages)))
 
     {
-      home.sessionVariables = { VISUAL = "emacs"; };
+      home.sessionVariables = optional cfg.useAsVisual { VISUAL = "emacs"; };
 
       xdg.mimeApps = {
         defaultApplications = { "text/plain" = [ "emacsclient.desktop" ]; };
