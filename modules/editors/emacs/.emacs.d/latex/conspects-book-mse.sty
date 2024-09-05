@@ -1,0 +1,37 @@
+\documentclass[oneside]{book}
+\input{~/.emacs.d/latex/packages.sty}
+
+%% Page setup
+%% =================
+
+\geometry{
+    a4paper,
+}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  filecolor=orange,
+  citecolor=black,      
+  urlcolor=cyan,
+}
+
+\addto\captionsrussian{\renewcommand{\chaptername}{Лекция}}
+\renewcommand{\leftmark}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\thetitle}
+\fancyhead[L]{\leftmark}
+\fancyfoot[L]{ITMO MSE y2024}
+\fancyfoot[C]{Страница \thepage \hspace{1pt} из \pageref*{LastPage}}
+
+\renewcommand{\footrulewidth}{0.4pt}
+
+%% Other styles setup
+%% ====================
+
+\captionsetup{justification=centering,margin=2cm}
+\newenvironment{colored}[1]{\color{#1}}{}
+
+\input{~/.emacs.d/latex/common.sty}

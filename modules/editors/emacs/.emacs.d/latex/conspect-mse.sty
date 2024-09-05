@@ -1,0 +1,38 @@
+\documentclass[english]{article}
+\input{~/.emacs.d/latex/packages.sty}
+
+%% Page setup
+%% =================
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  filecolor=orange,
+  citecolor=black,      
+  urlcolor=cyan,
+}
+
+\geometry{
+    a4paper,
+    left=2.5cm,
+    top=2cm,
+    right=2.5cm,
+    bottom=2cm,
+    marginparsep=7pt,
+    marginparwidth=.6in,
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\thetitle}
+\fancyfoot[L]{ITMO MSE y2024}
+\fancyfoot[C]{Страница \thepage \hspace{1pt} из \pageref*{LastPage}}
+
+\renewcommand{\footrulewidth}{0.4pt}
+
+%% Other styles setup
+%% ====================
+
+\captionsetup{justification=centering,margin=2cm}
+\newenvironment{colored}[1]{\color{#1}}{}
+
+\input{~/.emacs.d/latex/common.sty}

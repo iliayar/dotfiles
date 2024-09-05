@@ -1,17 +1,5 @@
-\usepackage{hyperref}
- \hypersetup{
-     colorlinks=true,
-     linkcolor=blue,
-     filecolor=orange,
-     citecolor=black,      
-     urlcolor=cyan,
-     }
-
-\usetikzlibrary{decorations.markings}
-\usetikzlibrary{cd}
-\usetikzlibrary{patterns}
-\usetikzlibrary{automata, arrows}
-
+%% Helper commands
+%% ================
 \newcommand\addtag{\refstepcounter{equation}\tag{\theequation}}
 \newcommand{\eqrefoffset}[1]{\addtocounter{equation}{-#1}(\arabic{equation}\addtocounter{equation}{#1})}
 \newcommand{\llb}{\llbracket}
@@ -34,6 +22,8 @@
 \newcommand{\todo}{{\color{red}\fbox{\text{Доделать}}}}
 \newcommand{\fixme}{{\color{red}\fbox{\text{Исправить}}}}
 
+%% Theorems setup
+%% =================
 \newcounter{propertycnt}
 \setcounter{propertycnt}{1}
 \newcommand{\beginproperty}{\setcounter{propertycnt}{1}}
@@ -131,10 +121,8 @@
   \renewcommand{\answername}{Answer}%
 }
 
-
-\captionsetup{justification=centering,margin=2cm}
-\newenvironment{colored}[1]{\color{#1}}{}
-
+%% IDK, Let it be here
+%% ========================
 \tikzset{->-/.style={decoration={
   markings,
   mark=at position .5 with {\arrow{>}}},postaction={decorate}}}
@@ -163,6 +151,8 @@
 }
 \makeatother
 
+%% Algorithms setup
+%% ====================
 \newenvironment{rualgo}[1][]
   {\begin{algorithm}[#1]
      \selectlanguage{russian}%
@@ -216,10 +206,3 @@
      % Set other language requirements
   }
   {\end{algorithm}}
-
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[R]{\thetitle}
-\fancyfoot[L]{ITMO MSE y2024}
-\fancyfoot[C]{Page \thepage \hspace{1pt} of \pageref*{LastPage}}
-\renewcommand{\footrulewidth}{0.4pt}
