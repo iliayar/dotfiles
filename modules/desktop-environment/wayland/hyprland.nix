@@ -71,6 +71,9 @@ in {
         type = types.listOf types.str;
       };
       portals.enable = mkOption { default = false; };
+      cursor.hyprcursor = mkOption {
+        default = null;
+      };
     };
   };
 
@@ -111,7 +114,7 @@ in {
           $mainMod = SUPER
 
           debug {
-           disable_logs = false 
+           disable_logs = true 
           }
 
           bindm = $mainMod, mouse:272, movewindow
@@ -152,9 +155,17 @@ in {
 
           cursor {
             no_warps = true;
+            enable_hyprcursor = true;
           }
 
           env = WLR_DRM_NO_ATOMIC,1
+
+          env = XCURSOR_SIZE,24
+          env = HYPRCURSOR_SIZE,24
+
+          ${if cfg.cursor.hyprcursor != null then ''
+          env = HYPRCURSOR_THEM,${cfg.cursor.hyprcursor}
+          '' else ""}
 
           bind = $mainMod, K, layoutmsg, cycleprev
           bind = $mainMod, J, layoutmsg, cyclenext
