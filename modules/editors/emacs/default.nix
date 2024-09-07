@@ -677,6 +677,9 @@ in {
     })
 
     {
+      home.sessionVariables = {
+        TEXMFDOTDIR = "\${TEXMFDOTDIR:-.}:~/.emacs.d/latex";
+      };
 
       xdg.mimeApps = {
         defaultApplications = { "text/plain" = [ "emacsclient.desktop" ]; };

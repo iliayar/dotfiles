@@ -1,4 +1,6 @@
 #+begin_src emacs-lisp
+  (require 'ox-latex)
+
   ;; Reset default value. For debugging
   ;; (custom-reevaluate-setting 'org-latex-classes)
 
@@ -7,7 +9,7 @@
       (add-to-list 'org-latex-classes
     				 (list "general"
     					   "
-    \\input{~/.emacs.d/latex/conspect.sty}
+    \\input{conspect.sty}
     [NO-DEFAULT-PACKAGES]
     "
     					   '("\\section{%s}" . "\\section*{%s}")
@@ -20,7 +22,7 @@
       (add-to-list 'org-latex-classes
     				 (list "conspect-mse"
     					   "
-    \\input{~/.emacs.d/latex/conspect-mse.sty}
+    \\input{conspect-mse.sty}
     [NO-DEFAULT-PACKAGES]
     "
     					   '("\\section{%s}" . "\\section*{%s}")
@@ -31,9 +33,23 @@
     					   ))
 
       (add-to-list 'org-latex-classes
+    				 (list "lectures"
+    					   "
+  \\input{conspects-book.sty}
+  [NO-DEFAULT-PACKAGES]
+      "
+    					   '("\\chapter*{%1$s}\\renewcommand{\\leftmark}{%1$s}\\addcontentsline{toc}{chapter}{%1$s}\\stepcounter{chapter}" . "\\chapter{%s}")
+    					   '("\\section{%s}" . "\\section*{%s}")
+    					   '("\\subsection{%s}" . "\\subsection*{%s}")
+    					   '("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+    					   '("\\paragraph{%s}" . "\\paragraph*{%s}")
+    					   '("\\subparagraph{%s}" . "\\subparagraph*{%s}")
+    					   ))
+
+      (add-to-list 'org-latex-classes
     				 (list "conspects-book-mse"
     					   "
-  \\input{~/.emacs.d/latex/conspects-book-mse.sty}
+  \\input{conspects-book-mse.sty}
   [NO-DEFAULT-PACKAGES]
       "
     					   '("\\chapter*{%1$s}\\renewcommand{\\leftmark}{%1$s}\\addcontentsline{toc}{chapter}{%1$s}\\stepcounter{chapter}" . "\\chapter{%s}")

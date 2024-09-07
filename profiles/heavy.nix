@@ -84,7 +84,7 @@
         code = { enable = true; };
       };
 
-      langs.enable = [ "nix" "misc" "go" "haskell" ];
+      langs.enable = [ "nix" "misc" "go" "haskell" "latex" ];
 
       code-assist = {
         enable = true;
