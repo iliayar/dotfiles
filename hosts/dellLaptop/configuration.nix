@@ -209,6 +209,13 @@ in {
     '';
   };
 
+  # NOTE: Fix for zoom screensharing under wayland,
+  # because it has hardcoded path
+  # FIXME: Still doesn't help
+  systemd.tmpfiles.rules = [
+    "L+ /usr/libexec/xdg-desktop-portal - - - - ${pkgs.xdg-desktop-portal}/libexec/xdg-desktop-portal"
+  ];
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave

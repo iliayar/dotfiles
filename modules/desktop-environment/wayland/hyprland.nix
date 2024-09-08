@@ -72,9 +72,7 @@ in {
         type = types.listOf types.str;
       };
       portals.enable = mkOption { default = false; };
-      cursor.hyprcursor = mkOption {
-        default = null;
-      };
+      cursor.hyprcursor = mkOption { default = null; };
     };
   };
 
@@ -165,8 +163,9 @@ in {
           env = HYPRCURSOR_SIZE,24
 
           ${if cfg.cursor.hyprcursor != null then ''
-          env = HYPRCURSOR_THEM,${cfg.cursor.hyprcursor}
-          '' else ""}
+            env = HYPRCURSOR_THEM,${cfg.cursor.hyprcursor}
+          '' else
+            ""}
 
           bind = $mainMod, K, layoutmsg, cycleprev
           bind = $mainMod, J, layoutmsg, cyclenext
@@ -424,11 +423,10 @@ in {
             xdg-desktop-portal-wlr
             # xdg-desktop-portal-hyprland
           ];
-          configPackages = with pkgs;
-            [
-              xdg-desktop-portal-wlr
-              # xdg-desktop-portal-hyprland 
-            ];
+          configPackages = with pkgs; [
+            xdg-desktop-portal-wlr
+            # xdg-desktop-portal-hyprland 
+          ];
           config.common.default = "*";
         };
       };
