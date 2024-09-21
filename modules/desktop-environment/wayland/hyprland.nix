@@ -73,6 +73,7 @@ in {
       };
       portals.enable = mkOption { default = false; };
       cursor.hyprcursor = mkOption { default = null; };
+      cursor.xcursor = mkOption { default = null; };
     };
   };
 
@@ -97,6 +98,8 @@ in {
         swayidle
         hyprshade
         last-screenshot
+
+        vimix-cursors
       ];
 
       wayland.windowManager.hyprland = {
@@ -163,7 +166,11 @@ in {
           env = HYPRCURSOR_SIZE,24
 
           ${if cfg.cursor.hyprcursor != null then ''
-            env = HYPRCURSOR_THEM,${cfg.cursor.hyprcursor}
+            env = HYPRCURSOR_THEME,${cfg.cursor.hyprcursor}
+          '' else
+            ""}
+          ${if cfg.cursor.xcursor != null then ''
+            env = XCURSOR_THEME,${cfg.cursor.xcursor}
           '' else
             ""}
 

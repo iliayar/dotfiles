@@ -32,6 +32,7 @@
 
     dev = {
       python.enable = true;
+      python.additionalPackages = pypkgs: with pypkgs; [ pygments ];
       cpp.enable = true;
       js.enable = true;
       latex.enable = true;
@@ -215,6 +216,9 @@
       wayland.hyprland = {
         enable = true;
         portals.enable = true;
+
+        cursor.hyprcursor = "Vimix Cursors";
+        cursor.xcursor = "Vimix Cursors";
       };
 
       wayland.waybar = {

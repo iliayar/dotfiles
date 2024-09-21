@@ -4,7 +4,7 @@ with lib;
 
 let
   texc = pkgs.writeShellScriptBin "texc" ''
-       ${pkgs.texlive.combined.scheme-full}/bin/pdflatex -interaction=nonstopmode -shell-escape
+       ${pkgs.texlive.combined.scheme-full}/bin/pdflatex -interaction=nonstopmode -shell-escape $@
   '';
   cfg = config.custom.dev.latex;
 in

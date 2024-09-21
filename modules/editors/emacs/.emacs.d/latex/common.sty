@@ -62,6 +62,11 @@
   \renewcommand\themanualtheoreminner{#1}%
   \manualtheoreminner
 }{\endmanualtheoreminner}
+\newtheorem{manualtaskinner}{\protect\taskname}
+\newenvironment{manualtask}[1]{%
+  \renewcommand\themanualtaskinner{#1}%
+  \manualtaskinner
+}{\endmanualtaskinner}
 
 \newtheoremstyle{colon}%
 {}
@@ -168,6 +173,8 @@
      \renewcommand{\algorithmicrepeat}{{\color{red}\textbf{повторять}}}%
      \renewcommand{\algorithmicuntil}{{\color{red}\textbf{до тех пор пока}}}%
      \renewcommand{\algorithmicloop}{{\color{red}\textbf{повторять}}}%
+     \renewcommand{\algorithmicfunction}{{\color{red}\textbf{функция}}}%
+     \renewcommand{\algorithmicprocedure}{{\color{red}\textbf{процедура}}}%
      \renewcommand{\algorithmicnot}{{\color{blue}\textbf{не}}}%
      \renewcommand{\algorithmicand}{{\color{blue}\textbf{и}}}%
      \renewcommand{\algorithmicor}{{\color{blue}\textbf{или}}}%
@@ -195,6 +202,8 @@
      \renewcommand{\algorithmicrepeat}{{\color{red}\textbf{repeat}}}%
      \renewcommand{\algorithmicuntil}{{\color{red}\textbf{until}}}%
      \renewcommand{\algorithmicloop}{{\color{red}\textbf{loop}}}%
+     \renewcommand{\algorithmicfunction}{{\color{red}\textbf{function}}}%
+     \renewcommand{\algorithmicprocedure}{{\color{red}\textbf{procedure}}}%
      \renewcommand{\algorithmicnot}{{\color{blue}\textbf{not}}}%
      \renewcommand{\algorithmicand}{{\color{blue}\textbf{and}}}%
      \renewcommand{\algorithmicor}{{\color{blue}\textbf{or}}}%
