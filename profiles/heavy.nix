@@ -217,8 +217,8 @@
         enable = true;
         portals.enable = true;
 
-        cursor.hyprcursor = "Vimix Cursors";
-        cursor.xcursor = "Vimix Cursors";
+        cursor.hyprcursor = "Bibata-Original-Classic";
+        cursor.xcursor = "Bibata-Original-Classic";
       };
 
       wayland.waybar = {

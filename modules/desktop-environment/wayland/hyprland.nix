@@ -100,6 +100,7 @@ in {
         last-screenshot
 
         vimix-cursors
+        bibata-cursors
       ];
 
       wayland.windowManager.hyprland = {
@@ -157,7 +158,12 @@ in {
 
           cursor {
             no_warps = true;
-            enable_hyprcursor = true;
+            enable_hyprcursor = false;
+            no_hardware_cursors = false;
+          }
+
+          opengl {
+            force_introspection = false;
           }
 
           env = WLR_DRM_NO_ATOMIC,1
