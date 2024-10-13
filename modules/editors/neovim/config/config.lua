@@ -614,3 +614,7 @@ if nixcfg.agi.enable then
         }
     )
 end
+
+if nixcfg.remote.enable then
+    require("remote-nvim").setup()
+end

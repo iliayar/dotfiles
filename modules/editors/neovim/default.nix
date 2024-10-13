@@ -1,4 +1,4 @@
-{ config, lib, pkgs, code-stats-vim, secrets, obsidian-nvim, ... }:
+{ config, lib, pkgs, code-stats-vim, secrets, obsidian-nvim, remote-nvim, ... }:
 
 with lib;
 
@@ -7,6 +7,14 @@ let
     pname = "obsidian.nvim";
     version = "2023-12-23";
     src = obsidian-nvim;
+  };
+
+  remote-nvim-pkg = pkgs.vimUtils.buildVimPlugin {
+    pname = "remote-nvim.nvim";
+    version = "2024-10-09";
+    src = remote-nvim;
+
+    dontPatchShebangs = true;
   };
 
   cfg = config.custom.editors.nvim;
@@ -41,6 +49,8 @@ let
         programs.neovim = { extraPackages = with pkgs; [ ripgrep ]; };
       };
     };
+
+    remote = { plugins = with pkgs.vimPlugins; [ nui-nvim remote-nvim-pkg ]; };
 
     statusBar = {
       autoEnable = cfg.pretty.status-bar.enable;
@@ -127,9 +137,9 @@ let
     };
     langHaskell = { autoEnable = builtins.elem "haskell" cfg.langs.enable; };
 
-    langLean = { 
-        autoEnable = builtins.elem "lean" cfg.langs.enable; 
-        plugins = with pkgs.vimPlugins; [ lean-nvim ];
+    langLean = {
+      autoEnable = builtins.elem "lean" cfg.langs.enable;
+      plugins = with pkgs.vimPlugins; [ lean-nvim ];
     };
 
     obsidian = {
