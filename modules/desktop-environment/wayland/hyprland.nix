@@ -372,6 +372,8 @@ in {
           }
 
           windowrule = opacity 0.9 0.9, ^(Spotify)$
+          windowrule = opacity 0.9 0.9, ^(VSCodium)$
+          windowrule = opacity 0.9 0.9, ^(Code)$
           # windowrule = float, ^(Zoom)$
 
           exec-once = waypaper --restore

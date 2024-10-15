@@ -1,4 +1,5 @@
-{ config, lib, pkgs, code-stats-vim, secrets, obsidian-nvim, remote-nvim, ... }:
+{ config, lib, pkgs, codestats-nvim, secrets, obsidian-nvim, remote-nvim
+, coq-lsp-nvim, ... }:
 
 with lib;
 
@@ -17,6 +18,12 @@ let
     dontPatchShebangs = true;
   };
 
+  coq-lsp-nvim-pkg = pkgs.vimUtils.buildVimPlugin {
+    pname = "coq-lsp.nvim";
+    version = "2024-10-13";
+    src = coq-lsp-nvim;
+  };
+
   cfg = config.custom.editors.nvim;
 
   toLuaArray = l: "{ " + (foldl (acc: e: acc + ''"${e}", '') "" l) + "}";
@@ -30,6 +37,7 @@ let
         hop-nvim
         gitsigns-nvim
         comment-nvim
+        undotree
 
         telescope-nvim
         telescope-fzf-native-nvim
@@ -80,6 +88,7 @@ let
 
         nvim-snippy
         cmp-snippy
+        cmp-buffer
         nvim-lint
       ];
       config = {
@@ -94,7 +103,7 @@ let
         [
           (pkgs.vimUtils.buildVimPlugin {
             name = "codestats-nvim";
-            src = code-stats-vim;
+            src = codestats-nvim;
           })
         ];
       extraParameters = {
@@ -140,6 +149,15 @@ let
     langLean = {
       autoEnable = builtins.elem "lean" cfg.langs.enable;
       plugins = with pkgs.vimPlugins; [ lean-nvim ];
+    };
+    langCoq = {
+      autoEnable = builtins.elem "coq" cfg.langs.enable;
+      plugins = with pkgs.vimPlugins;
+        [
+          Coqtail
+          # NOTE: Pretty bad
+          # coq-lsp-nvim-pkg 
+        ];
     };
 
     obsidian = {
@@ -193,6 +211,7 @@ in {
             "plantuml"
             "haskell"
             "lean"
+            "coq"
           ]);
         };
 
@@ -267,7 +286,7 @@ in {
           '';
         })
         (mkIf enabled { programs.neovim = { plugins = bundle.plugins; }; })
-        (mkIf enabled (bundle.config))
+        (mkIf enabled bundle.config)
       ]) (attrNames bundles)))
 
     {

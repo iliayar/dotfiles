@@ -46,6 +46,7 @@ let
     "dap-mode"
     "counsel-projectile"
     "corfu"
+    "cape"
     "corfu-terminal"
     "marginalia"
     "orderless"
@@ -221,7 +222,7 @@ let
     misc-code-internal-corfu = {
       auto-enable = cfg.bundles.misc-code-internal.enable
         && cfg.misc.code.completion == "corfu";
-      packages = [ "corfu" "kind-icon" "corfu-terminal" ];
+      packages = [ "corfu" "cape" "kind-icon" "corfu-terminal" ];
     };
 
     langs-nix-internal = {
@@ -238,7 +239,7 @@ let
       packages = [
         # "company-nixos-options" # FIXME: nixos-options too slow on load
       ];
-      config = { home.packages = [ pkgs.nixfmt-classic ]; };
+      config = { home.packages = with pkgs; [ nixfmt-classic nixpkgs-fmt ]; };
     };
 
     vertico-internal = {
@@ -527,13 +528,9 @@ in {
         '';
       };
 
-      useAsVisual = mkOption {
-        default = false;
-      };
+      useAsVisual = mkOption { default = false; };
 
-      package = mkOption {
-        default = pkgs.emacs29-pgtk;
-      };
+      package = mkOption { default = pkgs.emacs29-pgtk; };
 
       server = mkOption {
         default = false;
@@ -672,9 +669,7 @@ in {
           if enabled then allPackages.${pkg} else _: [ ];
       }) (attrNames allPackages)))
 
-    (mkIf cfg.useAsVisual {
-      home.sessionVariables = { VISUAL = "emacs"; };
-    })
+    (mkIf cfg.useAsVisual { home.sessionVariables = { VISUAL = "emacs"; }; })
 
     {
       home.sessionVariables = {

@@ -1,9 +1,5 @@
 nixcfg = require("config.nix")
 
-if nixcfg.codeStats.enable then
-    vim.env.CODESTATS_API_KEY = nixcfg.codeStats.key
-end
-
 vim.g.mapleader = " "
 
 vim.opt.number = true
@@ -24,9 +20,17 @@ vim.opt.termguicolors = true
 
 vim.opt.conceallevel = 1
 
+vim.opt.undofile = true
+
 vim.keymap.set("n", "<Esc>", "<Cmd>noh<CR>")
 
 vim.api.nvim_create_augroup("UserGroup", {})
+
+if nixcfg.codeStats.enable then
+    require("codestats-nvim").setup({
+        token = nixcfg.codeStats.key,
+    })
+end
 
 if nixcfg.misc.enable then
     require("nvim-surround").setup({})
@@ -323,9 +327,8 @@ if nixcfg.codeMisc.enable then
     local snippy = require("snippy")
 
     cmp_sources = {
-        {
-            name = "snippy"
-        }
+        { name = "snippy" },
+        { name = "buffer" },
     }
 
     if nixcfg.lsp.enable then
@@ -553,6 +556,14 @@ if nixcfg.lsp.enable then
             lsp = {on_attach = common_on_attach},
             mappings = true
         }
+    end
+
+    if nixcfg.langCoq.enable then
+        -- vim.g.loaded_coqtail = 1
+        -- vim.g.coqtail.supported = 0
+
+        -- NOTE: Pretty bad
+        -- require("coq-lsp").setup()
     end
 end
 

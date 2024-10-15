@@ -560,7 +560,7 @@ Mostly from this post https://kristofferbalintona.me/posts/202202270056/
   (use-package corfu
     :if nixcfg-corfu
     :hook (corfu-mode . corfu-popupinfo-mode)
-    :after (evil)
+    :after (evil cape)
     :config
     (global-corfu-mode)
 
@@ -571,18 +571,21 @@ Mostly from this post https://kristofferbalintona.me/posts/202202270056/
     (defun corfu-enable-always-in-minibuffer ()
       "Enable Corfu in the minibuffer if Vertico/Mct are not active."
       (unless (or (bound-and-true-p mct--active) ; Useful if I ever use MCT
-          (bound-and-true-p vertico--input))
-    (setq-local corfu-auto nil)       ; Ensure auto completion is disabled
-    (corfu-mode 1)))
-     (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
+  				(bound-and-true-p vertico--input))
+        (setq-local corfu-auto nil)       ; Ensure auto completion is disabled
+        (corfu-mode 1)))
+    (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
 
     ;; Setup lsp to use corfu for lsp completion
     (defun kb/corfu-setup-lsp ()
       "Use orderless completion style with lsp-capf instead of the
-      default lsp-passthrough."
+        default lsp-passthrough."
       (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-        '(orderless)))
+            '(orderless)))
 
+    ;; Get it out here! Idk from where it comes
+    (define-key corfu-map (kbd "<RET>") nil)
+    (define-key corfu-map (kbd "<TAB>") nil)
 
     :custom
     (corfu-auto t)
@@ -591,26 +594,39 @@ Mostly from this post https://kristofferbalintona.me/posts/202202270056/
     (corfu-preview-current nil)
 
     (completion-cycle-threshold nil)
-
     (lsp-completion-provider :none) ; Use corfu instead the default for lsp completions
 
+    :hook
+    (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
 
-    :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
+    ;; (corfu-mode . (lambda ()
+    ;; 			  (define-key corfu-map (kbd "<RET>") nil)
+    ;; 			  (define-key corfu-map (kbd "<TAB>") nil)))
 
     :general
     (
-     :keymaps 'corfu-map
+     :keymaps '(override corfu-map)
      :states 'insert
      "<backtab>" #'corfu-insert
      "C-n" #'corfu-next
      "C-p" #'corfu-previous
      "C-l" #'corfu-show-location
-     ;; FIXME: Check default bindings and remove if exists
-     ;; "M-d" #'corfu-popupinfo-toggle
-     ;; "M-n" #'corfu-popupinfo-scroll-up
-     ;; "M-p" #'corfu-popupinfo-scroll-down
-     )
-  )
+     ))
+
+  (use-package dabbrev
+    :if nixcfg-corfu
+    :config
+    (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
+    (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
+    (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
+    (add-to-list 'dabbrev-ignored-buffer-modes 'tags-table-mode))
+
+  ;; FIXME: Why it's working only after corfu-mode disable, enable
+  (use-package cape
+    :if nixcfg-corfu
+    :after dabbrev
+    :init
+    (add-hook 'completion-at-point-functions #'cape-dabbrev))
 
   (use-package kind-icon
     :if nixcfg-kind-icon
@@ -622,8 +638,7 @@ Mostly from this post https://kristofferbalintona.me/posts/202202270056/
     (kind-icon-blend-frac 0.08)
     :config
     (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter) ; Enable `kind-icon'
-  )
-
+    )
 
   (use-package corfu-terminal
     :if nixcfg-corfu-terminal
@@ -631,7 +646,7 @@ Mostly from this post https://kristofferbalintona.me/posts/202202270056/
     :config
     (unless (display-graphic-p)
       (corfu-terminal-mode +1))
-  )
+    )
 #+end_src
 Completion for =M-x= commands. Enabling ~counsel-colors-emacs~.
 #+begin_src emacs-lisp
