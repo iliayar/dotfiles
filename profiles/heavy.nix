@@ -20,6 +20,10 @@
     sonic-pi
     pipewire.jack
     qpwgraph
+
+    deploy-rs
+
+    libreoffice
   ];
 
   denv = { langs.haskell.enable = true; };
@@ -78,6 +82,8 @@
 
         proof-assist.enable = true;
         wayland.enable = true;
+
+        sonic-pi.enable = false;
       };
 
       misc = {
@@ -173,6 +179,7 @@
     shell = {
       misc.enable = true;
       zsh.enable = true;
+      tmux.enable = true;
     };
 
     de = {

@@ -1012,6 +1012,14 @@ Emacs everywhere!
     :if nixcfg-emacs-everywhere)
 #+end_src
 
+Sonic Pi
+#+begin_src emacs-lisp
+  (use-package sonic-pi
+    :if nixcfg-sonic-pi
+    :config
+      (setq sonic-pi-path nixcfg-sonic-pi-path))
+#+end_src
+
 *FAST* Term?
 #+begin_src emacs-lisp
     (use-package vterm

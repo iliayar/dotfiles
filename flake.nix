@@ -6,8 +6,6 @@
 
     nur.url = "github:nix-community/NUR";
 
-    flake-utils.url = "github:numtide/flake-utils";
-
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -67,6 +65,7 @@
 
     uci = {
       url = "git+ssh://git@github.com/iliayar/uci.git";
+      # url = "path:/home/iliayar/Repos/microci";
       # inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -125,62 +124,116 @@
       url = "github:tomtomjhj/coq-lsp.nvim";
       flake = false;
     };
+
+    deploy-rs.url = "github:serokell/deploy-rs";
   };
 
   outputs = { self, home-manager, nixpkgs, codestats-nvim, secrets
     , emacs-overlay, libxft-bgra, org-roam-ui, picom-jonaburg, wakatime-cli
-    , zsh-wakatime, tlpui-src, rust-blocks, nur, flake-utils, uci, anyrun
-    , nwg-displays, rust-overlay, denv, wezterm-newest, pyprland-newest
-    , obsidian-nvim, lean4-mode, pyprland-my, remote-nvim, coq-lsp-nvim, ...
-    }@inputs:
-    flake-utils.lib.eachSystem
-    (with flake-utils.lib.system; [ x86_64-linux x86_64-darwin ]) (system:
-      let
-        overlays = [ emacs-overlay.overlay rust-overlay.overlays.default ]
-          ++ (import ./modules/overlays (inputs // { inherit system; }));
+    , zsh-wakatime, tlpui-src, rust-blocks, nur, uci, anyrun, nwg-displays
+    , rust-overlay, denv, wezterm-newest, pyprland-newest, obsidian-nvim
+    , lean4-mode, pyprland-my, remote-nvim, coq-lsp-nvim, deploy-rs, ... }@inputs:
+    let
+      config = system:
+        let
+          overlays = [ emacs-overlay.overlay rust-overlay.overlays.default ]
+            ++ (import ./modules/overlays (inputs // { inherit system; }));
 
-        nixpkgs-config = {
-          inherit system overlays;
-          config.allowUnfree = true;
-          config.permittedInsecurePackages = [ "electron-25.9.0" ];
-        };
-
-        pkgs = import nixpkgs nixpkgs-config;
-
-        mylib = import ./modules/lib.nix { inherit pkgs; };
-
-        themes = import ./modules/themes { inherit mylib; };
-
-        specialArgs = {
-          inherit home-manager codestats-nvim libxft-bgra org-roam-ui
-            picom-jonaburg wakatime-cli zsh-wakatime mylib tlpui-src system
-            anyrun wezterm-newest pyprland-newest obsidian-nvim lean4-mode
-            pyprland-my remote-nvim coq-lsp-nvim;
-
-          secrets = import secrets;
-          themes = themes;
-        };
-
-        makeHomeProfileImpl = profile:
-          home-manager.lib.homeManagerConfiguration rec {
-            inherit pkgs;
-            extraSpecialArgs = specialArgs // { inherit pkgs system; };
-            modules = [
-              denv.homeManagerModules.default
-              anyrun.homeManagerModules.default
-              ./modules
-              profile
-            ];
+          nixpkgs-config = {
+            inherit system overlays;
+            config.allowUnfree = true;
+            config.permittedInsecurePackages = [ "electron-25.9.0" ];
           };
 
-        makeHomeProfile = name: makeHomeProfileImpl ./profiles/${name}.nix;
+          pkgs = import nixpkgs nixpkgs-config;
 
-        makeProfiles =
-          pkgs.lib.foldl (acc: name: acc // { ${name} = makeHomeProfile name; })
-          { };
+          mylib = import ./modules/lib.nix { inherit pkgs; };
 
-        homeConfigurations =
-          (makeProfiles [ "heavy" "ubuntu-virt" "work" "work-linux" ]) // {
+          themes = import ./modules/themes { inherit mylib; };
+
+          specialArgs = {
+            inherit home-manager code-stats-vim libxft-bgra org-roam-ui
+              picom-jonaburg wakatime-cli zsh-wakatime mylib tlpui-src system
+              anyrun wezterm-newest pyprland-newest obsidian-nvim lean4-mode
+              pyprland-my remote-nvim coq-lsp-nvim;
+
+            secrets = import secrets;
+            themes = themes;
+          };
+
+          makeHomeProfileImpl = profile:
+            home-manager.lib.homeManagerConfiguration rec {
+              inherit pkgs;
+              extraSpecialArgs = specialArgs // { inherit pkgs system; };
+              modules = [
+                denv.homeManagerModules.default
+                anyrun.homeManagerModules.default
+                ./modules
+                profile
+              ];
+            };
+
+          makeHomeProfile = name: makeHomeProfileImpl ./profiles/${name}.nix;
+
+          makeProfiles = pkgs.lib.foldl
+            (acc: name: acc // { ${name} = makeHomeProfile name; }) { };
+
+          dellLaptop = let
+            modules = [
+              nur.nixosModules.nur
+              ./hosts/dellLaptop/configuration.nix
+              ./cachix.nix
+              {
+                nixpkgs = nixpkgs-config;
+                nix = {
+                  gc = {
+                    automatic = true;
+                    options = "--delete-older-than 3d";
+                  };
+                };
+              }
+            ];
+          in nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
+
+          lenovoLaptop = let
+            modules = [
+              ./hosts/lenovoLaptop/configuration.nix
+              ./cachix.nix
+              {
+                nixpkgs = nixpkgs-config;
+                nix = {
+                  gc = {
+                    automatic = true;
+                    options = "--delete-older-than 3d";
+                  };
+                };
+              }
+            ];
+          in nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
+
+          homeSrv = let
+            modules = [
+              ./hosts/homeSrv/configuration.nix
+              ./cachix.nix
+              {
+                nixpkgs = nixpkgs-config;
+                nix = {
+                  gc = {
+                    automatic = true;
+                    options = "--delete-older-than 3d";
+                  };
+                };
+              }
+            ];
+          in nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
+
+          homeConfigurations = (makeProfiles [
+            "heavy"
+            "ubuntu-virt"
+            "work"
+            "work-linux"
+            "home-server-ci"
+          ]) // {
             wsl = home-manager.lib.homeManagerConfiguration rec {
               inherit pkgs;
               extraSpecialArgs = specialArgs // { inherit pkgs system; };
@@ -188,62 +241,63 @@
             };
           };
 
-        dellLaptop = let
-          modules = [
-            nur.nixosModules.nur
-            ./hosts/dellLaptop/configuration.nix
-            ./cachix.nix
-            {
-              nixpkgs = nixpkgs-config;
-              nix = {
-                gc = {
-                  automatic = true;
-                  options = "--delete-older-than 3d";
-                };
-              };
-            }
-          ];
-        in nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
+          nixosConfigurations = {
+            NixLaptop = dellLaptop;
+            NixLenovo = lenovoLaptop;
+            NixServer = homeSrv;
+          };
 
-        lenovoLaptop = let
-          modules = [
-            ./hosts/lenovoLaptop/configuration.nix
-            ./cachix.nix
-            {
-              nixpkgs = nixpkgs-config;
-              nix = {
-                gc = {
-                  automatic = true;
-                  options = "--delete-older-than 3d";
+          deployPkgs = import nixpkgs {
+            inherit system;
+            overlays = [
+              deploy-rs.overlay # or deploy-rs.overlays.default
+              (self: super: {
+                deploy-rs = {
+                  inherit (pkgs) deploy-rs;
+                  lib = super.deploy-rs.lib;
                 };
-              };
-            }
-          ];
-        in nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
+              })
+            ];
+          };
 
-        homeSrv = let
-          modules = [
-            ./hosts/homeSrv/configuration.nix
-            ./cachix.nix
-            {
-              nixpkgs = nixpkgs-config;
-              nix = {
-                gc = {
-                  automatic = true;
-                  options = "--delete-older-than 3d";
-                };
-              };
-            }
-          ];
-        in nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
-      in {
-        packages = {
-          nixosConfigurations.NixLaptop = dellLaptop;
-          nixosConfigurations.NixLenovo = lenovoLaptop;
-          nixosConfigurations.NixServer = homeSrv;
-          inherit homeConfigurations;
+          deploySystemPaths = {
+            homeServer = deployPkgs.deploy-rs.lib.activate.nixos
+              nixosConfigurations.NixServer;
+            homeServerCi = deployPkgs.deploy-rs.lib.activate.home-manager
+              homeConfigurations.home-server-ci;
+          };
+
+        in {
+          inherit homeConfigurations nixosConfigurations deploySystemPaths;
+          makeHomeConfiguration = makeHomeProfileImpl;
         };
+    in {
+      makeHomeConfiguration."x86_64-linux" =
+        (config "x86_64-linux").makeHomeConfiguration;
 
-        makeHomeConfiguration = makeHomeProfileImpl;
-      });
+      nixosConfigurations = {
+        NixLaptop = (config "x86_64-linux").nixosConfigurations.NixLaptop;
+      };
+
+      homeConfigurations = {
+        heavy = (config "x86_64-linux").homeConfigurations.heavy;
+      };
+
+      deploy.nodes = {
+        homeServer = {
+          hostname = "home.iliayar.net";
+          profilesOrder = [ "system" "ci" ];
+          profiles.system = {
+            user = "root";
+            sshUser = "root";
+            path = (config "x86_64-linux").deploySystemPaths.homeServer;
+          };
+          profiles.ci = {
+            user = "ci";
+            sshUser = "ci";
+            path = (config "x86_64-linux").deploySystemPaths.homeServerCi;
+          };
+        };
+      };
+    };
 }

@@ -20,7 +20,10 @@ in {
   boot.loader.efi.efiSysMountPoint = "/boot/";
 
   # boot.kernelPackages = pkgs.linuxPackages_5_15;
-  boot.extraModulePackages = with config.boot.kernelPackages; [ nvidia_x11 v4l2loopback  ];
+  boot.extraModulePackages = with config.boot.kernelPackages; [
+    nvidia_x11
+    v4l2loopback
+  ];
   boot.kernelModules = [ "v4l2loopback" ];
 
   time.timeZone = "Europe/Moscow";
@@ -51,6 +54,7 @@ in {
   };
 
   programs.steam.enable = true;
+  programs.wireshark.enable = true;
 
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", MODE="0666", RUN+="${pkgs.coreutils}/bin/chmod a+w /sys/class/backlight/%k/brightness"
@@ -66,7 +70,6 @@ in {
     };
     vt = 6;
   };
-
 
   services.displayManager.sddm.enable = false;
   services.xserver = {
@@ -141,9 +144,7 @@ in {
   services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware = {
-    graphics = {
-      enable = true;
-    };
+    graphics = { enable = true; };
     nvidia = {
       prime = {
         sync.enable = true;
@@ -162,7 +163,10 @@ in {
 
   nix = {
     package = pkgs.nixFlakes;
-    settings = { trusted-users = [ "root" "iliayar" ]; };
+    settings = {
+      trusted-users = [ "iliayar" ];
+      secret-key-files = [ "/var/iliayar-cache-priv-key.pem" ];
+    };
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
@@ -171,7 +175,7 @@ in {
   users.users.iliayar = {
     isNormalUser = true;
     home = "/home/iliayar";
-    extraGroups = [ "wheel" "networkmanager" "video" "libvirtd" ];
+    extraGroups = [ "wheel" "networkmanager" "video" "libvirtd" "wireshark" ];
     shell = pkgs.zsh;
   };
   programs.zsh.enable = true;
@@ -200,6 +204,8 @@ in {
     config.boot.kernelPackages.perf
 
     xdg-utils
+
+    wireshark
   ];
 
   security.sudo = {

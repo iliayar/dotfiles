@@ -150,6 +150,7 @@ let
     "yasnippet"
     "yasnippet-snippets"
     "mermaid-mode"
+    "sonic-pi"
   ] // {
     "lsp-julia" = epkgs:
       [
@@ -188,6 +189,16 @@ let
     emacs-everywhere = {
       packages = [ "emacs-everywhere" ];
       config = { home.packages = with pkgs; [ xdotool xorg.xwininfo ]; };
+    };
+
+    sonic-pi = {
+      packages = [ "sonic-pi" ];
+      config = {
+        home.packages = with pkgs; [ ruby supercollider ];
+        home.file.".emacs.d/nixcfg.el".text = ''
+          (setq nixcfg-sonic-pi-path "${pkgs.sonic-pi}/")
+        '';
+      };
     };
 
     misc-code-internal = {
