@@ -152,7 +152,7 @@
           themes = import ./modules/themes { inherit mylib; };
 
           specialArgs = {
-            inherit home-manager code-stats-vim libxft-bgra org-roam-ui
+            inherit home-manager codestats-nvim libxft-bgra org-roam-ui
               picom-jonaburg wakatime-cli zsh-wakatime mylib tlpui-src system
               anyrun wezterm-newest pyprland-newest obsidian-nvim lean4-mode
               pyprland-my remote-nvim coq-lsp-nvim;
@@ -182,6 +182,23 @@
             modules = [
               nur.nixosModules.nur
               ./hosts/dellLaptop/configuration.nix
+              ./cachix.nix
+              {
+                nixpkgs = nixpkgs-config;
+                nix = {
+                  gc = {
+                    automatic = true;
+                    options = "--delete-older-than 3d";
+                  };
+                };
+              }
+            ];
+          in nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
+
+          pc = let
+            modules = [
+              # nur.nixosModules.nur
+              ./hosts/pc/configuration.nix
               ./cachix.nix
               {
                 nixpkgs = nixpkgs-config;
@@ -245,6 +262,7 @@
             NixLaptop = dellLaptop;
             NixLenovo = lenovoLaptop;
             NixServer = homeSrv;
+            NixPC = pc;
           };
 
           deployPkgs = import nixpkgs {
@@ -277,6 +295,7 @@
 
       nixosConfigurations = {
         NixLaptop = (config "x86_64-linux").nixosConfigurations.NixLaptop;
+        NixPC = (config "x86_64-linux").nixosConfigurations.NixPC;
       };
 
       homeConfigurations = {
