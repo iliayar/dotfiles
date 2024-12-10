@@ -472,6 +472,24 @@ if nixcfg.lsp.enable then
         )
     end
 
+    if nixcfg.langZig.enable then
+        lspconfig.zls.setup(
+            {
+                capabilities = capabilities,
+                on_attach = common_on_attach
+            }
+        )
+    end
+
+    if nixcfg.langTypescript.enable then
+        lspconfig.tsserver.setup(
+            {
+                capabilities = capabilities,
+                on_attach = common_on_attach
+            }
+        )
+    end
+
     if nixcfg.langNix.enable then
         lspconfig.nixd.setup(
             {

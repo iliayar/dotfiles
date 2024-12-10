@@ -129,6 +129,8 @@ let
     langSql = { autoEnable = builtins.elem "sql" cfg.langs.enable; };
     langLatex = { autoEnable = builtins.elem "latex" cfg.langs.enable; };
     langProtobuf = { autoEnable = builtins.elem "protobuf" cfg.langs.enable; };
+    langTypescript = { autoEnable = builtins.elem "typescript" cfg.langs.enable; };
+    langZig = { autoEnable = builtins.elem "zig" cfg.langs.enable; };
     langCpp = {
       autoEnable = builtins.elem "cpp" cfg.langs.enable;
       extraParameters = {
@@ -212,6 +214,8 @@ in {
             "haskell"
             "lean"
             "coq"
+            "typescript"
+            "zig"
           ]);
         };
 

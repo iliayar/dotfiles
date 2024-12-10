@@ -12,6 +12,7 @@
     ./uci.nix
     ./train.nix
     ./js.nix
+    ./ts.nix
     ./rust.nix
     ./nix.nix
     ./lua.nix
@@ -20,6 +21,7 @@
     ./sql.nix
     ./typst.nix
     ./lean.nix
+    ./zig.nix
   ];
 
 }

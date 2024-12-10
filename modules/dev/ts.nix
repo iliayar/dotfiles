@@ -3,11 +3,11 @@
 with lib;
 
 let
-  cfg = config.custom.dev.js;
+  cfg = config.custom.dev.ts;
 in
 {
   options = {
-    custom.dev.js = {
+    custom.dev.ts = {
       enable = mkOption {
         default = false;
       };
@@ -17,8 +17,7 @@ in
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
-        bun
-        nodejs_22
+        nodePackages.typescript-language-server
     ];
   };
 }

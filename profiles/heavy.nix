@@ -39,6 +39,7 @@
       python.additionalPackages = pypkgs: with pypkgs; [ pygments ];
       cpp.enable = true;
       js.enable = true;
+      ts.enable = true;
       latex.enable = true;
       rust.enable = true;
       nix.enable = true;
@@ -47,6 +48,7 @@
       ocaml.enable = true;
       sql.enable = true;
       typst.enable = true;
+      zig.enable = true;
 
       embed.enable = true;
 
@@ -152,6 +154,8 @@
         "plantuml"
         "haskell"
         "lean"
+        "typescript"
+        "zig"
       ];
       langs.cpp.lsp = "ccls";
       code-assist = { enable = true; };

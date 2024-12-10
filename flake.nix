@@ -152,10 +152,10 @@
           themes = import ./modules/themes { inherit mylib; };
 
           specialArgs = {
-            inherit home-manager codestats-nvim libxft-bgra org-roam-ui
+            inherit home-manager libxft-bgra org-roam-ui
               picom-jonaburg wakatime-cli zsh-wakatime mylib tlpui-src system
               anyrun wezterm-newest pyprland-newest obsidian-nvim lean4-mode
-              pyprland-my remote-nvim coq-lsp-nvim;
+              pyprland-my codestats-nvim remote-nvim coq-lsp-nvim;
 
             secrets = import secrets;
             themes = themes;
@@ -250,6 +250,7 @@
             "work"
             "work-linux"
             "home-server-ci"
+            "home-server"
           ]) // {
             wsl = home-manager.lib.homeManagerConfiguration rec {
               inherit pkgs;
@@ -283,6 +284,8 @@
               nixosConfigurations.NixServer;
             homeServerCi = deployPkgs.deploy-rs.lib.activate.home-manager
               homeConfigurations.home-server-ci;
+            homeServerDev = deployPkgs.deploy-rs.lib.activate.home-manager
+              homeConfigurations.home-server;
           };
 
         in {
@@ -305,7 +308,7 @@
       deploy.nodes = {
         homeServer = {
           hostname = "home.iliayar.net";
-          profilesOrder = [ "system" "ci" ];
+          profilesOrder = [ "system" "ci" "iliayar" ];
           profiles.system = {
             user = "root";
             sshUser = "root";
@@ -315,6 +318,11 @@
             user = "ci";
             sshUser = "ci";
             path = (config "x86_64-linux").deploySystemPaths.homeServerCi;
+          };
+          profiles.dev = {
+            user = "iliayar";
+            sshUser = "iliayar";
+            path = (config "x86_64-linux").deploySystemPaths.homeServerDev;
           };
         };
       };

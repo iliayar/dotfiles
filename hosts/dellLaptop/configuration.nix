@@ -186,6 +186,17 @@ in {
 
   virtualisation.libvirtd.enable = true;
 
+  services.shairport-sync = {
+    arguments = "-v -o alsa";
+    openFirewall = true;
+    enable = true;
+  };
+
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    libusb1
+  ];
+
   # virtualisation.virtualbox.host.enable = true;
   # users.extraGroups.vboxusers.members = [ "iliayar" ];
   # virtualisation.virtualbox.host.enableExtensionPack = true;
