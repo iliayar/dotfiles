@@ -78,6 +78,8 @@ in
       home.packages = with pkgs; [
         gamemode
         mangohud
+
+        er-patcher
       ];
     })
   ];

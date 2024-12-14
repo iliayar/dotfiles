@@ -33,7 +33,7 @@
   users.users.iliayar = {
     isNormalUser = true;
     home = "/home/iliayar";
-    extraGroups = [ "wheel" "networkmanager" "video" "libvirtd" "wireshark" ];
+    extraGroups = [ "wheel" "networkmanager" "video" "libvirtd" "wireshark" "dialout" "docker" "audio" ];
     shell = pkgs.zsh;
   };
   programs.zsh.enable = true;
@@ -68,6 +68,22 @@
 
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
+
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet -t -r -c Hyprland";
+        user = "greeter";
+      };
+    };
+    vt = 6;
+  };
+
+  programs.dconf.enable = true;
+  programs.steam.enable = true;
+
+  services.resolved.enable = true;
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

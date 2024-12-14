@@ -171,11 +171,11 @@ let
         }
       '';
     };
-    temperature = {
+    temperature = { thermal-zone }: {
       id = "temperature";
       config = {
         iterval = 1;
-        thermal-zone = 1;
+        thermal-zone = thermal-zone;
         format = " {temperatureC}°C";
       };
       style = ''

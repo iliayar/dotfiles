@@ -1,4 +1,4 @@
-{ wezterm-newest, nixpkgs, pyprland-newest, system, pyprland-my, ... }@inputs:
+{ wezterm-newest, nixpkgs, pyprland-newest, system, pyprland-my, swww, ... }@inputs:
 final: prev: {
   # inkscape = (prev.inkscape.override {
   #   python3 = {
@@ -13,4 +13,5 @@ final: prev: {
 
   pyprland = pyprland-my.packages.${system}.pyprland;
   wezterm = wezterm-newest.packages.${system}.default;
+  swww = swww.packages.${system}.default;
 }

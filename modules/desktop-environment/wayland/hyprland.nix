@@ -94,6 +94,7 @@ in {
         nwg-displays
         wlr-randr
         wdisplays
+        wlr-layout-ui
         brightnessctl
         swayidle
         hyprshade
@@ -136,16 +137,22 @@ in {
             gaps_out = 0;
             # border_size = 5;
 
-            allow_tearing = true
+            # allow_tearing = true
           }
 
-          master {
-            no_gaps_when_only = true
-          }
+          # no_gaps_when_only
+          workspace = w[tv1], gapsout:0, gapsin:0
+          workspace = f[1], gapsout:0, gapsin:0
+          windowrulev2 = bordersize 0, floating:0, onworkspace:w[tv1]
+          windowrulev2 = rounding 0, floating:0, onworkspace:w[tv1]
+          windowrulev2 = bordersize 0, floating:0, onworkspace:f[1]
+          windowrulev2 = rounding 0, floating:0, onworkspace:f[1]
 
           decoration {
+            shadow {
+              enabled = false;
+            }
             rounding = false;
-            drop_shadow = false;
 
             blur {
               enabled = false;
@@ -166,7 +173,7 @@ in {
             force_introspection = false;
           }
 
-          env = WLR_DRM_NO_ATOMIC,1
+          # env = WLR_DRM_NO_ATOMIC,1
 
           env = XCURSOR_SIZE,24
           env = HYPRCURSOR_SIZE,24
@@ -376,8 +383,11 @@ in {
           windowrule = opacity 0.9 0.9, ^(Code)$
           # windowrule = float, ^(Zoom)$
 
+          exec-once = swww-daemon -q
           exec-once = waypaper --restore
           exec-once = waybar & pypr
+
+          env = BROWSER,brave
 
           # Extra startup
           ${startupExtra}
@@ -416,17 +426,19 @@ in {
         position = "0% 0%"
         size = "100% 50%"
 
-        [monitors.placement."Samsung"]
-        rightOf = "California Institute"
+        [monitors]
+        hotplug_command = "wlrlui -m"
+        # [monitors.placement."Samsung"]
+        # rightOf = "California Institute"
 
-        [monitors.placement."Dell"]
-        topOf = "California Institute"
+        # [monitors.placement."Dell"]
+        # topOf = "California Institute"
 
-        [monitors.placement."Lenovo"]
-        topOf = "California Institute"
+        # [monitors.placement."Lenovo"]
+        # topOf = "California Institute"
 
-        [monitors.placement."Acer"]
-        rightOf = "California Institute"
+        # [monitors.placement."Acer"]
+        # rightOf = "California Institute"
       '';
     })
     (mkIf (cfg.enable && cfg.portals.enable) {

@@ -257,7 +257,9 @@
               })
               cpu
               memory
-              temperature
+              (temperature {
+                thermal-zone = 1;
+              })
               battery
               hyprland-language
               clock

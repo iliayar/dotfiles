@@ -63,8 +63,8 @@
       22
       80
       443
-      # TODO: Remove it
-      3002
+      1337
+      8384
     ];
     allowedUDPPorts = [ 53 ];
   };

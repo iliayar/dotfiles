@@ -58,7 +58,7 @@ in
       font-awesome
       # symbola
       ubuntu_font_family
-      nerdfonts
+      nerd-fonts.fira-code
       corefonts
     ];
   };

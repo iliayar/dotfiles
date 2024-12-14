@@ -126,9 +126,13 @@
     };
 
     deploy-rs.url = "github:serokell/deploy-rs";
+    swww = {
+      url = "github:LGFae/swww";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, home-manager, nixpkgs, codestats-nvim, secrets
+  outputs = { self, swww, home-manager, nixpkgs, codestats-nvim, secrets
     , emacs-overlay, libxft-bgra, org-roam-ui, picom-jonaburg, wakatime-cli
     , zsh-wakatime, tlpui-src, rust-blocks, nur, uci, anyrun, nwg-displays
     , rust-overlay, denv, wezterm-newest, pyprland-newest, obsidian-nvim
@@ -155,7 +159,7 @@
             inherit home-manager libxft-bgra org-roam-ui
               picom-jonaburg wakatime-cli zsh-wakatime mylib tlpui-src system
               anyrun wezterm-newest pyprland-newest obsidian-nvim lean4-mode
-              pyprland-my codestats-nvim remote-nvim coq-lsp-nvim;
+              pyprland-my codestats-nvim remote-nvim coq-lsp-nvim swww;
 
             secrets = import secrets;
             themes = themes;
@@ -251,6 +255,7 @@
             "work-linux"
             "home-server-ci"
             "home-server"
+            "pc"
           ]) // {
             wsl = home-manager.lib.homeManagerConfiguration rec {
               inherit pkgs;
@@ -303,6 +308,7 @@
 
       homeConfigurations = {
         heavy = (config "x86_64-linux").homeConfigurations.heavy;
+        pc = (config "x86_64-linux").homeConfigurations.pc;
       };
 
       deploy.nodes = {
