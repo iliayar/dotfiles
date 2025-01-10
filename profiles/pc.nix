@@ -68,12 +68,12 @@
     #   minecraft.enable = true;
     #   wine.enable = true;
     #   lutris.enable = true;
-    #   click-the-circles.enable = true;
 
     #   extra.enable = true;
     # };
     games = {
-        extra.enable = true;
+      click-the-circles.enable = true;
+      extra.enable = true;
     };
 
     # editors.emacs = {
@@ -220,7 +220,7 @@
 
       # audio-utils.enable = true;
       # easyeffects.enable = true;
-      # spotify.enable = true;
+      spotify.enable = true;
 
       # zathura.enable = true;
 

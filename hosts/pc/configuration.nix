@@ -53,8 +53,7 @@
   nix = {
     settings = {
       trusted-users = [ "iliayar" ];
-      # TODO: Restore
-      # secret-key-files = [ "/var/iliayar-cache-priv-key.pem" ];
+      secret-key-files = [ "/var/iliayar-cache-priv-key.pem" ];
     };
     extraOptions = ''
       experimental-features = nix-command flakes

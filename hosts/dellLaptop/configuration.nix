@@ -162,7 +162,6 @@ in {
   # hardware.pulseaudio.enable = false;
 
   nix = {
-    package = pkgs.nixFlakes;
     settings = {
       trusted-users = [ "iliayar" ];
       secret-key-files = [ "/var/iliayar-cache-priv-key.pem" ];

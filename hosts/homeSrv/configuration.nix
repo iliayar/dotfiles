@@ -1,6 +1,8 @@
 { config, pkgs, uci, system, ... }:
 
-{
+let 
+    my-key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC8pnmPL9aFmXf7nzWxP9nDBFB5WC+hxdZcxXT+NTYm7G8UGGXf7G/F+FKIaHVCdUYidDVO4QVQtjG3qmQRjc52phWTXuk3bf1zGdvnZiriLRLeaXDRqQ+Ldm/UfGbQBU3yf9dih1DXsmp+R0gTkX+ZPAUyYz4/n7jSKs3bqHmzijVz348yajpYmo7UddozphPzBcf/Wxq/UqnGdmaQ3SepW88kCNEagDsN139pfOBXrdBaseBv5GBUhlio5QadRUoosEILOjc9oZqvZ5Nrxm/em8r/sPs/acSi9kTN2SqSMXSR5vRm24mQKBv1x+7hCKr4RwS+MUP3eKWLddiR9NmilOuprqgkdfNlPVmFrRIe9cdfaZ/5qz7IU70Dge3K6D+iWQGsInr0d6vdxsw2G0yxosk9yULJpSjRqUaFfq/q8CY1CvDZ9aJ9n4qMkg2PVgJizK+bk7WdqVfU5BWaFlHpHjI9UsIbU50of2xbgZ+Q237QNtab+9bXby89ld+wCFY/YUtE9BaWKoA3ENLNb6ygDohSSQQW6y5QTbNtoiXSzQUgTC/DThr5p+A8W9poxidxcL1U1KX4kNZ48HCKibbUNcZed3p90MX0rerjIS3npUMk/kw9QccNN0yNsqLj2a3mFBGU1r2upjbi5rsaQ1zrbUC/gqEO/rVIi+TF8Xpl6w== iliayar@nixos";
+in {
   imports = [ ./hardware-configuration.nix ];
 
   boot.loader.systemd-boot.enable = true;
@@ -28,9 +30,7 @@
     settings.PermitRootLogin = "yes";
   };
 
-  users.users.root.openssh.authorizedKeys.keys = [
-    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC8pnmPL9aFmXf7nzWxP9nDBFB5WC+hxdZcxXT+NTYm7G8UGGXf7G/F+FKIaHVCdUYidDVO4QVQtjG3qmQRjc52phWTXuk3bf1zGdvnZiriLRLeaXDRqQ+Ldm/UfGbQBU3yf9dih1DXsmp+R0gTkX+ZPAUyYz4/n7jSKs3bqHmzijVz348yajpYmo7UddozphPzBcf/Wxq/UqnGdmaQ3SepW88kCNEagDsN139pfOBXrdBaseBv5GBUhlio5QadRUoosEILOjc9oZqvZ5Nrxm/em8r/sPs/acSi9kTN2SqSMXSR5vRm24mQKBv1x+7hCKr4RwS+MUP3eKWLddiR9NmilOuprqgkdfNlPVmFrRIe9cdfaZ/5qz7IU70Dge3K6D+iWQGsInr0d6vdxsw2G0yxosk9yULJpSjRqUaFfq/q8CY1CvDZ9aJ9n4qMkg2PVgJizK+bk7WdqVfU5BWaFlHpHjI9UsIbU50of2xbgZ+Q237QNtab+9bXby89ld+wCFY/YUtE9BaWKoA3ENLNb6ygDohSSQQW6y5QTbNtoiXSzQUgTC/DThr5p+A8W9poxidxcL1U1KX4kNZ48HCKibbUNcZed3p90MX0rerjIS3npUMk/kw9QccNN0yNsqLj2a3mFBGU1r2upjbi5rsaQ1zrbUC/gqEO/rVIi+TF8Xpl6w== iliayar@nixos"
-  ];
+  users.users.root.openssh.authorizedKeys.keys = [ my-key ];
 
   networking = {
     nat = {
@@ -97,9 +97,11 @@
     homeMode = "755";
   };
 
-  users.users.ci.openssh.authorizedKeys.keys = [
-    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC8pnmPL9aFmXf7nzWxP9nDBFB5WC+hxdZcxXT+NTYm7G8UGGXf7G/F+FKIaHVCdUYidDVO4QVQtjG3qmQRjc52phWTXuk3bf1zGdvnZiriLRLeaXDRqQ+Ldm/UfGbQBU3yf9dih1DXsmp+R0gTkX+ZPAUyYz4/n7jSKs3bqHmzijVz348yajpYmo7UddozphPzBcf/Wxq/UqnGdmaQ3SepW88kCNEagDsN139pfOBXrdBaseBv5GBUhlio5QadRUoosEILOjc9oZqvZ5Nrxm/em8r/sPs/acSi9kTN2SqSMXSR5vRm24mQKBv1x+7hCKr4RwS+MUP3eKWLddiR9NmilOuprqgkdfNlPVmFrRIe9cdfaZ/5qz7IU70Dge3K6D+iWQGsInr0d6vdxsw2G0yxosk9yULJpSjRqUaFfq/q8CY1CvDZ9aJ9n4qMkg2PVgJizK+bk7WdqVfU5BWaFlHpHjI9UsIbU50of2xbgZ+Q237QNtab+9bXby89ld+wCFY/YUtE9BaWKoA3ENLNb6ygDohSSQQW6y5QTbNtoiXSzQUgTC/DThr5p+A8W9poxidxcL1U1KX4kNZ48HCKibbUNcZed3p90MX0rerjIS3npUMk/kw9QccNN0yNsqLj2a3mFBGU1r2upjbi5rsaQ1zrbUC/gqEO/rVIi+TF8Xpl6w== iliayar@nixos"
-  ];
+  users.users.factorio = {
+    isNormalUser = true; 
+  };
+
+  users.users.ci.openssh.authorizedKeys.keys = [ my-key ];
 
   services.caddy = {
     enable = true;

@@ -184,7 +184,7 @@
 
           dellLaptop = let
             modules = [
-              nur.nixosModules.nur
+              nur.modules.nixos.default
               ./hosts/dellLaptop/configuration.nix
               ./cachix.nix
               {
