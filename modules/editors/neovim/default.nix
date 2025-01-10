@@ -104,6 +104,7 @@ let
           (pkgs.vimUtils.buildVimPlugin {
             name = "codestats-nvim";
             src = codestats-nvim;
+            doCheck = false;
           })
         ];
       extraParameters = {
