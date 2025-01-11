@@ -130,13 +130,18 @@
       url = "github:LGFae/swww";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    ghostty-newest = {
+        url = "github:ghostty-org/ghostty";
+    };
   };
 
   outputs = { self, swww, home-manager, nixpkgs, codestats-nvim, secrets
     , emacs-overlay, libxft-bgra, org-roam-ui, picom-jonaburg, wakatime-cli
     , zsh-wakatime, tlpui-src, rust-blocks, nur, uci, anyrun, nwg-displays
     , rust-overlay, denv, wezterm-newest, pyprland-newest, obsidian-nvim
-    , lean4-mode, pyprland-my, remote-nvim, coq-lsp-nvim, deploy-rs, ... }@inputs:
+    , lean4-mode, pyprland-my, remote-nvim, coq-lsp-nvim, deploy-rs
+    , ghostty-newest, ... }@inputs:
     let
       config = system:
         let
@@ -159,7 +164,7 @@
             inherit home-manager libxft-bgra org-roam-ui
               picom-jonaburg wakatime-cli zsh-wakatime mylib tlpui-src system
               anyrun wezterm-newest pyprland-newest obsidian-nvim lean4-mode
-              pyprland-my codestats-nvim remote-nvim coq-lsp-nvim swww;
+              pyprland-my codestats-nvim remote-nvim coq-lsp-nvim swww ghostty-newest;
 
             secrets = import secrets;
             themes = themes;

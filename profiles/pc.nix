@@ -35,7 +35,9 @@
     settings = { code-stats-machine = "DellLaptop"; };
 
     dev = {
+        python.enable = true;
         go.enable = true;
+        nix.enable = true;
     };
     # dev = {
     #   python.enable = true;
@@ -207,6 +209,10 @@
           # useNvidia = false;
         };
 
+        ghostty = {
+            enable = true;
+        };
+
         # urxvt.enable = true;
       };
 
@@ -229,6 +235,8 @@
       wayland.hyprland = {
         enable = true;
         portals.enable = true;
+
+        termCmd = "ghostty";
 
         cursor.hyprcursor = "Bibata-Original-Classic";
         cursor.xcursor = "Bibata-Original-Classic";

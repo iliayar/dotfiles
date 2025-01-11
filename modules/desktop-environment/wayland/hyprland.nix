@@ -421,8 +421,10 @@ in {
         "[AO] select Audio Output" = "${tools.select_audio_output}/bin/select_audio_output"
 
         [scratchpads.term-quake]
-        command = "wezterm start --class term-quake"
-        class = "term-quake"
+        # command = "wezterm start --class term-quake"
+        # class = "term-quake"
+        command = "ghostty --class=local.iliayar.term-quake"
+        class = "local.iliayar.term-quake"
         position = "0% 0%"
         size = "100% 50%"
 
