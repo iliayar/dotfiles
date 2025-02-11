@@ -78,59 +78,45 @@
       extra.enable = true;
     };
 
-    # editors.emacs = {
-    #   enable = true;
-    #   server = false;
+    editors.emacs = {
+      enable = true;
+      server = false;
 
-    #   bundles = {
-    #     code-stats.enable = true;
-    #     evil-integrations.enable = true;
-    #     web.enable = false;
-    #     obsidian.enable = false;
+      bundles = {
+        code-stats.enable = true;
+        evil-integrations.enable = true;
+        proof-assist.enable = true;
+        wayland.enable = true;
+      };
 
-    #     proof-assist.enable = true;
-    #     wayland.enable = true;
+      misc = {
+        enable = true;
+        code = { enable = true; };
+      };
 
-    #     sonic-pi.enable = false;
-    #   };
+      langs.enable = [ "nix" "misc" ];
 
-    #   misc = {
-    #     enable = true;
-    #     code = { enable = true; };
-    #   };
+      code-assist = {
+        enable = true;
+        pretty.enable = true;
+      };
 
-    #   langs.enable = [ "nix" "misc" "go" "haskell" "latex" ];
+      evil = { enable = true; };
 
-    #   code-assist = {
-    #     enable = true;
-    #     pretty.enable = true;
-    #   };
+      org = {
+        roam = {
+          enable = true;
+          ui = true;
+        };
+        style = "v2";
+      };
 
-    #   evil = { enable = true; };
-
-    #   org = {
-    #     roam = {
-    #       enable = true;
-    #       ui = true;
-    #     };
-    #     style = "v2";
-
-    #     reveal.enable = false;
-    #   };
-
-    #   pretty = {
-    #     theme = "doom-gruvbox";
-    #     extra.enable = false;
-    #     font-size = 120;
-    #   };
-
-    #   packages = {
-    #     ace-window.enable = false;
-    #     avy.enable = false;
-    #     hl-todo.enable = false;
-    #     lsp-ui.enable = false;
-    #   };
-    # };
+      pretty = {
+        theme = "doom-gruvbox";
+        extra.enable = false;
+        font-size = 120;
+      };
+    };
 
     editors.nvim = {
       bundles = {
@@ -147,7 +133,7 @@
       };
       langs.enable = [
         "misc"
-        # "nix"
+        "nix"
         # "python"
         # "rust"
         # "go"
@@ -169,6 +155,7 @@
     misc = {
       enable = true;
       syncthing = true;
+      udiskie = true;
 
       git = {
         enable = true;
@@ -192,7 +179,7 @@
 
     de = {
       misc = true;
-      # media = true;
+      media = true;
       # obs.enable = true;
       social.enable = true;
 

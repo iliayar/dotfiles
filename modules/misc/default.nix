@@ -27,7 +27,7 @@ in
       };
 
       udiskie = mkOption {
-        default = true;
+        default = false;
       };
     };
   };

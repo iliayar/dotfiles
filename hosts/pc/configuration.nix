@@ -6,8 +6,41 @@
       ./hardware-configuration.nix
     ];
 
+  boot.extraModulePackages = [
+    pkgs.systec-can
+  ];
+  hardware.firmware = [
+    pkgs.systec-can
+  ];
+
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  boot = {
+    plymouth = {
+      enable = true;
+      theme = "rings";
+      themePackages = with pkgs; [
+        (adi1090x-plymouth-themes.override {
+          selected_themes = [ "rings" ];
+        })
+      ];
+    };
+
+    consoleLogLevel = 0;
+    initrd.verbose = false;
+    initrd.systemd.enable = true;
+    kernelParams = [
+      "quiet"
+      "splash"
+      "boot.shell_on_fail"
+      "loglevel=3"
+      "rd.systemd.show_status=false"
+      "rd.udev.log_level=3"
+      "udev.log_priority=3"
+    ];
+  };
 
   networking = {
     hostName = "NixPC";
@@ -84,6 +117,20 @@
 
   services.resolved.enable = true;
 
+  # FIXME: MX Master 3s keeps wakes up system after suspend
+  # Not persistent workaround: echo "XHC2" | sudo tee /proc/acpi/wakeup
+  #
+  # $ grep XHC2 /proc/acpi/wakeup
+  # XHC2      S4    *disabled  pci:0000:13:00.0
+  # $ cat /sys/class/pci_bus/0000:13/device/vendor
+  # 0x1022
+  # $ cat /sys/class/pci_bus/0000:13/device/device
+  # 0x14dd
+  services.udev.extraRules = ''
+    ACTION=="add" SUBSYSTEM=="pci" ATTR{vendor}=="0x1022" ATTR{device}=="0x14dd" ATTR{power/wakeup}="disabled"
+  '';
+
+
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
   #
@@ -104,4 +151,3 @@
   system.stateVersion = "24.11"; # Did you read the comment?
 
 }
-

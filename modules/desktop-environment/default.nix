@@ -16,7 +16,8 @@ let
   zoom-fixed-nixos = pkgs.writeShellScriptBin "zoom-fixed" ''
     XDG_CURRENT_DESKTOP=GNOME ${pkgs.zoom-us}/bin/zoom $@
   '';
-in {
+in
+{
   imports = [
     ./xsession.nix
     ./xmonad
@@ -103,7 +104,15 @@ in {
       };
     })
 
-    (mkIf cfg.media { home.packages = with pkgs; [ gimp vlc mpv deluge ]; })
+    (mkIf cfg.media {
+      home.packages = with pkgs; [
+        gimp
+        vlc
+        # mpv
+        # deluge 
+        transmission_4-qt
+      ];
+    })
 
     (mkIf cfg.obs.enable {
       programs.obs-studio = {
@@ -125,12 +134,15 @@ in {
       xdg.desktopEntries = {
         zoom = {
           name = "Zoom";
-          exec = let
-            zoom-bin = if cfg.social.fix-zoom-non-nixos then
-              "${zoom-fixed}/bin/zoom-fixed"
-            else
-              "${zoom-fixed-nixos}/bin/zoom-fixed";
-          in "${zoom-bin} %U";
+          exec =
+            let
+              zoom-bin =
+                if cfg.social.fix-zoom-non-nixos then
+                  "${zoom-fixed}/bin/zoom-fixed"
+                else
+                  "${zoom-fixed-nixos}/bin/zoom-fixed";
+            in
+            "${zoom-bin} %U";
           type = "Application";
           terminal = false;
           mimeType = [

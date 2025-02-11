@@ -987,6 +987,7 @@
         "rust-overlay": "rust-overlay_3",
         "secrets": "secrets",
         "swww": "swww",
+        "systec-can": "systec-can",
         "tlpui-src": "tlpui-src",
         "uci": "uci",
         "wakatime-cli": "wakatime-cli",
@@ -1161,6 +1162,19 @@
         "owner": "LGFae",
         "repo": "swww",
         "type": "github"
+      }
+    },
+    "systec-can": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1666603020,
+        "narHash": "sha256-ETWN/uTTgMo2Hhig1hC32POgKpNdhRDGc/tcEnoxEYg=",
+        "type": "tarball",
+        "url": "https://www.systec-electronic.com/media/default/Redakteur/produkte/Interfaces_Gateways/sysWORXX_USB_CANmodul_Series/Downloads/SO-1139-systec_can.tar.bz2"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://www.systec-electronic.com/media/default/Redakteur/produkte/Interfaces_Gateways/sysWORXX_USB_CANmodul_Series/Downloads/SO-1139-systec_can.tar.bz2"
       }
     },
     "systems": {

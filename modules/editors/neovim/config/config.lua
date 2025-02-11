@@ -262,7 +262,7 @@ if nixcfg.codeMisc.enable then
 
     if nixcfg.langNix.enable then
         params.filetype["nix"] = {
-            require("formatter.defaults.nixfmt")
+            require("formatter.defaults.nixpkgs_fmt")
         }
     end
 

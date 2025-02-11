@@ -80,6 +80,7 @@ in
         mangohud
 
         er-patcher
+        r2modman
       ];
     })
   ];
