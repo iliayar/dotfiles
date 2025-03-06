@@ -26,7 +26,7 @@
     # libreoffice
   ];
 
-  # denv = { langs.haskell.enable = true; };
+  denv = { langs.haskell.enable = true; };
 
   custom = {
 
@@ -38,6 +38,8 @@
         python.enable = true;
         go.enable = true;
         nix.enable = true;
+        ocaml.enable = true;
+        cpp.enable = true;
     };
     # dev = {
     #   python.enable = true;
@@ -136,15 +138,15 @@
         "nix"
         # "python"
         # "rust"
-        # "go"
+        "go"
         # "lua"
-        # "ocaml"
+        "ocaml"
         # "sql"
         # "latex"
         # "cpp"
         # "typst"
         # "plantuml"
-        # "haskell"
+        "haskell"
         # "lean"
       ];
       langs.cpp.lsp = "ccls";

@@ -39,6 +39,7 @@ in
 
       initExtra = ''
         ${cfg.extra}
+        PATH=$PATH:$HOME/.local/bin
       '';
     };
   };

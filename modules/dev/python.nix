@@ -66,7 +66,7 @@ in
     home.packages = with pkgs; [
       (python3.withPackages (ps: with ps; 
         (if cfg.jupyter then [ jupyter jupyterlab ] else []) ++
-        (if cfg.math then [ numpy ] else []) ++
+        (if cfg.math then [ numpy pandas matplotlib ] else []) ++
         (if cfg.web then [ requests ] else []) ++
         (cfg.additionalPackages ps)
       ))

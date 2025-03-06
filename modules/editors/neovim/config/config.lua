@@ -233,6 +233,10 @@ if nixcfg.misc.enable then
     end
 end
 
+if nixcfg.exp.enable then
+    require("nvim-exp").setup()
+end
+
 if nixcfg.codeMisc.enable then
     treesitterConfig = {
         highlight = {
@@ -582,6 +586,26 @@ if nixcfg.lsp.enable then
 
         -- NOTE: Pretty bad
         -- require("coq-lsp").setup()
+    end
+
+    if nixcfg.exp.enable then
+        local configs = require('lspconfig.configs')
+        local util = require('lspconfig.util')
+        configs.exp = {
+            default_config = {
+                cmd = {'exp-ls'},
+                filetypes = {'exp'},
+                root_dir = util.root_pattern('.exp'),
+                single_file_support = true,
+            }
+        }
+        lspconfig.exp.setup(
+            {
+                autostart = false,
+                capabilities = capabilities,
+                on_attach = common_on_attach,
+            }
+        )
     end
 end
 

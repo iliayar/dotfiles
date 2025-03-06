@@ -26,6 +26,8 @@ let
 
   cfg = config.custom.editors.nvim;
 
+  nvim-exp = import ./nvim-exp { inherit pkgs; };
+
   toLuaArray = l: "{ " + (foldl (acc: e: acc + ''"${e}", '') "" l) + "}";
 
   bundles = {
@@ -172,6 +174,8 @@ let
     orgmode = { plugins = with pkgs.vimPlugins; [ orgmode ]; };
 
     agi = { plugins = with pkgs.vimPlugins; [ ChatGPT-nvim ]; };
+
+    exp = { autoEnable = cfg.experiments.enable; plugins = [ nvim-exp ]; };
   };
 in {
   options = {
@@ -248,6 +252,10 @@ in {
           default = "~/org/obsidian/notes";
           type = types.str;
         };
+      };
+
+      experiments = {
+        enable = mkOption { default = true; };
       };
     };
   };
