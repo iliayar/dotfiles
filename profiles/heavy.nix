@@ -9,22 +9,7 @@
   home.username = "iliayar";
   home.homeDirectory = "/home/iliayar";
 
-  home.packages = with pkgs; [
-    xournalpp
-    pkgs.gnome.adwaita-icon-theme
-    obsidian
-    aichat
-    graphviz
-    plantuml-c4
-
-    sonic-pi
-    pipewire.jack
-    qpwgraph
-
-    deploy-rs
-
-    libreoffice
-  ];
+  home.packages = with pkgs; [];
 
   denv = { langs.haskell.enable = true; };
 
@@ -36,41 +21,15 @@
 
     dev = {
       python.enable = true;
-      python.additionalPackages = pypkgs: with pypkgs; [ pygments ];
-      cpp.enable = true;
-      js.enable = true;
-      ts.enable = true;
-      latex.enable = true;
-      rust.enable = true;
       nix.enable = true;
       lua.enable = true;
       go.enable = true;
       ocaml.enable = true;
-      sql.enable = true;
-      typst.enable = true;
-      zig.enable = true;
-
-      embed.enable = true;
-
-      uci.enable = true;
-      uci.daemon = true;
-
-      train.enable = true;
-
       lean.enable = true;
     };
 
     study.sage.enable = true;
     study.misc.enable = true;
-
-    games = {
-      minecraft.enable = true;
-      wine.enable = true;
-      lutris.enable = true;
-      click-the-circles.enable = true;
-
-      extra.enable = true;
-    };
 
     editors.emacs = {
       enable = true;
@@ -80,7 +39,7 @@
         code-stats.enable = true;
         evil-integrations.enable = true;
         web.enable = false;
-        obsidian.enable = false;
+        # obsidian.enable = false;
 
         proof-assist.enable = true;
         wayland.enable = true;
@@ -129,9 +88,9 @@
     editors.nvim = {
       bundles = {
         codeStats.enable = true;
-        obsidian.enable = true;
-        orgmode.enable = true;
-        agi.enable = false;
+        # obsidian.enable = true    ;
+        # orgmode.enable = true;
+        # agi.enable = false;
       };
 
       enable = true;
@@ -143,21 +102,11 @@
         "misc"
         "nix"
         "python"
-        "rust"
         "go"
         "lua"
         "ocaml"
-        "sql"
-        "latex"
-        "cpp"
-        "typst"
-        "plantuml"
-        "haskell"
         "lean"
-        "typescript"
-        "zig"
       ];
-      langs.cpp.lsp = "ccls";
       code-assist = { enable = true; };
       pretty = { status-bar.enable = true; };
     };
@@ -175,8 +124,6 @@
       pass.enable = true;
       ssh.enable = true;
 
-      zellij.enable = true;
-
       net.enable = true;
     };
 
@@ -189,40 +136,28 @@
     de = {
       misc = true;
       media = true;
-      obs.enable = true;
       social.enable = true;
 
       browsers = {
         brave.enable = true;
-        qute.enable = true;
       };
 
       terms = {
-        alacritty.enable = true;
-        # Moving to
-        wezterm = {
-          enable = true;
-          useNvidia = false;
+        # wezterm = {
+        #   enable = true;
+        #   useNvidia = false;
+        # };
+        ghostty = {
+            enable = true;
         };
-
-        urxvt.enable = true;
       };
 
-      # xmobar.enable = true;
-      # xmonad.enable = true;
-
-      # lock.enable = true;
-      # conky.enable = true;
       dunst.enable = true;
-      # picom.enable = true;
 
       audio-utils.enable = true;
-      easyeffects.enable = true;
       spotify.enable = true;
 
       zathura.enable = true;
-
-      # pointer.enable = true;
 
       wayland.hyprland = {
         enable = true;
@@ -230,6 +165,8 @@
 
         cursor.hyprcursor = "Bibata-Original-Classic";
         cursor.xcursor = "Bibata-Original-Classic";
+
+        termCmd = "ghostty";
       };
 
       wayland.waybar = {
