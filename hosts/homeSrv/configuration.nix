@@ -37,6 +37,14 @@ in {
       enable = true;
       internalIPs = [ "192.168.2.0/24" ];
       externalInterface = "enp2s0";
+
+      forwardPorts = [
+        {
+            destination = "192.168.2.101:2222";
+            proto = "tcp";
+            sourcePort = 4022;
+        }
+      ];
     };
 
     interfaces."enp4s0" = {
@@ -59,6 +67,10 @@ in {
 
   networking.firewall = {
     enable = true;
+    allowedTCPPortRanges = [
+        { from = 4000; to = 4099; }
+        { from = 3000; to = 3099; }
+    ];
     allowedTCPPorts = [
       22
       80

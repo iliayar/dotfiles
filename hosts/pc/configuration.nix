@@ -16,6 +16,7 @@
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.supportedFilesystems = [ "ntfs" ];
 
   boot = {
     plymouth = {
@@ -45,6 +46,7 @@
   networking = {
     hostName = "NixPC";
     networkmanager = { enable = true; };
+    nameservers = [ "1.1.1.1" "8.8.8.8" "8.8.4.4" ];
   };
 
   time.timeZone = "Europe/Moscow";
@@ -114,8 +116,11 @@
 
   programs.dconf.enable = true;
   programs.steam.enable = true;
+  programs.nix-ld.enable = true;
 
   services.resolved.enable = true;
+
+  services.hardware.openrgb.enable = true;
 
   # FIXME: MX Master 3s keeps wakes up system after suspend
   # Not persistent workaround: echo "XHC2" | sudo tee /proc/acpi/wakeup
@@ -130,6 +135,12 @@
     ACTION=="add" SUBSYSTEM=="pci" ATTR{vendor}=="0x1022" ATTR{device}=="0x14dd" ATTR{power/wakeup}="disabled"
   '';
 
+  virtualisation.libvirtd.enable = true;
+  virtualisation.virtualbox.host.enable = true;
+  virtualisation.virtualbox.host.enableExtensionPack = true;
+  users.extraGroups.vboxusers.members = [ "iliayar" ];
+
+  programs.wireshark.enable = true;
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

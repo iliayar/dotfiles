@@ -21,9 +21,13 @@
     # pipewire.jack
     # qpwgraph
 
+    # TODO: Move these somewhere
+    wireshark
+    libreoffice
     deploy-rs
 
-    # libreoffice
+    # TODO: Move it in separate config or delete
+    warp-terminal
   ];
 
   denv = { langs.haskell.enable = true; };
@@ -35,11 +39,14 @@
     settings = { code-stats-machine = "DellLaptop"; };
 
     dev = {
-        python.enable = true;
-        go.enable = true;
-        nix.enable = true;
-        ocaml.enable = true;
-        cpp.enable = true;
+      python.enable = true;
+      go.enable = true;
+      nix.enable = true;
+      ocaml.enable = true;
+      cpp.enable = true;
+
+      uci.enable = true;
+      uci.daemon = false;
     };
     # dev = {
     #   python.enable = true;
@@ -56,9 +63,6 @@
     #   typst.enable = true;
 
     #   embed.enable = true;
-
-    #   uci.enable = true;
-    #   uci.daemon = true;
 
     #   train.enable = true;
 
@@ -78,6 +82,7 @@
     games = {
       click-the-circles.enable = true;
       extra.enable = true;
+      wine.enable = true;
     };
 
     editors.emacs = {
@@ -136,7 +141,7 @@
       langs.enable = [
         "misc"
         "nix"
-        # "python"
+        "python"
         # "rust"
         "go"
         # "lua"
@@ -152,6 +157,11 @@
       langs.cpp.lsp = "ccls";
       code-assist = { enable = true; };
       pretty = { status-bar.enable = true; };
+
+      obsidian = {
+        enable = true;
+        path = "~/org/obsidian";
+      };
     };
 
     misc = {
@@ -199,7 +209,7 @@
         };
 
         ghostty = {
-            enable = true;
+          enable = true;
         };
 
         # urxvt.enable = true;

@@ -1,15 +1,9 @@
-{ config, lib, pkgs, codestats-nvim, secrets, obsidian-nvim, remote-nvim
+{ config, lib, pkgs, codestats-nvim, secrets, remote-nvim
 , coq-lsp-nvim, ... }:
 
 with lib;
 
 let
-  obsidian-nvim-pkg = pkgs.vimUtils.buildVimPlugin {
-    pname = "obsidian.nvim";
-    version = "2023-12-23";
-    src = obsidian-nvim;
-  };
-
   remote-nvim-pkg = pkgs.vimUtils.buildVimPlugin {
     pname = "remote-nvim.nvim";
     version = "2024-10-09";
@@ -167,7 +161,7 @@ let
 
     obsidian = {
       autoEnable = cfg.obsidian.enable;
-      plugins = with pkgs.vimPlugins; [ obsidian-nvim-pkg ];
+      plugins = with pkgs.vimPlugins; [ obsidian-nvim ];
       extraParameters = { path = ''"${cfg.obsidian.path}"''; };
     };
 

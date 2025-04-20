@@ -109,11 +109,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    obsidian-nvim = {
-      url = "github:epwalsh/obsidian.nvim";
-      flake = false;
-    };
-
     remote-nvim = {
       url = "github:amitds1997/remote-nvim.nvim";
       # url = "path:/home/iliayar/Repos/remote-nvim.nvim";
@@ -164,7 +159,6 @@
     , denv
     , wezterm-newest
     , pyprland-newest
-    , obsidian-nvim
     , lean4-mode
     , pyprland-my
     , remote-nvim
@@ -195,7 +189,7 @@
           specialArgs = {
             inherit home-manager libxft-bgra org-roam-ui
               picom-jonaburg wakatime-cli zsh-wakatime mylib tlpui-src system
-              anyrun wezterm-newest pyprland-newest obsidian-nvim lean4-mode
+              anyrun wezterm-newest pyprland-newest lean4-mode
               pyprland-my codestats-nvim remote-nvim coq-lsp-nvim swww ghostty-newest
               systec-can;
 
