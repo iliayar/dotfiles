@@ -28,7 +28,17 @@
 
     # TODO: Move it in separate config or delete
     warp-terminal
+    zed-editor
   ];
+
+  # TODO: Move it somewhere
+  services.ollama = {
+    enable = true;
+    acceleration = "rocm";
+    environmentVariables = {
+      HSA_OVERRIDE_GFX_VERSION = "11.0.0";
+    };
+  };
 
   denv = { langs.haskell.enable = true; };
 

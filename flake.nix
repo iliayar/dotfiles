@@ -126,48 +126,21 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    ghostty-newest = {
-      url = "github:ghostty-org/ghostty";
-    };
+    ghostty-newest = { url = "github:ghostty-org/ghostty"; };
 
     systec-can = {
-      url = "https://www.systec-electronic.com/media/default/Redakteur/produkte/Interfaces_Gateways/sysWORXX_USB_CANmodul_Series/Downloads/SO-1139-systec_can.tar.bz2";
+      url =
+        "https://www.systec-electronic.com/media/default/Redakteur/produkte/Interfaces_Gateways/sysWORXX_USB_CANmodul_Series/Downloads/SO-1139-systec_can.tar.bz2";
       flake = false;
     };
   };
 
-  outputs =
-    { self
-    , swww
-    , home-manager
-    , nixpkgs
-    , codestats-nvim
-    , secrets
-    , emacs-overlay
-    , libxft-bgra
-    , org-roam-ui
-    , picom-jonaburg
-    , wakatime-cli
-    , zsh-wakatime
-    , tlpui-src
-    , rust-blocks
-    , nur
-    , uci
-    , anyrun
-    , nwg-displays
-    , rust-overlay
-    , denv
-    , wezterm-newest
-    , pyprland-newest
-    , lean4-mode
-    , pyprland-my
-    , remote-nvim
-    , coq-lsp-nvim
-    , deploy-rs
-    , ghostty-newest
-    , systec-can
-    , ...
-    }@inputs:
+  outputs = { self, swww, home-manager, nixpkgs, codestats-nvim, secrets
+    , emacs-overlay, libxft-bgra, org-roam-ui, picom-jonaburg, wakatime-cli
+    , zsh-wakatime, tlpui-src, rust-blocks, nur, uci, anyrun, nwg-displays
+    , rust-overlay, denv, wezterm-newest, pyprland-newest, lean4-mode
+    , pyprland-my, remote-nvim, coq-lsp-nvim, deploy-rs, ghostty-newest
+    , systec-can, ... }@inputs:
     let
       config = system:
         let
@@ -187,10 +160,10 @@
           themes = import ./modules/themes { inherit mylib; };
 
           specialArgs = {
-            inherit home-manager libxft-bgra org-roam-ui
-              picom-jonaburg wakatime-cli zsh-wakatime mylib tlpui-src system
-              anyrun wezterm-newest pyprland-newest lean4-mode
-              pyprland-my codestats-nvim remote-nvim coq-lsp-nvim swww ghostty-newest
+            inherit home-manager libxft-bgra org-roam-ui picom-jonaburg
+              wakatime-cli zsh-wakatime mylib tlpui-src system anyrun
+              wezterm-newest pyprland-newest lean4-mode pyprland-my
+              codestats-nvim remote-nvim coq-lsp-nvim swww ghostty-newest
               systec-can;
 
             secrets = import secrets;
@@ -212,82 +185,73 @@
           makeHomeProfile = name: makeHomeProfileImpl ./profiles/${name}.nix;
 
           makeProfiles = pkgs.lib.foldl
-            (acc: name: acc // { ${name} = makeHomeProfile name; })
-            { };
+            (acc: name: acc // { ${name} = makeHomeProfile name; }) { };
 
-          dellLaptop =
-            let
-              modules = [
-                nur.modules.nixos.default
-                ./hosts/dellLaptop/configuration.nix
-                ./cachix.nix
-                {
-                  nixpkgs = nixpkgs-config;
-                  nix = {
-                    gc = {
-                      automatic = true;
-                      options = "--delete-older-than 3d";
-                    };
+          dellLaptop = let
+            modules = [
+              nur.modules.nixos.default
+              ./hosts/dellLaptop/configuration.nix
+              ./cachix.nix
+              {
+                nixpkgs = nixpkgs-config;
+                nix = {
+                  gc = {
+                    automatic = true;
+                    options = "--delete-older-than 3d";
                   };
-                }
-              ];
-            in
-            nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
+                };
+              }
+            ];
+          in nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
 
-          pc =
-            let
-              modules = [
-                # nur.nixosModules.nur
-                ./hosts/pc/configuration.nix
-                ./cachix.nix
-                {
-                  nixpkgs = nixpkgs-config;
-                  nix = {
-                    gc = {
-                      automatic = true;
-                      options = "--delete-older-than 3d";
-                    };
+          pc = let
+            modules = [
+              # nur.nixosModules.nur
+              ./hosts/pc/configuration.nix
+              ./cachix.nix
+              {
+                nixpkgs = nixpkgs-config;
+                nix = {
+                  gc = {
+                    automatic = true;
+                    options = "--delete-older-than 3d";
                   };
-                }
-              ];
-            in
-            nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
+                };
+              }
+            ];
+          in nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
 
-          lenovoLaptop =
-            let
-              modules = [
-                ./hosts/lenovoLaptop/configuration.nix
-                ./cachix.nix
-                {
-                  nixpkgs = nixpkgs-config;
-                  nix = {
-                    gc = {
-                      automatic = true;
-                      options = "--delete-older-than 3d";
-                    };
+          lenovoLaptop = let
+            modules = [
+              ./hosts/lenovoLaptop/configuration.nix
+              ./cachix.nix
+              {
+                nixpkgs = nixpkgs-config;
+                nix = {
+                  gc = {
+                    automatic = true;
+                    options = "--delete-older-than 3d";
                   };
-                }
-              ];
-            in
-            nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
+                };
+              }
+            ];
+          in nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
 
-          homeSrv =
-            let
-              modules = [
-                ./hosts/homeSrv/configuration.nix
-                ./cachix.nix
-                {
-                  nixpkgs = nixpkgs-config;
-                  nix = {
-                    gc = {
-                      automatic = true;
-                      options = "--delete-older-than 3d";
-                    };
+          homeSrv = let
+            modules = [
+              ./hosts/homeSrv/configuration.nix
+              ./cachix.nix
+              {
+                nixpkgs = nixpkgs-config;
+                nix = {
+                  gc = {
+                    automatic = true;
+                    options = "--delete-older-than 3d";
                   };
-                }
-              ];
-            in
-            nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
+                };
+              }
+            ];
+          in nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
 
           homeConfigurations = (makeProfiles [
             "heavy"
@@ -334,13 +298,11 @@
               homeConfigurations.home-server;
           };
 
-        in
-        {
+        in {
           inherit homeConfigurations nixosConfigurations deploySystemPaths;
           makeHomeConfiguration = makeHomeProfileImpl;
         };
-    in
-    {
+    in {
       makeHomeConfiguration."x86_64-linux" =
         (config "x86_64-linux").makeHomeConfiguration;
 

@@ -83,6 +83,9 @@
   environment.systemPackages = with pkgs; [
     vim
     git
+
+    # GPU stuff
+    clinfo
   ];
 
   nix = {
@@ -96,9 +99,14 @@
   };
 
   hardware = {
-    graphics = { enable = true; };
+    graphics = { 
+        enable = true;
+        extraPackages = with pkgs; [ rocmPackages.clr.icd ];
+    };
     keyboard.qmk.enable = true;
   };
+
+  services.xserver.videoDrivers = [ "amdgpu" ];
 
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
