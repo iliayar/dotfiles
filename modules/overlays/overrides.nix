@@ -30,4 +30,8 @@ final: prev: {
       };
     });
   });
+
+  mesa = prev.mesa.overrideAttrs (prev: rec {
+    patches = prev.patches ++ [ ./doom.patch ];
+  });
 }
