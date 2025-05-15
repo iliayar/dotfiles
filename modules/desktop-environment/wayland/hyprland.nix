@@ -169,10 +169,6 @@ in {
             no_hardware_cursors = false;
           }
 
-          opengl {
-            force_introspection = false;
-          }
-
           # env = WLR_DRM_NO_ATOMIC,1
 
           env = XCURSOR_SIZE,24
@@ -325,19 +321,20 @@ in {
 
           bind = ,T, exec, pypr toggle term-quake
           bind = ,T, submap, reset
-          # $term_quake = ^(term-quake)$
+          windowrule = float, class:local.iliayar.term-quake
+          # $term_quake = class:term-quake
           # windowrule = workspace special silent,$term_quake
           # windowrule = float,$term_quake
 
           bind = ,N, exec, pypr toggle org-notes
           bind = ,N, submap, reset
-          $org_notes = title:^(org-notes)$
+          $org_notes = title:org-notes
           windowrule = workspace special silent,$org_notes
           windowrule = float,$org_notes
 
           bind = ,O, exec, pypr toggle obsidian
           bind = ,O, submap, reset
-          $obsidian = ^(obsidian)$
+          $obsidian = class:obsidian
           windowrule = workspace special silent,$obsidian
           windowrule = float,$obsidian
 
@@ -378,10 +375,11 @@ in {
             force_default_wallpaper = 0
           }
 
-          windowrule = opacity 0.9 0.9, ^(Spotify)$
-          windowrule = opacity 0.9 0.9, ^(VSCodium)$
-          windowrule = opacity 0.9 0.9, ^(Code)$
-          # windowrule = float, ^(Zoom)$
+          # FIXME: Is it class?
+          windowrule = opacity 0.9 0.9, class:Spotify
+          windowrule = opacity 0.9 0.9, class:VSCodium
+          windowrule = opacity 0.9 0.9, class:Code
+          # windowrule = float, class:Zoom
 
           exec-once = swww-daemon -q
           exec-once = waypaper --restore

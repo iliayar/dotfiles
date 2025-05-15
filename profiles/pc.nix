@@ -29,6 +29,11 @@
     # TODO: Move it in separate config or delete
     warp-terminal
     zed-editor
+    msty
+    open-interpreter
+    code-cursor
+    windsurf
+    claude-code
   ];
 
   # TODO: Move it somewhere
@@ -54,6 +59,8 @@
       nix.enable = true;
       ocaml.enable = true;
       cpp.enable = true;
+      rust.enable = true;
+      zig.enable = true;
 
       uci.enable = true;
       uci.daemon = false;
@@ -152,7 +159,7 @@
         "misc"
         "nix"
         "python"
-        # "rust"
+        "rust"
         "go"
         # "lua"
         "ocaml"
@@ -163,6 +170,7 @@
         # "plantuml"
         "haskell"
         # "lean"
+        "zig"
       ];
       langs.cpp.lsp = "ccls";
       code-assist = { enable = true; };

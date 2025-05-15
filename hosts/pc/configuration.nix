@@ -7,10 +7,10 @@
     ];
 
   boot.extraModulePackages = [
-    pkgs.systec-can
+    # pkgs.systec-can
   ];
   hardware.firmware = [
-    pkgs.systec-can
+    # pkgs.systec-can
   ];
 
 
@@ -148,7 +148,18 @@
   virtualisation.virtualbox.host.enableExtensionPack = true;
   users.extraGroups.vboxusers.members = [ "iliayar" ];
 
+  virtualisation.docker = {
+    enable = true;
+    extraPackages = with pkgs; [
+        docker-compose
+    ];
+  };
+
   programs.wireshark.enable = true;
+
+  security.pam.services.kwallet = {
+    kwallet.enable = true;
+  };
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

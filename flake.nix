@@ -79,11 +79,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    anyrun = {
-      url = "github:Kirottu/anyrun";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nwg-displays = {
       url = "github:nwg-piotr/nwg-displays";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -137,7 +132,7 @@
 
   outputs = { self, swww, home-manager, nixpkgs, codestats-nvim, secrets
     , emacs-overlay, libxft-bgra, org-roam-ui, picom-jonaburg, wakatime-cli
-    , zsh-wakatime, tlpui-src, rust-blocks, nur, uci, anyrun, nwg-displays
+    , zsh-wakatime, tlpui-src, rust-blocks, nur, uci, nwg-displays
     , rust-overlay, denv, wezterm-newest, pyprland-newest, lean4-mode
     , pyprland-my, remote-nvim, coq-lsp-nvim, deploy-rs, ghostty-newest
     , systec-can, ... }@inputs:
@@ -161,7 +156,7 @@
 
           specialArgs = {
             inherit home-manager libxft-bgra org-roam-ui picom-jonaburg
-              wakatime-cli zsh-wakatime mylib tlpui-src system anyrun
+              wakatime-cli zsh-wakatime mylib tlpui-src system
               wezterm-newest pyprland-newest lean4-mode pyprland-my
               codestats-nvim remote-nvim coq-lsp-nvim swww ghostty-newest
               systec-can;
@@ -176,7 +171,6 @@
               extraSpecialArgs = specialArgs // { inherit pkgs system; };
               modules = [
                 denv.homeManagerModules.default
-                anyrun.homeManagerModules.default
                 ./modules
                 profile
               ];

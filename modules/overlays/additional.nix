@@ -33,6 +33,7 @@ final: prev: {
   };
 
   tlpui = prev.callPackage ../pkgs/tlpui { inherit tlpui-src; };
+  msty = prev.callPackage ../pkgs/msty { };
 
   nwg-displays = nwg-displays.packages.${system}.default;
 }

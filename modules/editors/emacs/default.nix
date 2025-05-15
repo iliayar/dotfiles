@@ -541,7 +541,7 @@ in {
 
       useAsVisual = mkOption { default = false; };
 
-      package = mkOption { default = pkgs.emacs29-pgtk; };
+      package = mkOption { default = pkgs.emacs-pgtk; };
 
       server = mkOption {
         default = false;
