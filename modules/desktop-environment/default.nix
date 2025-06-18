@@ -108,7 +108,9 @@ in
       home.packages = with pkgs; [
         gimp
         vlc
-        # mpv
+        # FIXME(iliayar): VLC sometimes crashes(
+        mpv
+
         # deluge 
         transmission_4-qt
       ];

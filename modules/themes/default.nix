@@ -40,7 +40,7 @@ let
     color14 = brightCyan;
     color15 = brightWhite;
 
-    font = "Fira Code";
+    font = "FiraCode Nerd Font Mono";
   };
 
   createMap = f: mapAttrs (_: c: f (mylib.strToColor c));

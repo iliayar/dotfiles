@@ -1,4 +1,4 @@
-{ system, libxft-bgra, picom-jonaburg, wakatime-cli, tlpui-src, rust-blocks, uci, nwg-displays, ... }@inputs:
+{ system, libxft-bgra, picom-jonaburg, tlpui-src, rust-blocks, uci, nwg-displays, cfcli, zen-browser, ... }@inputs:
 
 final: prev: {
   libxft-bgra = prev.stdenv.mkDerivation {
@@ -17,13 +17,6 @@ final: prev: {
   uci = uci.packages.${system}.uci;
   ucid = uci.packages.${system}.ucid;
 
-  # wakatime-cli = prev.buildGoModule { 
-  #   pname = "wakatime-cli";
-  #   src = wakatime-cli;
-  #   vendorSha256 = null;
-  # };
-  wakatime-cli = prev.wakatime;
-
   # rz-ghidra = prev.callPackage ../pkgs/rz-ghidra { pkgs = prev; };
 
   inkscape-extensions = prev.inkscape-extensions // {
@@ -36,4 +29,7 @@ final: prev: {
   msty = prev.callPackage ../pkgs/msty { };
 
   nwg-displays = nwg-displays.packages.${system}.default;
+  cfcli = cfcli.packages.${system}.default;
+
+  zen-browser = zen-browser.packages.${system}.default;
 }

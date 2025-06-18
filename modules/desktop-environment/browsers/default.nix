@@ -8,6 +8,7 @@ in
 {
   imports = [
     ./brave.nix
+    ./zen.nix
   ];
 
   options = {
@@ -15,6 +16,10 @@ in
       enable = mkOption {
         default = false;
       };
+    };
+    custom.de.browsers.default = mkOption {
+        default = "brave";
+        type = types.enum [ "none" "brave" "zen" ];
     };
   };
 

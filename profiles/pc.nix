@@ -30,10 +30,18 @@
     warp-terminal
     zed-editor
     msty
-    open-interpreter
-    code-cursor
-    windsurf
+    # open-interpreter
+    # code-cursor
+    # windsurf
     claude-code
+
+    # TODO: this one too
+    cfcli
+
+    # TODO: And this one
+    yazi
+    meli
+    w3m
   ];
 
   # TODO: Move it somewhere
@@ -64,6 +72,8 @@
 
       uci.enable = true;
       uci.daemon = false;
+
+      latex.enable = true;
     };
     # dev = {
     #   python.enable = true;
@@ -118,7 +128,7 @@
         code = { enable = true; };
       };
 
-      langs.enable = [ "nix" "misc" ];
+      langs.enable = [ "nix" "misc" "latex" ];
 
       code-assist = {
         enable = true;
@@ -215,6 +225,8 @@
 
       browsers = {
         brave.enable = true;
+        zen.enable = true;
+        default = "zen";
         # qute.enable = true;
       };
 
@@ -245,7 +257,7 @@
       # easyeffects.enable = true;
       spotify.enable = true;
 
-      # zathura.enable = true;
+      zathura.enable = true;
 
       # pointer.enable = true;
 

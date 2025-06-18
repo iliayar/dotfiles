@@ -7,7 +7,7 @@ let
 in
 {
   options = {
-    custom.de.browsers.brave = {
+    custom.de.browsers.zen = {
       enable = mkOption {
         default = false;
       };
@@ -17,20 +17,20 @@ in
   config = mkMerge [
     (mkIf cfg.zen.enable {
       home.packages = with pkgs; [
-        brave
+        zen-browser
       ];
     })
-    (mkIf (cfg.default == "brave") {
+    (mkIf (cfg.default == "zen") {
       home.sessionVariables = {
-        BROWSER = "brave";
+        BROWSER = "zen";
       };
 
       xdg.mimeApps = {
         defaultApplications = {
-          "x-scheme-handler/http" = [ "brave-browser.desktop" ];
-          "x-scheme-handler/https" = [ "brave-browser.desktop" ];
-          "x-scheme-handler/about" = [ "brave-browser.desktop" ];
-          "x-scheme-handler/unknown" = [ "brave-browser.desktop" ];
+          "x-scheme-handler/http" = [ "zen.desktop" ];
+          "x-scheme-handler/https" = [ "zen.desktop" ];
+          "x-scheme-handler/about" = [ "zen.desktop" ];
+          "x-scheme-handler/unknown" = [ "zen.desktop" ];
         };
       };
     })

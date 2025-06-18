@@ -108,6 +108,7 @@ in {
         enable = true;
         # package = hyprland.packages.${system}.default;
         xwayland = { enable = true; };
+        plugins = with pkgs.hyprlandPlugins; [ hy3 ];
 
         extraConfig = let
           startupExtra = foldr (cmd: a: ''
@@ -131,7 +132,7 @@ in {
           bind = $mainMod, F, fullscreen, 0
 
           general {
-            layout = master
+            layout = hy3
 
             gaps_in = 0;
             gaps_out = 0;
@@ -140,13 +141,31 @@ in {
             # allow_tearing = true
           }
 
-          # no_gaps_when_only
-          workspace = w[tv1], gapsout:0, gapsin:0
-          workspace = f[1], gapsout:0, gapsin:0
-          windowrulev2 = bordersize 0, floating:0, onworkspace:w[tv1]
-          windowrulev2 = rounding 0, floating:0, onworkspace:w[tv1]
-          windowrulev2 = bordersize 0, floating:0, onworkspace:f[1]
-          windowrulev2 = rounding 0, floating:0, onworkspace:f[1]
+          plugin {
+            hy3 {
+                no_gaps_when_only = 1
+
+                tabs {
+                    height = 20
+                    padding = 0
+                    radius = 0
+                    border_width = 0
+                    text_font = "${themes.font}"
+                    text_height = 12
+
+                    col.active = rgba(${themes.hex.brightBlack}ff)
+                    col.active.text = rgba(${themes.hex.foreground}ff)
+
+                    col.focused = rgba(${themes.hex.black}ff)
+                    col.focused.text = rgba(${themes.hex.foreground}ff)
+
+                    col.inactive = rgba(${themes.hex.black}ff)
+                    col.inactive.text = rgba(${themes.hex.foreground}ff)
+
+                    blur = false
+                }
+            }
+          }
 
           decoration {
             shadow {
@@ -183,20 +202,42 @@ in {
           '' else
             ""}
 
-          bind = $mainMod, K, layoutmsg, cycleprev
-          bind = $mainMod, J, layoutmsg, cyclenext
+          # Master
+          # bind = $mainMod, K, layoutmsg, cycleprev
+          # bind = $mainMod, J, layoutmsg, cyclenext
 
-          bind = $mainMod SHIFT, K, layoutmsg, swapprev
-          bind = $mainMod SHIFT, J, layoutmsg, swapnext
+          bind = $mainMod, H, hy3:movefocus, left, visible
+          bind = $mainMod, L, hy3:movefocus, right, visible
+          bind = $mainMod, J, hy3:movefocus, down, visible
+          bind = $mainMod, K, hy3:movefocus, up, visible
 
-          bind = $mainMod SHIFT, Return, layoutmsg, swapwithmaster master
-          bind = $mainMod CTRL, Return, layoutmsg, focusmaster
+          # Master
+          # bind = $mainMod SHIFT, K, layoutmsg, swapprev
+          # bind = $mainMod SHIFT, J, layoutmsg, swapnext
+
+          bind = $mainMod SHIFT, H, hy3:movewindow, left, visible
+          bind = $mainMod SHIFT, L, hy3:movewindow, right, visible
+          bind = $mainMod SHIFT, J, hy3:movewindow, down, visible
+          bind = $mainMod SHIFT, K, hy3:movewindow, up, visible
+
+          bind = $mainMod CTRL, K, hy3:changefocus, raise
+          bind = $mainMod CTRL, J, hy3:changefocus, lower
+
+          # Master
+          # bind = $mainMod SHIFT, Return, layoutmsg, swapwithmaster master
+          # bind = $mainMod CTRL, Return, layoutmsg, focusmaster
+
+          bind = $mainMod, E, hy3:changegroup, opposite
+          bind = $mainMod, W, hy3:changegroup, toggletab
+          bind = $mainMod CTRL, H, hy3:movefocus, left
+          bind = $mainMod CTRL, L, hy3:movefocus, right
 
           bind = $mainMod, bracketleft, focusmonitor, +1
           bind = $mainMod, bracketright, focusmonitor, -1
 
-          bind = $mainMod SHIFT, bracketleft, movewindow, mon:l
-          bind = $mainMod SHIFT, bracketright, movewindow, mon:r
+          # Master
+          # bind = $mainMod SHIFT, bracketleft, movewindow, mon:l
+          # bind = $mainMod SHIFT, bracketright, movewindow, mon:r
 
           bind = $mainMod, C, exec, pypr menu
           bind = $mainMod, T, exec, pypr toggle term-quake
@@ -216,27 +257,50 @@ in {
           bind = $mainMod, 9, focusworkspaceoncurrentmonitor, 9
           bind = $mainMod, 0, focusworkspaceoncurrentmonitor, 10
 
-          bind = $mainMod SHIFT, 1, movetoworkspace, 1
-          bind = $mainMod SHIFT, 2, movetoworkspace, 2
-          bind = $mainMod SHIFT, 3, movetoworkspace, 3
-          bind = $mainMod SHIFT, 4, movetoworkspace, 4
-          bind = $mainMod SHIFT, 5, movetoworkspace, 5
-          bind = $mainMod SHIFT, 6, movetoworkspace, 6
-          bind = $mainMod SHIFT, 7, movetoworkspace, 7
-          bind = $mainMod SHIFT, 8, movetoworkspace, 8
-          bind = $mainMod SHIFT, 9, movetoworkspace, 9
-          bind = $mainMod SHIFT, 0, movetoworkspace, 10
+          bind = $mainMod SHIFT, 1, hy3:movetoworkspace, 1, follow
+          bind = $mainMod SHIFT, 2, hy3:movetoworkspace, 2, follow
+          bind = $mainMod SHIFT, 3, hy3:movetoworkspace, 3, follow
+          bind = $mainMod SHIFT, 4, hy3:movetoworkspace, 4, follow
+          bind = $mainMod SHIFT, 5, hy3:movetoworkspace, 5, follow
+          bind = $mainMod SHIFT, 6, hy3:movetoworkspace, 6, follow
+          bind = $mainMod SHIFT, 7, hy3:movetoworkspace, 7, follow
+          bind = $mainMod SHIFT, 8, hy3:movetoworkspace, 8, follow
+          bind = $mainMod SHIFT, 9, hy3:movetoworkspace, 9, follow
+          bind = $mainMod SHIFT, 0, hy3:movetoworkspace, 10, follow
 
-          bind = $mainMod CTRL, 1, movetoworkspacesilent, 1
-          bind = $mainMod CTRL, 2, movetoworkspacesilent, 2
-          bind = $mainMod CTRL, 3, movetoworkspacesilent, 3
-          bind = $mainMod CTRL, 4, movetoworkspacesilent, 4
-          bind = $mainMod CTRL, 5, movetoworkspacesilent, 5
-          bind = $mainMod CTRL, 6, movetoworkspacesilent, 6
-          bind = $mainMod CTRL, 7, movetoworkspacesilent, 7
-          bind = $mainMod CTRL, 8, movetoworkspacesilent, 8
-          bind = $mainMod CTRL, 9, movetoworkspacesilent, 9
-          bind = $mainMod CTRL, 0, movetoworkspacesilent, 10
+          bind = $mainMod CTRL, 1, hy3:movetoworkspace, 1
+          bind = $mainMod CTRL, 2, hy3:movetoworkspace, 2
+          bind = $mainMod CTRL, 3, hy3:movetoworkspace, 3
+          bind = $mainMod CTRL, 4, hy3:movetoworkspace, 4
+          bind = $mainMod CTRL, 5, hy3:movetoworkspace, 5
+          bind = $mainMod CTRL, 6, hy3:movetoworkspace, 6
+          bind = $mainMod CTRL, 7, hy3:movetoworkspace, 7
+          bind = $mainMod CTRL, 8, hy3:movetoworkspace, 8
+          bind = $mainMod CTRL, 9, hy3:movetoworkspace, 9
+          bind = $mainMod CTRL, 0, hy3:movetoworkspace, 10
+
+          # Master
+          # bind = $mainMod SHIFT, 1, movetoworkspace, 1
+          # bind = $mainMod SHIFT, 2, movetoworkspace, 2
+          # bind = $mainMod SHIFT, 3, movetoworkspace, 3
+          # bind = $mainMod SHIFT, 4, movetoworkspace, 4
+          # bind = $mainMod SHIFT, 5, movetoworkspace, 5
+          # bind = $mainMod SHIFT, 6, movetoworkspace, 6
+          # bind = $mainMod SHIFT, 7, movetoworkspace, 7
+          # bind = $mainMod SHIFT, 8, movetoworkspace, 8
+          # bind = $mainMod SHIFT, 9, movetoworkspace, 9
+          # bind = $mainMod SHIFT, 0, movetoworkspace, 10
+
+          # bind = $mainMod CTRL, 1, movetoworkspacesilent, 1
+          # bind = $mainMod CTRL, 2, movetoworkspacesilent, 2
+          # bind = $mainMod CTRL, 3, movetoworkspacesilent, 3
+          # bind = $mainMod CTRL, 4, movetoworkspacesilent, 4
+          # bind = $mainMod CTRL, 5, movetoworkspacesilent, 5
+          # bind = $mainMod CTRL, 6, movetoworkspacesilent, 6
+          # bind = $mainMod CTRL, 7, movetoworkspacesilent, 7
+          # bind = $mainMod CTRL, 8, movetoworkspacesilent, 8
+          # bind = $mainMod CTRL, 9, movetoworkspacesilent, 9
+          # bind = $mainMod CTRL, 0, movetoworkspacesilent, 10
 
           # Resize Submap
           bind = $mainMod, R, submap, resize
@@ -285,35 +349,35 @@ in {
           bind=,escape,submap,reset
           submap = reset
 
-          # Groups submap
-          bind = $mainMod, G, submap, groups
-          submap = groups
+          # === Groups submap
+          # bind = $mainMod, G, submap, groups
+          # submap = groups
 
-          bind=,t,togglegroup
-          bind=,u,moveoutofgroup
+          # bind=,t,togglegroup
+          # bind=,u,moveoutofgroup
 
-          bind=SHIFT,j,moveintogroup,d
-          bind=SHIFT,k,moveintogroup,u
-          bind=SHIFT,l,moveintogroup,r
-          bind=SHIFT,h,moveintogroup,l
+          # bind=SHIFT,j,moveintogroup,d
+          # bind=SHIFT,k,moveintogroup,u
+          # bind=SHIFT,l,moveintogroup,r
+          # bind=SHIFT,h,moveintogroup,l
 
-          bind=,j,changegroupactive,f
-          bind=,k,changegroupactive,b
+          # bind=,j,changegroupactive,f
+          # bind=,k,changegroupactive,b
 
-          bind=,escape,submap,reset
-          submap = reset
+          # bind=,escape,submap,reset
+          # submap = reset
 
-          # Layout submap
-          bind = $mainMod, L, submap, layout
-          submap = layout
+          # === Layout submap
+          # bind = $mainMod, L, submap, layout
+          # submap = layout
 
-          bind=,j, layoutmsg, orientationnext
-          bind=,k, layoutmsg, orientationprev
+          # bind=,j, layoutmsg, orientationnext
+          # bind=,k, layoutmsg, orientationprev
 
-          bind=,f,workspaceopt, allfloat
+          # bind=,f,workspaceopt, allfloat
 
-          bind=,escape,submap,reset
-          submap = reset
+          # bind=,escape,submap,reset
+          # submap = reset
 
           # Scratchpads
           bind = $mainMod, S, submap, scratchpads
@@ -385,7 +449,7 @@ in {
           exec-once = waypaper --restore
           exec-once = waybar & pypr
 
-          env = BROWSER,brave
+          env = BROWSER,${config.custom.de.browsers.default}
 
           # Extra startup
           ${startupExtra}
