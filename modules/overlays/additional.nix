@@ -1,4 +1,4 @@
-{ system, libxft-bgra, picom-jonaburg, tlpui-src, rust-blocks, uci, nwg-displays, cfcli, zen-browser, ... }@inputs:
+{ system, libxft-bgra, picom-jonaburg, tlpui-src, rust-blocks, uci, nwg-displays, cfcli, zen-browser, curd, ... }@inputs:
 
 final: prev: {
   libxft-bgra = prev.stdenv.mkDerivation {
@@ -32,4 +32,5 @@ final: prev: {
   cfcli = cfcli.packages.${system}.default;
 
   zen-browser = zen-browser.packages.${system}.default;
+  curd = curd.packages.${system}.default;
 }

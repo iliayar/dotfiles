@@ -40,14 +40,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    KC_GRV, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,                     KC_CIRC, KC_AMPR, KC_ASTR, XXXXXXX, XXXXXXX,  KC_F12,
   KC_TILD, XXXXXXX, KC_UNDS, KC_EQL,   KC_LT,   KC_GT,                     KC_LPRN, KC_RPRN, KC_QUOT, KC_DQUO, KC_PIPE,  XXXXXXX,
   _______, XXXXXXX, KC_MINS, KC_PLUS, KC_LCBR, KC_RCBR, _______,   _______, KC_LBRC, KC_RBRC, KC_SCLN, KC_COLN, KC_BSLS, _______,
-                    _______, _______, _______, _______, _______,   _______, MO(_ADJUST), _______, _______, _______
+                    _______, _______, _______, _______, _______,   _______, _______, _______, _______, _______
 ),
 [_RAISE] = LAYOUT(
   _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                          _______, _______, _______, _______, _______, _______,
   _______,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                             KC_6,    KC_7,    KC_8,    KC_9,    KC_0, _______,
   _______, XXXXXXX, XXXXXXX, XXXXXXX, KC_CAPS, KC_RALT,                          KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, XXXXXXX, _______,
   _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PSCR,  _______,       _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
-                    _______, _______, _______, MO(_ADJUST), _______,        _______, _______, _______, _______, _______
+                    _______, _______, _______, _______, _______,        _______, _______, _______, _______, _______
 ),
 [_ADJUST] = LAYOUT(
 XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
@@ -130,3 +130,7 @@ bool oled_task_user(void) {
 }
 
 #endif
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
+}

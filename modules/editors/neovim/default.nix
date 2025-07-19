@@ -18,6 +18,29 @@ let
     src = coq-lsp-nvim;
   };
 
+  # Checks don't pass
+  sonic-pi-nvim-pkg = pkgs.vimUtils.buildVimPlugin {
+    pname = "sonicpi.nvim";
+    version = "2025-06-22";
+    src = pkgs.fetchFromGitHub {
+        owner = "magicmonty";
+        repo = "sonicpi.nvim";
+        rev = "9204aec1461520ccb42deb6354a514ecf7eadad8";
+        hash = "sha256-seqnwft6dQ9nQaBbaMnWHTUpUq7n+VcGKhBIRPZEw/c=";
+    };
+  };
+
+  strudel-nvim-pkg = pkgs.vimUtils.buildVimPlugin {
+    pname = "strudel.nvim";
+    version = "2025-06-22";
+    src = pkgs.fetchFromGitHub {
+        owner = "gruvw";
+        repo = "strudel.nvim";
+        rev = "9ad3634c7c302f16db889a55c2ff13e66f56ded2";
+        hash = "sha256-SSD76hTVKZmCBT5sfji/fC8MExO2sZBumHM+rPIF4vQ=";
+    };
+  };
+
   cfg = config.custom.editors.nvim;
 
   nvim-exp = import ./nvim-exp { inherit pkgs; };
@@ -137,7 +160,7 @@ let
     };
     langTypst = {
       autoEnable = builtins.elem "typst" cfg.langs.enable;
-      plugins = with pkgs.vimPlugins; [ typst-vim ];
+      plugins = with pkgs.vimPlugins; [ typst-vim typst-preview-nvim ];
     };
     langPlantuml = {
       autoEnable = builtins.elem "plantuml" cfg.langs.enable;
@@ -158,6 +181,7 @@ let
           # coq-lsp-nvim-pkg 
         ];
     };
+    langFSharp = { autoEnable = builtins.elem "fsharp" cfg.langs.enable; };
 
     obsidian = {
       autoEnable = cfg.obsidian.enable;
@@ -170,6 +194,9 @@ let
     agi = { plugins = with pkgs.vimPlugins; [ ChatGPT-nvim ]; };
 
     exp = { autoEnable = cfg.experiments.enable; plugins = [ nvim-exp ]; };
+
+    sonicpi = { plugins = [ sonic-pi-nvim-pkg ]; };
+    strudel = { plugins = [ strudel-nvim-pkg ]; };
   };
 in {
   options = {
@@ -215,6 +242,7 @@ in {
             "coq"
             "typescript"
             "zig"
+            "fsharp"
           ]);
         };
 

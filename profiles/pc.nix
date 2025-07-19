@@ -42,6 +42,13 @@
     yazi
     meli
     w3m
+
+    thunderbird
+
+    yt-dlp
+    audacity
+
+    curd
   ];
 
   # TODO: Move it somewhere
@@ -74,6 +81,7 @@
       uci.daemon = false;
 
       latex.enable = true;
+      typst.enable = true;
     };
     # dev = {
     #   python.enable = true;
@@ -158,6 +166,8 @@
         # obsidian.enable = true;
         # orgmode.enable = true;
         # agi.enable = false;
+        # sonicpi.enable = true;
+        strudel.enable = true;
       };
 
       enable = true;
@@ -176,11 +186,12 @@
         # "sql"
         # "latex"
         # "cpp"
-        # "typst"
+        "typst"
         # "plantuml"
         "haskell"
         # "lean"
         "zig"
+        "fsharp"
       ];
       langs.cpp.lsp = "ccls";
       code-assist = { enable = true; };

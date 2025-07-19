@@ -11,7 +11,7 @@
 
   home.packages = with pkgs; [ git caddy ];
 
-  custom.de.fonts.enable = false;
+  custom.de.fonts.enable = true;
 
   systemd.user.services.ucid = let
     runtimeDeps = with pkgs; [

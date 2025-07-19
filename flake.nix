@@ -128,6 +128,10 @@
         url = "github:youwen5/zen-browser-flake";
         inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    curd = {
+        url ="github:Wraient/curd";
+    };
   };
 
   outputs = { self, home-manager, nixpkgs, nur, secrets, denv, emacs-overlay, rust-overlay, deploy-rs, ... }@inputs:

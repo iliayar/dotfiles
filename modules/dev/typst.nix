@@ -19,8 +19,8 @@ in
     home.packages = with pkgs; [
         typst
         typstfmt
-        typst-lsp
         typst-live
+        tinymist
         polylux2pdfpc
         pdfpc
     ];

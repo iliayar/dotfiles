@@ -302,6 +302,8 @@ in {
           # bind = $mainMod CTRL, 9, movetoworkspacesilent, 9
           # bind = $mainMod CTRL, 0, movetoworkspacesilent, 10
 
+          bind = $mainMod, comma, togglefloating
+
           # Resize Submap
           bind = $mainMod, R, submap, resize
           submap = resize

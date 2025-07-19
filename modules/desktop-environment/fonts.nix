@@ -59,7 +59,7 @@ in
       # symbola
       ubuntu_font_family
       nerd-fonts.fira-code
-      corefonts
+      # corefonts
     ];
   };
 }

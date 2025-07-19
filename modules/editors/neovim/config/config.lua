@@ -312,6 +312,10 @@ if nixcfg.codeMisc.enable then
         }
     end
 
+    if nixcfg.langTypst.enable then
+        require("typst-preview").setup({})
+    end
+
     require("formatter").setup(params)
 
     vim.keymap.set("n", "<C-=>", "<cmd>Format<CR>")
@@ -554,7 +558,7 @@ if nixcfg.lsp.enable then
     end
 
     if nixcfg.langTypst.enable then
-        lspconfig.typst_lsp.setup(
+        lspconfig.tinymist.setup(
             {
                 autostart = false,
                 capabilities = capabilities,
@@ -586,6 +590,16 @@ if nixcfg.lsp.enable then
 
         -- NOTE: Pretty bad
         -- require("coq-lsp").setup()
+    end
+
+    if nixcfg.langFSharp.enable then
+        lspconfig.fsautocomplete.setup(
+            {
+                autostart = false,
+                capabilities = capabilities,
+                on_attach = common_on_attach
+            }
+        )
     end
 
     if nixcfg.exp.enable then
@@ -670,4 +684,25 @@ end
 
 if nixcfg.remote.enable then
     require("remote-nvim").setup()
+end
+
+if nixcfg.sonicpi.enable then
+    require("sonicpi").setup({
+        server_dir = "",
+    })
+end
+
+if nixcfg.strudel.enable then
+    local strudel = require("strudel")
+    strudel.setup({
+        update_on_save = true,
+    })
+
+    vim.keymap.set("n", "<Leader>sul", strudel.launch)
+    vim.keymap.set("n", "<Leader>suq", strudel.quit)
+    vim.keymap.set("n", "<Leader>sut", strudel.toggle)
+    vim.keymap.set("n", "<Leader>suu", strudel.update)
+    vim.keymap.set("n", "<Leader>sus", strudel.stop)
+    vim.keymap.set("n", "<Leader>sub", strudel.set_buffer)
+    vim.keymap.set("n", "<Leader>sux", strudel.execute)
 end
