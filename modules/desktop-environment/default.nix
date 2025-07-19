@@ -57,7 +57,7 @@ in
         xkb-switch
         light
         nitrogen
-        pcmanfm
+        lxqt.pcmanfm-qt
         arandr
         # tlpui
 

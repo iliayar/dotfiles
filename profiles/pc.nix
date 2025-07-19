@@ -27,9 +27,9 @@
     deploy-rs
 
     # TODO: Move it in separate config or delete
-    warp-terminal
-    zed-editor
-    msty
+    # warp-terminal
+    # zed-editor
+    # msty
     # open-interpreter
     # code-cursor
     # windsurf

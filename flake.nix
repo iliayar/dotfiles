@@ -71,7 +71,6 @@
 
     nwg-displays = {
       url = "github:nwg-piotr/nwg-displays";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     rust-overlay = {

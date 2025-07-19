@@ -631,12 +631,13 @@ if nixcfg.obsidian.enable then
                     name = "notes",
                     path = nixcfg.obsidian.path
                 }
-            }
+            },
+            legacy_commands = false,
         }
     )
 
-    vim.keymap.set("n", "<C-c>nf", "<Cmd>ObsidianQuickSwitch<CR>")
-    vim.keymap.set("n", "<C-c>nr", "<Cmd>ObsidianSearch<CR>")
+    vim.keymap.set("n", "<C-c>nf", "<Cmd>Obsidian quick_switch<CR>")
+    vim.keymap.set("n", "<C-c>nr", "<Cmd>Obsidian search<CR>")
 end
 
 if nixcfg.orgmode.enable then

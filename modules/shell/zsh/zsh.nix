@@ -37,7 +37,7 @@ in
         magit = "emacsclient -t -e '(magit)'";
       };
 
-      initExtra = ''
+      initContent = ''
         ${cfg.extra}
         PATH=$PATH:$HOME/.local/bin
       '';
