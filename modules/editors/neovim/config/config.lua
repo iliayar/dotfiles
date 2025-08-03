@@ -469,77 +469,61 @@ if nixcfg.lsp.enable then
 
     local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-    local lspconfig = require("lspconfig")
-
     if nixcfg.langRust.enable then
-        lspconfig.rust_analyzer.setup(
-            {
-                capabilities = capabilities,
-                on_attach = common_on_attach
-            }
-        )
+        vim.lsp.config('rust_analyzer', {
+            capabilities = capabilities,
+            on_attach = common_on_attach
+        })
+        vim.lsp.enable('rust_analyzer')
     end
 
     if nixcfg.langZig.enable then
-        lspconfig.zls.setup(
-            {
-                capabilities = capabilities,
-                on_attach = common_on_attach
-            }
-        )
+        vim.lsp.config('zls',{
+            capabilities = capabilities,
+            on_attach = common_on_attach
+        })
+        vim.lsp.enable('zls')
     end
 
     if nixcfg.langTypescript.enable then
-        lspconfig.tsserver.setup(
-            {
-                capabilities = capabilities,
-                on_attach = common_on_attach
-            }
-        )
+        vim.lsp.config('tsserver', {
+            capabilities = capabilities,
+            on_attach = common_on_attach
+        })
+        vim.lsp.enable('tsserver')
     end
 
     if nixcfg.langNix.enable then
-        lspconfig.nixd.setup(
-            {
-                autostart = false,
-                capabilities = capabilities,
-                on_attach = common_on_attach
-            }
-        )
+        vim.lsp.config('nixd', {
+            capabilities = capabilities,
+            on_attach = common_on_attach
+        })
     end
 
     if nixcfg.langGo.enable then
-        lspconfig.gopls.setup(
-            {
-                capabilities = capabilities,
-                on_attach = common_on_attach
-            }
-        )
+        vim.lsp.config('gopls', {
+            capabilities = capabilities,
+            on_attach = common_on_attach
+        })
+        vim.lsp.enable('gopls')
     end
 
     if nixcfg.langPython.enable then
-        lspconfig.pyright.setup(
-            {
-                autostart = false,
-                capabilities = capabilities,
-                on_attach = common_on_attach
-            }
-        )
+        vim.lsp.config('pyright', {
+            capabilities = capabilities,
+            on_attach = common_on_attach
+        })
     end
 
     if nixcfg.langOcaml.enable then
-        lspconfig.ocamllsp.setup(
-            {
-                autostart = false,
-                capabilities = capabilities,
-                on_attach = common_on_attach
-            }
-        )
+        vim.lsp.config('ocamllsp', {
+            capabilities = capabilities,
+            on_attach = common_on_attach,
+        })
     end
 
     if nixcfg.langCpp.enable then
         cfg = {
-            autostart = false,
             capabilities = capabilities,
             on_attach = common_on_attach
         }
@@ -549,32 +533,26 @@ if nixcfg.lsp.enable then
                 cfg.cmd = nixcfg.langCpp.command
             end
 
-            lspconfig.clangd.setup(cfg)
+            vim.lsp.config('clangd', cfg)
         end
 
         if nixcfg.langCpp.lsp == "ccls" then
-            lspconfig.ccls.setup(cfg)
+            vim.lsp.config('ccls', cfg)
         end
     end
 
     if nixcfg.langTypst.enable then
-        lspconfig.tinymist.setup(
-            {
-                autostart = false,
-                capabilities = capabilities,
-                on_attach = common_on_attach
-            }
-        )
+        vim.lsp.config('tinymist', {
+            capabilities = capabilities,
+            on_attach = common_on_attach
+        })
     end
 
     if nixcfg.langHaskell.enable then
-        lspconfig.hls.setup(
-            {
-                autostart = false,
-                capabilities = capabilities,
-                on_attach = common_on_attach
-            }
-        )
+        vim.lsp.config('hls', {
+            capabilities = capabilities,
+            on_attach = common_on_attach
+        })
     end
 
     if nixcfg.langLean.enable then
@@ -593,33 +571,23 @@ if nixcfg.lsp.enable then
     end
 
     if nixcfg.langFSharp.enable then
-        lspconfig.fsautocomplete.setup(
-            {
-                autostart = false,
-                capabilities = capabilities,
-                on_attach = common_on_attach
-            }
-        )
+        vim.lsp.config('fsautocomplete', {
+            capabilities = capabilities,
+            on_attach = common_on_attach
+        })
     end
 
     if nixcfg.exp.enable then
-        local configs = require('lspconfig.configs')
         local util = require('lspconfig.util')
-        configs.exp = {
-            default_config = {
-                cmd = {'exp-ls'},
-                filetypes = {'exp'},
-                root_dir = util.root_pattern('.exp'),
-                single_file_support = true,
-            }
-        }
-        lspconfig.exp.setup(
-            {
-                autostart = false,
-                capabilities = capabilities,
-                on_attach = common_on_attach,
-            }
-        )
+        vim.lsp.config('exp', {
+            cmd = {'exp-ls'},
+            filetypes = {'exp'},
+            root_dir = util.root_pattern('.exp'),
+            single_file_support = true,
+
+            capabilities = capabilities,
+            on_attach = common_on_attach,
+        })
     end
 end
 

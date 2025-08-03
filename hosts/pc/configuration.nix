@@ -169,6 +169,24 @@
     enable = true;
   };
 
+  services.gns3-server = {
+    enable = true;
+    ubridge.enable = true;
+    vpcs.enable = true;
+    dynamips.enable = true;
+  };
+
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;  # printing
+    publish = {
+      enable = true;
+      addresses = true;
+      workstation = true;
+      userServices = true;
+    };
+  };
+
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
   #

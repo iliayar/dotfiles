@@ -217,7 +217,7 @@
       pass.enable = true;
       ssh.enable = true;
 
-      # zellij.enable = true;
+      zellij.enable = true;
 
       net.enable = true;
     };

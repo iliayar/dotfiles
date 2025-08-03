@@ -45,15 +45,15 @@ in {
 
         font = {
           normal = {
-            family = "FiraCode Nerd Font";
+            family = "FiraCode Nerd Font Mono";
             style = "Regular";
           };
           bold = {
-            family = "FiraCode Nerd Font";
+            family = "FiraCode Nerd Font Mono";
             style = "Bold";
           };
           italic = {
-            family = "FiraCode Nerd Font";
+            family = "FiraCode Nerd Font Mono";
             style = "Italic";
           };
           size = 12.0;
