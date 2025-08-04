@@ -311,6 +311,7 @@
       homeConfigurations = {
         heavy = (config "x86_64-linux").homeConfigurations.heavy;
         pc = (config "x86_64-linux").homeConfigurations.pc;
+        home-server = (config "x86_64-linux").homeConfigurations.home-server;
       };
 
       deploy.nodes = {

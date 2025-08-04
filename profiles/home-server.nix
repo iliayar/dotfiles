@@ -10,13 +10,15 @@
   home.homeDirectory = "/home/iliayar";
 
   custom = {
+    settings = { code-stats-machine = "Remote"; };
+
     de.fonts.enable = false;
 
     editors.nvim = {
       enable = true;
 
       bundles = {
-        # codeStats.enable = true;
+        codeStats.enable = true;
       };
 
       misc = {
@@ -25,7 +27,7 @@
           enable = true;
         };
       };
-      langs.enable = [ "misc" "nix" ];
+      langs.enable = [ "misc" "nix" "ocaml" ];
       code-assist = { enable = true; };
       pretty = { status-bar.enable = true; };
     };
@@ -47,6 +49,7 @@
 
     dev = {
         latex.enable = true;
+        ocaml.enable = true;
     };
 
     editors.emacs = {
