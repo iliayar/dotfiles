@@ -1072,6 +1072,7 @@
         "swww": "swww",
         "systec-can": "systec-can",
         "tlpui-src": "tlpui-src",
+        "typst-preview-nvim": "typst-preview-nvim",
         "uci": "uci",
         "wezterm-newest": "wezterm-newest",
         "zen-browser": "zen-browser"
@@ -1552,6 +1553,22 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "typst-preview-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1754692926,
+        "narHash": "sha256-Sakw7/e1dtgp9WTjnGWSqo/EDUbHmHmLZgVPMAo0PeQ=",
+        "owner": "iliayar",
+        "repo": "typst-preview.nvim",
+        "rev": "7af169d40416ea3fe56108928e8e27f8ea82960e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "iliayar",
+        "repo": "typst-preview.nvim",
         "type": "github"
       }
     },

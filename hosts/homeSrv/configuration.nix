@@ -71,6 +71,10 @@ in {
         { from = 4000; to = 4099; }
         { from = 3000; to = 3099; }
     ];
+    allowedUDPPortRanges = [
+        { from = 4000; to = 4099; }
+        { from = 3000; to = 3099; }
+    ];
     allowedTCPPorts = [
       22
       80

@@ -10,15 +10,26 @@ keybinds clear-defaults=true {
   normal {
     bind "Alt Enter" { NewPane "Right"; }
     bind "Alt Shift Enter" { NewPane "Down"; }
-    bind "Alt k" { FocusNextPane; }
-    bind "Alt j" { FocusPreviousPane; }
+    bind "Alt k" { MoveFocus "Up"; }
+    bind "Alt j" { MoveFocus "Down"; }
+    bind "Alt h" { MoveFocus "Left"; }
+    bind "Alt l" { MoveFocus "Right"; }
+    bind "Alt Shift k" { MovePane "Up"; }
+    bind "Alt Shift j" { MovePane "Down"; }
+    bind "Alt Shift h" { MovePane "Left"; }
+    bind "Alt Shift l" { MovePane "Right"; }
     bind "Alt f" { ToggleFocusFullscreen; }
     bind "Alt Shift q" { CloseFocus; }
 
+    bind "Alt ," { ToggleFloatingPanes; }
+    bind "Alt ." { TogglePaneEmbedOrFloating; }
+
     bind "Alt t" { NewTab; }
     bind "Alt w" { CloseTab; }
-    bind "Alt l" { GoToNextTab; }
-    bind "Alt h" { GoToPreviousTab; }
+    bind "Alt n" { GoToNextTab; }
+    bind "Alt p" { GoToPreviousTab; }
+    bind "Alt Shift n" { MoveTab "Right"; }
+    bind "Alt Shift p" { MoveTab "Left"; }
 
     bind "Alt 1" { GoToTab 1; }
     bind "Alt 2" { GoToTab 2; }
@@ -40,6 +51,10 @@ keybinds clear-defaults=true {
     bind "l" { Resize "Right"; }
     bind "j" { Resize "Down"; }
     bind "k" { Resize "Up"; }
+    bind "Shift h" { MovePane "Left"; }
+    bind "Shift l" { MovePane "Right"; }
+    bind "Shift j" { MovePane "Down"; }
+    bind "Shift k" { MovePane "Up"; }
     bind "Esc" { SwitchToMode "normal"; }
   }
 

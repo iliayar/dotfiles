@@ -313,7 +313,18 @@ if nixcfg.codeMisc.enable then
     end
 
     if nixcfg.langTypst.enable then
-        require("typst-preview").setup({})
+        params = {
+            dependencies_bin = {
+                ["tinymist"] = "tinymist",
+            },
+        }
+        if nixcfg.langTypst.remote then
+            params.no_open = true
+            params.host = nixcfg.langTypst.host;
+            params.data_plane_port = nixcfg.langTypst.dataPlanePort;
+            params.control_plane_port = nixcfg.langTypst.controlPlanePort;
+        end
+        require("typst-preview").setup(params)
     end
 
     require("formatter").setup(params)

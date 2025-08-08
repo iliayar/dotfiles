@@ -1,5 +1,5 @@
 { config, lib, pkgs, codestats-nvim, secrets, remote-nvim
-, coq-lsp-nvim, ... }:
+, coq-lsp-nvim, typst-preview-nvim, ... }:
 
 with lib;
 
@@ -16,6 +16,12 @@ let
     pname = "coq-lsp.nvim";
     version = "2024-10-13";
     src = coq-lsp-nvim;
+  };
+
+  typst-preview-nvim-pkg = pkgs.vimUtils.buildVimPlugin {
+    pname = "typst-preview.nvim";
+    version = "v1.3.2-iliayar";
+    src = typst-preview-nvim;
   };
 
   # Checks don't pass
@@ -160,7 +166,17 @@ let
     };
     langTypst = {
       autoEnable = builtins.elem "typst" cfg.langs.enable;
-      plugins = with pkgs.vimPlugins; [ typst-vim typst-preview-nvim ];
+      plugins = with pkgs.vimPlugins; [ typst-vim typst-preview-nvim-pkg ];
+      extraParameters = {} // (
+        let remote = cfg.langs.typst.remote;
+        in if remote != null then {
+            remote = "true";
+            host = ''"${remote.host}"'';
+            dataPlanePort = toString remote.data-plane-port;
+            controlPlanePort = toString remote.control-plane-port;
+        } else {
+            remote = "false";
+        });
     };
     langPlantuml = {
       autoEnable = builtins.elem "plantuml" cfg.langs.enable;
@@ -252,6 +268,19 @@ in {
             type = types.enum [ "clangd" "ccls" ];
           };
           clangdCommand = mkOption { default = [ "clangd" ]; };
+        };
+
+        typst = {
+            remote = mkOption {
+                default = null;
+                type = types.nullOr (types.submodule {
+                    options = {
+                        host = mkOption { type = types.str; };
+                        control-plane-port = mkOption { type = types.int; };
+                        data-plane-port = mkOption { type = types.int; };
+                    };
+                });
+            };
         };
       };
 

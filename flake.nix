@@ -16,6 +16,12 @@
       flake = false;
     };
 
+    typst-preview-nvim = {
+        # url = "path:/home/iliayar/Repos/typst-preview.nvim";  
+        url = "github:iliayar/typst-preview.nvim";
+        flake = false;
+    };
+
     secrets.url = "git+ssh://git@github.com/iliayar/dotfiles-secrets.git";
 
     emacs-overlay = {
@@ -274,7 +280,7 @@
           deployPkgs = import nixpkgs {
             inherit system;
             overlays = [
-              deploy-rs.overlay # or deploy-rs.overlays.default
+              deploy-rs.overlays.default
               (self: super: {
                 deploy-rs = {
                   inherit (pkgs) deploy-rs;

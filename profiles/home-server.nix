@@ -27,7 +27,12 @@
           enable = true;
         };
       };
-      langs.enable = [ "misc" "nix" "ocaml" ];
+      langs.enable = [ "misc" "nix" "typst" ];
+      langs.typst.remote = {
+        host = "home.iliayar.net";
+        data-plane-port = 3000;
+        control-plane-port = 3001;
+      };
       code-assist = { enable = true; };
       pretty = { status-bar.enable = true; };
     };
@@ -39,6 +44,7 @@
 
       udiskie = false;
       pass.enable = true;
+      zellij.enable = true;
     };
 
     shell = {
@@ -49,7 +55,7 @@
 
     dev = {
         latex.enable = true;
-        ocaml.enable = true;
+        typst.enable = true;
     };
 
     editors.emacs = {
