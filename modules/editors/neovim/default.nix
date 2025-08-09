@@ -1,5 +1,15 @@
-{ config, lib, pkgs, codestats-nvim, secrets, remote-nvim
-, coq-lsp-nvim, typst-preview-nvim, ... }:
+{ config
+, lib
+, pkgs
+, codestats-nvim
+, secrets
+, remote-nvim
+, coq-lsp-nvim
+, typst-preview-nvim
+, system
+, cangjie-nvim
+, ...
+}:
 
 with lib;
 
@@ -29,10 +39,10 @@ let
     pname = "sonicpi.nvim";
     version = "2025-06-22";
     src = pkgs.fetchFromGitHub {
-        owner = "magicmonty";
-        repo = "sonicpi.nvim";
-        rev = "9204aec1461520ccb42deb6354a514ecf7eadad8";
-        hash = "sha256-seqnwft6dQ9nQaBbaMnWHTUpUq7n+VcGKhBIRPZEw/c=";
+      owner = "magicmonty";
+      repo = "sonicpi.nvim";
+      rev = "9204aec1461520ccb42deb6354a514ecf7eadad8";
+      hash = "sha256-seqnwft6dQ9nQaBbaMnWHTUpUq7n+VcGKhBIRPZEw/c=";
     };
   };
 
@@ -40,10 +50,10 @@ let
     pname = "strudel.nvim";
     version = "2025-06-22";
     src = pkgs.fetchFromGitHub {
-        owner = "gruvw";
-        repo = "strudel.nvim";
-        rev = "9ad3634c7c302f16db889a55c2ff13e66f56ded2";
-        hash = "sha256-SSD76hTVKZmCBT5sfji/fC8MExO2sZBumHM+rPIF4vQ=";
+      owner = "gruvw";
+      repo = "strudel.nvim";
+      rev = "9ad3634c7c302f16db889a55c2ff13e66f56ded2";
+      hash = "sha256-SSD76hTVKZmCBT5sfji/fC8MExO2sZBumHM+rPIF4vQ=";
     };
   };
 
@@ -105,7 +115,9 @@ let
       plugins = with pkgs.vimPlugins; [
         (nvim-treesitter.withPlugins (ps:
           with ps;
-          nvim-treesitter.allGrammars ++ cfg.misc.code.treeSitterExtraGrammars))
+          nvim-treesitter.allGrammars ++ cfg.misc.code.treeSitterExtraGrammars ++ [
+            cangjie-nvim.packages.${system}.tree-sitter-cangjie
+          ]))
         nvim-treesitter-context
         formatter-nvim
         nvim-cmp
@@ -167,16 +179,17 @@ let
     langTypst = {
       autoEnable = builtins.elem "typst" cfg.langs.enable;
       plugins = with pkgs.vimPlugins; [ typst-vim typst-preview-nvim-pkg ];
-      extraParameters = {} // (
+      extraParameters = { } // (
         let remote = cfg.langs.typst.remote;
         in if remote != null then {
-            remote = "true";
-            host = ''"${remote.host}"'';
-            dataPlanePort = toString remote.data-plane-port;
-            controlPlanePort = toString remote.control-plane-port;
+          remote = "true";
+          host = ''"${remote.host}"'';
+          dataPlanePort = toString remote.data-plane-port;
+          controlPlanePort = toString remote.control-plane-port;
         } else {
-            remote = "false";
-        });
+          remote = "false";
+        }
+      );
     };
     langPlantuml = {
       autoEnable = builtins.elem "plantuml" cfg.langs.enable;
@@ -198,6 +211,10 @@ let
         ];
     };
     langFSharp = { autoEnable = builtins.elem "fsharp" cfg.langs.enable; };
+    langCangjie = {
+      autoEnable = builtins.elem "cangjie" cfg.langs.enable;
+      plugins = [ cangjie-nvim.packages.${system}.default ];
+    };
 
     obsidian = {
       autoEnable = cfg.obsidian.enable;
@@ -214,17 +231,21 @@ let
     sonicpi = { plugins = [ sonic-pi-nvim-pkg ]; };
     strudel = { plugins = [ strudel-nvim-pkg ]; };
   };
-in {
+in
+{
   options = {
     custom.editors.nvim = {
 
       extraPlugins = mkOption { default = [ ]; };
       extraConfig = mkOption { default = ""; };
 
-      bundles = foldl (acc: name:
-        acc // {
-          "${name}".enable = mkOption { default = false; };
-        }) { } (attrNames bundles);
+      bundles = foldl
+        (acc: name:
+          acc // {
+            "${name}".enable = mkOption { default = false; };
+          })
+        { }
+        (attrNames bundles);
 
       enable = mkOption { default = false; };
 
@@ -259,6 +280,7 @@ in {
             "typescript"
             "zig"
             "fsharp"
+            "cangjie"
           ]);
         };
 
@@ -271,16 +293,16 @@ in {
         };
 
         typst = {
-            remote = mkOption {
-                default = null;
-                type = types.nullOr (types.submodule {
-                    options = {
-                        host = mkOption { type = types.str; };
-                        control-plane-port = mkOption { type = types.int; };
-                        data-plane-port = mkOption { type = types.int; };
-                    };
-                });
-            };
+          remote = mkOption {
+            default = null;
+            type = types.nullOr (types.submodule {
+              options = {
+                host = mkOption { type = types.str; };
+                control-plane-port = mkOption { type = types.int; };
+                data-plane-port = mkOption { type = types.int; };
+              };
+            });
+          };
         };
       };
 
@@ -318,40 +340,46 @@ in {
       '';
     }
 
-    (mkMerge (map (name:
-      let bundle = { autoEnable = false; } // bundles.${name};
-      in { custom.editors.nvim.bundles.${name}.enable = bundle.autoEnable; })
+    (mkMerge (map
+      (name:
+        let bundle = { autoEnable = false; } // bundles.${name};
+        in { custom.editors.nvim.bundles.${name}.enable = bundle.autoEnable; })
       (attrNames bundles)))
 
-    (mkMerge (map (name:
-      let
-        bundleDefault = {
-          autoEnable = false;
-          plugins = [ ];
-          config = { };
-          extraParameters = { };
-        };
-        bundle = bundleDefault // bundles.${name};
-        enabled = cfg.bundles.${name}.enable;
-        val = if enabled then "true" else "false";
-        extraParametersConfig = foldl (acc: param:
-          acc + ''
-            nixcfg.${name}.${param} = ${bundle.extraParameters.${param}}
-          '') "" (attrNames bundle.extraParameters);
-      in mkMerge [
-        (mkIf enabled {
-          xdg.configFile."nvim/lua/config/nix.lua".text = extraParametersConfig;
-        })
-        ({
-          xdg.configFile."nvim/lua/config/nix.lua".text = ''
-            nixcfg.${name} = {
-              enable = ${val},
-            }
-          '';
-        })
-        (mkIf enabled { programs.neovim = { plugins = bundle.plugins; }; })
-        (mkIf enabled bundle.config)
-      ]) (attrNames bundles)))
+    (mkMerge (map
+      (name:
+        let
+          bundleDefault = {
+            autoEnable = false;
+            plugins = [ ];
+            config = { };
+            extraParameters = { };
+          };
+          bundle = bundleDefault // bundles.${name};
+          enabled = cfg.bundles.${name}.enable;
+          val = if enabled then "true" else "false";
+          extraParametersConfig = foldl
+            (acc: param:
+              acc + ''
+                nixcfg.${name}.${param} = ${bundle.extraParameters.${param}}
+              '') ""
+            (attrNames bundle.extraParameters);
+        in
+        mkMerge [
+          (mkIf enabled {
+            xdg.configFile."nvim/lua/config/nix.lua".text = extraParametersConfig;
+          })
+          ({
+            xdg.configFile."nvim/lua/config/nix.lua".text = ''
+              nixcfg.${name} = {
+                enable = ${val},
+              }
+            '';
+          })
+          (mkIf enabled { programs.neovim = { plugins = bundle.plugins; }; })
+          (mkIf enabled bundle.config)
+        ])
+      (attrNames bundles)))
 
     {
       xdg.configFile."nvim/colors" = {

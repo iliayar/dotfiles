@@ -192,6 +192,7 @@
         # "lean"
         "zig"
         "fsharp"
+        "cangjie"
       ];
       langs.cpp.lsp = "ccls";
       code-assist = { enable = true; };

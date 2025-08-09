@@ -137,6 +137,11 @@
     curd = {
         url ="github:Wraient/curd";
     };
+
+    cangjie-nvim = {
+        # url = "path:/home/iliayar/Repos/Cangjie/cangjie.nvim";
+        url = "git+https://gitcode.com/iliayar/cangjie.nvim.git";
+    };
   };
 
   outputs = { self, home-manager, nixpkgs, nur, secrets, denv, emacs-overlay, rust-overlay, deploy-rs, ... }@inputs:
