@@ -237,6 +237,10 @@ if nixcfg.exp.enable then
     require("nvim-exp").setup()
 end
 
+if nixcfg.langCangjie.enable then
+    require("cangjie").setup()
+end
+
 if nixcfg.codeMisc.enable then
     treesitterConfig = {
         highlight = {
@@ -598,6 +602,13 @@ if nixcfg.lsp.enable then
 
             capabilities = capabilities,
             on_attach = common_on_attach,
+        })
+    end
+
+    if nixcfg.langCangjie.enable then
+        vim.lsp.config('cangjie-lsp', {
+            capabilities = capabilities,
+            on_attach = common_on_attach
         })
     end
 end
