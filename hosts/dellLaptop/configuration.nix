@@ -225,6 +225,19 @@ in {
     '';
   };
 
+  services.openssh = {
+    enable = true;
+    ports = [ 22 ];
+    settings = {
+      PasswordAuthentication = true;
+      UseDns = true;
+    };
+  };
+
+  users.users."iliayar".openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGfWzGKgy5ExUP5Pk2Oja7fSHi0yvkqs9EeHPjtn2HJI iliayar@NixPC"
+  ];
+
   # NOTE: Fix for zoom screensharing under wayland,
   # because it has hardcoded path
   # FIXME: Still doesn't help

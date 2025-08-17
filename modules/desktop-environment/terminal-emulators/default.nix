@@ -6,5 +6,6 @@
     ./urxvt.nix
     ./wezterm.nix
     ./ghostty.nix
+    ./wave.nix
   ];
 }

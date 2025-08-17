@@ -150,6 +150,9 @@
         ghostty = {
             enable = true;
         };
+        wave = {
+            enable = true;
+        };
       };
 
       dunst.enable = true;
