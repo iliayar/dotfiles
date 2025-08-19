@@ -236,7 +236,9 @@ in {
 
   users.users."iliayar".openssh.authorizedKeys.keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGfWzGKgy5ExUP5Pk2Oja7fSHi0yvkqs9EeHPjtn2HJI iliayar@NixPC"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIQS/EGCyrNBP1GKIm+BSHMIrwC+9TK9C/HyXAPDHLKK"
   ];
+  programs.mosh.enable = true;
 
   # NOTE: Fix for zoom screensharing under wayland,
   # because it has hardcoded path

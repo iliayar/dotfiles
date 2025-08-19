@@ -9,7 +9,9 @@
   home.username = "iliayar";
   home.homeDirectory = "/home/iliayar";
 
-  home.packages = with pkgs; [];
+  home.packages = with pkgs; [
+    curd
+  ];
 
   denv = { langs.haskell.enable = true; };
 
@@ -125,6 +127,8 @@
       ssh.enable = true;
 
       net.enable = true;
+
+      zellij.enable = true;
     };
 
     shell = {
@@ -140,6 +144,7 @@
 
       browsers = {
         brave.enable = true;
+        zen.enable = true;
       };
 
       terms = {
