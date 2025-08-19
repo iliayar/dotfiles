@@ -317,6 +317,7 @@
       nixosConfigurations = {
         NixLaptop = (config "x86_64-linux").nixosConfigurations.NixLaptop;
         NixPC = (config "x86_64-linux").nixosConfigurations.NixPC;
+        NixServer = (config "x86_64-linux").nixosConfigurations.NixServer;
       };
 
       homeConfigurations = {

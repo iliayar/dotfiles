@@ -118,6 +118,7 @@ in {
   };
 
   users.users.ci.openssh.authorizedKeys.keys = [ my-key ];
+  programs.mosh.enable = true;
 
   services.caddy = {
     enable = true;
