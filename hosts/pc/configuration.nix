@@ -119,11 +119,10 @@
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet -t -r -c Hyprland";
+        command = "${pkgs.tuigreet}/bin/tuigreet -t -r -c Hyprland";
         user = "greeter";
       };
     };
-    vt = 6;
   };
 
   programs.dconf.enable = true;
@@ -186,6 +185,8 @@
       userServices = true;
     };
   };
+
+  services.udisks2.enable = true;
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

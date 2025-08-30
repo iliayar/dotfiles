@@ -59,7 +59,7 @@ in
         enableZshIntegration = true;
         installVimSyntax = true;
         clearDefaultKeybinds = true;
-        package = ghostty-newest.packages.${system}.default;
+        # package = ghostty-newest.packages.${system}.default;
 
         settings = {
           theme = "my-theme";
