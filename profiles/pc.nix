@@ -12,7 +12,7 @@
   home.packages = with pkgs; [
     # xournalpp
     # pkgs.gnome.adwaita-icon-theme
-    # obsidian
+    obsidian
     # aichat
     # graphviz
     # plantuml-c4

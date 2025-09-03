@@ -18,6 +18,8 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.supportedFilesystems = [ "ntfs" ];
 
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
   boot = {
     plymouth = {
       enable = true;
@@ -51,6 +53,11 @@
     firewall = {
         enable = false;
     };
+  };
+
+  networking.interfaces."enp10s0".wakeOnLan = {
+    enable = true;
+    policy = [ "magic" ];
   };
 
   time.timeZone = "Europe/Moscow";
@@ -167,6 +174,11 @@
   services.openssh = {
     enable = true;
   };
+
+  users.users."iliayar".openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIQS/EGCyrNBP1GKIm+BSHMIrwC+9TK9C/HyXAPDHLKK"
+  ];
+  programs.mosh.enable = true;
 
   services.gns3-server = {
     enable = true;
