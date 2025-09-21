@@ -23,9 +23,9 @@ in
       };
     };
 
-    home.packages = with pkgs; [
+    home.packages = with pkgs; (if pkgs.stdenv.isLinux then [
         tessen
-    ];
+    ] else []);
 
     # FIXME: Seems broken
     # services.password-store-sync = {

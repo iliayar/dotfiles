@@ -6,6 +6,9 @@
 
     nur.url = "github:nix-community/NUR";
 
+    nix-darwin.url = "github:nix-darwin/nix-darwin/master";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -17,9 +20,9 @@
     };
 
     typst-preview-nvim = {
-        # url = "path:/home/iliayar/Repos/typst-preview.nvim";  
-        url = "github:iliayar/typst-preview.nvim";
-        flake = false;
+      # url = "path:/home/iliayar/Repos/typst-preview.nvim";  
+      url = "github:iliayar/typst-preview.nvim";
+      flake = false;
     };
 
     secrets.url = "git+ssh://git@github.com/iliayar/dotfiles-secrets.git";
@@ -130,21 +133,21 @@
     };
 
     zen-browser = {
-        url = "github:youwen5/zen-browser-flake";
-        inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:youwen5/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     curd = {
-        url ="github:Wraient/curd";
+      url = "github:Wraient/curd";
     };
 
     cangjie-nvim = {
-        # url = "path:/home/iliayar/Repos/Cangjie/cangjie.nvim";
-        url = "git+https://gitcode.com/iliayar/cangjie.nvim.git";
+      # url = "path:/home/iliayar/Repos/Cangjie/cangjie.nvim";
+      url = "git+https://gitcode.com/iliayar/cangjie.nvim.git";
     };
   };
 
-  outputs = { self, home-manager, nixpkgs, nur, secrets, denv, emacs-overlay, rust-overlay, deploy-rs, ... }@inputs:
+  outputs = { self, home-manager, nixpkgs, nur, secrets, denv, emacs-overlay, rust-overlay, deploy-rs, nix-darwin, ... }@inputs:
     let
       config = system:
         let
@@ -259,6 +262,26 @@
             in
             nixpkgs.lib.nixosSystem { inherit system modules specialArgs; };
 
+          macbook = nix-darwin.lib.darwinSystem {
+            specialArgs = specialArgs // { inherit self; };
+            modules = [
+              ./hosts/macbook/configuration.nix
+              ./cachix.nix
+              {
+                nixpkgs = {
+                  inherit overlays;
+                  config.allowUnfree = true;
+                };
+                nix = {
+                  gc = {
+                    automatic = true;
+                    options = "--delete-older-than 3d";
+                  };
+                };
+              }
+            ];
+          };
+
           homeConfigurations = (makeProfiles [
             "heavy"
             "ubuntu-virt"
@@ -267,6 +290,7 @@
             "home-server-ci"
             "home-server"
             "pc"
+            "macbook"
           ]) // {
             wsl = home-manager.lib.homeManagerConfiguration rec {
               inherit pkgs;
@@ -280,6 +304,10 @@
             NixLenovo = lenovoLaptop;
             NixServer = homeSrv;
             NixPC = pc;
+          };
+
+          darwinConfigurations = {
+            macbook = macbook;
           };
 
           deployPkgs = import nixpkgs {
@@ -306,7 +334,7 @@
 
         in
         {
-          inherit homeConfigurations nixosConfigurations deploySystemPaths;
+          inherit homeConfigurations nixosConfigurations deploySystemPaths darwinConfigurations;
           makeHomeConfiguration = makeHomeProfileImpl;
         };
     in
@@ -320,10 +348,15 @@
         NixServer = (config "x86_64-linux").nixosConfigurations.NixServer;
       };
 
+      darwinConfigurations = {
+        macbook = (config "aarch64-darwin").darwinConfigurations.macbook;
+      };
+
       homeConfigurations = {
         heavy = (config "x86_64-linux").homeConfigurations.heavy;
         pc = (config "x86_64-linux").homeConfigurations.pc;
         home-server = (config "x86_64-linux").homeConfigurations.home-server;
+        macbook = (config "aarch64-darwin").homeConfigurations.macbook;
       };
 
       deploy.nodes = {

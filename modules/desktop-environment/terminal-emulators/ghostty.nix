@@ -59,19 +59,27 @@ in
         enableZshIntegration = true;
         installVimSyntax = true;
         clearDefaultKeybinds = true;
-        # package = ghostty-newest.packages.${system}.default;
+
+        package =
+          if pkgs.stdenv.isDarwin then
+            pkgs.writeShellScriptBin "ghostty-fake" ''
+              echo "It's fake ghostty"
+            '' else ghostty-newest.packages.${system}.default;
 
         settings = {
           theme = "my-theme";
           background-opacity = 0.85;
-          font-size = 12;
+          font-size = 14;
           font-family = "FiraCode Nerd Font Mono";
 
+        } // (if pkgs.stdenv.isLinux then {
           window-decoration = false;
           gtk-tabs-location = "bottom";
           gtk-wide-tabs = false;
           gtk-custom-css = "${styles}";
-
+        } else {
+          macos-option-as-alt = false;
+        }) // {
           cursor-style = "block";
           cursor-style-blink = false;
           shell-integration-features = "no-cursor";
@@ -110,14 +118,22 @@ in
             "${mod}+0=goto_tab:10"
 
             "${mod}+tab=toggle_tab_overview"
-
+          ] ++ (if pkgs.stdenv.isLinux then [
             "ctrl+shift+v=paste_from_clipboard"
             "ctrl+shift+c=copy_to_clipboard"
-
             "ctrl+shift+plus=increase_font_size:2"
             "ctrl+minus=decrease_font_size:2"
             "ctrl+0=reset_font_size"
-          ];
+          ] else [
+            "cmd+v=paste_from_clipboard"
+            "cmd+c=copy_to_clipboard"
+            "cmd+plus=increase_font_size:2"
+            "cmd+minus=decrease_font_size:2"
+            "cmd+0=reset_font_size"
+
+            "option+left=esc:b"
+            "option+right=esc:f"
+          ]);
 
         };
 

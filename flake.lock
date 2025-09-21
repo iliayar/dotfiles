@@ -707,6 +707,27 @@
         "type": "github"
       }
     },
+    "nix-darwin": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1758447883,
+        "narHash": "sha256-yGA6MV0E4JSEXqLTb4ZZkmdJZcoQ8HUzihRRX12Bvpg=",
+        "owner": "nix-darwin",
+        "repo": "nix-darwin",
+        "rev": "25381509d5c91bbf3c30e23abc6d8476d2143cd1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-darwin",
+        "ref": "master",
+        "repo": "nix-darwin",
+        "type": "github"
+      }
+    },
     "nix-github-actions": {
       "inputs": {
         "nixpkgs": [
@@ -1204,6 +1225,7 @@
         "home-manager": "home-manager",
         "lean4-mode": "lean4-mode",
         "libxft-bgra": "libxft-bgra",
+        "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs_5",
         "nur": "nur",
         "nwg-displays": "nwg-displays",
@@ -1424,11 +1446,11 @@
         "nixpkgs": "nixpkgs_8"
       },
       "locked": {
-        "lastModified": 1739299976,
-        "narHash": "sha256-rLbdgTfI2jX0jnWQoYH/tBC/tR8qcJetp3Am3lNUDGQ=",
+        "lastModified": 1756914691,
+        "narHash": "sha256-Sxg26/Kwjx290gMEeRObw78h3tLPC44N/4STExGMphU=",
         "ref": "refs/heads/master",
-        "rev": "1c3d059aa6531da5f5c3d8c1a2eb9de98c0f4cbe",
-        "revCount": 10,
+        "rev": "704f21696aad990d1d8f3eca1775e05423e89b62",
+        "revCount": 11,
         "type": "git",
         "url": "ssh://git@github.com/iliayar/dotfiles-secrets.git"
       },

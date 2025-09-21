@@ -21,8 +21,9 @@ in
         typstfmt
         typst-live
         tinymist
+    ] ++ (if pkgs.stdenv.isLinux then [
         polylux2pdfpc
         pdfpc
-    ];
+    ] else []);
   };
 }
