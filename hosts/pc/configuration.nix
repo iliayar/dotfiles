@@ -177,6 +177,7 @@
 
   users.users."iliayar".openssh.authorizedKeys.keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIQS/EGCyrNBP1GKIm+BSHMIrwC+9TK9C/HyXAPDHLKK"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEm3biV/gVmzzgwH/K8lV/fM7Noa9lmWlJSXpEmWyE9s"
   ];
   programs.mosh.enable = true;
 

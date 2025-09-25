@@ -12,10 +12,6 @@ let
         env -i HOME=$HOME WAYLAND_DISPLAY=$WAYLAND_DISPLAY DISPLAY=$DISPLAY XDG_SESSION_TYPE=$XDG_SESSION_TYPE DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS XDG_CURRENT_DESKTOP=GNOME XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR zoom $@
     fi
   '';
-
-  zoom-fixed-nixos = pkgs.writeShellScriptBin "zoom-fixed" ''
-    XDG_CURRENT_DESKTOP=GNOME ${pkgs.zoom-us}/bin/zoom $@
-  '';
 in
 {
   imports = [
@@ -131,7 +127,23 @@ in
       home.packages = with pkgs; [
         tdesktop
         vesktop
-        (if cfg.social.fix-zoom-non-nixos then zoom-fixed else zoom-fixed-nixos)
+      ] ++ (if cfg.social.fix-zoom-non-nixos
+        then [ zoom-fixed ]
+        else [ zoom-us ]);
+
+      xdg.mimeApps = {
+        defaultApplications = {
+          "x-scheme-handler/tg" = [ "telegramdesktop.desktop" ];
+          "x-scheme-handler/zoommtg" = [ "zoom.desktop" ];
+          "application/x-zoom" = [ "zoom.desktop" ];
+          "x-scheme-handler/zoomus" = [ "zoom.desktop" ];
+        };
+      };
+    })
+
+    (mkIf (cfg.social.enable && cfg.social.fix-zoom-non-nixos) {
+      home.packages = with pkgs; [
+        zoom-fixed
       ];
       xdg.desktopEntries = {
         zoom = {
@@ -153,15 +165,6 @@ in
             "x-scheme-handler/zoomus"
             "x-scheme-handler/zoomphonecall"
           ];
-        };
-      };
-
-      xdg.mimeApps = {
-        defaultApplications = {
-          "x-scheme-handler/tg" = [ "telegramdesktop.desktop" ];
-          "x-scheme-handler/zoommtg" = [ "zoom.desktop" ];
-          "application/x-zoom" = [ "zoom.desktop" ];
-          "x-scheme-handler/zoomus" = [ "zoom.desktop" ];
         };
       };
     })

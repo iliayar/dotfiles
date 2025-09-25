@@ -82,6 +82,8 @@
 
       latex.enable = true;
       typst.enable = true;
+
+      lean.enable = true;
     };
     # dev = {
     #   python.enable = true;
@@ -185,11 +187,11 @@
         "ocaml"
         # "sql"
         # "latex"
-        # "cpp"
+        "cpp"
         "typst"
         # "plantuml"
         "haskell"
-        # "lean"
+        "lean"
         "zig"
         "fsharp"
         "cangjie"
