@@ -30,11 +30,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1750521148,
-        "narHash": "sha256-4JaxCL2vFfmXM8ccZ2w0zXW977Fv32GE+U5UmVhVOrY=",
+        "lastModified": 1758469300,
+        "narHash": "sha256-5l5JMZZnCTDBsrDr28EoyA/EBy2TYGMWQqVcAyQKX+w=",
         "ref": "refs/heads/master",
-        "rev": "83a73c245c033a15ad69e013d60823f39828ce7e",
-        "revCount": 20,
+        "rev": "f29a9aeafd71ab0720115330bea4df699380f989",
+        "revCount": 23,
         "type": "git",
         "url": "https://git.sr.ht/~iliayar/cfcli"
       },

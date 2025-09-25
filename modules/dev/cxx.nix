@@ -22,6 +22,7 @@ in {
         clang-tools
         gcc
         ccls
+        cmake
       ];
     })
     (mkIf (cfg.compiler == "gcc") {

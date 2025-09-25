@@ -38,8 +38,8 @@ in {
             y = 3;
           };
           opacity = 0.85;
-        } // (if cfg.alacritty.option_as_alt then {
-          option_as_alt = "Both";
+        } // (if pkgs.stdenv.isDarwin then {
+          option_as_alt = "OnlyLeft";
         } else
           { });
 

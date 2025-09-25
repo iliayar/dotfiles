@@ -36,7 +36,7 @@
     # claude-code
 
     # TODO: this one too
-    # cfcli
+    cfcli
 
     # TODO: And this one
     # yazi
@@ -48,7 +48,7 @@
     # yt-dlp
     # audacity
 
-    # curd
+    curd
   ];
 
   # TODO: Move it somewhere
@@ -72,10 +72,10 @@
 
     dev = {
       # python.enable = true;
-      # go.enable = true;
+      go.enable = true;
       nix.enable = true;
       # ocaml.enable = true;
-      # cpp.enable = true;
+      cpp.enable = true;
       # rust.enable = true;
       # zig.enable = true;
 
@@ -84,6 +84,8 @@
 
       latex.enable = true;
       typst.enable = true;
+
+      lean.enable = true;
     };
     # dev = {
     #   python.enable = true;
@@ -102,8 +104,6 @@
     #   embed.enable = true;
 
     #   train.enable = true;
-
-    #   lean.enable = true;
     # };
 
     # study.sage.enable = true;
@@ -181,28 +181,28 @@
         "nix"
         # "python"
         # "rust"
-        # "go"
+        "go"
         # "lua"
         # "ocaml"
         # "sql"
         "latex"
-        # "cpp"
+        "cpp"
         "typst"
         # "plantuml"
         # "haskell"
-        # "lean"
+        "lean"
         # "zig"
         # "fsharp"
         # "cangjie"
       ];
-      # langs.cpp.lsp = "ccls";
+      langs.cpp.lsp = "ccls";
       code-assist = { enable = true; };
       pretty = { status-bar.enable = true; };
 
-      # obsidian = {
-      #   enable = true;
-      #   path = "~/org/obsidian";
-      # };
+      obsidian = {
+        enable = true;
+        path = "~/org/obsidian";
+      };
     };
 
     misc = {
@@ -233,6 +233,7 @@
     de.terms.ghostty = {
       enable = true;
     };
+    de.terms.alacritty.enable = true;
 
     de.zathura.enable = true;
 

@@ -78,7 +78,7 @@ in
           gtk-wide-tabs = false;
           gtk-custom-css = "${styles}";
         } else {
-          macos-option-as-alt = false;
+          macos-option-as-alt = "left";
         }) // {
           cursor-style = "block";
           cursor-style-blink = false;
