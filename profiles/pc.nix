@@ -66,7 +66,7 @@
 
     hw.qmk.enable = true;
 
-    settings = { code-stats-machine = "DellLaptop"; };
+    settings = { code-stats-machine = "PC"; };
 
     dev = {
       python.enable = true;
@@ -120,6 +120,10 @@
       click-the-circles.enable = true;
       extra.enable = true;
       wine.enable = true;
+    };
+
+    editors.vscode = {
+        enable = true;
     };
 
     editors.emacs = {

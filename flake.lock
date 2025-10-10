@@ -149,11 +149,11 @@
         "rust-overlay": "rust-overlay_3"
       },
       "locked": {
-        "lastModified": 1726084923,
-        "narHash": "sha256-5S6oVXylGGmC5sV898uZUSduS4ZxN6uqTE2+N5bK/Xg=",
+        "lastModified": 1759325485,
+        "narHash": "sha256-g/+Ca1aLR2pf+y/gNjactcp7iEwF7vCcnx/3JUrcZjo=",
         "owner": "iliayar",
         "repo": "env.nix",
-        "rev": "a3cebbd5604b05f233775e3cffa4f2c7a5ca24ab",
+        "rev": "5b023afe2bee704724424482e692e267537660ba",
         "type": "github"
       },
       "original": {
@@ -1446,11 +1446,11 @@
         "nixpkgs": "nixpkgs_8"
       },
       "locked": {
-        "lastModified": 1756914691,
-        "narHash": "sha256-Sxg26/Kwjx290gMEeRObw78h3tLPC44N/4STExGMphU=",
+        "lastModified": 1758976392,
+        "narHash": "sha256-I1h/Er70QUxFp0E0HrzCTWQd/XlMnDus7REfTfVpFLw=",
         "ref": "refs/heads/master",
-        "rev": "704f21696aad990d1d8f3eca1775e05423e89b62",
-        "revCount": 11,
+        "rev": "8cf6f1f1c4e79c606465c0fcd940af94725577d1",
+        "revCount": 12,
         "type": "git",
         "url": "ssh://git@github.com/iliayar/dotfiles-secrets.git"
       },

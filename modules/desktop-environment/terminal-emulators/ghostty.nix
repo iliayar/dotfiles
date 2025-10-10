@@ -64,12 +64,12 @@ in
           if pkgs.stdenv.isDarwin then
             pkgs.writeShellScriptBin "ghostty-fake" ''
               echo "It's fake ghostty"
-            '' else ghostty-newest.packages.${system}.default;
+            '' else pkgs.ghostty;
 
         settings = {
           theme = "my-theme";
           background-opacity = 0.85;
-          font-size = 14;
+          font-size = 12;
           font-family = "FiraCode Nerd Font Mono";
 
         } // (if pkgs.stdenv.isLinux then {

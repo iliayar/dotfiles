@@ -219,7 +219,7 @@ in
         in
         mkMerge [
           (mkIf enabled {
-            programs.vscode = {
+            programs.vscode.profiles.default = {
               extensions = bundle.extensions;
               userSettings = bundle.settings;
               keybindings = bundle.keybindings;
