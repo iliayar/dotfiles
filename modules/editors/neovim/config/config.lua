@@ -81,14 +81,6 @@ if nixcfg.misc.enable then
 
     vim.keymap.set(
         "",
-        "<Leader>ww",
-        function()
-            require("window-picker").pick_window()
-        end
-    )
-
-    vim.keymap.set(
-        "",
         "<Leader>wd",
         function()
             local winid = vim.api.nvim_get_current_win()
@@ -96,78 +88,117 @@ if nixcfg.misc.enable then
         end
     )
 
-    local trouble = require("trouble.sources.telescope")
-    local fb_actions = require("telescope").extensions.file_browser.actions
-    local actions = require("telescope.actions")
+    if nixcfg.picker.t == "telescope" then
+        local trouble = require("trouble.sources.telescope")
+        local actions = require("telescope.actions")
 
-    require("telescope").setup(
-        {
-            defaults = {
-                color_devicons = true,
-                mappings = {
-                    i = {
-                        ["<C-t>"] = trouble.open,
-                        ["<C-S-o>"] = require("telescope.actions.layout").toggle_preview
-                    },
-                    n = {["<C-t>"] = trouble.open}
-                },
-                layout_strategy = "flex",
-                preview = {
-                    hide_on_startup = true
-                }
-            },
-            pickers = {
-                buffers = {
+        require("telescope").setup(
+            {
+                defaults = {
+                    color_devicons = true,
                     mappings = {
                         i = {
-                            ["<C-d>"] = actions.delete_buffer + actions.move_to_top
+                            ["<C-t>"] = trouble.open,
+                            ["<C-S-o>"] = require("telescope.actions.layout").toggle_preview
+                        },
+                        n = {["<C-t>"] = trouble.open}
+                    },
+                    layout_strategy = "flex",
+                    preview = {
+                        hide_on_startup = true
+                    }
+                },
+                pickers = {
+                    buffers = {
+                        mappings = {
+                            i = {
+                                ["<C-d>"] = actions.delete_buffer + actions.move_to_top
+                            }
                         }
                     }
-                }
-            },
-            extensions = {
-                ["ui-select"] = {
-                    require("telescope.themes").get_dropdown({})
+                },
+                extensions = {
+                    ["ui-select"] = {
+                        require("telescope.themes").get_dropdown({})
+                    }
                 }
             }
-        }
-    )
+        )
 
-    require("telescope").load_extension("fzf")
-    require("telescope").load_extension("file_browser")
-    require("telescope").load_extension("ui-select")
+        require("telescope").load_extension("fzf")
+        require("telescope").load_extension("file_browser")
+        require("telescope").load_extension("ui-select")
 
-    local themes = require("telescope.themes")
-    local builtin = require("telescope.builtin")
+        local themes = require("telescope.themes")
+        local builtin = require("telescope.builtin")
 
-    vim.keymap.set(
-        "n",
-        "<Leader>ff",
-        function()
-            require("telescope").extensions.file_browser.file_browser(
-                {
-                    cwd_to_path = true,
-                    path = "%:p:h"
-                }
-            )
-        end,
-        {}
-    )
-    vim.keymap.set("n", "<Leader>fr", builtin.live_grep, {})
-    vim.keymap.set("n", "<Leader>fg", builtin.find_files, {})
-    vim.keymap.set(
-        "n",
-        "<Leader>bf",
-        function()
-            builtin.buffers(
-                {
-                    sort_lastused = true,
-                    ignore_current_buffer = true
-                }
-            )
-        end,
-        {}
-    )
+        vim.keymap.set(
+            "n",
+            "<Leader>ff",
+            function()
+                require("telescope").extensions.file_browser.file_browser(
+                    {
+                        cwd_to_path = true,
+                        path = "%:p:h"
+                    }
+                )
+            end,
+            {}
+        )
+        vim.keymap.set("n", "<Leader>fr", builtin.live_grep, {})
+        vim.keymap.set("n", "<Leader>fg", builtin.find_files, {})
+        vim.keymap.set(
+            "n",
+            "<Leader>bf",
+            function()
+                builtin.buffers(
+                    {
+                        sort_lastused = true,
+                        ignore_current_buffer = true
+                    }
+                )
+            end,
+            {}
+        )
+    elseif nixcfg.picker.t == "snacks" then
+        local trouble = require("trouble.sources.snacks")
+        local yazi = require("yazi")
+        local Snacks = require("snacks")
+        Snacks.setup({
+            picker = {
+                actions = trouble.actions,
+                win = {
+                    input = {
+                        keys = {
+                            ["<C-t>"] = trouble.open
+                        }
+                    }
+                },
+                layout = { 
+                    preset = "ivy",
+                    preview = "main",
+                },
+                ui_select = true,
+            }
+        })
+
+        yazi.setup({
+        })
+
+        vim.keymap.set("n", "<Leader>ff", function()
+            yazi.yazi()
+        end, {})
+        vim.keymap.set("n", "<Leader>fF", function()
+            yazi.yazi(nil, vim.fn.getcwd())
+        end, {})
+        vim.keymap.set("n", "<Leader>fr", Snacks.picker.grep, {})
+        vim.keymap.set("n", "<Leader>fg", Snacks.picker.files, {})
+        vim.keymap.set("n", "<Leader>bf", function()
+            Snacks.picker.buffers({
+                current = false,
+            })
+        end, {})
+    end
 
     vim.keymap.set(
         "n",
@@ -415,7 +446,13 @@ end
 
 if nixcfg.lsp.enable then
     local trouble = require("trouble")
-    local builtin = require("telescope.builtin")
+
+    local picker = nil
+    if nixcfg.picker.t == "telescope" then
+        picker = require("telescope.builtin")
+    elseif nixcfg.picker.t == "snacks" then
+        picker = require("snacks").picker
+    end
 
     vim.keymap.set("n", "<Leader>sl", "<Cmd>LspStart<CR>")
     vim.keymap.set("n", "<Leader>ss", "<Cmd>LspStop<CR>")
@@ -440,7 +477,7 @@ if nixcfg.lsp.enable then
         "n",
         "<Leader>se",
         function()
-            builtin.diagnostics({})
+            picker.diagnostics({})
         end
     )
 
@@ -451,10 +488,10 @@ if nixcfg.lsp.enable then
 
         local opts = {buffer = bufnr}
         vim.keymap.set("n", "gsD", vim.lsp.buf.declaration, opts)
-        vim.keymap.set("n", "gsd", builtin.lsp_definitions, opts)
-        vim.keymap.set("n", "gsi", builtin.lsp_implementations, opts)
-        vim.keymap.set("n", "gsx", builtin.lsp_references, opts)
-        vim.keymap.set("n", "gst", builtin.lsp_type_definitions, opts)
+        vim.keymap.set("n", "gsd", picker.lsp_definitions, opts)
+        vim.keymap.set("n", "gsi", picker.lsp_implementations, opts)
+        vim.keymap.set("n", "gsx", picker.lsp_references, opts)
+        vim.keymap.set("n", "gst", picker.lsp_type_definitions, opts)
         vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
         vim.keymap.set("n", "<Leader>cr", vim.lsp.buf.rename, opts)
         vim.keymap.set({"n", "v"}, "<Leader>ca", vim.lsp.buf.code_action, opts)

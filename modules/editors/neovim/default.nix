@@ -74,10 +74,6 @@ let
         comment-nvim
         undotree
 
-        telescope-nvim
-        telescope-fzf-native-nvim
-        telescope-file-browser-nvim
-        telescope-ui-select-nvim
         plenary-nvim
         harpoon
 
@@ -155,6 +151,24 @@ let
     lsp = {
       autoEnable = cfg.code-assist.enable;
       plugins = with pkgs.vimPlugins; [ nvim-lspconfig cmp-nvim-lsp ];
+    };
+
+    picker = {
+        autoEnable = true;
+        extraParameters = {
+            t = ''"${cfg.picker}"'';
+        };
+        plugins = with pkgs.vimPlugins; 
+            if cfg.picker == "telescope" then [
+                telescope-nvim
+                telescope-fzf-native-nvim
+                telescope-file-browser-nvim
+                telescope-ui-select-nvim
+            ] else if cfg.picker == "snacks" then [
+                snacks-nvim
+                # Snacks explorer sucks
+                yazi-nvim
+            ] else [];
     };
 
     langMisc = { autoEnable = builtins.elem "misc" cfg.langs.enable; };
@@ -255,6 +269,11 @@ in
           enable = mkOption { default = false; };
           treeSitterExtraGrammars = mkOption { default = [ ]; };
         };
+      };
+
+      picker = mkOption {
+          default = "snacks";
+          type = types.enum [ "snacks" "telescope" ];
       };
 
       langs = {
