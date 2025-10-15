@@ -60,7 +60,7 @@
   #   };
   # };
 
-  # denv = { langs.haskell.enable = true; };
+  denv = { langs.haskell.enable = true; };
 
   # custom.de.fonts.enable = false;
 
@@ -71,7 +71,7 @@
     settings = { code-stats-machine = "MacBook"; };
 
     dev = {
-      # python.enable = true;
+      python.enable = true;
       go.enable = true;
       nix.enable = true;
       # ocaml.enable = true;
@@ -179,7 +179,7 @@
       langs.enable = [
         "misc"
         "nix"
-        # "python"
+        "python"
         # "rust"
         "go"
         # "lua"
@@ -189,7 +189,7 @@
         "cpp"
         "typst"
         # "plantuml"
-        # "haskell"
+        "haskell"
         "lean"
         # "zig"
         # "fsharp"
