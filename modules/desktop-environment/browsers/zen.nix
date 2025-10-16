@@ -31,6 +31,10 @@ in
           "x-scheme-handler/https" = [ "zen.desktop" ];
           "x-scheme-handler/about" = [ "zen.desktop" ];
           "x-scheme-handler/unknown" = [ "zen.desktop" ];
+          "text/html" = [ "zen.desktop" ];
+          "text/xml" = [ "zen.desktop" ];
+          "application/xhtml+xml" = [ "zen.desktop" ];
+          "application/vnd.mozilla.xul+xml" = [ "zen.desktop" ];
         };
       };
     })

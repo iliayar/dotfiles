@@ -57,6 +57,17 @@ let
     };
   };
 
+  alabaster-nvim = pkgs.vimUtils.buildVimPlugin {
+    pname = "alabaster.nvim";
+    version = "2025-10-16";
+    src = pkgs.fetchFromGitHub {
+      owner = "p00f";
+      repo = "alabaster.nvim";
+      rev = "b14f4527bd5d5528cac33599f71ad542c2f38748";
+      hash = "sha256-W9F9cWJfBglZ92W9h4uaVe7vENCf0wWDK0vr4U5LePU=";
+    };
+  };
+
   cfg = config.custom.editors.nvim;
 
   nvim-exp = import ./nvim-exp { inherit pkgs; };
@@ -104,6 +115,11 @@ let
     prettyGruvbox = {
       autoEnable = cfg.pretty.theme == "gruvbox";
       plugins = with pkgs.vimPlugins; [ gruvbox-nvim ];
+    };
+
+    prettyAlabaster = {
+      autoEnable = cfg.pretty.theme == "alabaster";
+      plugins = with pkgs.vimPlugins; [ alabaster-nvim ];
     };
 
     codeMisc = {
@@ -330,7 +346,7 @@ in
       pretty = {
         theme = mkOption {
           default = "gruvbox";
-          type = types.enum [ "gruvbox" "monokai" ];
+          type = types.enum [ "gruvbox" "monokai" "alabaster" ];
         };
 
         status-bar.enable = mkOption { default = false; };

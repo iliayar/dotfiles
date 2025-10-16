@@ -419,6 +419,8 @@ if nixcfg.prettyGruvbox.enable then
         }
     )
     vim.cmd("colorscheme gruvbox")
+elseif nixcfg.prettyAlabaster.enable then
+    vim.cmd("colorscheme alabaster")
 else
     vim.cmd("colorscheme monokai")
 end
