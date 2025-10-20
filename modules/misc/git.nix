@@ -18,6 +18,10 @@ in
           If not null, enables auto signing
         '';
       };
+
+      save-creds = mkOption {
+        default = false;
+      };
     };
   };
 
@@ -32,6 +36,7 @@ in
 
         extraConfig = {
           core.editor = "vim";
+          credential.helper = if cfg.git.save-creds then "store" else null;
         };
 
         aliases = {
