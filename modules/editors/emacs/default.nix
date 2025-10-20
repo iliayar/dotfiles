@@ -151,6 +151,8 @@ let
     "yasnippet-snippets"
     "mermaid-mode"
     "sonic-pi"
+    "alabaster-theme"
+    "stimmung-themes"
   ] // {
     "lsp-julia" = epkgs:
       [
@@ -178,11 +180,17 @@ let
       packages = [
         "projectile"
         "magit"
-        # "treemacs"
-        # "treemacs-projectile"
         # "minimap"
         # "esup"
         "which-key"
+      ];
+    };
+
+    misc-treemacs-inernal = {
+      auto-enable = cfg.misc.enable && cfg.misc.treemacs.enable;
+      packages = [
+        "treemacs"
+        "treemacs-projectile"
       ];
     };
 
@@ -292,15 +300,15 @@ let
     evil-integrations = { packages = [ "evil-collection" ]; };
 
     evil-treemacs-internal = {
-      auto-enable = cfg.evil.enable && cfg.misc.enable;
+      auto-enable = cfg.evil.enable && cfg.misc.enable && cfg.misc.treemacs.enable;
       packages = [
-        # "treemacs-evil" 
+        "treemacs-evil" 
       ];
     };
 
     theme-internal = {
       auto-enable = cfg.pretty.theme != null;
-      packages = [ "doom-themes" "all-the-icons" ];
+      packages = [ "doom-themes" "all-the-icons" "alabaster-theme" "stimmung-themes" ];
       config = {
         home.file.".emacs.d/nixcfg.el".text = ''
           (setq nixcfg-theme '${cfg.pretty.theme})
@@ -332,7 +340,7 @@ let
     };
 
     lsp-misc-internal = {
-      auto-enable = cfg.bundles.lsp-internal.enable && cfg.misc.enable;
+      auto-enable = cfg.bundles.lsp-internal.enable && cfg.misc.enable && cfg.misc.treemacs.enable;
       packages = [ "lsp-treemacs" ];
     };
 
@@ -552,6 +560,8 @@ in {
 
       misc = {
         enable = mkOption { default = false; };
+
+        treemacs.enable = mkOption { default = false; };
 
         completion = mkOption {
           default = "vertico";

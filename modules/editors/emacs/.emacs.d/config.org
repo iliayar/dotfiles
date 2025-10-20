@@ -55,11 +55,11 @@ Smooth scrolling
   (setq-default tab-width 4)
 #+end_src
 
-Browser fixes
-#+begin_src emacs-lisp
-  (setq browse-url-browser-function #'browse-url-chromium)
-  (setq browse-url-chromium-program "brave")
-#+end_src
+# Browser fixes
+# #+begin_src emacs-lisp
+#   (setq browse-url-browser-function #'browse-url-chromium)
+#   (setq browse-url-chromium-program "brave")
+# #+end_src
 
 * Packages
 #+begin_src emacs-lisp
@@ -333,6 +333,10 @@ Highlight lines chaned according to ~git~
 #+end_src
 *Or* doom theme
 #+begin_src emacs-lisp
+  (use-package alabaster-theme
+    :if nixcfg-alabaster-theme)
+  (use-package stimmung-themes
+    :if nixcfg-stimmung-themes)
   (use-package doom-themes
     :if nixcfg-doom-themes
     :preface (defvar region-fg nil)
@@ -842,14 +846,10 @@ Lsp integration with several plugins
     :if nixcfg-lsp-ivy)
 #+end_src
 C++ lsp \\
-In /build/ directory run =cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=YES ..=
+In /build/ directory run =cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=YES ..= and then `ln` it to root
 #+BEGIN_SRC emacs-lisp
   (use-package ccls
-    :if nixcfg-ccls
-    :config
-    (setq ccls-initialization-options
-	  '(:compilationDatabaseDirectory "build"
-					  :cache (:directory "build/.ccls-cache"))))
+    :if nixcfg-ccls)
 #+END_SRC
 Haskell lsp
 #+begin_src emacs-lisp
@@ -953,12 +953,14 @@ Compilation windows settings:
   (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 
   (defun my-compilation-hook ()
-    (when (not (get-buffer-window "*compilation*"))
+    (when (and
+  		 (not (get-buffer-window "*compilation*"))
+  		 (not (string= (buffer-name) "*Async-native-compile-log*")))
       (save-selected-window
-	(save-excursion
-	  (let* ((w (split-window-vertically)))
-	    (select-window w)
-	    (switch-to-buffer "*compilation*"))))))
+  	  (save-excursion
+  		(let* ((w (split-window-vertically)))
+  	      (select-window w)
+  	      (switch-to-buffer "*compilation*"))))))
   (add-hook 'compilation-mode-hook 'my-compilation-hook)
 
   (setq compilation-window-height 10)
@@ -1039,12 +1041,12 @@ Cheatsheets
 *** Obsidian
 #+begin_src emacs-lisp
   (use-package obsidian
-    :if nixcfg-bundle-obsidian
+    :if nixcfg-obsidian
     :config
-    (obsidian-specify-path "~/org/obsidian")
     (global-obsidian-mode t)
     :custom
     (obsidian-inbox-directory "Capture")
+    (obsidian-directory "~/org/obsidian")
     :bind (("C-c b f" . obsidian-jump)
            ("C-c b c" . obsidian-capture)
     :map obsidian-mode-map

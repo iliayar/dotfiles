@@ -135,6 +135,7 @@
         evil-integrations.enable = true;
         proof-assist.enable = true;
         wayland.enable = true;
+        obsidian.enable = true;
       };
 
       misc = {
@@ -142,7 +143,7 @@
         code = { enable = true; };
       };
 
-      langs.enable = [ "nix" "misc" "latex" ];
+      langs.enable = [ "nix" "misc" "latex" "cpp" ];
 
       code-assist = {
         enable = true;
@@ -160,7 +161,7 @@
       };
 
       pretty = {
-        theme = "doom-gruvbox";
+        theme = "alabaster";
         extra.enable = false;
         font-size = 120;
       };

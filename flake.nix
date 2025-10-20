@@ -37,16 +37,6 @@
       flake = false;
     };
 
-    org-roam-ui = {
-      url = "github:org-roam/org-roam-ui";
-      flake = false;
-    };
-
-    lean4-mode = {
-      url = "github:leanprover-community/lean4-mode";
-      flake = false;
-    };
-
     picom-jonaburg = {
       url = "github:jonaburg/picom";
       flake = false;

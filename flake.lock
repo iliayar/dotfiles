@@ -658,22 +658,6 @@
         "type": "github"
       }
     },
-    "lean4-mode": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1748752682,
-        "narHash": "sha256-6XFcyqSTx1CwNWqQvIc25cuQMwh3YXnbgr5cDiOCxBk=",
-        "owner": "leanprover-community",
-        "repo": "lean4-mode",
-        "rev": "1388f9d1429e38a39ab913c6daae55f6ce799479",
-        "type": "github"
-      },
-      "original": {
-        "owner": "leanprover-community",
-        "repo": "lean4-mode",
-        "type": "github"
-      }
-    },
     "libpng": {
       "flake": false,
       "locked": {
@@ -1067,22 +1051,6 @@
         "type": "github"
       }
     },
-    "org-roam-ui": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1667644845,
-        "narHash": "sha256-dCoEQRi86eMerkMQPy3Ow/Kj9kzHxXRSrDk4cl8uLHo=",
-        "owner": "org-roam",
-        "repo": "org-roam-ui",
-        "rev": "5ac74960231db0bf7783c2ba7a19a60f582e91ab",
-        "type": "github"
-      },
-      "original": {
-        "owner": "org-roam",
-        "repo": "org-roam-ui",
-        "type": "github"
-      }
-    },
     "picom-jonaburg": {
       "flake": false,
       "locked": {
@@ -1223,13 +1191,11 @@
         "emacs-overlay": "emacs-overlay",
         "ghostty-newest": "ghostty-newest",
         "home-manager": "home-manager",
-        "lean4-mode": "lean4-mode",
         "libxft-bgra": "libxft-bgra",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs_5",
         "nur": "nur",
         "nwg-displays": "nwg-displays",
-        "org-roam-ui": "org-roam-ui",
         "picom-jonaburg": "picom-jonaburg",
         "pyprland-my": "pyprland-my",
         "pyprland-newest": "pyprland-newest",
