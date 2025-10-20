@@ -39,7 +39,7 @@
     cfcli
 
     # TODO: And this one
-    # yazi
+    yazi
     # meli
     # w3m
 
