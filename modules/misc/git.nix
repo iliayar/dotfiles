@@ -22,6 +22,15 @@ in
       save-creds = mkOption {
         default = false;
       };
+
+      creds = {
+        email = mkOption {
+            default = "iliayar3@gmail.com";
+        };
+        name = mkOption {
+            default = "iliayar";
+        };
+      };
     };
   };
 
@@ -31,8 +40,8 @@ in
         enable = true;
         lfs.enable = true;
 
-        userEmail = "iliayar3@gmail.com";
-        userName = "iliayar";
+        userEmail = cfg.git.creds.email;
+        userName =cfg.git.creds.name;
 
         extraConfig = {
           core.editor = "vim";

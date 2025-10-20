@@ -30,4 +30,14 @@ final: prev: {
       };
     });
   });
+
+  # zellij = prev.zellij.overrideDerivation (old: rec {
+  #   version = "0.42.2";
+  #   src = prev.fetchFromGitHub {
+  #       owner = "zellij-org";
+  #       repo = "zellij";
+  #       rev = "v${version}";
+  #       sha256 = "";
+  #   };
+  # });
 }

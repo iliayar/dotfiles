@@ -37,6 +37,7 @@ if nixcfg.misc.enable then
     require("hop").setup({})
     require("nvim-web-devicons").setup()
     require("gitsigns").setup()
+    require("git-conflict").setup()
     require("Comment").setup(
         {
             mappings = {
@@ -89,10 +90,13 @@ if nixcfg.misc.enable then
     )
 
     if nixcfg.picker.t == "telescope" then
+        local telescope = require("telescope")
         local trouble = require("trouble.sources.telescope")
+        local fb_actions = telescope.extensions.file_browser.actions
         local actions = require("telescope.actions")
+        local lga_actions = require("telescope-live-grep-args.actions")
 
-        require("telescope").setup(
+        telescope.setup(
             {
                 defaults = {
                     color_devicons = true,
@@ -120,14 +124,26 @@ if nixcfg.misc.enable then
                 extensions = {
                     ["ui-select"] = {
                         require("telescope.themes").get_dropdown({})
-                    }
+                    },
+                    ["live_grep_args"] = {
+                      auto_quoting = true,
+                      mappings = {
+                        i = {
+                          ["<C-k>"] = lga_actions.quote_prompt(),
+                          ["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
+                          ["<C-space>"] = lga_actions.to_fuzzy_refine,
+                        },
+                      },
+                    },
                 }
             }
         )
 
-        require("telescope").load_extension("fzf")
-        require("telescope").load_extension("file_browser")
-        require("telescope").load_extension("ui-select")
+        telescope.load_extension("fzf")
+        telescope.load_extension("file_browser")
+        telescope.load_extension("ui-select")
+        telescope.load_extension("lines")
+        telescope.load_extension("live_grep_args")
 
         local themes = require("telescope.themes")
         local builtin = require("telescope.builtin")
@@ -145,7 +161,13 @@ if nixcfg.misc.enable then
             end,
             {}
         )
-        vim.keymap.set("n", "<Leader>fr", builtin.live_grep, {})
+        vim.keymap.set(
+            "n",
+            "<Leader>fr",
+            function()
+                telescope.extensions.live_grep_args.live_grep_args()
+            end,
+            {})
         vim.keymap.set("n", "<Leader>fg", builtin.find_files, {})
         vim.keymap.set(
             "n",
@@ -160,6 +182,9 @@ if nixcfg.misc.enable then
             end,
             {}
         )
+        vim.keymap.set("n", "<Leader>fl", function()
+            require("telescope").extensions.lines.lines()
+        end, {})
     elseif nixcfg.picker.t == "snacks" then
         local trouble = require("trouble.sources.snacks")
         local yazi = require("yazi")
@@ -518,6 +543,18 @@ if nixcfg.lsp.enable then
                 end,
                 opts
             )
+            vim.keymap.set(
+                "v",
+                "<C-=>",
+                function()
+                    local start_pos = vim.api.nvim_buf_get_mark(0, "<")
+                    local end_pos = vim.api.nvim_buf_get_mark(0, ">")
+                    vim.lsp.buf.format {
+                        range = { ["start"] = start_pos, ["end"] = end_pos }
+                    }
+                end,
+                opts
+            )
         end
     end
 
@@ -735,4 +772,54 @@ if nixcfg.strudel.enable then
     vim.keymap.set("n", "<Leader>sus", strudel.stop)
     vim.keymap.set("n", "<Leader>sub", strudel.set_buffer)
     vim.keymap.set("n", "<Leader>sux", strudel.execute)
+end
+
+-- FIXME(iliayar): Generalize it
+if nixcfg.debugger.enable then
+    local dap = require('dap')
+    dap.adapters.lldb = {
+        type = 'executable',
+        command = '/usr/bin/lldb-vscode-17',
+        name = 'lldb',
+    }
+
+    vim.keymap.set("n", "<Leader>db", dap.toggle_breakpoint)
+    vim.keymap.set("n", "<Leader>dB", function()
+        local condition = vim.fn.input("Condition: ")
+        dap.toggle_breakpoint(condition)
+    end)
+    vim.keymap.set("n", "<Leader>od", dap.repl.open)
+    vim.keymap.set("n", "<Leader>dc", dap.continue)
+    vim.keymap.set("n", "<Leader>dn", dap.step_over)
+    vim.keymap.set("n", "<Leader>ds", dap.step_into)
+    vim.keymap.set("n", "<Leader>df", dap.step_out)
+    vim.keymap.set("n", "<Leader>dk", dap.terminate)
+
+    if nixcfg.langCpp.enable then
+        makeCjcConfiguation = function(binary)
+            return {
+                name = binary,
+                type = 'lldb',
+                request = 'launch',
+                program = binary,
+                cwd = function()
+                    return vim.fn.readfile('/home/iliayar/Temp/debug_me_path')[1]
+                end,
+                stopOnEntry = false,
+                args = function()
+                    return vim.split(vim.fn.readfile('/home/iliayar/Temp/debug_me_args')[1], " +")
+                end,
+            }
+        end
+        dap.configurations.cpp = {
+            makeCjcConfiguation('cjc'),
+            makeCjcConfiguation('cjc-frontend'),
+        }
+    end
+
+    require('nvim-dap-virtual-text').setup({
+        enabled = false,
+        enabled_commands = true,
+    })
+    vim.keymap.set("n", "<Leader>dl", "<Cmd>DapVirtualTextToggle<CR>")
 end

@@ -68,6 +68,17 @@ let
     };
   };
 
+  telescope-lines-nvim-pkg = pkgs.vimUtils.buildVimPlugin {
+    pname = "telescope-lines.nvim";
+    version = "2025-21-02";
+    src = pkgs.fetchFromGitHub {
+      owner = "neanias";
+      repo = "telescope-lines.nvim";
+      rev = "a937349b31505ba052b973de217e7536abd813dd";
+      hash = "sha256-uX24DnsJ/I7mQv2o5yfUTVOxPa/RoCvG55CWylRipZU=";
+    };
+  };
+
   cfg = config.custom.editors.nvim;
 
   nvim-exp = import ./nvim-exp { inherit pkgs; };
@@ -82,6 +93,7 @@ let
         nvim-web-devicons
         hop-nvim
         gitsigns-nvim
+        git-conflict-nvim
         comment-nvim
         undotree
 
@@ -93,6 +105,7 @@ let
         neogit
 
         vim-just
+        vim-llvm
       ];
 
       config = {
@@ -180,11 +193,18 @@ let
                 telescope-fzf-native-nvim
                 telescope-file-browser-nvim
                 telescope-ui-select-nvim
+                telescope-lines-nvim-pkg
+                telescope-live-grep-args-nvim
             ] else if cfg.picker == "snacks" then [
                 snacks-nvim
                 # Snacks explorer sucks
                 yazi-nvim
             ] else [];
+    };
+
+    debugger = {
+        autoEnable = cfg.misc.debugger.enable;
+      plugins = with pkgs.vimPlugins; [ nvim-dap nvim-dap-virtual-text ];
     };
 
     langMisc = { autoEnable = builtins.elem "misc" cfg.langs.enable; };
@@ -285,6 +305,9 @@ in
           enable = mkOption { default = false; };
           treeSitterExtraGrammars = mkOption { default = [ ]; };
         };
+        debugger = {
+            enable = mkOption { default = false; };
+        };
       };
 
       picker = mkOption {
@@ -365,12 +388,15 @@ in
       experiments = {
         enable = mkOption { default = true; };
       };
+
+      extraNixCfg = mkOption { default = ""; };
     };
   };
 
   config = mkIf cfg.enable (mkMerge [
     {
       xdg.configFile."nvim/lua/config/nix.lua".text = ''
+        ${cfg.extraNixCfg}
         return nixcfg
       '';
     }

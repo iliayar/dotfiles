@@ -11,6 +11,10 @@ in
       enable = mkOption {
         default = false;
       };
+
+      extraConfig = mkOption {
+        default = "";
+      };
     };
   };
 
@@ -29,6 +33,8 @@ in
 
         extraConfig = ''
             unbind-key -a
+
+            ${cfg.extraConfig}
 
             bind-key C-b send-prefix
 
