@@ -197,7 +197,10 @@
       ];
       langs.cpp.lsp = "ccls";
       code-assist = { enable = true; };
-      pretty = { status-bar.enable = true; };
+      pretty = {
+        status-bar.enable = true;
+        theme = "alabaster";
+      };
 
       obsidian = {
         enable = true;
