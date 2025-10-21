@@ -26,8 +26,8 @@
       flake = false;
     };
 
-    # secrets.url = "git+ssh://git@github.com/iliayar/dotfiles-secrets.git";
-    secrets.url = "path:/home/iliayar/Repos/dotfiles-secrets";
+    secrets.url = "git+ssh://git@github.com/iliayar/dotfiles-secrets.git";
+    # secrets.url = "path:/home/iliayar/Repos/dotfiles-secrets";
 
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
