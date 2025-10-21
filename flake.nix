@@ -15,8 +15,8 @@
     };
 
     codestats-nvim = {
-      # https://gitcode.com/iliayar/codestats.nvim
-      url = "git+https://gitcode.com/iliayar/codestats.nvim";
+      # url = "git+https://gitcode.com/iliayar/codestats.nvim";
+      url = "github:YannickFricke/codestats.nvim";
       flake = false;
     };
 
@@ -26,7 +26,8 @@
       flake = false;
     };
 
-    secrets.url = "git+ssh://git@github.com/iliayar/dotfiles-secrets.git";
+    # secrets.url = "git+ssh://git@github.com/iliayar/dotfiles-secrets.git";
+    secrets.url = "path:/home/iliayar/Repos/dotfiles-secrets";
 
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";

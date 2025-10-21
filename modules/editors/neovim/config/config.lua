@@ -560,63 +560,56 @@ if nixcfg.lsp.enable then
 
     local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-    if nixcfg.langRust.enable then
-        vim.lsp.config('rust_analyzer', {
-            capabilities = capabilities,
-            on_attach = common_on_attach
+    if nixcfg.prettyAlabaster.enable then
+        -- FIXME(iliayar): Remove when support for semantic tokens added to theme
+        vim.api.nvim_create_autocmd('LspNotify', {
+          callback = function(args)
+              vim.lsp.semantic_tokens.stop(args.data.client_id, args.buf)
+          end,
         })
+    end
+
+    vim.lsp.config('*', {
+        capabilities = capabilities,
+        on_attach = common_on_attach
+    })
+
+    if nixcfg.langRust.enable then
+        vim.lsp.config('rust_analyzer', {})
         vim.lsp.enable('rust_analyzer')
     end
 
     if nixcfg.langZig.enable then
-        vim.lsp.config('zls',{
-            capabilities = capabilities,
-            on_attach = common_on_attach
-        })
+        vim.lsp.config('zls', {})
         vim.lsp.enable('zls')
     end
 
     if nixcfg.langTypescript.enable then
-        vim.lsp.config('tsserver', {
-            capabilities = capabilities,
-            on_attach = common_on_attach
-        })
+        vim.lsp.config('tsserver', {})
         vim.lsp.enable('tsserver')
     end
 
     if nixcfg.langNix.enable then
-        vim.lsp.config('nixd', {
-            capabilities = capabilities,
-            on_attach = common_on_attach
-        })
+        vim.lsp.config('nixd', {})
     end
 
     if nixcfg.langGo.enable then
-        vim.lsp.config('gopls', {
-            capabilities = capabilities,
-            on_attach = common_on_attach
-        })
+        vim.lsp.config('gopls', {})
         vim.lsp.enable('gopls')
     end
 
     if nixcfg.langPython.enable then
-        vim.lsp.config('pyright', {
-            capabilities = capabilities,
-            on_attach = common_on_attach
-        })
+        vim.lsp.config('pyright', {})
     end
 
     if nixcfg.langOcaml.enable then
-        vim.lsp.config('ocamllsp', {
-            capabilities = capabilities,
-            on_attach = common_on_attach,
-        })
+        vim.lsp.config('ocamllsp', {})
     end
 
     if nixcfg.langCpp.enable then
         cfg = {
             capabilities = capabilities,
-            on_attach = common_on_attach
+            on_attach = common_on_attach,
         }
 
         if nixcfg.langCpp.lsp == "clangd" then
@@ -633,17 +626,11 @@ if nixcfg.lsp.enable then
     end
 
     if nixcfg.langTypst.enable then
-        vim.lsp.config('tinymist', {
-            capabilities = capabilities,
-            on_attach = common_on_attach
-        })
+        vim.lsp.config('tinymist', {})
     end
 
     if nixcfg.langHaskell.enable then
-        vim.lsp.config('hls', {
-            capabilities = capabilities,
-            on_attach = common_on_attach
-        })
+        vim.lsp.config('hls', {})
     end
 
     if nixcfg.langLean.enable then
@@ -662,10 +649,7 @@ if nixcfg.lsp.enable then
     end
 
     if nixcfg.langFSharp.enable then
-        vim.lsp.config('fsautocomplete', {
-            capabilities = capabilities,
-            on_attach = common_on_attach
-        })
+        vim.lsp.config('fsautocomplete', {})
     end
 
     if nixcfg.exp.enable then
@@ -675,17 +659,11 @@ if nixcfg.lsp.enable then
             filetypes = {'exp'},
             root_dir = util.root_pattern('.exp'),
             single_file_support = true,
-
-            capabilities = capabilities,
-            on_attach = common_on_attach,
         })
     end
 
     if nixcfg.langCangjie.enable then
-        vim.lsp.config('cangjie-lsp', {
-            capabilities = capabilities,
-            on_attach = common_on_attach
-        })
+        vim.lsp.config('cangjie-lsp', {})
     end
 end
 
@@ -774,12 +752,11 @@ if nixcfg.strudel.enable then
     vim.keymap.set("n", "<Leader>sux", strudel.execute)
 end
 
--- FIXME(iliayar): Generalize it
 if nixcfg.debugger.enable then
     local dap = require('dap')
     dap.adapters.lldb = {
         type = 'executable',
-        command = '/usr/bin/lldb-vscode-17',
+        command = 'lldb-dap',
         name = 'lldb',
     }
 
@@ -796,24 +773,64 @@ if nixcfg.debugger.enable then
     vim.keymap.set("n", "<Leader>dk", dap.terminate)
 
     if nixcfg.langCpp.enable then
-        makeCjcConfiguation = function(binary)
-            return {
-                name = binary,
-                type = 'lldb',
-                request = 'launch',
-                program = binary,
-                cwd = function()
-                    return vim.fn.readfile('/home/iliayar/Temp/debug_me_path')[1]
-                end,
-                stopOnEntry = false,
-                args = function()
-                    return vim.split(vim.fn.readfile('/home/iliayar/Temp/debug_me_args')[1], " +")
-                end,
-            }
-        end
+        cjcConfiguration = {
+            name = 'cjc',
+            type = 'lldb',
+            request = 'launch',
+            program = function()
+                local cangjieHome = os.getenv('CANGJIE_HOME')
+                if not cangjieHome then
+                    return 'cjc'
+                end
+
+                local binDir = cangjieHome .. "/bin/"
+                local cjcPath = binDir .. 'cjc'
+
+                if vim.fn.filereadable(binDir .. '.cjc-wrapped') then
+                    -- cjc is wrapped for nix compatibility
+                    cjcPath = binDir .. '.cjc-wrapped'
+                end
+
+                return cjcPath
+            end,
+            cwd = function()
+                local dir = vim.fn.getcwd()
+                local cjRoot = os.getenv('CJ_ROOT')
+                if cjRoot then
+                    local argsFile = cjRoot .. '/playground/debug_path'
+                    dir = vim.fn.readfile(argsFile)[1]
+                end
+                return dir
+            end,
+            stopOnEntry = false,
+            args = function()
+                local args = {}
+
+                local nixArgs = os.getenv('NIX_CJC_ARGS')
+                if not nixArgs then
+                    for _, arg in ipairs(vim.split(nixArgs, ' +')) do
+                        table.insert(args, arg)
+                    end
+                end
+
+                local cjRoot = os.getenv('CJ_ROOT')
+                local additionalArgs = ''
+                if cjRoot then
+                    local argsFile = cjRoot .. '/playground/debug_args'
+                    additionalArgs = vim.fn.readfile(argsFile)[1]
+                else
+                    additionalArgs = vim.fn.input("Args: ")
+                end
+
+                for _, arg in ipairs(vim.split(additionalArgs, ' +')) do
+                    table.insert(args, arg)
+                end
+
+                return args
+            end,
+        }
         dap.configurations.cpp = {
-            makeCjcConfiguation('cjc'),
-            makeCjcConfiguation('cjc-frontend'),
+            cjcConfiguration
         }
     end
 
