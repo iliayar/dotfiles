@@ -66,6 +66,8 @@
 
   custom = {
 
+    study.sage.enable = true;
+
     # hw.qmk.enable = true;
 
     settings = { code-stats-machine = "MacBook"; };
@@ -155,7 +157,7 @@
       };
 
       pretty = {
-        theme = "doom-gruvbox";
+        theme = "alabaster";
         extra.enable = false;
         font-size = 120;
       };
