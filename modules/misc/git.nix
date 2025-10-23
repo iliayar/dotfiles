@@ -45,7 +45,7 @@ in
 
         extraConfig = {
           core.editor = "vim";
-          credential.helper = if cfg.git.save-creds then "store" else null;
+          credential.helper = if cfg.git.save-creds then "store" else false;
         };
 
         aliases = {

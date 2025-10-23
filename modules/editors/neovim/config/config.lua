@@ -508,7 +508,7 @@ if nixcfg.lsp.enable then
         end
     )
 
-    local common_on_attach = function(client, bufnr)
+    local on_attach = function(client, bufnr)
         local sr = client.server_capabilities
 
         vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
@@ -557,21 +557,24 @@ if nixcfg.lsp.enable then
             )
         end
     end
+    vim.api.nvim_create_autocmd('LspAttach', {
+        callback = function(args)
+            local client = vim.lsp.get_client_by_id(args.data.client_id)
+            local bufnr = args.buf
+            on_attach(client, bufnr)
+        end
+    })
 
-    local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-    if nixcfg.prettyAlabaster.enable then
-        -- FIXME(iliayar): Remove when support for semantic tokens added to theme
-        vim.api.nvim_create_autocmd('LspNotify', {
-          callback = function(args)
-              vim.lsp.semantic_tokens.stop(args.data.client_id, args.buf)
-          end,
-        })
+    local on_init = function(client, _)
+        if nixcfg.prettyAlabaster.enable then
+            -- FIXME(iliayar): Remove when support for semantic tokens added to theme
+            client.server_capabilities.semanticTokensProvider = nil
+        end
     end
 
     vim.lsp.config('*', {
-        capabilities = capabilities,
-        on_attach = common_on_attach
+        capabilities = require("cmp_nvim_lsp").default_capabilities(),
+        on_init = on_init,
     })
 
     if nixcfg.langRust.enable then
@@ -607,10 +610,7 @@ if nixcfg.lsp.enable then
     end
 
     if nixcfg.langCpp.enable then
-        cfg = {
-            capabilities = capabilities,
-            on_attach = common_on_attach,
-        }
+        cfg = {}
 
         if nixcfg.langCpp.lsp == "clangd" then
             if nixcfg.langCpp.command then

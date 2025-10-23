@@ -106,7 +106,7 @@
     #   lean.enable = true;
     # };
 
-    # study.sage.enable = true;
+    study.sage.enable = true;
     # study.misc.enable = true;
 
     # games = {
