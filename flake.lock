@@ -8,11 +8,11 @@
         "tree-sitter-cangjie-src": "tree-sitter-cangjie-src"
       },
       "locked": {
-        "lastModified": 1760183508,
-        "narHash": "sha256-efMewKOJcNLGLyVoMJt3aBpNMLAIqV+oQB8OMzinGgY=",
+        "lastModified": 1761311683,
+        "narHash": "sha256-FHPIlOj6h/RdlEQwBmoOqxA0V6Kz/fMEBmsdwDWYAYA=",
         "ref": "refs/heads/master",
-        "rev": "e298a8e101a158cba171c7388b012d1677c50483",
-        "revCount": 5,
+        "rev": "ff478f80b4c8adf8037f7ae18b417874b35c7461",
+        "revCount": 6,
         "type": "git",
         "url": "https://gitcode.com/iliayar/cangjie.nvim.git"
       },
@@ -1414,15 +1414,12 @@
       "locked": {
         "lastModified": 1758976392,
         "narHash": "sha256-I1h/Er70QUxFp0E0HrzCTWQd/XlMnDus7REfTfVpFLw=",
-        "ref": "refs/heads/master",
-        "rev": "8cf6f1f1c4e79c606465c0fcd940af94725577d1",
-        "revCount": 12,
-        "type": "git",
-        "url": "ssh://git@github.com/iliayar/dotfiles-secrets.git"
+        "path": "/home/iliayar/Repos/dotfiles-secrets",
+        "type": "path"
       },
       "original": {
-        "type": "git",
-        "url": "ssh://git@github.com/iliayar/dotfiles-secrets.git"
+        "path": "/home/iliayar/Repos/dotfiles-secrets",
+        "type": "path"
       }
     },
     "swww": {
