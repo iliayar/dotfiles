@@ -388,6 +388,7 @@ Code::stats
     :config
     (add-hook 'prog-mode-hook #'code-stats-mode)
     (add-hook 'org-mode-hook #'code-stats-mode)
+    (add-hook 'markdown-mode-hook #'code-stats-mode)
     (run-with-idle-timer 30 t #'code-stats-sync)
     (add-hook 'kill-emacs-hook (lambda () (code-stats-sync :wait))))
 #+END_SRC

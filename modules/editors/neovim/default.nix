@@ -144,7 +144,7 @@ let
             cangjie-nvim.packages.${system}.tree-sitter-cangjie
           ]))
         nvim-treesitter-context
-        formatter-nvim
+        conform-nvim
         nvim-cmp
         vim-visual-multi
 

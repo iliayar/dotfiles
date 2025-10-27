@@ -322,54 +322,38 @@ if nixcfg.codeMisc.enable then
         }
     )
 
-    params = {filetype = {}}
+    formatters_by_ft = {form = {}}
 
     if nixcfg.langNix.enable then
-        params.filetype["nix"] = {
-            require("formatter.defaults.nixpkgs_fmt")
-        }
+        formatters_by_ft["nix"] = { "nixpkgs_fmt" }
     end
 
     if nixcfg.langLua.enable then
-        params.filetype["lua"] = {
-            require("formatter.filetypes.lua").luafmt
-        }
+        formatters_by_ft["lua"] = { "stylua" }
     end
 
     if nixcfg.langPython.enable then
-        params.filetype["python"] = {
-            require("formatter.filetypes.python").black
-        }
+        formatters_by_ft["python"] = { "black" }
     end
 
     if nixcfg.langOcaml.enable then
-        params.filetype["ocaml"] = {
-            require("formatter.filetypes.ocaml").ocamlformat
-        }
+        formatters_by_ft["ocaml"] = { "ocamlformat" }
     end
 
     if nixcfg.langSql.enable then
-        params.filetype["sql"] = {
-            require("formatter.filetypes.sql").pgformat
-        }
+        formatters_by_ft["sql"] = { "pg_format" }
     end
 
     if nixcfg.langLatex.enable then
-        params.filetype["latex"] = {
-            require("formatter.filetypes.latex").latexindent
-        }
+        formatters_by_ft["latex"] = { "latexindent" }
     end
 
     if nixcfg.langCpp.enable then
-        params.filetype["cpp"] = {
-            require("formatter.filetypes.cpp").clangformat
-        }
+        formatters_by_ft["cpp"] = { "clang-format" }
     end
 
     if nixcfg.langProtobuf.enable then
-        params.filetype["proto"] = {
-            require("formatter.filetypes.proto").buf_format
-        }
+        formatters_by_ft["proto"] = { "buf" }
     end
 
     if nixcfg.langTypst.enable then
@@ -387,10 +371,14 @@ if nixcfg.codeMisc.enable then
         require("typst-preview").setup(params)
     end
 
-    require("formatter").setup(params)
+    local conform = require("conform")
+    conform.setup({
+        formatters_by_ft = formatters_by_ft
+    })
 
-    vim.keymap.set("n", "<C-=>", "<cmd>Format<CR>")
-    vim.keymap.set("n", "<Leader>ad", "<cmd>Format<CR>")
+    vim.keymap.set("n", "<C-=>", function()
+        conform.format()
+    end)
 
     require("snippy").setup(
         {

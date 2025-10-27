@@ -72,6 +72,7 @@
       python.enable = true;
       go.enable = true;
       nix.enable = true;
+      lua.enable = true;
       ocaml.enable = true;
       cpp.enable = true;
       rust.enable = true;
@@ -93,7 +94,6 @@
     #   latex.enable = true;
     #   rust.enable = true;
     #   nix.enable = true;
-    #   lua.enable = true;
     #   go.enable = true;
     #   ocaml.enable = true;
     #   sql.enable = true;
@@ -188,7 +188,7 @@
         "python"
         "rust"
         "go"
-        # "lua"
+        "lua"
         "ocaml"
         # "sql"
         # "latex"
