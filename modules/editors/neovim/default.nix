@@ -183,27 +183,27 @@ let
     };
 
     picker = {
-        autoEnable = true;
-        extraParameters = {
-            t = ''"${cfg.picker}"'';
-        };
-        plugins = with pkgs.vimPlugins; 
-            if cfg.picker == "telescope" then [
-                telescope-nvim
-                telescope-fzf-native-nvim
-                telescope-file-browser-nvim
-                telescope-ui-select-nvim
-                telescope-lines-nvim-pkg
-                telescope-live-grep-args-nvim
-            ] else if cfg.picker == "snacks" then [
-                snacks-nvim
-                # Snacks explorer sucks
-                yazi-nvim
-            ] else [];
+      autoEnable = true;
+      extraParameters = {
+        t = ''"${cfg.picker}"'';
+      };
+      plugins = with pkgs.vimPlugins;
+        if cfg.picker == "telescope" then [
+          telescope-nvim
+          telescope-fzf-native-nvim
+          telescope-file-browser-nvim
+          telescope-ui-select-nvim
+          telescope-lines-nvim-pkg
+          telescope-live-grep-args-nvim
+        ] else if cfg.picker == "snacks" then [
+          snacks-nvim
+          # Snacks explorer sucks
+          yazi-nvim
+        ] else [ ];
     };
 
     debugger = {
-        autoEnable = cfg.misc.debugger.enable;
+      autoEnable = cfg.misc.debugger.enable;
       plugins = with pkgs.vimPlugins; [ nvim-dap nvim-dap-virtual-text ];
     };
 
@@ -306,13 +306,13 @@ in
           treeSitterExtraGrammars = mkOption { default = [ ]; };
         };
         debugger = {
-            enable = mkOption { default = false; };
+          enable = mkOption { default = false; };
         };
       };
 
       picker = mkOption {
-          default = "snacks";
-          type = types.enum [ "snacks" "telescope" ];
+        default = "snacks";
+        type = types.enum [ "snacks" "telescope" ];
       };
 
       langs = {

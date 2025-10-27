@@ -123,7 +123,7 @@
     };
 
     editors.vscode = {
-        enable = true;
+      enable = true;
     };
 
     editors.emacs = {
