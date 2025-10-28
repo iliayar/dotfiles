@@ -498,8 +498,8 @@ if nixcfg.lsp.enable then
 		vim.lsp.config("ocamllsp", {})
 	end
 
-	if nixcfg.langCpp.enable then
-		cfg = {}
+    if nixcfg.langCpp.enable then
+        cfg = {on_init=on_init}
 
 		if nixcfg.langCpp.lsp == "clangd" then
 			if nixcfg.langCpp.command then
