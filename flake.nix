@@ -15,7 +15,6 @@
     };
 
     codestats-nvim = {
-      # url = "git+https://gitcode.com/iliayar/codestats.nvim";
       url = "github:YannickFricke/codestats.nvim";
       flake = false;
     };

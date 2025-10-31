@@ -179,6 +179,7 @@ if nixcfg.misc.enable then
 		vim.keymap.set("n", "<Leader>fg", Snacks.picker.files, {})
 		vim.keymap.set("n", "<Leader>bf", function()
 			Snacks.picker.buffers({
+				sort_lastused = true,
 				current = false,
 			})
 		end, {})
@@ -498,8 +499,8 @@ if nixcfg.lsp.enable then
 		vim.lsp.config("ocamllsp", {})
 	end
 
-    if nixcfg.langCpp.enable then
-        cfg = {on_init=on_init}
+	if nixcfg.langCpp.enable then
+		cfg = { on_init = on_init }
 
 		if nixcfg.langCpp.lsp == "clangd" then
 			if nixcfg.langCpp.command then
