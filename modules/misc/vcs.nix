@@ -89,5 +89,15 @@ in
         };
       };
     })
+
+    (mkIf (cfg.enable && cfg.jujutsu.enable && cfg.gpg.enable && cfg.git.gpg-key != null) {
+      programs.jujutsu.settings = {
+        signing = {
+            behavior = "own";
+            backend = "gpg";
+            key = cfg.git.gpg-key;
+        };
+      };
+    })
   ];
 }
