@@ -25,11 +25,17 @@ in
 
       creds = {
         email = mkOption {
-            default = "iliayar3@gmail.com";
+          default = "iliayar3@gmail.com";
         };
         name = mkOption {
-            default = "iliayar";
+          default = "iliayar";
         };
+      };
+    };
+
+    custom.misc.jujutsu = {
+      enable = mkOption {
+        default = false;
       };
     };
   };
@@ -41,7 +47,7 @@ in
         lfs.enable = true;
 
         userEmail = cfg.git.creds.email;
-        userName =cfg.git.creds.name;
+        userName = cfg.git.creds.name;
 
         extraConfig = {
           core.editor = "vim";
@@ -68,6 +74,18 @@ in
         signing = {
           signByDefault = true;
           key = cfg.git.gpg-key;
+        };
+      };
+    })
+
+    (mkIf (cfg.enable && cfg.jujutsu.enable) {
+      programs.jujutsu = {
+        enable = true;
+        settings = {
+          user = {
+            email = cfg.git.creds.email;
+            name = cfg.git.creds.name;
+          };
         };
       };
     })

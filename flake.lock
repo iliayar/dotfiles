@@ -1414,12 +1414,15 @@
       "locked": {
         "lastModified": 1758976392,
         "narHash": "sha256-I1h/Er70QUxFp0E0HrzCTWQd/XlMnDus7REfTfVpFLw=",
-        "path": "/home/iliayar/Repos/dotfiles-secrets",
-        "type": "path"
+        "ref": "refs/heads/master",
+        "rev": "8cf6f1f1c4e79c606465c0fcd940af94725577d1",
+        "revCount": 12,
+        "type": "git",
+        "url": "ssh://git@github.com/iliayar/dotfiles-secrets.git"
       },
       "original": {
-        "path": "/home/iliayar/Repos/dotfiles-secrets",
-        "type": "path"
+        "type": "git",
+        "url": "ssh://git@github.com/iliayar/dotfiles-secrets.git"
       }
     },
     "swww": {

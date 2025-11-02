@@ -319,7 +319,7 @@ if nixcfg.codeMisc.enable then
 		formatters_by_ft = formatters_by_ft,
 	})
 
-	vim.keymap.set("n", "<C-=>", function()
+	vim.keymap.set({"n", "v"}, "<C-=>", function()
 		conform.format()
 	end)
 

@@ -7,7 +7,7 @@ let
 in
 {
   imports = [
-    ./git.nix
+    ./vcs.nix
     ./ssh.nix
     ./gpg.nix
     ./password-store.nix

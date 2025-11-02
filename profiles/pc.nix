@@ -225,6 +225,8 @@
         gpg-key = "0x3FE87CB13CB3AC4E";
       };
 
+      jujutsu.enable = true;
+
       gpg.enable = true;
       pass.enable = true;
       ssh.enable = true;
