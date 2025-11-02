@@ -49,6 +49,7 @@
     audacity
 
     curd
+    rqbit
   ];
 
   # TODO: Move it somewhere
