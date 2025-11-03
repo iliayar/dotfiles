@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, nix-ai-tools, ... }:
 
 {
   # Let Home Manager install and manage itself.
@@ -33,7 +33,8 @@
     # open-interpreter
     # code-cursor
     # windsurf
-    claude-code
+    # claude-code
+    nix-ai-tools.packages.${pkgs.system}.copilot-cli
 
     # TODO: this one too
     cfcli
@@ -50,6 +51,9 @@
 
     curd
     rqbit
+    ffmpeg
+
+    dolphin-emu
   ];
 
   # TODO: Move it somewhere
@@ -201,6 +205,7 @@
         "zig"
         "fsharp"
         "cangjie"
+        "typescript"
       ];
       langs.cpp.lsp = "ccls";
       code-assist = { enable = true; };

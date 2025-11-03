@@ -178,10 +178,23 @@ if nixcfg.misc.enable then
 		vim.keymap.set("n", "<Leader>fr", Snacks.picker.grep, {})
 		vim.keymap.set("n", "<Leader>fg", Snacks.picker.files, {})
 		vim.keymap.set("n", "<Leader>bf", function()
-			Snacks.picker.buffers({
-				sort_lastused = true,
-				current = false,
-			})
+            -- NOTE: Insanely stupid. Preview causes the buffer to be "used",
+            -- so sorting doesn't work. And they refuse to fix it
+			-- Snacks.picker.buffers({
+			-- 	sort_lastused = false,
+			-- 	current = false,
+			-- 	layout = {
+			-- 		preset = "ivy",
+            --      -- Doesn't work?
+			-- 		preview = nil,
+			-- 	},
+			-- })
+            Snacks.picker.smart({
+                title = 'Buffers',
+                multi = false,
+                finder = 'buffers',
+                current = false,
+            })
 		end, {})
 	end
 
@@ -478,8 +491,8 @@ if nixcfg.lsp.enable then
 	end
 
 	if nixcfg.langTypescript.enable then
-		vim.lsp.config("tsserver", {})
-		vim.lsp.enable("tsserver")
+		vim.lsp.config("ts_ls", {})
+		vim.lsp.enable("ts_ls")
 	end
 
 	if nixcfg.langNix.enable then
