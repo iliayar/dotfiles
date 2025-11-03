@@ -97,6 +97,10 @@ in
             backend = "gpg";
             key = cfg.git.gpg-key;
         };
+
+        ui = {
+            pager = ["less" "-RFX"];
+        };
       };
     })
   ];
