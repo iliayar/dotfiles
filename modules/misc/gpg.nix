@@ -26,6 +26,8 @@ in
       services.gpg-agent = {
         enable = true;
         pinentry.package = pkgs.pinentry-gtk2;
+
+        defaultCacheTtl = 604800;
       };
     })
     (mkIf (cfg.enable && cfg.gpg.enable) {
