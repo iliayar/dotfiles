@@ -31,6 +31,11 @@ in
           default = "iliayar";
         };
       };
+
+      ignores = mkOption {
+        default = [ ];
+        type = types.listOf types.str;
+      };
     };
 
     custom.misc.jujutsu = {
@@ -64,7 +69,7 @@ in
 
         ignores = [
           "*.~undo-tree~"
-        ];
+        ] ++ cfg.git.ignores;
 
         delta.enable = true;
       };
@@ -93,13 +98,13 @@ in
     (mkIf (cfg.enable && cfg.jujutsu.enable && cfg.gpg.enable && cfg.git.gpg-key != null) {
       programs.jujutsu.settings = {
         signing = {
-            behavior = "own";
-            backend = "gpg";
-            key = cfg.git.gpg-key;
+          behavior = "own";
+          backend = "gpg";
+          key = cfg.git.gpg-key;
         };
 
         ui = {
-            pager = ["less" "-RFX"];
+          pager = [ "less" "-RFX" ];
         };
       };
     })
