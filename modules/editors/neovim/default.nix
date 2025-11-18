@@ -204,7 +204,7 @@ let
 
     debugger = {
       autoEnable = cfg.misc.debugger.enable;
-      plugins = with pkgs.vimPlugins; [ nvim-dap nvim-dap-virtual-text ];
+      plugins = with pkgs.vimPlugins; [ nvim-dap nvim-dap-virtual-text nvim-dap-view ];
     };
 
     langMisc = { autoEnable = builtins.elem "misc" cfg.langs.enable; };

@@ -178,23 +178,23 @@ if nixcfg.misc.enable then
 		vim.keymap.set("n", "<Leader>fr", Snacks.picker.grep, {})
 		vim.keymap.set("n", "<Leader>fg", Snacks.picker.files, {})
 		vim.keymap.set("n", "<Leader>bf", function()
-            -- NOTE: Insanely stupid. Preview causes the buffer to be "used",
-            -- so sorting doesn't work. And they refuse to fix it
+			-- NOTE: Insanely stupid. Preview causes the buffer to be "used",
+			-- so sorting doesn't work. And they refuse to fix it
 			-- Snacks.picker.buffers({
 			-- 	sort_lastused = false,
 			-- 	current = false,
 			-- 	layout = {
 			-- 		preset = "ivy",
-            --      -- Doesn't work?
+			--      -- Doesn't work?
 			-- 		preview = nil,
 			-- 	},
 			-- })
-            Snacks.picker.smart({
-                title = 'Buffers',
-                multi = false,
-                finder = 'buffers',
-                current = false,
-            })
+			Snacks.picker.smart({
+				title = "Buffers",
+				multi = false,
+				finder = "buffers",
+				current = false,
+			})
 		end, {})
 	end
 
@@ -332,7 +332,7 @@ if nixcfg.codeMisc.enable then
 		formatters_by_ft = formatters_by_ft,
 	})
 
-	vim.keymap.set({"n", "v"}, "<C-=>", function()
+	vim.keymap.set({ "n", "v" }, "<C-=>", function()
 		conform.format()
 	end)
 
@@ -653,15 +653,57 @@ if nixcfg.debugger.enable then
 
 	vim.keymap.set("n", "<Leader>db", dap.toggle_breakpoint)
 	vim.keymap.set("n", "<Leader>dB", function()
-		local condition = vim.fn.input("Condition: ")
-		dap.toggle_breakpoint(condition)
+		vim.ui.select({ "string", "custom" }, {
+			prompt = "Presets:",
+			format_item = function(item)
+				local mapping = {
+					["string"] = "Compare std::string",
+					["custom"] = "Custom",
+				}
+				return mapping[item]
+			end,
+		}, function(choice)
+			if choice == "string" then
+				vim.ui.input({ prompt = "std::string expression: " }, function(expr)
+					if not expr then
+						return
+					end
+					vim.ui.input({ prompt = "quoted string: " }, function(str)
+						if not str then
+							return
+						end
+						dap.toggle_breakpoint("(int)strcmp(" .. expr .. ".c_str(), " .. str .. ") == 0")
+					end)
+				end)
+			elseif choice == "custom" then
+				vim.ui.input({ prompt = "Condition: " }, function(cond)
+					dap.toggle_breakpoint(cond)
+				end)
+			end
+		end)
 	end)
-	vim.keymap.set("n", "<Leader>od", dap.repl.open)
+	vim.keymap.set("n", "<Leader>od", function()
+		vim.cmd("DapViewToggle")
+	end)
 	vim.keymap.set("n", "<Leader>dc", dap.continue)
 	vim.keymap.set("n", "<Leader>dn", dap.step_over)
 	vim.keymap.set("n", "<Leader>ds", dap.step_into)
 	vim.keymap.set("n", "<Leader>df", dap.step_out)
 	vim.keymap.set("n", "<Leader>dk", dap.terminate)
+
+	local dap_widgets = require("dap.ui.widgets")
+	vim.keymap.set({ "n", "v" }, "<Leader>dH", function()
+		dap_widgets.hover()
+	end)
+	vim.keymap.set({ "n", "v" }, "<Leader>dP", function()
+		dap_widgets.preview()
+	end)
+	vim.keymap.set("n", "<Leader>dF", function()
+		dap_widgets.centered_float(dap_widgets.frames)
+	end)
+	vim.keymap.set("n", "<Leader>dS", function()
+		dap_widgets.centered_float(dap_widgets.scopes)
+	end)
 
 	if nixcfg.langCpp.enable then
 		cjcConfiguration = {
@@ -730,4 +772,6 @@ if nixcfg.debugger.enable then
 		enabled_commands = true,
 	})
 	vim.keymap.set("n", "<Leader>dl", "<Cmd>DapVirtualTextToggle<CR>")
+
+	require("dap-view").setup({})
 end
