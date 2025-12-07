@@ -35,12 +35,12 @@ in {
   networking = {
     nat = {
       enable = true;
-      internalIPs = [ "192.168.2.0/24" ];
+      internalIPs = [ "192.168.69.0/24" ];
       externalInterface = "enp2s0";
 
       forwardPorts = [
         {
-            destination = "192.168.2.101:2222";
+            destination = "192.168.69.101:2222";
             proto = "tcp";
             sourcePort = 4022;
         }
@@ -49,7 +49,7 @@ in {
 
     interfaces."enp4s0" = {
       ipv4.addresses = [{
-        address = "192.168.2.1";
+        address = "192.168.69.1";
         prefixLength = 24;
       }];
     };
@@ -91,11 +91,11 @@ in {
       interfaces-config = { interfaces = [ "enp4s0" ]; };
       subnet4 = [{
         id = 1;
-        pools = [{ pool = "192.168.2.100 - 192.168.2.254"; }];
-        subnet = "192.168.2.0/24";
+        pools = [{ pool = "192.168.69.100 - 192.168.69.254"; }];
+        subnet = "192.168.69.0/24";
         option-data = [{
           name = "routers";
-          data = "192.168.2.1";
+          data = "192.168.69.1";
         }];
       }];
       option-data = [{
