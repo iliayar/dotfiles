@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, nix-ai-tools, ... }:
 
 {
   # Let Home Manager install and manage itself.
@@ -34,6 +34,7 @@
     # code-cursor
     # windsurf
     # claude-code
+    nix-ai-tools.packages.${pkgs.system}.copilot-cli
 
     # TODO: this one too
     cfcli
@@ -182,7 +183,7 @@
         "misc"
         "nix"
         "python"
-        # "rust"
+        "rust"
         "go"
         # "lua"
         # "ocaml"
@@ -219,6 +220,8 @@
         enable = true;
         gpg-key = "0x3FE87CB13CB3AC4E";
       };
+      
+      jujutsu.enable = true;
 
       gpg.enable = true;
       pass.enable = true;
