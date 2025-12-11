@@ -241,7 +241,8 @@ if nixcfg.misc.enable then
 		else
 			key = tostring(i)
 		end
-		vim.keymap.set("n", "<Leader>h" .. key, function()
+        -- FIXME: Why <Leader>N is bad?
+		vim.keymap.set("n", "<Leader>" .. key, function()
 			harpoon_ui.nav_file(i)
 		end)
 	end
