@@ -137,7 +137,7 @@
       url = "git+https://gitcode.com/iliayar/cangjie.nvim.git";
     };
 
-    nix-ai-tools.url = "github:numtide/nix-ai-tools";
+    nix-ai-tools.url = "github:numtide/llm-agents.nix";
   };
 
   outputs = { self, home-manager, nixpkgs, nur, secrets, denv, emacs-overlay, rust-overlay, deploy-rs, nix-darwin, ... }@inputs:
