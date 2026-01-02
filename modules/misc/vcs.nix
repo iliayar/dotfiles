@@ -51,28 +51,27 @@ in
         enable = true;
         lfs.enable = true;
 
-        userEmail = cfg.git.creds.email;
-        userName = cfg.git.creds.name;
+        settings = {
+          aliases = {
+            a = "add";
+            co = "checkout";
+            st = "status";
+            br = "branch";
+            ci = "commit";
+          };
+          user.email = cfg.git.creds.email;
+          user.name = cfg.git.creds.name;
 
-        extraConfig = {
           core.editor = "vim";
           credential.helper = if cfg.git.save-creds then "store" else false;
-        };
-
-        aliases = {
-          a = "add";
-          co = "checkout";
-          st = "status";
-          br = "branch";
-          ci = "commit";
         };
 
         ignores = [
           "*.~undo-tree~"
         ] ++ cfg.git.ignores;
 
-        delta.enable = true;
       };
+      programs.delta.enable = true;
     })
     (mkIf (cfg.enable && cfg.git.enable && cfg.gpg.enable && cfg.git.gpg-key != null) {
       programs.git = {

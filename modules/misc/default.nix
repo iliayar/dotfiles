@@ -39,7 +39,7 @@ in
         unzip
         zip
         pandoc
-        poppler_utils
+        poppler-utils
         htop
         bottom
 
@@ -48,7 +48,7 @@ in
         bat
         procs
         sd
-        du-dust
+        dust
         tokei
         delta
         hurl

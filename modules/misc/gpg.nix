@@ -21,7 +21,7 @@ in
       '';
     })
     (mkIf (cfg.enable && cfg.gpg.enable && pkgs.stdenv.isLinux) {
-      home.packages = [ pkgs.pinentry.gtk2 pkgs.gcr ];
+      home.packages = [ pkgs.pinentry-gtk2 pkgs.gcr ];
 
       services.gpg-agent = {
         enable = true;

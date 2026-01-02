@@ -34,14 +34,14 @@
     # code-cursor
     # windsurf
     # claude-code
-    nix-ai-tools.packages.${pkgs.system}.copilot-cli
+    nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.copilot-cli
 
     # TODO: this one too
     cfcli
 
     # TODO: And this one
     yazi
-    meli
+    # meli
     w3m
 
     thunderbird
@@ -54,6 +54,10 @@
     ffmpeg
 
     dolphin-emu
+
+    bs-manager
+    android-tools
+    sidequest
   ];
 
   # TODO: Move it somewhere
@@ -69,7 +73,7 @@
 
   custom = {
 
-    hw.qmk.enable = true;
+    # hw.qmk.enable = true;
 
     settings = { code-stats-machine = "PC"; };
 
@@ -111,7 +115,8 @@
     #   lean.enable = true;
     # };
 
-    study.sage.enable = true;
+    # FIXME:
+    # study.sage.enable = true;
     # study.misc.enable = true;
 
     # games = {
@@ -186,6 +191,7 @@
       misc = {
         enable = true;
         code = { enable = true; };
+        debugger.enable = true;
       };
       langs.enable = [
         "misc"

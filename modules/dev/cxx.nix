@@ -18,7 +18,7 @@ in {
   config = mkIf cfg.enable (mkMerge [
     (mkIf (cfg.compiler == "clang") {
       home.packages = with pkgs; [
-        (hiPrio clang)
+        (lib.hiPrio clang)
         clang-tools
         gcc
         ccls

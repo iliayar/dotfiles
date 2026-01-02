@@ -53,11 +53,11 @@ in
   '';
 
     home.packages = with pkgs; [
-      noto-fonts-emoji
+      noto-fonts-color-emoji
       fira-code
       font-awesome
       # symbola
-      ubuntu_font_family
+      ubuntu-classic
       nerd-fonts.fira-code
       # corefonts
     ];

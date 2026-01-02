@@ -54,7 +54,7 @@ in
         light
         nitrogen
         # lxqt.pcmanfm-qt
-        xfce.thunar
+        thunar
         pcmanfm
         arandr
         # tlpui
@@ -127,7 +127,7 @@ in
 
     (mkIf cfg.social.enable {
       home.packages = with pkgs; [
-        tdesktop
+        telegram-desktop
         vesktop
       ] ++ (if cfg.social.fix-zoom-non-nixos
         then [ zoom-fixed ]

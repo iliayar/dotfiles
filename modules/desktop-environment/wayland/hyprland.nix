@@ -387,22 +387,22 @@ in {
 
           bind = ,T, exec, pypr toggle term-quake
           bind = ,T, submap, reset
-          windowrule = float, class:local.iliayar.term-quake
+          windowrule = match:class local.iliayar.term-quake, float on
           # $term_quake = class:term-quake
           # windowrule = workspace special silent,$term_quake
           # windowrule = float,$term_quake
 
           bind = ,N, exec, pypr toggle org-notes
           bind = ,N, submap, reset
-          $org_notes = title:org-notes
-          windowrule = workspace special silent,$org_notes
-          windowrule = float,$org_notes
+          $org_notes = org-notes
+          windowrule = match:title $org_notes, workspace special silent
+          windowrule = match:title $org_notes, float on
 
           bind = ,O, exec, pypr toggle obsidian
           bind = ,O, submap, reset
-          $obsidian = class:obsidian
-          windowrule = workspace special silent,$obsidian
-          windowrule = float,$obsidian
+          $obsidian = obsidian
+          windowrule = match:class $obsidian, workspace special silent
+          windowrule = match:class $obsidian, float on
 
           bind=,escape,submap,reset
           submap = reset
@@ -442,9 +442,9 @@ in {
           }
 
           # FIXME: Is it class?
-          windowrule = opacity 0.9 0.9, class:Spotify
-          windowrule = opacity 0.9 0.9, class:VSCodium
-          windowrule = opacity 0.9 0.9, class:Code
+          windowrule = opacity 0.9 0.9, match:class Spotify
+          windowrule = opacity 0.9 0.9, match:class VSCodium
+          windowrule = opacity 0.9 0.9, match:class Code
           # windowrule = float, class:Zoom
 
           exec-once = swww-daemon -q

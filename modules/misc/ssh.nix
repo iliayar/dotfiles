@@ -16,6 +16,8 @@ in {
     programs.ssh = {
       enable = true;
       extraConfig = cfg.ssh.extraConfig;
+
+      enableDefaultConfig = false;
     };
   };
 }

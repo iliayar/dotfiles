@@ -18,7 +18,7 @@ in
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
         typst
-        typstfmt
+        typstyle
         typst-live
         tinymist
     ] ++ (if pkgs.stdenv.isLinux then [

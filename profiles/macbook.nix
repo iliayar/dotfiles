@@ -34,7 +34,7 @@
     # code-cursor
     # windsurf
     # claude-code
-    nix-ai-tools.packages.${pkgs.system}.copilot-cli
+    nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.copilot-cli
 
     # TODO: this one too
     cfcli

@@ -43,6 +43,7 @@
       "rd.udev.log_level=3"
       "udev.log_priority=3"
     ];
+    kernelPackages = pkgs.linuxPackages_latest;
   };
 
   networking = {
@@ -126,7 +127,7 @@
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet -t -r -c Hyprland";
+        command = "${pkgs.tuigreet}/bin/tuigreet -t -r -c start-hyprland";
         user = "greeter";
       };
     };
@@ -200,6 +201,37 @@
   };
 
   services.udisks2.enable = true;
+
+  programs.alvr = {
+    enable = true;
+    openFirewall = true;
+
+    # Pin to 20.13.0 due to https://github.com/alvr-org/ALVR/issues/3134
+    package = pkgs.alvr.overrideAttrs (
+      finalAttrs: prevAttrs: {
+        version = "21.0.0-dev12";
+
+        src = pkgs.fetchFromGitHub {
+          owner = "alvr-org";
+          repo = "ALVR";
+          # tag = "v${finalAttrs.version}";
+          rev = "dc3abf3bcc3a6b3a34b48a647bf620ba8175d432";
+          fetchSubmodules = true;
+          hash = "sha256-RPj+YF3icvIDZ25dmpV2zV2MZUTJRp+gPIHNZyqU3bM=";
+        };
+
+        cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
+          inherit (finalAttrs) src;
+          hash = "sha256-zRZFxCm6qnRVeATzHnoAkV26AG32VKfJABgIzVFX4hQ=";
+        };
+      }
+    );
+  };
+
+  services.wivrn = {
+    enable = true;
+    openFirewall = true;
+  };
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
