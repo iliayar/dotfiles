@@ -289,7 +289,7 @@
       dunst.enable = true;
       # picom.enable = true;
 
-      # audio-utils.enable = true;
+      audio-utils.enable = true;
       # easyeffects.enable = true;
       spotify.enable = true;
 

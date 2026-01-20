@@ -209,20 +209,19 @@
     # Pin to 20.13.0 due to https://github.com/alvr-org/ALVR/issues/3134
     package = pkgs.alvr.overrideAttrs (
       finalAttrs: prevAttrs: {
-        version = "21.0.0-dev12";
+        version = "20.13.0";
 
         src = pkgs.fetchFromGitHub {
           owner = "alvr-org";
           repo = "ALVR";
-          # tag = "v${finalAttrs.version}";
-          rev = "dc3abf3bcc3a6b3a34b48a647bf620ba8175d432";
+          tag = "v${finalAttrs.version}";
           fetchSubmodules = true;
-          hash = "sha256-RPj+YF3icvIDZ25dmpV2zV2MZUTJRp+gPIHNZyqU3bM=";
+          hash = "sha256-h7/fuuolxbNkjUbqXZ7NTb1AEaDMFaGv/S05faO2HIc=";
         };
 
         cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
           inherit (finalAttrs) src;
-          hash = "sha256-zRZFxCm6qnRVeATzHnoAkV26AG32VKfJABgIzVFX4hQ=";
+          hash = "sha256-A0ADPMhsREH1C/xpSxW4W2u4ziDrKRrQyY5kBDn//gQ=";
         };
       }
     );
