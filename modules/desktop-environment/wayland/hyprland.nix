@@ -1,5 +1,11 @@
 { config, pkgs, lib, themes, anyrun, system, ... }:
 
+# Example /use/share/wayland-sessions/hyprland.desktop:
+# [Desktop Entry]
+# Name=Hyprland
+# Exec=/home/iliayar/.nix-profile/bin/zsh -c 'nixGL start-hyprland'
+# Type=Application
+
 with lib;
 
 let
