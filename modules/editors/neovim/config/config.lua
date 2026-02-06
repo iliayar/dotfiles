@@ -470,10 +470,6 @@ if nixcfg.lsp.enable then
 	})
 
 	local on_init = function(client, _)
-		if nixcfg.prettyAlabaster.enable then
-			-- FIXME(iliayar): Remove when support for semantic tokens added to theme
-			client.server_capabilities.semanticTokensProvider = nil
-		end
 	end
 
 	vim.lsp.config("*", {
@@ -691,6 +687,10 @@ if nixcfg.debugger.enable then
 	vim.keymap.set("n", "<Leader>ds", dap.step_into)
 	vim.keymap.set("n", "<Leader>df", dap.step_out)
 	vim.keymap.set("n", "<Leader>dk", dap.terminate)
+	vim.keymap.set("n", "<Leader>du", dap.up)
+	vim.keymap.set("n", "<Leader>dd", dap.down)
+	vim.keymap.set("n", "<Leader>dC", dap.focus_frame)
+	vim.keymap.set("n", "<Leader>d<CR>", dap.run_to_cursor)
 
 	local dap_widgets = require("dap.ui.widgets")
 	vim.keymap.set({ "n", "v" }, "<Leader>dH", function()

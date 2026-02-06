@@ -59,12 +59,12 @@ let
 
   alabaster-nvim = pkgs.vimUtils.buildVimPlugin {
     pname = "alabaster.nvim";
-    version = "2025-10-16";
+    version = "2026-02-06";
     src = pkgs.fetchFromGitHub {
       owner = "p00f";
       repo = "alabaster.nvim";
-      rev = "b14f4527bd5d5528cac33599f71ad542c2f38748";
-      hash = "sha256-W9F9cWJfBglZ92W9h4uaVe7vENCf0wWDK0vr4U5LePU=";
+      rev = "ae0c5f41c70b576f0678319e57fe47b2b288d2fc";
+      hash = "sha256-myeggPnb76KFnm1rmSDgLwHHr1WKzV6KnGvvmU6GhXo=";
     };
   };
 
