@@ -50,6 +50,7 @@
     # audacity
 
     curd
+    mpv
   ];
 
   # TODO: Move it somewhere
