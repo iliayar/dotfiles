@@ -642,9 +642,14 @@ end
 
 if nixcfg.debugger.enable then
 	local dap = require("dap")
+    command = "lldb-dap"
+    if vim.loop.os_uname().sysname == "Darwin" then
+        -- FIXME: Acquire using `xcrun -f lldb-dap`
+        command = "/Library/Developer/CommandLineTools/usr/bin/lldb-dap"
+    end
 	dap.adapters.lldb = {
 		type = "executable",
-		command = "lldb-dap",
+		command = command,
 		name = "lldb",
 	}
 
@@ -720,7 +725,7 @@ if nixcfg.debugger.enable then
 				local binDir = cangjieHome .. "/bin/"
 				local cjcPath = binDir .. "cjc"
 
-				if vim.fn.filereadable(binDir .. ".cjc-wrapped") then
+				if vim.fn.filereadable(binDir .. ".cjc-wrapped") == 1 then
 					-- cjc is wrapped for nix compatibility
 					cjcPath = binDir .. ".cjc-wrapped"
 				end
@@ -741,7 +746,7 @@ if nixcfg.debugger.enable then
 				local args = {}
 
 				local nixArgs = os.getenv("NIX_CJC_ARGS")
-				if not nixArgs then
+				if nixArgs then
 					for _, arg in ipairs(vim.split(nixArgs, " +")) do
 						table.insert(args, arg)
 					end

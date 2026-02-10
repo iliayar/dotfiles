@@ -68,7 +68,7 @@
 
   custom = {
 
-    study.sage.enable = true;
+    study.sage.enable = false;
 
     # hw.qmk.enable = true;
 
@@ -179,6 +179,7 @@
       misc = {
         enable = true;
         code = { enable = true; };
+        debugger.enable = true;
       };
       langs.enable = [
         "misc"
@@ -197,9 +198,9 @@
         "lean"
         # "zig"
         # "fsharp"
-        # "cangjie"
+        "cangjie"
       ];
-      langs.cpp.lsp = "ccls";
+      langs.cpp.lsp = "clangd";
       code-assist = { enable = true; };
       pretty = {
         status-bar.enable = true;
