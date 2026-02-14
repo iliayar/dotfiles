@@ -52,18 +52,19 @@ in
         lfs.enable = true;
 
         settings = {
-          aliases = {
+          user.email = cfg.git.creds.email;
+          user.name = cfg.git.creds.name;
+
+          core.editor = "vim";
+          credential.helper = if cfg.git.save-creds then "store" else false;
+
+          alias = {
             a = "add";
             co = "checkout";
             st = "status";
             br = "branch";
             ci = "commit";
           };
-          user.email = cfg.git.creds.email;
-          user.name = cfg.git.creds.name;
-
-          core.editor = "vim";
-          credential.helper = if cfg.git.save-creds then "store" else false;
         };
 
         ignores = [

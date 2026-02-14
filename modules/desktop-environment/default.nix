@@ -129,6 +129,7 @@ in
       home.packages = with pkgs; [
         telegram-desktop
         vesktop
+        element-desktop
       ] ++ (if cfg.social.fix-zoom-non-nixos
         then [ zoom-fixed ]
         else [ zoom-us ]);

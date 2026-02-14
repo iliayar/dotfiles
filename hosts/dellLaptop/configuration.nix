@@ -68,13 +68,11 @@ in {
         user = "greeter";
       };
     };
-    vt = 6;
   };
 
   services.displayManager.sddm.enable = false;
   services.xserver = {
     enable = false;
-    desktopManager.plasma5.enable = false;
 
     dpi = 96;
 

@@ -59,7 +59,8 @@ in
       # symbola
       ubuntu-classic
       nerd-fonts.fira-code
-      # corefonts
+      corefonts
+      libertine
     ];
   };
 }
