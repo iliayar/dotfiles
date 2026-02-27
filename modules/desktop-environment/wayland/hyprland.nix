@@ -15,7 +15,7 @@ let
     select_audio_output = pkgs.writeShellScriptBin "select_audio_output" ''
       devices=$(pw-dump | jq 'map(select(.info.props."device.class" == "sound")) | map(select(.info.props."media.class" == "Audio/Sink")) | map({"name": .info.props."node.nick", "id": .id})')
 
-      selected=$(echo $devices | jq '.[].name' | bemenu)
+      selected=$(echo $devices | jq '.[].name' | vicinae dmenu)
       selected_id=$(echo $devices | jq "map(select(.name == $selected)) | .[].id")
 
       wpctl set-default "$selected_id"
@@ -110,6 +110,14 @@ in {
         bibata-cursors
       ];
 
+      services.vicinae = {
+        enable = true;
+        systemd = {
+            enable = true;
+            autoStart = true;
+        };
+      };
+
       wayland.windowManager.hyprland = {
         enable = true;
         # package = hyprland.packages.${system}.default;
@@ -132,8 +140,8 @@ in {
           bindm = $mainMod, mouse:273, resizewindow
 
           bind = $mainMod, Return, exec, ${cfg.termCmd}
-          bind = $mainMod, D, exec, bemenu-run
-          bind = $mainMod SHIFT, D, exec, j4-dmenu-desktop --dmenu=bemenu
+          bind = $mainMod, D, exec, vicinae open
+          # bind = $mainMod SHIFT, D, exec, bemenu-run
           bind = $mainMod SHIFT, Q, killactive
           bind = $mainMod, F, fullscreen, 0
 
@@ -480,14 +488,14 @@ in {
         plugins = ["scratchpads", "monitors", "shortcuts_menu"]
 
         [shortcuts_menu]
-        engine = "bemenu"
-        parameters = "-l 10 -p '[prompt]'"
+        engine = "vicinae"
 
         [shortcuts_menu.entries]
         # TODO: Move from top one
 
         "[TF] Toggle Float" = "hyprctl dispatch workspaceopt allfloat"
-        "[E] Emoji" = "${pkgs.bemoji}/bin/bemoji"
+        # In vicinae
+        # "[E] Emoji" = "${pkgs.bemoji}/bin/bemoji"
         "[AO] select Audio Output" = "${tools.select_audio_output}/bin/select_audio_output"
 
         [scratchpads.term-quake]
@@ -497,6 +505,8 @@ in {
         class = "local.iliayar.term-quake"
         position = "0% 0%"
         size = "100% 50%"
+        animation = ""
+        lazy = false
 
         [monitors]
         hotplug_command = "wlrlui -m"

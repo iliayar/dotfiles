@@ -1,4 +1,4 @@
-{ wezterm-newest, nixpkgs, pyprland-newest, system, pyprland-my, swww, ... }@inputs:
+{ wezterm-newest, nixpkgs, pyprland-newest, system, swww, ... }@inputs:
 final: prev: {
   # inkscape = (prev.inkscape.override {
   #   python3 = {
@@ -11,7 +11,7 @@ final: prev: {
   #     ++ (with prev; [ gobject-introspection gtk3 ]);
   # });
 
-  pyprland = pyprland-my.packages.${system}.pyprland;
+  pyprland = pyprland-newest.packages.${system}.pyprland;
   # swww = swww.packages.${system}.default;
 
   # FIXME: There is an unstable version! Check if it really works

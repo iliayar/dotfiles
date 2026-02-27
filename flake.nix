@@ -64,11 +64,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    pyprland-my = {
-      url = "github:iliayar/pyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nwg-displays = {
       url = "github:nwg-piotr/nwg-displays";
     };
@@ -138,9 +133,27 @@
     };
 
     nix-ai-tools.url = "github:numtide/llm-agents.nix";
+
+    vicinae = {
+        url = "github:vicinaehq/vicinae";
+        inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, home-manager, nixpkgs, nur, secrets, denv, emacs-overlay, rust-overlay, deploy-rs, nix-darwin, ... }@inputs:
+  outputs =
+    { self
+    , home-manager
+    , nixpkgs
+    , nur
+    , secrets
+    , denv
+    , emacs-overlay
+    , rust-overlay
+    , deploy-rs
+    , nix-darwin
+    , vicinae
+    , ...
+    }@inputs:
     let
       config = system:
         let
@@ -172,6 +185,8 @@
                 denv.homeManagerModules.default
                 ./modules
                 profile
+
+                vicinae.homeManagerModules.default
               ];
             };
 

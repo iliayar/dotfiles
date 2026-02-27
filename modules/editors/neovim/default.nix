@@ -60,11 +60,10 @@ let
   alabaster-nvim = pkgs.vimUtils.buildVimPlugin {
     pname = "alabaster.nvim";
     version = "2026-02-06";
-    src = pkgs.fetchFromGitHub {
-      owner = "p00f";
-      repo = "alabaster.nvim";
-      rev = "ae0c5f41c70b576f0678319e57fe47b2b288d2fc";
-      hash = "sha256-myeggPnb76KFnm1rmSDgLwHHr1WKzV6KnGvvmU6GhXo=";
+    src = pkgs.fetchgit {
+      url = "https://git.sr.ht/~iliayar/alabaster.nvim";
+      rev = "c5ca44ef2f1a82df0785c239227d2f03f0a4bd07";
+      hash = "sha256-TTpXbs2Ue2wnHTW26eqCOEpnmJgNqKKpJlWmmeQPHmk=";
     };
   };
 
@@ -132,7 +131,9 @@ let
 
     prettyAlabaster = {
       autoEnable = cfg.pretty.theme == "alabaster";
-      plugins = with pkgs.vimPlugins; [ alabaster-nvim ];
+      plugins = with pkgs.vimPlugins; [ 
+        alabaster-nvim
+      ];
     };
 
     codeMisc = {

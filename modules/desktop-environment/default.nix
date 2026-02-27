@@ -54,8 +54,15 @@ in
         light
         nitrogen
         # lxqt.pcmanfm-qt
-        thunar
-        pcmanfm
+        # thunar
+        # pcmanfm
+        (krusader.overrideAttrs {
+          postInstall = ''
+            mkdir -p $out/etc/xdg/menus
+            cp ${libsForQt5.kservice}/etc/xdg/menus/applications.menu $out/etc/xdg/menus/applications.menu
+          '';
+        })
+        kdePackages.kde-cli-tools
         arandr
         # tlpui
 
@@ -131,8 +138,8 @@ in
         vesktop
         element-desktop
       ] ++ (if cfg.social.fix-zoom-non-nixos
-        then [ zoom-fixed ]
-        else [ zoom-us ]);
+      then [ zoom-fixed ]
+      else [ zoom-us ]);
 
       xdg.mimeApps = {
         defaultApplications = {
