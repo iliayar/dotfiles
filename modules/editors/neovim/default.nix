@@ -266,6 +266,9 @@ let
       autoEnable = builtins.elem "cangjie" cfg.langs.enable;
       plugins = [ cangjie-nvim.packages.${system}.default ];
     };
+    langJava = {
+      autoEnable = builtins.elem "java" cfg.langs.enable;
+    };
 
     obsidian = {
       autoEnable = cfg.obsidian.enable;
@@ -340,6 +343,7 @@ in
             "zig"
             "fsharp"
             "cangjie"
+            "java"
           ]);
         };
 

@@ -555,6 +555,10 @@ if nixcfg.lsp.enable then
 		vim.lsp.config("fsautocomplete", {})
 	end
 
+	if nixcfg.langJava.enable then
+		vim.lsp.config("jdtls", {})
+	end
+
 	if nixcfg.exp.enable then
 		local util = require("lspconfig.util")
 		vim.lsp.config("exp", {

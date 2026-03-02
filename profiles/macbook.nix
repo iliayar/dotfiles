@@ -35,6 +35,7 @@
     # windsurf
     # claude-code
     nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.copilot-cli
+    nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.claude-code
 
     # TODO: this one too
     cfcli
@@ -199,6 +200,7 @@
         # "zig"
         # "fsharp"
         "cangjie"
+        "java"
       ];
       langs.cpp.lsp = "clangd";
       code-assist = { enable = true; };
