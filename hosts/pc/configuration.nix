@@ -77,10 +77,11 @@
     wireplumber.enable = true;
   };
 
+  programs.adb.enable = true;
   users.users.iliayar = {
     isNormalUser = true;
     home = "/home/iliayar";
-    extraGroups = [ "wheel" "networkmanager" "video" "libvirtd" "wireshark" "dialout" "docker" "audio" ];
+    extraGroups = [ "wheel" "networkmanager" "video" "libvirtd" "wireshark" "dialout" "docker" "audio" "adbusers" ];
     shell = pkgs.zsh;
   };
   programs.zsh.enable = true;

@@ -537,6 +537,9 @@ if nixcfg.lsp.enable then
 		require("lean").setup({
 			lsp = { on_attach = common_on_attach },
 			mappings = true,
+            abbreviations = {
+                enable = true,
+            }
 		})
 	end
 

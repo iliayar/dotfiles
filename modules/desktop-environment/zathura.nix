@@ -22,6 +22,7 @@ in
         recolor-keephue = "true";
         recolor-darkcolor = "${themes.foreground}";
         recolor-lightcolor = "${themes.background}";
+        selection-clipboard = "clipboard";
       };
     };
 

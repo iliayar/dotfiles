@@ -57,7 +57,6 @@
     dolphin-emu
 
     bs-manager
-    android-tools
     sidequest
   ];
 
