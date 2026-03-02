@@ -91,6 +91,10 @@ in
             email = cfg.git.creds.email;
             name = cfg.git.creds.name;
           };
+
+          ui = {
+            pager = [ "less" "-RFX" ];
+          };
         };
       };
     })
@@ -101,10 +105,6 @@ in
           behavior = "own";
           backend = "gpg";
           key = cfg.git.gpg-key;
-        };
-
-        ui = {
-          pager = [ "less" "-RFX" ];
         };
       };
     })
