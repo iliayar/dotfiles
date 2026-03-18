@@ -22,6 +22,7 @@
     ./typst.nix
     ./lean.nix
     ./zig.nix
+    ./java.nix
   ];
 
 }

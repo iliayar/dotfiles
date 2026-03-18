@@ -94,6 +94,8 @@
       typst.enable = true;
 
       lean.enable = true;
+
+      java.enable = true;
     };
     # dev = {
     #   python.enable = true;
@@ -212,6 +214,7 @@
         "fsharp"
         "cangjie"
         "typescript"
+        "java"
       ];
       langs.cpp.lsp = "ccls";
       code-assist = { enable = true; };

@@ -2,19 +2,17 @@
 
 with lib;
 
-let cfg = config.custom.dev.lua;
+let cfg = config.custom.dev.java;
 in {
   options = {
-    custom.dev.lua = {
+    custom.dev.java = {
       enable = mkOption { default = false; };
     };
   };
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
-        stylua
-        lua-language-server
-        lua
+        google-java-format
     ];
   };
 }

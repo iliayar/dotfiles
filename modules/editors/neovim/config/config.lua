@@ -72,7 +72,6 @@ if nixcfg.misc.enable then
 	if nixcfg.picker.t == "telescope" then
 		local telescope = require("telescope")
 		local trouble = require("trouble.sources.telescope")
-		local fb_actions = telescope.extensions.file_browser.actions
 		local actions = require("telescope.actions")
 		local lga_actions = require("telescope-live-grep-args.actions")
 
@@ -123,7 +122,6 @@ if nixcfg.misc.enable then
 		telescope.load_extension("lines")
 		telescope.load_extension("live_grep_args")
 
-		local themes = require("telescope.themes")
 		local builtin = require("telescope.builtin")
 
 		vim.keymap.set("n", "<Leader>ff", function()
@@ -241,7 +239,7 @@ if nixcfg.misc.enable then
 		else
 			key = tostring(i)
 		end
-        -- FIXME: Why <Leader>N is bad?
+		-- FIXME: Why <Leader>N is bad?
 		vim.keymap.set("n", "<Leader>" .. key, function()
 			harpoon_ui.nav_file(i)
 		end)
@@ -257,7 +255,7 @@ if nixcfg.langCangjie.enable then
 end
 
 if nixcfg.codeMisc.enable then
-	treesitterConfig = {
+	local treesitterConfig = {
 		highlight = {
 			enable = true,
 			additional_vim_regex_highlighting = { "markdown" },
@@ -279,7 +277,7 @@ if nixcfg.codeMisc.enable then
 		mode = "topline",
 	})
 
-	formatters_by_ft = { form = {} }
+	local formatters_by_ft = { form = {} }
 
 	if nixcfg.langNix.enable then
 		formatters_by_ft["nix"] = { "nixpkgs_fmt" }
@@ -314,7 +312,7 @@ if nixcfg.codeMisc.enable then
 	end
 
 	if nixcfg.langTypst.enable then
-		params = {
+		local params = {
 			dependencies_bin = {
 				["tinymist"] = "tinymist",
 			},
@@ -326,6 +324,10 @@ if nixcfg.codeMisc.enable then
 			params.control_plane_port = nixcfg.langTypst.controlPlanePort
 		end
 		require("typst-preview").setup(params)
+	end
+
+	if nixcfg.langJava.enable then
+		formatters_by_ft["java"] = { "google-java-format" }
 	end
 
 	local conform = require("conform")
@@ -348,7 +350,7 @@ if nixcfg.codeMisc.enable then
 	local cmp = require("cmp")
 	local snippy = require("snippy")
 
-	cmp_sources = {
+	local cmp_sources = {
 		{ name = "snippy" },
 		{ name = "buffer" },
 	}
@@ -469,8 +471,7 @@ if nixcfg.lsp.enable then
 		end,
 	})
 
-	local on_init = function(client, _)
-	end
+	local on_init = function(client, _) end
 
 	vim.lsp.config("*", {
 		capabilities = require("cmp_nvim_lsp").default_capabilities(),
@@ -494,6 +495,11 @@ if nixcfg.lsp.enable then
 
 	if nixcfg.langNix.enable then
 		vim.lsp.config("nixd", {})
+	end
+
+	if nixcfg.langLua.enable then
+		vim.lsp.config("lua_ls", {})
+        vim.lsp.enable("lua_ls")
 	end
 
 	if nixcfg.langGo.enable then
@@ -537,9 +543,9 @@ if nixcfg.lsp.enable then
 		require("lean").setup({
 			lsp = { on_attach = common_on_attach },
 			mappings = true,
-            abbreviations = {
-                enable = true,
-            }
+			abbreviations = {
+				enable = true,
+			},
 		})
 	end
 
@@ -649,11 +655,11 @@ end
 
 if nixcfg.debugger.enable then
 	local dap = require("dap")
-    command = "lldb-dap"
-    if vim.loop.os_uname().sysname == "Darwin" then
-        -- FIXME: Acquire using `xcrun -f lldb-dap`
-        command = "/Library/Developer/CommandLineTools/usr/bin/lldb-dap"
-    end
+	command = "lldb-dap"
+	if vim.loop.os_uname().sysname == "Darwin" then
+		-- FIXME: Acquire using `xcrun -f lldb-dap`
+		command = "/Library/Developer/CommandLineTools/usr/bin/lldb-dap"
+	end
 	dap.adapters.lldb = {
 		type = "executable",
 		command = command,
