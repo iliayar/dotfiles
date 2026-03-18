@@ -429,9 +429,23 @@ if nixcfg.lsp.enable then
 		picker.diagnostics({})
 	end)
 
-	local on_attach = function(client, bufnr)
-		local sr = client.server_capabilities
+    local handle_capabilities = function(client, bufnr)
+		local opts = { buffer = bufnr }
+		if client.supports_method("textDocument/formatting") then
+			vim.keymap.set("n", "<C-=>", function()
+				vim.lsp.buf.format({ async = true })
+			end, opts)
+			vim.keymap.set("v", "<C-=>", function()
+				local start_pos = vim.api.nvim_buf_get_mark(0, "<")
+				local end_pos = vim.api.nvim_buf_get_mark(0, ">")
+				vim.lsp.buf.format({
+					range = { ["start"] = start_pos, ["end"] = end_pos },
+				})
+			end, opts)
+		end
+    end
 
+	local on_attach = function(client, bufnr)
 		vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
 
 		local opts = { buffer = bufnr }
@@ -450,33 +464,27 @@ if nixcfg.lsp.enable then
 			print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 		end, opts)
 
-		if sr.documentFormattingProvider then
-			vim.keymap.set("n", "<C-=>", function()
-				vim.lsp.buf.format({ async = true })
-			end, opts)
-			vim.keymap.set("v", "<C-=>", function()
-				local start_pos = vim.api.nvim_buf_get_mark(0, "<")
-				local end_pos = vim.api.nvim_buf_get_mark(0, ">")
-				vim.lsp.buf.format({
-					range = { ["start"] = start_pos, ["end"] = end_pos },
-				})
-			end, opts)
-		end
+        handle_capabilities(client, bufnr)
 	end
-	vim.api.nvim_create_autocmd("LspAttach", {
-		callback = function(args)
-			local client = vim.lsp.get_client_by_id(args.data.client_id)
-			local bufnr = args.buf
-			on_attach(client, bufnr)
-		end,
-	})
-
-	local on_init = function(client, _) end
 
 	vim.lsp.config("*", {
 		capabilities = require("cmp_nvim_lsp").default_capabilities(),
-		on_init = on_init,
+		on_attach = on_attach,
 	})
+
+    vim.lsp.handlers['client/registerCapability'] = (function(overridden)
+      return function(err, res, ctx)
+        local result = overridden(err, res, ctx)
+        local client = vim.lsp.get_client_by_id(ctx.client_id)
+        if not client then
+          return
+        end
+        for bufnr, _ in pairs(client.attached_buffers) do
+          handle_capabilities(client, bufnr)
+        end
+        return result
+      end
+    end)(vim.lsp.handlers['client/registerCapability'])
 
 	if nixcfg.langRust.enable then
 		vim.lsp.config("rust_analyzer", {})
