@@ -54,7 +54,8 @@
     };
 
     uci = {
-      url = "git+ssh://git@github.com/iliayar/uci.git";
+      # url = "git+ssh://git@github.com/iliayar/uci.git/";
+      url = "github:iliayar/uci/eb88473e7ce48aae539dddb663d31c28c6027d51";
       # url = "path:/home/iliayar/Repos/microci";
       # inputs.nixpkgs.follows = "nixpkgs";
     };

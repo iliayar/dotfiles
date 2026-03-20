@@ -17,8 +17,7 @@ in
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
-        nixfmt-classic
-        nixpkgs-fmt
+        nixfmt
         nixd
     ];
   };

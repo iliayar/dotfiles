@@ -32,15 +32,15 @@ final: prev: {
   # });
 
   # FIXME: Cleanup when fixed
-  hyprlandPlugins.hy3 = prev.hyprlandPlugins.hy3.overrideAttrs (_: {
-    version = "0.52.0-50643d625829f303239f9ec019021f17d7e9f3fc";
-    src = final.fetchFromGitHub {
-      owner = "outfoxxed";
-      repo = "hy3";
-      rev = "50643d625829f303239f9ec019021f17d7e9f3fc";
-      hash = "sha256-Wuk2MULnGfgAbP1N/Rp6H6k7zG/ynDiy54mPvkt/4bM=";
-    };
-  });
+  # hyprlandPlugins.hy3 = prev.hyprlandPlugins.hy3.overrideAttrs (_: {
+  #   version = "0.52.0-50643d625829f303239f9ec019021f17d7e9f3fc";
+  #   src = final.fetchFromGitHub {
+  #     owner = "outfoxxed";
+  #     repo = "hy3";
+  #     rev = "50643d625829f303239f9ec019021f17d7e9f3fc";
+  #     hash = "sha256-Wuk2MULnGfgAbP1N/Rp6H6k7zG/ynDiy54mPvkt/4bM=";
+  #   };
+  # });
 
   bs-manager = final.callPackage (import ../pkgs/bs-manager) {};
 

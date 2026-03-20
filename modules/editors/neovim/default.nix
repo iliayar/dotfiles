@@ -470,7 +470,7 @@ in
         enable = true;
         vimAlias = true;
         plugins = cfg.extraPlugins;
-        extraLuaConfig = ''
+        initLua = ''
           require('config/config')
 
           ${cfg.extraConfig}

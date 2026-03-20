@@ -51,7 +51,7 @@ in
     (mkIf cfg.misc {
       home.packages = with pkgs; [
         xkb-switch
-        light
+        # light
         nitrogen
         # lxqt.pcmanfm-qt
         # thunar

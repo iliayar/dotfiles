@@ -77,7 +77,6 @@
     wireplumber.enable = true;
   };
 
-  programs.adb.enable = true;
   users.users.iliayar = {
     isNormalUser = true;
     home = "/home/iliayar";
@@ -99,6 +98,7 @@
 
     # GPU stuff
     clinfo
+    android-tools
   ];
 
   nix = {
@@ -156,8 +156,8 @@
   '';
 
   virtualisation.libvirtd.enable = true;
-  virtualisation.virtualbox.host.enable = true;
-  virtualisation.virtualbox.host.enableExtensionPack = true;
+  # virtualisation.virtualbox.host.enable = true;
+  # virtualisation.virtualbox.host.enableExtensionPack = true;
   users.extraGroups.vboxusers.members = [ "iliayar" ];
 
   virtualisation.docker = {

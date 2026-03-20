@@ -255,20 +255,22 @@ if nixcfg.langCangjie.enable then
 end
 
 if nixcfg.codeMisc.enable then
-	local treesitterConfig = {
-		highlight = {
-			enable = true,
-			additional_vim_regex_highlighting = { "markdown" },
-		},
-		ensure_installed = {},
-	}
+    -- FIXME: Is it gone?
+	-- local treesitterConfig = {
+	-- 	highlight = {
+	-- 		enable = true,
+	-- 		additional_vim_regex_highlighting = { "markdown" },
+	-- 	},
+	-- 	ensure_installed = {},
+	-- }
+	--
+	-- if nixcfg.orgmode.enable then
+	-- 	-- require("orgmode").setup_ts_grammar()
+	-- 	table.insert(treesitterConfig.highlight.additional_vim_regex_highlighting, "org")
+	-- end
+	--
+	-- require("nvim-treesitter.configs").setup(treesitterConfig)
 
-	if nixcfg.orgmode.enable then
-		-- require("orgmode").setup_ts_grammar()
-		table.insert(treesitterConfig.highlight.additional_vim_regex_highlighting, "org")
-	end
-
-	require("nvim-treesitter.configs").setup(treesitterConfig)
 	require("treesitter-context").setup({
 		enable = true,
 		line_numbers = true,
@@ -280,7 +282,7 @@ if nixcfg.codeMisc.enable then
 	local formatters_by_ft = { form = {} }
 
 	if nixcfg.langNix.enable then
-		formatters_by_ft["nix"] = { "nixpkgs_fmt" }
+		formatters_by_ft["nix"] = { "nixfmt" }
 	end
 
 	if nixcfg.langLua.enable then

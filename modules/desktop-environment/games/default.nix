@@ -59,7 +59,7 @@ in
 
     (mkIf cfg.wine.enable {
       home.packages = with pkgs; [
-        wineWowPackages.staging
+        wineWow64Packages.staging
         winetricks
         samba
         libkrb5

@@ -88,7 +88,7 @@ in {
       home.packages = with pkgs; [
         bemenu
         j4-dmenu-desktop
-        xorg.xrandr
+        xrandr
         waypaper
         swww
         grim
