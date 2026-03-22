@@ -159,11 +159,10 @@ Project tree. Settings fonts for ~treemacs~
                      (elfeed-search-mode . emacs)
                      (magit-status-mode . emacs))
          do (evil-set-initial-state mode state))
+    (unless (or (display-graphic-p) (daemonp))
+      (add-hook 'evil-insert-state-entry-hook (lambda () (send-string-to-terminal "\033[5 q")))
+      (add-hook 'evil-insert-state-exit-hook  (lambda () (send-string-to-terminal "\033[2 q"))))
     )
-
-  (unless (display-graphic-p)
-    (add-hook 'evil-insert-state-entry-hook (lambda () (send-string-to-terminal "\033[5 q")))
-    (add-hook 'evil-insert-state-exit-hook  (lambda () (send-string-to-terminal "\033[2 q"))))
 
   (use-package undo-tree
     :if nixcfg-undo-tree

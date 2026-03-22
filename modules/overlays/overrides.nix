@@ -42,7 +42,7 @@ final: prev: {
   #   };
   # });
 
-  bs-manager = final.callPackage (import ../pkgs/bs-manager) {};
+  # bs-manager = final.callPackage (import ../pkgs/bs-manager) {};
 
   # bs-manager = prev.bs-manager.overrideAttrs (_: rec {
   #   version = "1.5.4-8edfea66f2717e9d1b6a78f941b755cfbe84d44a";
