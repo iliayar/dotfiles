@@ -101,10 +101,12 @@ in
             "${mod}+h=goto_split:left"
             "${mod}+l=goto_split:right"
 
-            "${mod}+ctrl+j=resize_split:down,${resize-step}"
-            "${mod}+ctrl+k=resize_split:up,${resize-step}"
-            "${mod}+ctrl+h=resize_split:left,${resize-step}"
-            "${mod}+ctrl+l=resize_split:right,${resize-step}"
+            "${mod}+r=activate_key_table:resize"
+            "resize/j=resize_split:down,${resize-step}"
+            "resize/k=resize_split:up,${resize-step}"
+            "resize/h=resize_split:left,${resize-step}"
+            "resize/l=resize_split:right,${resize-step}"
+            "resize/escape=deactivate_key_table"
 
             "${mod}+1=goto_tab:1"
             "${mod}+2=goto_tab:2"
@@ -118,6 +120,8 @@ in
             "${mod}+0=goto_tab:10"
 
             "${mod}+tab=toggle_tab_overview"
+
+            "${mod}+slash=start_search"
           ] ++ (if pkgs.stdenv.isLinux then [
             "ctrl+shift+v=paste_from_clipboard"
             "ctrl+shift+c=copy_to_clipboard"
