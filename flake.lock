@@ -67,11 +67,11 @@
         "tree-sitter-cangjie-src": "tree-sitter-cangjie-src"
       },
       "locked": {
-        "lastModified": 1761311683,
-        "narHash": "sha256-FHPIlOj6h/RdlEQwBmoOqxA0V6Kz/fMEBmsdwDWYAYA=",
+        "lastModified": 1774304120,
+        "narHash": "sha256-uFIzxtJq/xLbRsNtGMNzrYdA1M5HOzlOiahwPxCpxG4=",
         "ref": "refs/heads/master",
-        "rev": "ff478f80b4c8adf8037f7ae18b417874b35c7461",
-        "revCount": 6,
+        "rev": "b67d6e379cde4e73c340abd91e3098d58290a893",
+        "revCount": 7,
         "type": "git",
         "url": "https://gitcode.com/iliayar/cangjie.nvim.git"
       },
