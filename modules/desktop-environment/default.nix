@@ -135,6 +135,7 @@ in
     (mkIf cfg.social.enable {
       home.packages = with pkgs; [
         telegram-desktop
+        deltachat-desktop
         vesktop
         element-desktop
       ] ++ (if cfg.social.fix-zoom-non-nixos

@@ -1,4 +1,9 @@
-{ config, pkgs, nix-ai-tools, ... }:
+{
+  config,
+  pkgs,
+  nix-ai-tools,
+  ...
+}:
 
 {
   # Let Home Manager install and manage itself.
@@ -50,7 +55,7 @@
     yt-dlp
     audacity
 
-    curd
+    ani-cli
     rqbit
     ffmpeg
 
@@ -59,6 +64,13 @@
     bs-manager
     sidequest
   ];
+
+  programs.jerry = {
+    enable = true;
+    config = {
+      score_on_completion = "true";
+    };
+  };
 
   # TODO: Move it somewhere
   services.ollama = {
@@ -69,13 +81,17 @@
     };
   };
 
-  denv = { langs.haskell.enable = true; };
+  denv = {
+    langs.haskell.enable = true;
+  };
 
   custom = {
 
     # hw.qmk.enable = true;
 
-    settings = { code-stats-machine = "PC"; };
+    settings = {
+      code-stats-machine = "PC";
+    };
 
     dev = {
       python.enable = true;
@@ -152,17 +168,26 @@
 
       misc = {
         enable = true;
-        code = { enable = true; };
+        code = {
+          enable = true;
+        };
       };
 
-      langs.enable = [ "nix" "misc" "latex" "cpp" ];
+      langs.enable = [
+        "nix"
+        "misc"
+        "latex"
+        "cpp"
+      ];
 
       code-assist = {
         enable = true;
         pretty.enable = true;
       };
 
-      evil = { enable = true; };
+      evil = {
+        enable = true;
+      };
 
       org = {
         roam = {
@@ -192,7 +217,9 @@
       enable = true;
       misc = {
         enable = true;
-        code = { enable = true; };
+        code = {
+          enable = true;
+        };
         debugger.enable = true;
       };
       langs.enable = [
@@ -217,7 +244,9 @@
         "java"
       ];
       langs.cpp.lsp = "ccls";
-      code-assist = { enable = true; };
+      code-assist = {
+        enable = true;
+      };
       pretty = {
         status-bar.enable = true;
         theme = "alabaster";
@@ -313,16 +342,16 @@
       wayland.waybar = {
         enable = true;
         modules = {
-          left = ms:
-            with ms; [
+          left =
+            ms: with ms; [
               hyprland-submap
               hyprland-workspaces
               wlr-taskbar
               hyprland-window
             ];
           center = ms: with ms; [ mpris ];
-          right = ms:
-            with ms; [
+          right =
+            ms: with ms; [
               # network
               pulseaudio
               (disk {

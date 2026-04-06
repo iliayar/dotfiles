@@ -10,7 +10,7 @@
   home.homeDirectory = "/home/iliayar";
 
   home.packages = with pkgs; [
-    curd
+    # ani-cli
   ];
 
   denv = { langs.haskell.enable = true; };

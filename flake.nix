@@ -124,10 +124,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    curd = {
-      url = "github:Wraient/curd";
-    };
-
     cangjie-nvim = {
       # url = "path:/home/iliayar/Repos/Cangjie/cangjie.nvim";
       url = "git+https://gitcode.com/iliayar/cangjie.nvim.git";
@@ -137,6 +133,11 @@
 
     vicinae = {
         url = "github:vicinaehq/vicinae";
+        inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    jerry = {
+        url = "github:justchokingaround/jerry";
         inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -153,6 +154,7 @@
     , deploy-rs
     , nix-darwin
     , vicinae
+    , jerry
     , ...
     }@inputs:
     let
@@ -188,6 +190,7 @@
                 profile
 
                 vicinae.homeManagerModules.default
+                jerry.homeManagerModules.default
               ];
             };
 

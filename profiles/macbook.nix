@@ -50,7 +50,7 @@
     # yt-dlp
     # audacity
 
-    curd
+    # ani-cli
     mpv
   ];
 

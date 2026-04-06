@@ -457,6 +457,7 @@ if nixcfg.lsp.enable then
         vim.keymap.set("n", "gsi", picker.lsp_implementations, opts)
         vim.keymap.set("n", "gsx", picker.lsp_references, opts)
         vim.keymap.set("n", "gst", picker.lsp_type_definitions, opts)
+        vim.keymap.set("n", "<Leader>fs", picker.lsp_workspace_symbols, opts)
         vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
         vim.keymap.set("n", "<Leader>cr", vim.lsp.buf.rename, opts)
         vim.keymap.set({ "n", "v" }, "<Leader>ca", vim.lsp.buf.code_action, opts)
