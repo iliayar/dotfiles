@@ -572,11 +572,10 @@ if nixcfg.lsp.enable then
     if nixcfg.exp.enable then
         local util = require("lspconfig.util")
         vim.lsp.config("exp", vim.tbl_extend("force", lsp_default_config, {
-            cmd = { "exp-ls" },
+            cmd = { "language_server" },
             filetypes = { "exp" },
             root_dir = util.root_pattern(".exp"),
             single_file_support = true,
-            lsp_default_config
         }))
     end
 
