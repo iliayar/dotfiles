@@ -38,11 +38,6 @@ in
         autosuggestion.enable = true;
         syntaxHighlighting.enable = true;
 
-        # FIXME: Remove it
-        oh-my-zsh = {
-          enable = true;
-        };
-
         shellAliases = {
           magit = "emacsclient -t -e '(magit)'";
         };
@@ -67,7 +62,12 @@ in
       };
     })
     (mkIf (cfg.enable && cfg.starship.enable) {
-      home.packages = with pkgs; [ jj-starship ];
+      home.packages = with pkgs; [
+        jj-starship
+      ];
+      # TODO: Remove it somehow, but is has good defaults
+      programs.zsh.oh-my-zsh.enable = true;
+
       programs.starship = {
         enable = true;
         enableZshIntegration = true;
@@ -115,6 +115,9 @@ in
         TRANSIENT_PROMPT_PROMPT='$(starship prompt --terminal-width="$COLUMNS" --keymap="''${KEYMAP:-}" --status="$STARSHIP_CMD_STATUS" --pipestatus="''${STARSHIP_PIPE_STATUS[*]}" --cmd-duration="''${STARSHIP_DURATION:-}" --jobs="$STARSHIP_JOBS_COUNT")'
         TRANSIENT_PROMPT_RPROMPT='$(starship prompt --right --terminal-width="$COLUMNS" --keymap="''${KEYMAP:-}" --status="$STARSHIP_CMD_STATUS" --pipestatus="''${STARSHIP_PIPE_STATUS[*]}" --cmd-duration="''${STARSHIP_DURATION:-}" --jobs="$STARSHIP_JOBS_COUNT")'
         TRANSIENT_PROMPT_TRANSIENT_PROMPT='$(starship prompt --profile transient)'
+
+        bindkey '^[[1;5C' forward-word
+        bindkey '^[[1;5D' backward-word
       '';
       programs.starship = {
         settings = {

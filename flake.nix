@@ -137,7 +137,7 @@
     };
 
     jerry = {
-        url = "github:justchokingaround/jerry";
+        url = "github:iliayar/jerry";
         inputs.nixpkgs.follows = "nixpkgs";
     };
   };

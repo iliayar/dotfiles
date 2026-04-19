@@ -715,15 +715,15 @@
         "systems": "systems_6"
       },
       "locked": {
-        "lastModified": 1775415762,
-        "narHash": "sha256-G0fn7SaCOL/l+oXEz/AWxBrtEYE0ldzwzLVdhHdKR1o=",
-        "owner": "justchokingaround",
+        "lastModified": 1776448022,
+        "narHash": "sha256-jrnM6IGA1HoIdK9fkdGClqDF+fF8GjyhV67SnMhY/uw=",
+        "owner": "iliayar",
         "repo": "jerry",
-        "rev": "3101b72dbbc2052e021f8ad44a482dfe6a41b2d2",
+        "rev": "9c4a72992f5bf046484d370d195b6df650ff36b0",
         "type": "github"
       },
       "original": {
-        "owner": "justchokingaround",
+        "owner": "iliayar",
         "repo": "jerry",
         "type": "github"
       }

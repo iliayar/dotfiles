@@ -80,6 +80,13 @@ in {
       portals.enable = mkOption { default = false; };
       cursor.hyprcursor = mkOption { default = null; };
       cursor.xcursor = mkOption { default = null; };
+
+      flameshot = {
+        enable = mkOption { default = false; }; 
+        leftmostMonitor = mkOption { default = "DP-1"; };
+        width = mkOption { default = "(monitor_w*2)"; };
+        height = mkOption { default = "(monitor_h)"; };
+      };
     };
   };
 
@@ -115,6 +122,22 @@ in {
         systemd = {
             enable = true;
             autoStart = true;
+        };
+      };
+
+      services.flameshot = {
+        enable = cfg.flameshot.enable;
+        settings = {
+            General = {
+                useGrimAdapter = true;
+                disabledGrimWarning = true;
+
+                contrastOpacity = 120;
+
+                savePath = "Pictures/screenshots";
+
+                saveAfterCopy = true;
+            };
         };
       };
 
@@ -255,10 +278,16 @@ in {
 
           bind = $mainMod, C, exec, pypr menu
           bind = $mainMod, T, exec, pypr toggle term-quake
-          bind = $mainMod SHIFT, print, exec, ${my-screenshot}/bin/my-screenshot e f
-          bind = SHIFT, print, exec, ${my-screenshot}/bin/my-screenshot n f
-          bind = $mainMod, print, exec, ${my-screenshot}/bin/my-screenshot e
-          bind = , print, exec, ${my-screenshot}/bin/my-screenshot
+
+          ${ if cfg.flameshot.enable then ''
+                bind = SHIFT, print, exec, flameshot full
+                bind = , print, exec, flameshot gui
+            ''else ''
+                bind = $mainMod SHIFT, print, exec, ${my-screenshot}/bin/my-screenshot e f
+                bind = SHIFT, print, exec, ${my-screenshot}/bin/my-screenshot n f
+                bind = $mainMod, print, exec, ${my-screenshot}/bin/my-screenshot e
+                bind = , print, exec, ${my-screenshot}/bin/my-screenshot
+            '' }
 
           bind = $mainMod, 1, focusworkspaceoncurrentmonitor, 1
           bind = $mainMod, 2, focusworkspaceoncurrentmonitor, 2
@@ -466,6 +495,24 @@ in {
           exec-once = waybar & pypr
 
           env = BROWSER,${config.custom.de.browsers.default}
+
+          ${ if cfg.flameshot.enable then ''
+                windowrule {
+                    name = flameshot-multi-display-fix
+                    match:title = flameshot
+                
+                    animation = fade
+                    rounding = 0
+                    border_size = 0
+                    fullscreen_state = 0 0
+                    float = on
+                    pin = on
+                    monitor = DP-2
+                    move = 0 0
+                    # FIXME: Move to config
+                    size = ${cfg.flameshot.width} ${cfg.flameshot.height}
+                }
+            '' else "" }
 
           # Extra startup
           ${startupExtra}
