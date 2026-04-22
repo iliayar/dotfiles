@@ -64,14 +64,9 @@
 
     bs-manager
     sidequest
-  ];
 
-  programs.jerry = {
-    enable = true;
-    config = {
-      score_on_completion = "true";
-    };
-  };
+    curd
+  ];
 
   # TODO: Move it somewhere
   services.ollama = {
@@ -88,7 +83,7 @@
 
   custom = {
 
-    # hw.qmk.enable = true;
+    hw.qmk.enable = true;
 
     settings = {
       code-stats-machine = "PC";

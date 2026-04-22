@@ -136,8 +136,8 @@
         inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    jerry = {
-        url = "github:iliayar/jerry";
+    curd = {
+        url = "github:Wraient/curd";
         inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -154,7 +154,7 @@
     , deploy-rs
     , nix-darwin
     , vicinae
-    , jerry
+    , curd
     , ...
     }@inputs:
     let
@@ -190,7 +190,6 @@
                 profile
 
                 vicinae.homeManagerModules.default
-                jerry.homeManagerModules.default
               ];
             };
 
