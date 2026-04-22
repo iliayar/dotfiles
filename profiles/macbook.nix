@@ -36,6 +36,7 @@
     # claude-code
     nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.copilot-cli
     nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.claude-code
+    nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.codex
 
     # TODO: this one too
     cfcli
@@ -44,6 +45,7 @@
     yazi
     # meli
     # w3m
+    dos2unix
 
     # thunderbird
 
@@ -71,7 +73,7 @@
 
     study.sage.enable = false;
 
-    # hw.qmk.enable = true;
+    hw.qmk.enable = true;
 
     settings = { code-stats-machine = "MacBook"; };
 
@@ -206,7 +208,7 @@
       code-assist = { enable = true; };
       pretty = {
         status-bar.enable = true;
-        theme = "alabaster";
+        theme = "gruvbox";
       };
 
       obsidian = {
