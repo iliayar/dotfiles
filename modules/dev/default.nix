@@ -23,6 +23,7 @@
     ./lean.nix
     ./zig.nix
     ./java.nix
+    ./misc.nix
   ];
 
 }

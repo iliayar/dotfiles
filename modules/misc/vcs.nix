@@ -94,6 +94,7 @@ in
 
           ui = {
             pager = [ "less" "-RFX" ];
+            conflict-marker-style = "git";
           };
         };
       };
