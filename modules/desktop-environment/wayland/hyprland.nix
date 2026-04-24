@@ -469,6 +469,7 @@ in {
             repeat_rate = 50
             repeat_delay = 200
             follow_mouse = 2
+            float_switch_override_focus = 0
             kb_layout = us,ru
             kb_options = ${cfg.kbOptions}
 
