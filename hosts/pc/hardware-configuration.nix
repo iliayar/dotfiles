@@ -27,11 +27,11 @@
     };
 
   fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/e1022e3b-da4c-4c2b-a042-25a640ab14cf";
+    { device = "/dev/disk/by-uuid/e003074e-acf1-4d91-addf-ec24e282a1f3";
       fsType = "ext4";
     };
 
-  boot.initrd.luks.devices."data".device = "/dev/disk/by-uuid/ec9182ec-3531-4683-b14d-a77284fc4f9e";
+  boot.initrd.luks.devices."data".device = "/dev/disk/by-uuid/d2e72e8e-a979-44c6-a4e3-bc86693c56ae";
 
   swapDevices =
     [ { device = "/dev/disk/by-uuid/c6b7d663-103f-4737-9c1b-6ef3066f1bd7"; }

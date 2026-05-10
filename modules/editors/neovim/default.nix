@@ -475,6 +475,9 @@ in
 
           ${cfg.extraConfig}
         '';
+
+        withPython3 = false;
+        withRuby = false;
       };
     }
   ]);

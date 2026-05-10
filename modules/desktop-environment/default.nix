@@ -93,6 +93,7 @@ in
           package = pkgs.vimix-gtk-themes;
           name = "vimix-dark";
         };
+        gtk4.theme = config.gtk.theme;
       };
 
       qt = {

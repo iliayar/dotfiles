@@ -101,10 +101,6 @@
     };
 
     deploy-rs.url = "github:serokell/deploy-rs";
-    swww = {
-      url = "github:LGFae/swww";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     ghostty-newest = { url = "github:ghostty-org/ghostty"; };
 

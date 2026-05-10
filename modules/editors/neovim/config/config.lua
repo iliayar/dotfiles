@@ -419,9 +419,9 @@ if nixcfg.lsp.enable then
     end
     assert(picker)
 
-    vim.keymap.set("n", "<Leader>sl", "<Cmd>LspStart<CR>")
-    vim.keymap.set("n", "<Leader>ss", "<Cmd>LspStop<CR>")
-    vim.keymap.set("n", "<Leader>sr", "<Cmd>LspRestart<CR>")
+    vim.keymap.set("n", "<Leader>sl", "<Cmd>lsp enable<CR>")
+    vim.keymap.set("n", "<Leader>ss", "<Cmd>lsp stop<CR>")
+    vim.keymap.set("n", "<Leader>sr", "<Cmd>lsp restart<CR>")
 
     vim.keymap.set({ "n", "i" }, "<C-e>", vim.diagnostic.open_float)
     vim.keymap.set("n", "<Leader>ste", function()
@@ -436,7 +436,7 @@ if nixcfg.lsp.enable then
 
     local handle_capabilities = function(client, bufnr)
         local opts = { buffer = bufnr }
-        if client.supports_method("textDocument/formatting") then
+        if client:supports_method("textDocument/formatting") then
             vim.keymap.set("n", "<C-=>", function()
                 vim.lsp.buf.format({ async = true })
             end, opts)

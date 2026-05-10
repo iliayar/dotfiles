@@ -97,7 +97,7 @@ in {
         j4-dmenu-desktop
         xrandr
         waypaper
-        swww
+        awww
         grim
         slurp
         wl-clipboard
