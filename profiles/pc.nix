@@ -42,6 +42,7 @@
     nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.copilot-cli
     nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.claude-code
     nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.codex
+    nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.pi
 
     # TODO: this one too
     cfcli
@@ -335,7 +336,8 @@
         cursor.xcursor = "Bibata-Original-Classic";
 
         flameshot = {
-            enable = true;
+            # FIXME: still pretty bad
+            enable = false;
             leftmostMonitor = "DP-2";
             width = "4880";
             height = "2580";

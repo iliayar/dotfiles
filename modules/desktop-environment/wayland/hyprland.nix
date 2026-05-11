@@ -129,13 +129,8 @@ in {
         enable = cfg.flameshot.enable;
         settings = {
             General = {
-                useGrimAdapter = true;
-                disabledGrimWarning = true;
-
                 contrastOpacity = 120;
-
                 savePath = "Pictures/screenshots";
-
                 saveAfterCopy = true;
             };
         };

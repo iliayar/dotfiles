@@ -579,6 +579,12 @@ if nixcfg.lsp.enable then
             root_dir = util.root_pattern(".exp"),
             single_file_support = true,
         }))
+
+        vim.lsp.config("rlalr", vim.tbl_extend("force", lsp_default_config, {
+            cmd = { "rlalr-ls" },
+            filetypes = { "rlalr_gramma", "rlalr_lexer" },
+            single_file_support = true,
+        }))
     end
 
     if nixcfg.langCangjie.enable then

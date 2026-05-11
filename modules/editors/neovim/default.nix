@@ -81,6 +81,7 @@ let
   cfg = config.custom.editors.nvim;
 
   nvim-exp = import ./nvim-exp { inherit pkgs; };
+  nvim-rlalr = import ./nvim-rlalr { inherit pkgs; };
 
   toLuaArray = l: "{ " + (foldl (acc: e: acc + ''"${e}", '') "" l) + "}";
 
@@ -280,7 +281,7 @@ let
 
     agi = { plugins = with pkgs.vimPlugins; [ ChatGPT-nvim ]; };
 
-    exp = { autoEnable = cfg.experiments.enable; plugins = [ nvim-exp ]; };
+    exp = { autoEnable = cfg.experiments.enable; plugins = [ nvim-exp nvim-rlalr ]; };
 
     sonicpi = { plugins = [ sonic-pi-nvim-pkg ]; };
     strudel = { plugins = [ strudel-nvim-pkg ]; };
