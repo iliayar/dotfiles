@@ -37,6 +37,7 @@
     nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.copilot-cli
     nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.claude-code
     nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.codex
+    nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.pi
 
     # TODO: this one too
     cfcli
@@ -249,7 +250,7 @@
     };
     de.terms.alacritty.enable = true;
 
-    de.zathura.enable = true;
+    # de.zathura.enable = true;
 
     # de = {
     #   misc = true;

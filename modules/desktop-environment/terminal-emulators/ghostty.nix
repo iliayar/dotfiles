@@ -137,6 +137,7 @@ in
 
             "option+left=esc:b"
             "option+right=esc:f"
+            "global:option+cmd+t=toggle_quick_terminal"
           ]);
 
         };
