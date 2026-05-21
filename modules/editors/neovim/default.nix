@@ -149,6 +149,7 @@ let
         conform-nvim
         nvim-cmp
         vim-visual-multi
+        nvim-origami
 
         nvim-snippy
         cmp-snippy

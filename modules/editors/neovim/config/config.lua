@@ -26,6 +26,20 @@ vim.keymap.set("n", "<Esc>", "<Cmd>noh<CR>")
 
 vim.api.nvim_create_augroup("UserGroup", {})
 
+
+local function border(hl_name)
+    return {
+        { "┌", hl_name },
+        { "─", hl_name },
+        { "┐", hl_name },
+        { "│", hl_name },
+        { "┘", hl_name },
+        { "─", hl_name },
+        { "└", hl_name },
+        { "│", hl_name },
+    }
+end
+
 if nixcfg.codeStats.enable then
     require("codestats-nvim").setup({
         token = nixcfg.codeStats.key,
@@ -374,7 +388,12 @@ if nixcfg.codeMisc.enable then
         mapping = cmp.mapping.preset.insert({
             ["<S-Tab>"] = cmp.mapping.confirm({ select = true }),
         }),
-        window = {},
+        window = {
+            documentation = {
+                border = border("CmpDocBorder"),
+                winhighlight = "Normal:CmpDoc",
+            },
+        },
         sources = cmp.config.sources(cmp_sources),
     })
 end
@@ -460,10 +479,11 @@ if nixcfg.lsp.enable then
         vim.keymap.set("n", "gsx", picker.lsp_references, opts)
         vim.keymap.set("n", "gst", picker.lsp_type_definitions, opts)
         vim.keymap.set("n", "<Leader>fs", picker.lsp_workspace_symbols, opts)
-        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+        vim.keymap.set("n", "K", function() vim.lsp.buf.hover { border = border("HoverDocBorder") } end, opts)
         vim.keymap.set("n", "<Leader>cr", vim.lsp.buf.rename, opts)
         vim.keymap.set({ "n", "v" }, "<Leader>ca", vim.lsp.buf.code_action, opts)
-        vim.keymap.set({ "n", "i" }, "<C-k>", vim.lsp.buf.signature_help, opts)
+        vim.keymap.set({ "n", "i" }, "<C-k>",
+            function() vim.lsp.buf.signature_help { border = border("SigHelpBorder") } end, opts)
         vim.keymap.set("n", "<Leader>swa", vim.lsp.buf.add_workspace_folder, opts)
         vim.keymap.set("n", "<Leader>swr", vim.lsp.buf.remove_workspace_folder, opts)
         vim.keymap.set("n", "<Leader>swl", function()
@@ -590,6 +610,18 @@ if nixcfg.lsp.enable then
     if nixcfg.langCangjie.enable then
         vim.lsp.config("cangjie-lsp", lsp_default_config)
     end
+
+    vim.opt.foldmethod = "manual"
+    vim.opt.foldlevel = 99
+    vim.opt.foldlevelstart = 99
+    require("origami").setup {
+        autoFold = {
+            enabled = false,
+        },
+        foldKeymaps = {
+            setup = false,
+        }
+    }
 end
 
 if nixcfg.obsidian.enable then
