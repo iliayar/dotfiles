@@ -142,11 +142,11 @@
         "systems": "systems_3"
       },
       "locked": {
-        "lastModified": 1778619144,
-        "narHash": "sha256-/5l1aNhPKCBIWTKa8P0q1feMNLJ2Xlqruikx/TVw2M0=",
+        "lastModified": 1779131926,
+        "narHash": "sha256-iEKp9rkaN5+5hkp0tWnXHWU8Q1wam7nc1fALmITa5T4=",
         "owner": "Wraient",
         "repo": "curd",
-        "rev": "6a0c2b9a2667bba6e566915ffb7d016c876ff8b8",
+        "rev": "22fcf0fd569c7dfee3208b3c1398666cb3a035c5",
         "type": "github"
       },
       "original": {
