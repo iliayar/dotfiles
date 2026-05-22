@@ -109,6 +109,7 @@
       lean.enable = true;
 
       java.enable = true;
+      fsharp.enable = true;
     };
     # dev = {
     #   python.enable = true;
