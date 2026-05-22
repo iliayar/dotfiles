@@ -611,6 +611,11 @@ if nixcfg.lsp.enable then
         vim.lsp.config("cangjie-lsp", lsp_default_config)
     end
 
+    vim.lsp.config("codebook", vim.tbl_extend("force", lsp_default_config, {
+        filetypes = { "typst" },
+    }))
+    vim.lsp.enable("codebook")
+
     vim.opt.foldmethod = "manual"
     vim.opt.foldlevel = 99
     vim.opt.foldlevelstart = 99
