@@ -1,4 +1,10 @@
-{ config, pkgs, lib, themes, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  themes,
+  ...
+}:
 
 with lib;
 
@@ -42,6 +48,19 @@ in
       enable = mkOption {
         default = false;
       };
+
+      extraSettings = mkOption {
+        default = { };
+        example = {
+          extraSettings = {
+            templates = {
+              commit_trailers = ''
+                format_signed_off_by_trailer(self)
+              '';
+            };
+          };
+        };
+      };
     };
   };
 
@@ -69,7 +88,8 @@ in
 
         ignores = [
           "*.~undo-tree~"
-        ] ++ cfg.git.ignores;
+        ]
+        ++ cfg.git.ignores;
 
       };
       programs.delta.enable = true;
@@ -93,10 +113,14 @@ in
           };
 
           ui = {
-            pager = [ "less" "-RFX" ];
+            pager = [
+              "less"
+              "-RFX"
+            ];
             conflict-marker-style = "git";
           };
-        };
+        }
+        // cfg.jujutsu.extraSettings;
       };
     })
 

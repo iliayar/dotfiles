@@ -611,8 +611,10 @@ if nixcfg.lsp.enable then
         vim.lsp.config("cangjie-lsp", lsp_default_config)
     end
 
+    local codebook_filetypes = vim.lsp.config["codebook"].filetypes
+    vim.list_extend(codebook_filetypes, { "typst", "cangjie" })
     vim.lsp.config("codebook", vim.tbl_extend("force", lsp_default_config, {
-        filetypes = { "typst" },
+        filetypes = codebook_filetypes,
     }))
     vim.lsp.enable("codebook")
 
