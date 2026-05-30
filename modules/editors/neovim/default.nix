@@ -127,7 +127,7 @@ let
 
     prettyGruvbox = {
       autoEnable = cfg.pretty.theme == "gruvbox";
-      plugins = with pkgs.vimPlugins; [ gruvbox-nvim ];
+      plugins = with pkgs.vimPlugins; [ gruvbox-nvim catppuccin-nvim ];
     };
 
     prettyAlabaster = {

@@ -196,7 +196,7 @@ in
           in
           {
             my-theme = mk-theme themes.dark;
-            my-theme-light = mk-theme themes.light;
+            my-theme-light = mk-theme themes.catppuccin-light;
           };
       };
   };

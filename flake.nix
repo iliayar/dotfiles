@@ -125,6 +125,11 @@
       url = "git+https://gitcode.com/iliayar/cangjie.nvim.git";
     };
 
+    rlalr-nvim = {
+        url = "path:/Users/iliayar/Repos/mse-fl/tree-sitter-rlalr";
+        # url = "git+https://gitlab.com/iliayar/mse-fl.git";
+    };
+
     nix-ai-tools.url = "github:numtide/llm-agents.nix";
 
     vicinae = {

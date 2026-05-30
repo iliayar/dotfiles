@@ -1,7 +1,7 @@
 { mylib, ... }:
 with builtins;
 let
-  light = rec {
+  gruvbox-light = rec {
     cursor = "#f92672";
     cursorText = "#f9f5d7";
     background = "#fbf1c7";
@@ -22,6 +22,48 @@ let
     brightMagenta = "#8f3f71";
     brightCyan = "#427b58";
     brightWhite = "#3c3836";
+
+    color0 = black;
+    color1 = red;
+    color2 = green;
+    color3 = yellow;
+    color4 = blue;
+    color5 = magenta;
+    color6 = cyan;
+    color7 = white;
+    color8 = brightBlack;
+    color9 = brightRed;
+    color10 = brightGreen;
+    color11 = brightYellow;
+    color12 = brightBlue;
+    color13 = brightMagenta;
+    color14 = brightCyan;
+    color15 = brightWhite;
+
+    font = "FiraCode Nerd Font Mono";
+  };
+
+  catppuccin-light = rec {
+    cursor = "#dc8a78";
+    cursorText = "#eff1f5";
+    background = "#eff1f5";
+    foreground = "#4c4f69";
+    black = "#5c5f77";
+    red = "#d20f39";
+    yellow = "#df8e1d";
+    green = "#40a02b";
+    blue = "#1e66f5";
+    magenta = "#ea76cb";
+    cyan = "#179299";
+    white = "#acb0be";
+    brightBlack = "#6c6f85";
+    brightRed = "#d20f39";
+    brightYellow = "#df8e1d";
+    brightGreen = "#40a02b";
+    brightBlue = "#1e66f5";
+    brightMagenta = "#ea76cb";
+    brightCyan = "#179299";
+    brightWhite = "#bcc0cc";
 
     color0 = black;
     color1 = red;
@@ -106,5 +148,6 @@ in
 withAllMaps dark
 // {
   dark = withAllMaps dark;
-  light = withAllMaps light;
+  gruvbox-light = withAllMaps gruvbox-light;
+  catppuccin-light = withAllMaps catppuccin-light;
 }
