@@ -1,4 +1,12 @@
-{ config, pkgs, lib, themes, ghostty-newest, system, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  themes,
+  ghostty-newest,
+  system,
+  ...
+}:
 
 with lib;
 
@@ -64,22 +72,32 @@ in
           if pkgs.stdenv.isDarwin then
             pkgs.writeShellScriptBin "ghostty-fake" ''
               echo "It's fake ghostty"
-            '' else pkgs.ghostty;
+            ''
+          else
+            pkgs.ghostty;
 
         settings = {
-          theme = "my-theme";
+          theme = "dark:my-theme,light:my-theme-light";
+          window-theme = "dark";
           background-opacity = 0.85;
           font-size = 12;
           font-family = "FiraCode Nerd Font Mono";
 
-        } // (if pkgs.stdenv.isLinux then {
-          window-decoration = false;
-          gtk-tabs-location = "bottom";
-          gtk-wide-tabs = false;
-          gtk-custom-css = "${styles}";
-        } else {
-          macos-option-as-alt = "left";
-        }) // {
+        }
+        // (
+          if pkgs.stdenv.isLinux then
+            {
+              window-decoration = false;
+              gtk-tabs-location = "bottom";
+              gtk-wide-tabs = false;
+              gtk-custom-css = "${styles}";
+            }
+          else
+            {
+              macos-option-as-alt = "left";
+            }
+        )
+        // {
           cursor-style = "block";
           cursor-style-blink = false;
           shell-integration-features = "no-cursor";
@@ -122,53 +140,64 @@ in
             "${mod}+tab=toggle_tab_overview"
 
             "${mod}+slash=start_search"
-          ] ++ (if pkgs.stdenv.isLinux then [
-            "ctrl+shift+v=paste_from_clipboard"
-            "ctrl+shift+c=copy_to_clipboard"
-            "ctrl+shift+plus=increase_font_size:2"
-            "ctrl+minus=decrease_font_size:2"
-            "ctrl+0=reset_font_size"
-          ] else [
-            "cmd+v=paste_from_clipboard"
-            "cmd+c=copy_to_clipboard"
-            "cmd+plus=increase_font_size:2"
-            "cmd+minus=decrease_font_size:2"
-            "cmd+0=reset_font_size"
+          ]
+          ++ (
+            if pkgs.stdenv.isLinux then
+              [
+                "ctrl+shift+v=paste_from_clipboard"
+                "ctrl+shift+c=copy_to_clipboard"
+                "ctrl+shift+plus=increase_font_size:2"
+                "ctrl+minus=decrease_font_size:2"
+                "ctrl+0=reset_font_size"
+              ]
+            else
+              [
+                "cmd+v=paste_from_clipboard"
+                "cmd+c=copy_to_clipboard"
+                "cmd+plus=increase_font_size:2"
+                "cmd+minus=decrease_font_size:2"
+                "cmd+0=reset_font_size"
 
-            "option+left=esc:b"
-            "option+right=esc:f"
-            "global:option+cmd+t=toggle_quick_terminal"
-          ]);
+                "option+left=esc:b"
+                "option+right=esc:f"
+                "global:option+cmd+t=toggle_quick_terminal"
+              ]
+          );
 
         };
 
-        themes = {
-          my-theme = {
-            background = "${themes.hex.background}";
-            selection-background = "${themes.hex.foreground}";
-            foreground = "${themes.hex.foreground}";
-            selection-foreground = "${themes.hex.background}";
-            cursor-color = "${themes.hex.cursor}";
-            palette = [
-              "0=${themes.color0}"
-              "1=${themes.color1}"
-              "2=${themes.color2}"
-              "3=${themes.color3}"
-              "4=${themes.color4}"
-              "5=${themes.color5}"
-              "6=${themes.color6}"
-              "7=${themes.color7}"
-              "8=${themes.color8}"
-              "9=${themes.color9}"
-              "10=${themes.color10}"
-              "11=${themes.color11}"
-              "12=${themes.color12}"
-              "13=${themes.color13}"
-              "14=${themes.color14}"
-              "15=${themes.color15}"
-            ];
+        themes =
+          let
+            mk-theme = theme: {
+              background = "${theme.hex.background}";
+              selection-background = "${themes.hex.foreground}";
+              foreground = "${theme.hex.foreground}";
+              selection-foreground = "${theme.hex.background}";
+              cursor-color = "${theme.hex.cursor}";
+              palette = [
+                "0=${theme.color0}"
+                "1=${theme.color1}"
+                "2=${theme.color2}"
+                "3=${theme.color3}"
+                "4=${theme.color4}"
+                "5=${theme.color5}"
+                "6=${theme.color6}"
+                "7=${theme.color7}"
+                "8=${theme.color8}"
+                "9=${theme.color9}"
+                "10=${theme.color10}"
+                "11=${theme.color11}"
+                "12=${theme.color12}"
+                "13=${theme.color13}"
+                "14=${theme.color14}"
+                "15=${theme.color15}"
+              ];
+            };
+          in
+          {
+            my-theme = mk-theme themes.dark;
+            my-theme-light = mk-theme themes.light;
           };
-        };
       };
   };
 }
