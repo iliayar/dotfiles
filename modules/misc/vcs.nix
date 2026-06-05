@@ -66,6 +66,7 @@ in
 
   config = mkMerge [
     (mkIf (cfg.enable && cfg.git.enable) {
+      home.packages = with pkgs; [ git-filter-repo ];
       programs.git = {
         enable = true;
         lfs.enable = true;

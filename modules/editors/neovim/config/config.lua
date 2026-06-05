@@ -264,6 +264,7 @@ end
 
 if nixcfg.exp.enable then
     require("nvim-exp").setup()
+    require("nvim-rlalr").setup()
 end
 
 if nixcfg.langCangjie.enable then
@@ -600,11 +601,7 @@ if nixcfg.lsp.enable then
             single_file_support = true,
         }))
 
-        vim.lsp.config("rlalr", vim.tbl_extend("force", lsp_default_config, {
-            cmd = { "rlalr-ls" },
-            filetypes = { "rlalr_gramma", "rlalr_lexer" },
-            single_file_support = true,
-        }))
+        vim.lsp.config("rlalr", lsp_default_config)
     end
 
     if nixcfg.langCangjie.enable then

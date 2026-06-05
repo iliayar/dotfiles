@@ -1,14 +1,16 @@
-{ config
-, lib
-, pkgs
-, codestats-nvim
-, secrets
-, remote-nvim
-, coq-lsp-nvim
-, typst-preview-nvim
-, system
-, cangjie-nvim
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  codestats-nvim,
+  secrets,
+  remote-nvim,
+  coq-lsp-nvim,
+  typst-preview-nvim,
+  system,
+  cangjie-nvim,
+  nvim-rlalr,
+  ...
 }:
 
 with lib;
@@ -81,7 +83,6 @@ let
   cfg = config.custom.editors.nvim;
 
   nvim-exp = import ./nvim-exp { inherit pkgs; };
-  nvim-rlalr = import ./nvim-rlalr { inherit pkgs; };
 
   toLuaArray = l: "{ " + (foldl (acc: e: acc + ''"${e}", '') "" l) + "}";
 
@@ -109,15 +110,25 @@ let
       ];
 
       config = {
-        programs.neovim = { extraPackages = with pkgs; [ ripgrep ]; };
+        programs.neovim = {
+          extraPackages = with pkgs; [ ripgrep ];
+        };
       };
     };
 
-    remote = { plugins = with pkgs.vimPlugins; [ nui-nvim remote-nvim-pkg ]; };
+    remote = {
+      plugins = with pkgs.vimPlugins; [
+        nui-nvim
+        remote-nvim-pkg
+      ];
+    };
 
     statusBar = {
       autoEnable = cfg.pretty.status-bar.enable;
-      plugins = with pkgs.vimPlugins; [ lualine-nvim lualine-lsp-progress ];
+      plugins = with pkgs.vimPlugins; [
+        lualine-nvim
+        lualine-lsp-progress
+      ];
     };
 
     todoComments = {
@@ -127,12 +138,15 @@ let
 
     prettyGruvbox = {
       autoEnable = cfg.pretty.theme == "gruvbox";
-      plugins = with pkgs.vimPlugins; [ gruvbox-nvim catppuccin-nvim ];
+      plugins = with pkgs.vimPlugins; [
+        gruvbox-nvim
+        catppuccin-nvim
+      ];
     };
 
     prettyAlabaster = {
       autoEnable = cfg.pretty.theme == "alabaster";
-      plugins = with pkgs.vimPlugins; [ 
+      plugins = with pkgs.vimPlugins; [
         alabaster-nvim
       ];
     };
@@ -140,11 +154,17 @@ let
     codeMisc = {
       autoEnable = cfg.misc.code.enable;
       plugins = with pkgs.vimPlugins; [
-        (nvim-treesitter.withPlugins (ps:
+        (nvim-treesitter.withPlugins (
+          ps:
           with ps;
-          nvim-treesitter.allGrammars ++ cfg.misc.code.treeSitterExtraGrammars ++ [
+          nvim-treesitter.allGrammars
+          ++ cfg.misc.code.treeSitterExtraGrammars
+          ++ [
             cangjie-nvim.packages.${system}.tree-sitter-cangjie
-          ]))
+            nvim-rlalr.packages.${system}.tree-sitter-rlalr-gramma
+            nvim-rlalr.packages.${system}.tree-sitter-rlalr-lexer
+          ]
+        ))
         nvim-treesitter-context
         conform-nvim
         nvim-cmp
@@ -157,32 +177,35 @@ let
         nvim-lint
       ];
       config = {
-        programs.neovim = { extraPackages = with pkgs; [ tree-sitter ]; };
+        programs.neovim = {
+          extraPackages = with pkgs; [ tree-sitter ];
+        };
       };
     };
 
-    linux = { autoEnable = pkgs.stdenv.isLinux; };
+    linux = {
+      autoEnable = pkgs.stdenv.isLinux;
+    };
 
     codeStats = {
-      plugins = with pkgs.vimPlugins;
-        [
-          (pkgs.vimUtils.buildVimPlugin {
-            name = "codestats-nvim";
-            src = codestats-nvim;
-            doCheck = false;
-          })
-        ];
+      plugins = with pkgs.vimPlugins; [
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "codestats-nvim";
+          src = codestats-nvim;
+          doCheck = false;
+        })
+      ];
       extraParameters = {
-        key = ''
-          "${
-            secrets.code-stats-api-key.${config.custom.settings.code-stats-machine}
-          }"; '';
+        key = ''"${secrets.code-stats-api-key.${config.custom.settings.code-stats-machine}}"; '';
       };
     };
 
     lsp = {
       autoEnable = cfg.code-assist.enable;
-      plugins = with pkgs.vimPlugins; [ nvim-lspconfig cmp-nvim-lsp ];
+      plugins = with pkgs.vimPlugins; [
+        nvim-lspconfig
+        cmp-nvim-lsp
+      ];
     };
 
     picker = {
@@ -190,38 +213,72 @@ let
       extraParameters = {
         t = ''"${cfg.picker}"'';
       };
-      plugins = with pkgs.vimPlugins;
-        if cfg.picker == "telescope" then [
-          telescope-nvim
-          telescope-fzf-native-nvim
-          telescope-file-browser-nvim
-          telescope-ui-select-nvim
-          telescope-lines-nvim-pkg
-          telescope-live-grep-args-nvim
-        ] else if cfg.picker == "snacks" then [
-          snacks-nvim
-          # Snacks explorer sucks
-          yazi-nvim
-        ] else [ ];
+      plugins =
+        with pkgs.vimPlugins;
+        if cfg.picker == "telescope" then
+          [
+            telescope-nvim
+            telescope-fzf-native-nvim
+            telescope-file-browser-nvim
+            telescope-ui-select-nvim
+            telescope-lines-nvim-pkg
+            telescope-live-grep-args-nvim
+          ]
+        else if cfg.picker == "snacks" then
+          [
+            snacks-nvim
+            # Snacks explorer sucks
+            yazi-nvim
+          ]
+        else
+          [ ];
     };
 
     debugger = {
       autoEnable = cfg.misc.debugger.enable;
-      plugins = with pkgs.vimPlugins; [ nvim-dap nvim-dap-virtual-text nvim-dap-view ];
+      plugins = with pkgs.vimPlugins; [
+        nvim-dap
+        nvim-dap-virtual-text
+        nvim-dap-view
+      ];
     };
 
-    langMisc = { autoEnable = builtins.elem "misc" cfg.langs.enable; };
-    langNix = { autoEnable = builtins.elem "nix" cfg.langs.enable; };
-    langPython = { autoEnable = builtins.elem "python" cfg.langs.enable; };
-    langRust = { autoEnable = builtins.elem "rust" cfg.langs.enable; };
-    langGo = { autoEnable = builtins.elem "go" cfg.langs.enable; };
-    langLua = { autoEnable = builtins.elem "lua" cfg.langs.enable; };
-    langOcaml = { autoEnable = builtins.elem "ocaml" cfg.langs.enable; };
-    langSql = { autoEnable = builtins.elem "sql" cfg.langs.enable; };
-    langLatex = { autoEnable = builtins.elem "latex" cfg.langs.enable; };
-    langProtobuf = { autoEnable = builtins.elem "protobuf" cfg.langs.enable; };
-    langTypescript = { autoEnable = builtins.elem "typescript" cfg.langs.enable; };
-    langZig = { autoEnable = builtins.elem "zig" cfg.langs.enable; };
+    langMisc = {
+      autoEnable = builtins.elem "misc" cfg.langs.enable;
+    };
+    langNix = {
+      autoEnable = builtins.elem "nix" cfg.langs.enable;
+    };
+    langPython = {
+      autoEnable = builtins.elem "python" cfg.langs.enable;
+    };
+    langRust = {
+      autoEnable = builtins.elem "rust" cfg.langs.enable;
+    };
+    langGo = {
+      autoEnable = builtins.elem "go" cfg.langs.enable;
+    };
+    langLua = {
+      autoEnable = builtins.elem "lua" cfg.langs.enable;
+    };
+    langOcaml = {
+      autoEnable = builtins.elem "ocaml" cfg.langs.enable;
+    };
+    langSql = {
+      autoEnable = builtins.elem "sql" cfg.langs.enable;
+    };
+    langLatex = {
+      autoEnable = builtins.elem "latex" cfg.langs.enable;
+    };
+    langProtobuf = {
+      autoEnable = builtins.elem "protobuf" cfg.langs.enable;
+    };
+    langTypescript = {
+      autoEnable = builtins.elem "typescript" cfg.langs.enable;
+    };
+    langZig = {
+      autoEnable = builtins.elem "zig" cfg.langs.enable;
+    };
     langCpp = {
       autoEnable = builtins.elem "cpp" cfg.langs.enable;
       extraParameters = {
@@ -231,24 +288,36 @@ let
     };
     langTypst = {
       autoEnable = builtins.elem "typst" cfg.langs.enable;
-      plugins = with pkgs.vimPlugins; [ typst-vim typst-preview-nvim-pkg ];
-      extraParameters = { } // (
-        let remote = cfg.langs.typst.remote;
-        in if remote != null then {
-          remote = "true";
-          host = ''"${remote.host}"'';
-          dataPlanePort = toString remote.data-plane-port;
-          controlPlanePort = toString remote.control-plane-port;
-        } else {
-          remote = "false";
-        }
-      );
+      plugins = with pkgs.vimPlugins; [
+        typst-vim
+        typst-preview-nvim-pkg
+      ];
+      extraParameters =
+        { }
+        // (
+          let
+            remote = cfg.langs.typst.remote;
+          in
+          if remote != null then
+            {
+              remote = "true";
+              host = ''"${remote.host}"'';
+              dataPlanePort = toString remote.data-plane-port;
+              controlPlanePort = toString remote.control-plane-port;
+            }
+          else
+            {
+              remote = "false";
+            }
+        );
     };
     langPlantuml = {
       autoEnable = builtins.elem "plantuml" cfg.langs.enable;
       plugins = with pkgs.vimPlugins; [ plantuml-syntax ];
     };
-    langHaskell = { autoEnable = builtins.elem "haskell" cfg.langs.enable; };
+    langHaskell = {
+      autoEnable = builtins.elem "haskell" cfg.langs.enable;
+    };
 
     langLean = {
       autoEnable = builtins.elem "lean" cfg.langs.enable;
@@ -256,14 +325,15 @@ let
     };
     langCoq = {
       autoEnable = builtins.elem "coq" cfg.langs.enable;
-      plugins = with pkgs.vimPlugins;
-        [
-          Coqtail
-          # NOTE: Pretty bad
-          # coq-lsp-nvim-pkg 
-        ];
+      plugins = with pkgs.vimPlugins; [
+        Coqtail
+        # NOTE: Pretty bad
+        # coq-lsp-nvim-pkg
+      ];
     };
-    langFSharp = { autoEnable = builtins.elem "fsharp" cfg.langs.enable; };
+    langFSharp = {
+      autoEnable = builtins.elem "fsharp" cfg.langs.enable;
+    };
     langCangjie = {
       autoEnable = builtins.elem "cangjie" cfg.langs.enable;
       plugins = [ cangjie-nvim.packages.${system}.default ];
@@ -275,17 +345,33 @@ let
     obsidian = {
       autoEnable = cfg.obsidian.enable;
       plugins = with pkgs.vimPlugins; [ obsidian-nvim ];
-      extraParameters = { path = ''"${cfg.obsidian.path}"''; };
+      extraParameters = {
+        path = ''"${cfg.obsidian.path}"'';
+      };
     };
 
-    orgmode = { plugins = with pkgs.vimPlugins; [ orgmode ]; };
+    orgmode = {
+      plugins = with pkgs.vimPlugins; [ orgmode ];
+    };
 
-    agi = { plugins = with pkgs.vimPlugins; [ ChatGPT-nvim ]; };
+    agi = {
+      plugins = with pkgs.vimPlugins; [ ChatGPT-nvim ];
+    };
 
-    exp = { autoEnable = cfg.experiments.enable; plugins = [ nvim-exp nvim-rlalr ]; };
+    exp = {
+      autoEnable = cfg.experiments.enable;
+      plugins = [
+        nvim-exp
+        nvim-rlalr.packages.${system}.nvim-rlalr
+      ];
+    };
 
-    sonicpi = { plugins = [ sonic-pi-nvim-pkg ]; };
-    strudel = { plugins = [ strudel-nvim-pkg ]; };
+    sonicpi = {
+      plugins = [ sonic-pi-nvim-pkg ];
+    };
+    strudel = {
+      plugins = [ strudel-nvim-pkg ];
+    };
   };
 in
 {
@@ -295,13 +381,13 @@ in
       extraPlugins = mkOption { default = [ ]; };
       extraConfig = mkOption { default = ""; };
 
-      bundles = foldl
-        (acc: name:
-          acc // {
-            "${name}".enable = mkOption { default = false; };
-          })
-        { }
-        (attrNames bundles);
+      bundles = foldl (
+        acc: name:
+        acc
+        // {
+          "${name}".enable = mkOption { default = false; };
+        }
+      ) { } (attrNames bundles);
 
       enable = mkOption { default = false; };
 
@@ -318,41 +404,49 @@ in
 
       picker = mkOption {
         default = "snacks";
-        type = types.enum [ "snacks" "telescope" ];
+        type = types.enum [
+          "snacks"
+          "telescope"
+        ];
       };
 
       langs = {
         enable = mkOption {
           default = [ "misc" ];
-          type = types.listOf (types.enum [
-            "misc"
-            "nix"
-            "python"
-            "rust"
-            "go"
-            "lua"
-            "cpp"
-            "ocaml"
-            "sql"
-            "latex"
-            "protobuf"
-            "typst"
-            "plantuml"
-            "haskell"
-            "lean"
-            "coq"
-            "typescript"
-            "zig"
-            "fsharp"
-            "cangjie"
-            "java"
-          ]);
+          type = types.listOf (
+            types.enum [
+              "misc"
+              "nix"
+              "python"
+              "rust"
+              "go"
+              "lua"
+              "cpp"
+              "ocaml"
+              "sql"
+              "latex"
+              "protobuf"
+              "typst"
+              "plantuml"
+              "haskell"
+              "lean"
+              "coq"
+              "typescript"
+              "zig"
+              "fsharp"
+              "cangjie"
+              "java"
+            ]
+          );
         };
 
         cpp = {
           lsp = mkOption {
             default = "clangd";
-            type = types.enum [ "clangd" "ccls" ];
+            type = types.enum [
+              "clangd"
+              "ccls"
+            ];
           };
           clangdCommand = mkOption { default = [ "clangd" ]; };
         };
@@ -360,23 +454,31 @@ in
         typst = {
           remote = mkOption {
             default = null;
-            type = types.nullOr (types.submodule {
-              options = {
-                host = mkOption { type = types.str; };
-                control-plane-port = mkOption { type = types.int; };
-                data-plane-port = mkOption { type = types.int; };
-              };
-            });
+            type = types.nullOr (
+              types.submodule {
+                options = {
+                  host = mkOption { type = types.str; };
+                  control-plane-port = mkOption { type = types.int; };
+                  data-plane-port = mkOption { type = types.int; };
+                };
+              }
+            );
           };
         };
       };
 
-      code-assist = { enable = mkOption { default = false; }; };
+      code-assist = {
+        enable = mkOption { default = false; };
+      };
 
       pretty = {
         theme = mkOption {
           default = "gruvbox";
-          type = types.enum [ "gruvbox" "monokai" "alabaster" ];
+          type = types.enum [
+            "gruvbox"
+            "monokai"
+            "alabaster"
+          ];
         };
 
         status-bar.enable = mkOption { default = false; };
@@ -408,14 +510,24 @@ in
       '';
     }
 
-    (mkMerge (map
-      (name:
-        let bundle = { autoEnable = false; } // bundles.${name};
-        in { custom.editors.nvim.bundles.${name}.enable = bundle.autoEnable; })
-      (attrNames bundles)))
+    (mkMerge (
+      map (
+        name:
+        let
+          bundle = {
+            autoEnable = false;
+          }
+          // bundles.${name};
+        in
+        {
+          custom.editors.nvim.bundles.${name}.enable = bundle.autoEnable;
+        }
+      ) (attrNames bundles)
+    ))
 
-    (mkMerge (map
-      (name:
+    (mkMerge (
+      map (
+        name:
         let
           bundleDefault = {
             autoEnable = false;
@@ -426,12 +538,13 @@ in
           bundle = bundleDefault // bundles.${name};
           enabled = cfg.bundles.${name}.enable;
           val = if enabled then "true" else "false";
-          extraParametersConfig = foldl
-            (acc: param:
-              acc + ''
-                nixcfg.${name}.${param} = ${bundle.extraParameters.${param}}
-              '') ""
-            (attrNames bundle.extraParameters);
+          extraParametersConfig = foldl (
+            acc: param:
+            acc
+            + ''
+              nixcfg.${name}.${param} = ${bundle.extraParameters.${param}}
+            ''
+          ) "" (attrNames bundle.extraParameters);
         in
         mkMerge [
           (mkIf enabled {
@@ -444,10 +557,15 @@ in
               }
             '';
           })
-          (mkIf enabled { programs.neovim = { plugins = bundle.plugins; }; })
+          (mkIf enabled {
+            programs.neovim = {
+              plugins = bundle.plugins;
+            };
+          })
           (mkIf enabled bundle.config)
-        ])
-      (attrNames bundles)))
+        ]
+      ) (attrNames bundles)
+    ))
 
     {
       xdg.configFile."nvim/colors" = {
@@ -457,7 +575,9 @@ in
 
       home.packages = [ pkgs.xsel ];
 
-      home.sessionVariables = { EDITOR = "vim"; };
+      home.sessionVariables = {
+        EDITOR = "vim";
+      };
 
       xdg.configFile."nvim/lua/config" = {
         source = ./config;
