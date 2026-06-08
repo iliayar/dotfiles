@@ -1,10 +1,14 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
-  imports =
-    [
-      ./hardware-configuration.nix
-    ];
+  imports = [
+    ./hardware-configuration.nix
+  ];
 
   boot.extraModulePackages = [
     # pkgs.systec-can
@@ -12,7 +16,6 @@
   hardware.firmware = [
     # pkgs.systec-can
   ];
-
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -48,11 +51,17 @@
 
   networking = {
     hostName = "NixPC";
-    networkmanager = { enable = true; };
-    nameservers = [ "1.1.1.1" "8.8.8.8" "8.8.4.4" ];
+    networkmanager = {
+      enable = true;
+    };
+    nameservers = [
+      "1.1.1.1"
+      "8.8.8.8"
+      "8.8.4.4"
+    ];
 
     firewall = {
-        enable = false;
+      enable = false;
     };
   };
 
@@ -65,7 +74,10 @@
 
   i18n = {
     defaultLocale = "en_US.UTF-8";
-    supportedLocales = [ "en_US.UTF-8/UTF-8" "ru_RU.UTF-8/UTF-8" ];
+    supportedLocales = [
+      "en_US.UTF-8/UTF-8"
+      "ru_RU.UTF-8/UTF-8"
+    ];
   };
 
   security.polkit.enable = true;
@@ -80,7 +92,17 @@
   users.users.iliayar = {
     isNormalUser = true;
     home = "/home/iliayar";
-    extraGroups = [ "wheel" "networkmanager" "video" "libvirtd" "wireshark" "dialout" "docker" "audio" "adbusers" ];
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+      "video"
+      "libvirtd"
+      "wireshark"
+      "dialout"
+      "docker"
+      "audio"
+      "adbusers"
+    ];
     shell = pkgs.zsh;
   };
   programs.zsh.enable = true;
@@ -112,9 +134,9 @@
   };
 
   hardware = {
-    graphics = { 
-        enable = true;
-        extraPackages = with pkgs; [ rocmPackages.clr.icd ];
+    graphics = {
+      enable = true;
+      extraPackages = with pkgs; [ rocmPackages.clr.icd ];
     };
     keyboard.qmk.enable = true;
   };
@@ -163,7 +185,7 @@
   virtualisation.docker = {
     enable = true;
     extraPackages = with pkgs; [
-        docker-compose
+      docker-compose
     ];
   };
 
@@ -192,7 +214,7 @@
 
   services.avahi = {
     enable = true;
-    nssmdns4 = true;  # printing
+    nssmdns4 = true; # printing
     publish = {
       enable = true;
       addresses = true;

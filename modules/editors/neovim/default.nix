@@ -80,6 +80,17 @@ let
     };
   };
 
+  direnv-nvim-pkg = pkgs.vimUtils.buildVimPlugin {
+    pname = "direnv.nvim";
+    version = "2026-06-02";
+    src = pkgs.fetchFromGitHub {
+      owner = "NotAShelf";
+      repo = "direnv.nvim";
+      rev = "8962b7fe3f6267db9dd8b2a49f2c6175b7980210";
+      hash = "sha256-S2AuTMOCiglrvB1mJWEDlSke130GWpnDvMuIapjMyFk=";
+    };
+  };
+
   cfg = config.custom.editors.nvim;
 
   nvim-exp = import ./nvim-exp { inherit pkgs; };
@@ -104,6 +115,7 @@ let
         trouble-nvim
 
         neogit
+        direnv-nvim-pkg
 
         vim-just
         vim-llvm

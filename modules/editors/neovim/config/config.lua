@@ -58,6 +58,7 @@ if nixcfg.misc.enable then
             extra = false,
         },
     })
+    require("direnv").setup({})
 
     local commentApi = require("Comment.api")
 
@@ -512,6 +513,13 @@ if nixcfg.lsp.enable then
             return result
         end
     end)(vim.lsp.handlers['client/registerCapability'])
+
+    -- FIXME: Burn it with fire
+    vim.lsp.config("tvm_ffi_navigator", { filetypes = {} })
+    vim.lsp.config("angularls", { filetypes = {} })
+    vim.lsp.config("tsgo", { filetypes = {} })
+    vim.lsp.config("glint", { filetypes = {} })
+    vim.lsp.config("gitlab_duo", { filetypes = {} })
 
     if nixcfg.langRust.enable then
         vim.lsp.config("rust_analyzer", lsp_default_config)
