@@ -121,7 +121,7 @@
     };
 
     cangjie-nvim = {
-      # url = "path:/home/iliayar/Repos/Cangjie/cangjie.nvim";
+      # url = "path:/home/iliayar/Repos/cangjie.nvim";
       url = "git+https://gitcode.com/iliayar/cangjie.nvim.git";
     };
 

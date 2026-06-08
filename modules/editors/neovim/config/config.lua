@@ -613,7 +613,7 @@ if nixcfg.lsp.enable then
     end
 
     if nixcfg.langCangjie.enable then
-        vim.lsp.config("cangjie-lsp", lsp_default_config)
+        vim.lsp.config("cangjie", lsp_default_config)
     end
 
     local codebook_filetypes = vim.lsp.config["codebook"].filetypes
