@@ -20,7 +20,7 @@ in
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
       fsautocomplete
-      dotnet-sdk_9
+      dotnet-sdk_10
     ];
   };
 }

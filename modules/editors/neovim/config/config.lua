@@ -520,6 +520,7 @@ if nixcfg.lsp.enable then
     vim.lsp.config("tsgo", { filetypes = {} })
     vim.lsp.config("glint", { filetypes = {} })
     vim.lsp.config("gitlab_duo", { filetypes = {} })
+    vim.lsp.config("sourcekit", { filetypes = {} })
 
     if nixcfg.langRust.enable then
         vim.lsp.config("rust_analyzer", lsp_default_config)
@@ -567,10 +568,12 @@ if nixcfg.lsp.enable then
             end
 
             vim.lsp.config("clangd", cfg)
+            vim.lsp.config("ccls", { filetypes = {} })
         end
 
         if nixcfg.langCpp.lsp == "ccls" then
             vim.lsp.config("ccls", cfg)
+            vim.lsp.config("clangd", { filetypes = {} })
         end
     end
 

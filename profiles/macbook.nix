@@ -94,6 +94,7 @@
       typst.enable = true;
 
       lean.enable = true;
+      fsharp.enable = true;
     };
     # dev = {
     #   python.enable = true;
@@ -201,7 +202,7 @@
         "haskell"
         "lean"
         # "zig"
-        # "fsharp"
+        "fsharp"
         "cangjie"
         "java"
       ];
