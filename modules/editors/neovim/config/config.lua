@@ -207,6 +207,13 @@ if nixcfg.misc.enable then
                 multi = false,
                 finder = "buffers",
                 current = false,
+                win = {
+                    input = {
+                        keys = {
+                            ["<C-d>"] = { "bufdelete", mode = { "n", "i" }},
+                        }
+                    }
+                }
             })
         end, {})
     end
