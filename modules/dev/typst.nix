@@ -21,6 +21,7 @@ in
         typstyle
         typst-live
         tinymist
+        plantuml-c4
     ] ++ (if pkgs.stdenv.isLinux then [
         polylux2pdfpc
         pdfpc
