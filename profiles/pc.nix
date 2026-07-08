@@ -264,6 +264,7 @@
       git = {
         enable = true;
         gpg-key = "0x3FE87CB13CB3AC4E";
+        save-creds = true;
       };
 
       jujutsu.enable = true;
