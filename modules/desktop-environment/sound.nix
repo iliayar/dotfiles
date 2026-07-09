@@ -18,7 +18,7 @@ in {
 
   config = mkMerge [
     (mkIf cfg.audio-utils.enable {
-      home.packages = with pkgs; [ pulseaudio pulsemixer paprefs ];
+      home.packages = with pkgs; [ pulseaudio pulsemixer paprefs wiremix ];
     })
     (mkIf (cfg.audio-utils.enable && cfg.audio-utils.withWireplumber) {
       home.packages = with pkgs; [ wireplumber ];

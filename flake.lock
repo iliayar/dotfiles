@@ -102,17 +102,17 @@
     "codestats-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1776090390,
-        "narHash": "sha256-CVM2rDVDLfSaWX3TrWK4EAFgaUK+AAX19jYZXhfKYVQ=",
-        "owner": "YannickFricke",
-        "repo": "codestats.nvim",
-        "rev": "076b101e9e1b97007e3a29dfd03d2148883b024d",
-        "type": "github"
+        "lastModified": 1783615698,
+        "narHash": "sha256-426BBVZBRaSUP+1eZfJiEu4mZZDJD2sWjUAS2l83EIA=",
+        "ref": "refs/heads/master",
+        "rev": "a82ea93f6ce60c9242be5a60b5dcb162743b903c",
+        "revCount": 18,
+        "type": "git",
+        "url": "https://git.sr.ht/~iliayar/codestats.nvim"
       },
       "original": {
-        "owner": "YannickFricke",
-        "repo": "codestats.nvim",
-        "type": "github"
+        "type": "git",
+        "url": "https://git.sr.ht/~iliayar/codestats.nvim"
       }
     },
     "coq-lsp-nvim": {
@@ -139,17 +139,17 @@
         "systems": "systems_4"
       },
       "locked": {
-        "lastModified": 1786005509,
-        "narHash": "sha256-6dupLSwxXt+40HypOe3vb/kSV/WlQuXLHvudsETCMic=",
-        "owner": "Wraient",
-        "repo": "curd",
-        "rev": "b859cc34cf0321c9f6e731dbe5b56aa76bf6004b",
-        "type": "github"
+        "lastModified": 1787440161,
+        "narHash": "sha256-QtfqrahS7lDGdLaTPI/7B14tmfaeeiXHsLLZURSlzrA=",
+        "ref": "refs/heads/main",
+        "rev": "d5d0ccedac3e9338286339265e5821cbb8388f80",
+        "revCount": 583,
+        "type": "git",
+        "url": "https://git.sr.ht/~iliayar/curd"
       },
       "original": {
-        "owner": "Wraient",
-        "repo": "curd",
-        "type": "github"
+        "type": "git",
+        "url": "https://git.sr.ht/~iliayar/curd"
       }
     },
     "denv": {

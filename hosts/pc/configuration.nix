@@ -87,6 +87,17 @@
     enable = true;
     pulse.enable = true;
     wireplumber.enable = true;
+    jack.enable = true;
+    extraConfig = {
+      pipewire."92-low-latency" = {
+        "context.properties" = {
+          "default.clock.rate" = 48000;
+          "default.clock.quantum" = 32;
+          "default.clock.min-quantum" = 32;
+          "default.clock.max-quantum" = 32;
+        };
+      };
+    };
   };
 
   users.users.iliayar = {
@@ -102,6 +113,7 @@
       "docker"
       "audio"
       "adbusers"
+      "jackaudio"
     ];
     shell = pkgs.zsh;
   };
@@ -121,6 +133,8 @@
     # GPU stuff
     clinfo
     android-tools
+
+    bluez
   ];
 
   nix = {

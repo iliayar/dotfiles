@@ -15,7 +15,7 @@
     };
 
     codestats-nvim = {
-      url = "github:YannickFricke/codestats.nvim";
+      url = "git+https://git.sr.ht/~iliayar/codestats.nvim";
       flake = false;
     };
 
@@ -149,7 +149,8 @@
     };
 
     curd = {
-        url = "github:Wraient/curd";
+        # url = "github:Wraient/curd";
+        url = "git+https://git.sr.ht/~iliayar/curd";
         inputs.nixpkgs.follows = "nixpkgs";
     };
   };
