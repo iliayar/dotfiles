@@ -125,6 +125,11 @@
       url = "git+https://gitcode.com/iliayar/cangjie.nvim.git";
     };
 
+    cjexplore-nvim = {
+      # url = "path:/home/iliayar/Repos/cjexplore.nvim";
+      url = "git+https://gitcode.com/iliayar/cangjie.nvim.git";
+    };
+
     nvim-rlalr = {
         # url = "path:/Users/iliayar/Repos/mse-fl/nvim";
         url = "git+https://git.sr.ht/~iliayar/nvim-rlalr";

@@ -10,6 +10,7 @@
   system,
   cangjie-nvim,
   nvim-rlalr,
+  cjexplore-nvim,
   ...
 }:
 
@@ -348,7 +349,10 @@ let
     };
     langCangjie = {
       autoEnable = builtins.elem "cangjie" cfg.langs.enable;
-      plugins = [ cangjie-nvim.packages.${system}.default ];
+      plugins = [
+        cangjie-nvim.packages.${system}.default
+        cjexplore-nvim.packages.${system}.default
+      ];
     };
     langJava = {
       autoEnable = builtins.elem "java" cfg.langs.enable;

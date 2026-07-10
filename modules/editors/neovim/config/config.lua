@@ -860,3 +860,10 @@ if nixcfg.debugger.enable then
 
     require("dap-view").setup({})
 end
+
+if nixcfg.langCangjie.enable then
+    require("cjexplore").setup({
+      default_stages = { "macroexp", "genericinst" },
+      default_stage = "macroexp",
+    })
+end
