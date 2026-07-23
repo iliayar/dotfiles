@@ -3,6 +3,7 @@
   pkgs,
   lib,
   themes,
+  gitcode-cli,
   ...
 }:
 
@@ -13,6 +14,11 @@ let
 in
 {
   options = {
+    custom.misc.gitcode-cli = {
+        enable = mkOption {
+            default = false;
+        };
+    };
     custom.misc.git = {
       enable = mkOption {
         default = false;
@@ -133,6 +139,12 @@ in
           key = cfg.git.gpg-key;
         };
       };
+    })
+
+    (mkIf (cfg.enable && cfg.gitcode-cli.enable) {
+        home.packages = [
+            gitcode-cli.packages.${pkgs.system}.default
+        ];
     })
   ];
 }

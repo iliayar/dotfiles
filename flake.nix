@@ -127,7 +127,13 @@
 
     cjexplore-nvim = {
       # url = "path:/home/iliayar/Repos/cjexplore.nvim";
-      url = "git+https://gitcode.com/iliayar/cangjie.nvim.git";
+      url = "git+https://gitcode.com/iliayar/cjexplore.nvim.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    gitcode-cli = {
+      # url = "path:/home/iliayar/Repos/cangjie.nvim";
+      url = "git+https://gitcode.com/iliayar/gitcode-cli-nix.git";
     };
 
     nvim-rlalr = {
