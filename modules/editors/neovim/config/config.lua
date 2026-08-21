@@ -357,6 +357,10 @@ if nixcfg.codeMisc.enable then
         formatters_by_ft["java"] = { "google-java-format" }
     end
 
+    if nixcfg.langCangjie.enable then
+        formatters_by_ft["cangjie"] = { "cjfmt" }
+    end
+
     local conform = require("conform")
     conform.setup({
         formatters_by_ft = formatters_by_ft,

@@ -56,6 +56,7 @@ in
         parallel
         mprocs
         just
+        util-linux
       ];
     }
     (mkIf cfg.syncthing {
