@@ -374,6 +374,17 @@ let
       plugins = with pkgs.vimPlugins; [ ChatGPT-nvim ];
     };
 
+    aiCompletion = {
+        autoEnable = cfg.ai.completion.enable;
+        plugins = with pkgs.vimPlugins; [ minuet-ai-nvim ];
+        extraParameters = {
+            apiKey = ''"${cfg.ai.completion.apikey}"'';
+            endPoint = ''"${cfg.ai.completion.endpoint}"'';
+            model = ''"${cfg.ai.completion.model}"'';
+            name = ''"${cfg.ai.completion.name}"'';
+        };
+    };
+
     exp = {
       autoEnable = cfg.experiments.enable;
       plugins = [
@@ -507,6 +518,16 @@ in
         path = mkOption {
           default = "~/org/obsidian/notes";
           type = types.str;
+        };
+      };
+
+      ai = {
+        completion = {
+            enable = mkOption { default = false; };
+            apikey = mkOption { default = ""; };
+            endpoint = mkOption { default = ""; };
+            model = mkOption { default = ""; };
+            name = mkOption { default = "Custom"; };
         };
       };
 

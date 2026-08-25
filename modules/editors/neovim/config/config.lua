@@ -392,15 +392,17 @@ if nixcfg.codeMisc.enable then
         })
     end
 
+    local cmpMapping = {
+        ["<S-Tab>"] = cmp.mapping.confirm({ select = true })
+    }
+
     cmp.setup({
         snippet = {
             expand = function(args)
                 snippy.expand_snippet(args.body)
             end,
         },
-        mapping = cmp.mapping.preset.insert({
-            ["<S-Tab>"] = cmp.mapping.confirm({ select = true }),
-        }),
+        mapping = cmp.mapping.preset.insert(cmpMapping),
         window = {
             documentation = {
                 border = border("CmpDocBorder"),
@@ -427,10 +429,19 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, {
 })
 
 if nixcfg.statusBar.enable then
-    local params = { sections = { lualine_c = { "filename" } } }
+    local params = { 
+        sections = { 
+            lualine_c = { "filename" },
+            lualine_x = { "encoding", "fileformat", "filetype" },
+        }
+    }
 
     if nixcfg.lsp.enable then
         table.insert(params.sections.lualine_c, "lsp_progress")
+    end
+
+    if nixcfg.aiCompletion.enable then
+        table.insert(params.sections.lualine_x, 1, { require("minuet.lualine") })
     end
 
     require("lualine").setup(params)
@@ -871,3 +882,33 @@ if nixcfg.langCangjie.enable then
       default_stage = "macroexp",
     })
 end
+
+if nixcfg.aiCompletion.enable then
+    local params = nixcfg.aiCompletion
+
+    require("minuet").setup({
+        provider = 'openai_compatible',
+        request_timeout = 10,
+        provider_options = {
+            openai_compatible = {
+                api_key = function() return params.apiKey end,
+                end_point = params.endPoint .. "/chat/completions",
+                model = params.model,
+                name = params.name;
+                optional = {
+                    enable_thinking = false,
+                },
+            },
+        },
+        virtualtext = {
+            auto_trigger_ft = {},
+            keymap = {
+                accept = '<C-CR>',
+                accept_line = '<C-Down>',
+                prev = '<C-Left>',
+                next = '<C-Right>',
+            },
+        },
+    })
+end
+
