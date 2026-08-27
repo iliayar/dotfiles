@@ -1,4 +1,13 @@
-{ config, lib, pkgs, secrets, ... }@inputs:
+{
+  config,
+  lib,
+  pkgs,
+  secrets,
+  # cangjie-nvim,
+  # nvim-rlalr,
+  system,
+  ...
+}@inputs:
 
 with lib;
 
@@ -9,165 +18,184 @@ let
     "${name}".enable = mkOption { default = false; };
   };
 
-  makePackagesDictId =
-    foldl (acc: e: acc // { "${e}" = epkgs: [ epkgs.${e} ]; }) { };
+  makePackagesDictId = foldl (acc: e: acc // { "${e}" = epkgs: [ epkgs.${e} ]; }) { };
 
   makeEnableOptions = foldl (acc: name: acc // (makeEnableOption name)) { };
 
-  enablePackages = pkgs:
-    mkMerge
-    (map (pkg: { custom.editors.emacs.packages.${pkg}.enable = true; }) pkgs);
+  enablePackages =
+    pkgs: mkMerge (map (pkg: { custom.editors.emacs.packages.${pkg}.enable = true; }) pkgs);
 
-  allPackages = makePackagesDictId [
-    "ob-mermaid"
-    "highlight-indent-guides"
-    "obsidian"
-    "topsy"
-    "cheat-sh"
-    "protobuf-mode"
-    "pyvenv"
-    "sdlang-mode"
-    "vterm"
-    "ace-window"
-    "all-the-icons"
-    "anaconda-mode"
-    "avy"
-    "bison-mode"
-    "ccls"
-    "centaur-tabs"
-    "code-stats"
-    "company"
-    "company-anaconda"
-    "company-coq"
-    "company-nixos-options"
-    "company-solidity"
-    "consult"
-    "consult-projectile"
-    "dap-mode"
-    "counsel-projectile"
-    "corfu"
-    "cape"
-    "corfu-terminal"
-    "marginalia"
-    "orderless"
-    "counsel"
-    "goto-chg"
-    "evil"
-    "evil-collection"
-    "evil-snipe"
-    "kind-icon"
-    "evil-surround"
-    "evil-multiedit"
-    "evil-mc"
-    "avy"
-    "ace-window"
-    "hydra"
-    "emacs-everywhere"
-    "minimap"
-    "all-the-icons"
-    "hl-todo"
-    "rainbow-delimiters"
-    "dashboard"
-    "diff-hl"
-    "direnv"
-    "dockerfile-mode"
-    "doom-modeline"
-    "doom-themes"
-    "editorconfig"
-    "elfeed"
-    "elfeed-goodies"
-    "elfeed-org"
-    "emacs-everywhere"
-    "esup"
-    "evil"
-    "evil-collection"
-    "evil-mc"
-    "evil-multiedit"
-    "evil-snipe"
-    "evil-surround"
-    "exwm"
-    "flycheck"
-    "format-all"
-    "gcmh"
-    "general"
-    "go-mode"
-    "goto-chg"
-    "graphviz-dot-mode"
-    "haskell-mode"
-    "hl-todo"
-    "hydra"
-    "impatient-mode"
-    "julia-mode"
-    "kotlin-mode"
-    "lsp-haskell"
-    "lsp-ivy"
-    "lsp-java"
-    "lsp-latex"
-    "lsp-mode"
-    "lsp-pyright"
-    "lsp-treemacs"
-    "lsp-ui"
-    "lua-mode"
-    "magit"
-    "marginalia"
-    "minimap"
-    "minimap"
-    "nix-mode"
-    "nix-sandbox"
-    "nixos-options"
-    "orderless"
-    "org-bullets"
-    "org-roam"
-    "org-roam-ui"
-    "org-special-block-extras"
-    "org-special-block-extras"
-    "org-special-block-extras"
-    "ox-json"
-    "ox-reveal"
-    "ox-gfm"
-    "php-mode"
-    "projectile"
-    "proof-general"
-    "lean4-mode"
-    "rainbow-delimiters"
-    "rjsx-mode"
-    "rustic"
-    "smartparens"
-    "solidity-flycheck"
-    "solidity-mode"
-    "tide"
-    "treemacs"
-    "treemacs-evil"
-    "treemacs-projectile"
-    "typescript-mode"
-    "undo-tree"
-    "use-package"
-    "vertico"
-    "web-mode"
-    "websocket"
-    "which-key"
-    "yaml-mode"
-    "yasnippet"
-    "yasnippet-snippets"
-    "mermaid-mode"
-    "sonic-pi"
-    "alabaster-theme"
-    "stimmung-themes"
-  ] // {
-    "lsp-julia" = epkgs:
-      [
-        (epkgs.lsp-julia.overrideAttrs
-          (old: { patches = [ ./lsp-julia.patch ]; }))
+  allPackages =
+    makePackagesDictId [
+      "ob-mermaid"
+      "highlight-indent-guides"
+      "obsidian"
+      "topsy"
+      "cheat-sh"
+      "protobuf-mode"
+      "pyvenv"
+      "sdlang-mode"
+      "vterm"
+      "ace-window"
+      "all-the-icons"
+      "anaconda-mode"
+      "avy"
+      "bison-mode"
+      "ccls"
+      "centaur-tabs"
+      "code-stats"
+      "company"
+      "company-anaconda"
+      "company-coq"
+      "company-nixos-options"
+      "company-solidity"
+      "consult"
+      "consult-projectile"
+      "dap-mode"
+      "counsel-projectile"
+      "corfu"
+      "cape"
+      "corfu-terminal"
+      "marginalia"
+      "orderless"
+      "counsel"
+      "goto-chg"
+      "evil"
+      "evil-collection"
+      "evil-snipe"
+      "kind-icon"
+      "evil-surround"
+      "evil-multiedit"
+      "evil-mc"
+      "avy"
+      "ace-window"
+      "hydra"
+      "emacs-everywhere"
+      "minimap"
+      "all-the-icons"
+      "hl-todo"
+      "rainbow-delimiters"
+      "dashboard"
+      "diff-hl"
+      "direnv"
+      "dockerfile-mode"
+      "doom-modeline"
+      "doom-themes"
+      "editorconfig"
+      "elfeed"
+      "elfeed-goodies"
+      "elfeed-org"
+      "emacs-everywhere"
+      "esup"
+      "evil"
+      "evil-collection"
+      "evil-mc"
+      "evil-multiedit"
+      "evil-snipe"
+      "evil-surround"
+      "exwm"
+      "flycheck"
+      "format-all"
+      "gcmh"
+      "general"
+      "go-mode"
+      "goto-chg"
+      "graphviz-dot-mode"
+      "haskell-mode"
+      "hl-todo"
+      "hydra"
+      "impatient-mode"
+      "julia-mode"
+      "kotlin-mode"
+      "lsp-haskell"
+      "lsp-ivy"
+      "lsp-java"
+      "lsp-latex"
+      "lsp-mode"
+      "lsp-pyright"
+      "lsp-treemacs"
+      "lsp-ui"
+      "lua-mode"
+      "magit"
+      "marginalia"
+      "minimap"
+      "minimap"
+      "nix-mode"
+      "nix-sandbox"
+      "nixos-options"
+      "orderless"
+      "org-bullets"
+      "org-roam"
+      "org-roam-ui"
+      "org-special-block-extras"
+      "org-special-block-extras"
+      "org-special-block-extras"
+      "ox-json"
+      "ox-reveal"
+      "ox-gfm"
+      "php-mode"
+      "projectile"
+      "proof-general"
+      "lean4-mode"
+      "rainbow-delimiters"
+      "rjsx-mode"
+      "rustic"
+      "smartparens"
+      "solidity-flycheck"
+      "solidity-mode"
+      "tide"
+      "treemacs"
+      "treemacs-evil"
+      "treemacs-projectile"
+      "typescript-mode"
+      "undo-tree"
+      "use-package"
+      "vertico"
+      "web-mode"
+      "websocket"
+      "which-key"
+      "yaml-mode"
+      "yasnippet"
+      "yasnippet-snippets"
+      "mermaid-mode"
+      "sonic-pi"
+      "alabaster-theme"
+      "stimmung-themes"
+      "tree-sitter-langs"
+    ]
+    // {
+      "lsp-julia" = epkgs: [
+        (epkgs.lsp-julia.overrideAttrs (old: {
+          patches = [ ./lsp-julia.patch ];
+        }))
       ];
-    "tree-sitter-grammars" = epkgs:
-      with epkgs;
-      [ treesit-grammars.with-all-grammars ];
-  };
+      "tree-sitter-grammars" =
+        epkgs:
+        with epkgs;
+        [
+          (treesit-grammars.with-grammars (
+            p:
+            pkgs.tree-sitter.allGrammars
+            # ++ [
+            #   cangjie-nvim.packages.${system}.tree-sitter-cangjie
+            #   nvim-rlalr.packages.${system}.tree-sitter-rlalr-gramma
+            #   nvim-rlalr.packages.${system}.tree-sitter-rlalr-lexer
+            # ]
+          ))
+        ];
+    };
 
   bundles = {
     basic = {
       auto-enable = true;
-      packages = [ "use-package" "gcmh" "general" "hydra" "direnv" "vterm" ];
+      packages = [
+        "use-package"
+        "gcmh"
+        "general"
+        "hydra"
+        "direnv"
+        "vterm"
+      ];
       config = {
         home.file.".emacs.d/private.el".text = ''
           ;; Some secret info here
@@ -196,13 +224,21 @@ let
 
     emacs-everywhere = {
       packages = [ "emacs-everywhere" ];
-      config = { home.packages = with pkgs; [ xdotool xorg.xwininfo ]; };
+      config = {
+        home.packages = with pkgs; [
+          xdotool
+          xorg.xwininfo
+        ];
+      };
     };
 
     sonic-pi = {
       packages = [ "sonic-pi" ];
       config = {
-        home.packages = with pkgs; [ ruby supercollider ];
+        home.packages = with pkgs; [
+          ruby
+          supercollider
+        ];
         home.file.".emacs.d/nixcfg.el".text = ''
           (setq nixcfg-sonic-pi-path "${pkgs.sonic-pi}/")
         '';
@@ -219,6 +255,7 @@ let
         "sdlang-mode"
         "protobuf-mode"
         "tree-sitter-grammars"
+        "tree-sitter-langs"
         # "highlight-indent-guides"
         # "mermaid-mode"
 
@@ -227,21 +264,23 @@ let
     };
 
     misc-code-internal-smart-parens = {
-      auto-enable = cfg.misc.enable && cfg.misc.code.enable
-        && cfg.misc.code.auto-parens.enable;
+      auto-enable = cfg.misc.enable && cfg.misc.code.enable && cfg.misc.code.auto-parens.enable;
       packages = [ "smartparens" ];
     };
 
     misc-code-internal-company = {
-      auto-enable = cfg.bundles.misc-code-internal.enable
-        && cfg.misc.code.completion == "company";
+      auto-enable = cfg.bundles.misc-code-internal.enable && cfg.misc.code.completion == "company";
       packages = [ "company" ];
     };
 
     misc-code-internal-corfu = {
-      auto-enable = cfg.bundles.misc-code-internal.enable
-        && cfg.misc.code.completion == "corfu";
-      packages = [ "corfu" "cape" "kind-icon" "corfu-terminal" ];
+      auto-enable = cfg.bundles.misc-code-internal.enable && cfg.misc.code.completion == "corfu";
+      packages = [
+        "corfu"
+        "cape"
+        "kind-icon"
+        "corfu-terminal"
+      ];
     };
 
     langs-nix-internal = {
@@ -253,8 +292,7 @@ let
     };
 
     langs-nix-misc-internal = {
-      auto-enable = cfg.bundles.langs-nix-internal.enable
-        && cfg.misc.code.enable;
+      auto-enable = cfg.bundles.langs-nix-internal.enable && cfg.misc.code.enable;
       packages = [
         # "company-nixos-options" # FIXME: nixos-options too slow on load
       ];
@@ -262,19 +300,33 @@ let
 
     vertico-internal = {
       auto-enable = cfg.misc.enable && cfg.misc.completion == "vertico";
-      packages =
-        [ "vertico" "consult" "consult-projectile" "marginalia" "orderless" ];
+      packages = [
+        "vertico"
+        "consult"
+        "consult-projectile"
+        "marginalia"
+        "orderless"
+      ];
     };
 
     ivy-internal = {
       auto-enable = cfg.misc.enable && cfg.misc.completion == "ivy";
-      packages = [ "counsel" "counsel-projectile" ];
+      packages = [
+        "counsel"
+        "counsel-projectile"
+      ];
     };
 
-    org-style-v1 = { auto-enable = cfg.org.style == "v1"; };
-    org-style-v2 = { auto-enable = cfg.org.style == "v2"; };
+    org-style-v1 = {
+      auto-enable = cfg.org.style == "v1";
+    };
+    org-style-v2 = {
+      auto-enable = cfg.org.style == "v2";
+    };
 
-    obsidian = { packages = [ "obsidian" ]; };
+    obsidian = {
+      packages = [ "obsidian" ];
+    };
 
     org-roam-internal = {
       auto-enable = cfg.org.roam.enable;
@@ -283,31 +335,47 @@ let
 
     org-roam-ui-internal = {
       auto-enable = cfg.org.roam.ui;
-      packages = [ "org-roam-ui" "websocket" ];
+      packages = [
+        "org-roam-ui"
+        "websocket"
+      ];
     };
 
     evil-internal = {
       auto-enable = cfg.evil.enable;
-      packages = [ "evil" "undo-tree" ];
+      packages = [
+        "evil"
+        "undo-tree"
+      ];
     };
 
     evil-extra-internal = {
       auto-enable = cfg.evil.enable && cfg.evil.extra;
-      packages = [ "evil-mc" "evil-surround" ];
+      packages = [
+        "evil-mc"
+        "evil-surround"
+      ];
     };
 
-    evil-integrations = { packages = [ "evil-collection" ]; };
+    evil-integrations = {
+      packages = [ "evil-collection" ];
+    };
 
     evil-treemacs-internal = {
       auto-enable = cfg.evil.enable && cfg.misc.enable && cfg.misc.treemacs.enable;
       packages = [
-        "treemacs-evil" 
+        "treemacs-evil"
       ];
     };
 
     theme-internal = {
       auto-enable = cfg.pretty.theme != null;
-      packages = [ "doom-themes" "all-the-icons" "alabaster-theme" "stimmung-themes" ];
+      packages = [
+        "doom-themes"
+        "all-the-icons"
+        "alabaster-theme"
+        "stimmung-themes"
+      ];
       config = {
         home.file.".emacs.d/nixcfg.el".text = ''
           (setq nixcfg-theme '${cfg.pretty.theme})
@@ -322,7 +390,7 @@ let
         "diff-hl"
 
         # FIXME: This crashes emacs
-        # "doom-modeline" 
+        # "doom-modeline"
 
         "centaur-tabs"
       ];
@@ -330,12 +398,18 @@ let
 
     lsp-internal = {
       auto-enable = cfg.code-assist.enable;
-      packages = [ "lsp-mode" "flycheck" ];
+      packages = [
+        "lsp-mode"
+        "flycheck"
+      ];
     };
 
     lsp-ui-internal = {
       auto-enable = cfg.code-assist.enable && cfg.code-assist.pretty.enable;
-      packages = [ "lsp-ui" "rainbow-delimiters" ];
+      packages = [
+        "lsp-ui"
+        "rainbow-delimiters"
+      ];
     };
 
     lsp-misc-internal = {
@@ -344,8 +418,7 @@ let
     };
 
     lsp-ivy-internal = {
-      auto-enable = cfg.bundles.lsp-internal.enable
-        && cfg.bundles.ivy-internal.enable;
+      auto-enable = cfg.bundles.lsp-internal.enable && cfg.bundles.ivy-internal.enable;
       packages = [ "lsp-ivy" ];
     };
 
@@ -355,31 +428,40 @@ let
     };
 
     langs-python-lsp-pylsp-internal = {
-      auto-enable = cfg.bundles.lsp-internal.enable
-        && cfg.bundles.langs-python-internal.enable && cfg.langs.python.ls
-        == "pylsp";
+      auto-enable =
+        cfg.bundles.lsp-internal.enable
+        && cfg.bundles.langs-python-internal.enable
+        && cfg.langs.python.ls == "pylsp";
       config = {
-        custom.dev.python.additionalPackages = pypkgs:
-          [ pypkgs.python-lsp-server ];
+        custom.dev.python.additionalPackages = pypkgs: [ pypkgs.python-lsp-server ];
       };
     };
 
     langs-python-lsp-pyright-internal = {
-      auto-enable = cfg.bundles.lsp-internal.enable
-        && cfg.bundles.langs-python-internal.enable && cfg.langs.python.ls
-        == "pyright";
+      auto-enable =
+        cfg.bundles.lsp-internal.enable
+        && cfg.bundles.langs-python-internal.enable
+        && cfg.langs.python.ls == "pyright";
       packages = [ "lsp-pyright" ];
     };
 
     langs-misc-internal = {
       auto-enable = builtins.elem "misc" cfg.langs.enable;
-      packages =
-        [ "dockerfile-mode" "yaml-mode" "graphviz-dot-mode" "bison-mode" ];
+      packages = [
+        "dockerfile-mode"
+        "yaml-mode"
+        "graphviz-dot-mode"
+        "bison-mode"
+      ];
     };
 
     langs-typescript-internal = {
       auto-enable = builtins.elem "typescript" cfg.langs.enable;
-      packages = [ "tide" "rjsx-mode" "typescript-mode" ];
+      packages = [
+        "tide"
+        "rjsx-mode"
+        "typescript-mode"
+      ];
     };
 
     langs-cpp-internal = {
@@ -392,17 +474,24 @@ let
     };
 
     langs-cpp-lsp-ccls-internal = {
-      auto-enable = cfg.bundles.lsp-internal.enable
-        && cfg.bundles.langs-cpp-internal.enable && cfg.langs.cpp.ls == "ccls";
+      auto-enable =
+        cfg.bundles.lsp-internal.enable
+        && cfg.bundles.langs-cpp-internal.enable
+        && cfg.langs.cpp.ls == "ccls";
       packages = [ "ccls" ];
-      config = { home.packages = [ pkgs.ccls ]; };
+      config = {
+        home.packages = [ pkgs.ccls ];
+      };
     };
 
     langs-cpp-lsp-clangd-internal = {
-      auto-enable = cfg.bundles.lsp-internal.enable
-        && cfg.bundles.langs-cpp-internal.enable && cfg.langs.cpp.ls
-        == "clangd";
-      config = { home.packages = [ pkgs.clang ]; };
+      auto-enable =
+        cfg.bundles.lsp-internal.enable
+        && cfg.bundles.langs-cpp-internal.enable
+        && cfg.langs.cpp.ls == "clangd";
+      config = {
+        home.packages = [ pkgs.clang ];
+      };
     };
 
     langs-haskell-internal = {
@@ -411,8 +500,7 @@ let
     };
 
     langs-haskell-lsp-internal = {
-      auto-enable = cfg.bundles.lsp-internal.enable
-        && cfg.bundles.langs-haskell-internal.enable;
+      auto-enable = cfg.bundles.lsp-internal.enable && cfg.bundles.langs-haskell-internal.enable;
       packages = [ "lsp-haskell" ];
     };
 
@@ -422,8 +510,7 @@ let
     };
 
     langs-latex-lsp-internal = {
-      auto-enable = cfg.bundles.lsp-internal.enable
-        && cfg.bundles.langs-latex-internal.enable;
+      auto-enable = cfg.bundles.lsp-internal.enable && cfg.bundles.langs-latex-internal.enable;
       packages = [ "lsp-latex" ];
     };
 
@@ -452,8 +539,7 @@ let
     };
 
     langs-java-lsp-internal = {
-      auto-enable = cfg.bundles.lsp-internal.enable
-        && cfg.bundles.langs-java-internal.enable;
+      auto-enable = cfg.bundles.lsp-internal.enable && cfg.bundles.langs-java-internal.enable;
       packages = [ "lsp-java" ];
     };
 
@@ -463,22 +549,28 @@ let
     };
 
     langs-solidity-lsp-internal = {
-      auto-enable = cfg.bundles.lsp-internal.enable
-        && cfg.bundles.langs-solidity-internal.enable;
+      auto-enable = cfg.bundles.lsp-internal.enable && cfg.bundles.langs-solidity-internal.enable;
       packages = [ "solidity-flycheck" ];
     };
 
     langs-solidity-misc-internal = {
-      auto-enable = cfg.misc.code.enable && cfg.misc.code.completion
-        == "company" && cfg.bundles.langs-solidity-internal.enable;
+      auto-enable =
+        cfg.misc.code.enable
+        && cfg.misc.code.completion == "company"
+        && cfg.bundles.langs-solidity-internal.enable;
       packages = [ "company-solidity" ];
     };
 
-    proof-assist = { packages = [ "proof-general" "lean4-mode" ]; };
+    proof-assist = {
+      packages = [
+        "proof-general"
+        "lean4-mode"
+      ];
+    };
 
     proff-assist-company = {
-      auto-enable = cfg.bundles.proof-assist.enable && cfg.misc.code.enable
-        && cfg.misc.code.completion == "company";
+      auto-enable =
+        cfg.bundles.proof-assist.enable && cfg.misc.code.enable && cfg.misc.code.completion == "company";
       packages = [ "company-coq" ];
     };
 
@@ -488,23 +580,39 @@ let
     };
 
     langs-julia-lsp-internal = {
-      auto-enable = cfg.bundles.lsp-internal.enable
-        && cfg.bundles.langs-julia-internal.enable;
+      auto-enable = cfg.bundles.lsp-internal.enable && cfg.bundles.langs-julia-internal.enable;
       packages = [ "lsp-julia" ];
     };
 
-    web = { packages = [ "impatient-mode" "web-mode" ]; };
+    web = {
+      packages = [
+        "impatient-mode"
+        "web-mode"
+      ];
+    };
 
-    rss = { packages = [ "elfeed" "elfeed-org" "elfeed-goodies" ]; };
+    rss = {
+      packages = [
+        "elfeed"
+        "elfeed-org"
+        "elfeed-goodies"
+      ];
+    };
 
     org-misc-internal = {
       auto-enable = true;
-      packages = [ "ob-mermaid" "ox-gfm" ];
+      packages = [
+        "ob-mermaid"
+        "ox-gfm"
+      ];
     };
 
     org-extra-internal = {
       auto-enable = cfg.org.extra.enable;
-      packages = [ "ox-json" "org-bullets" ];
+      packages = [
+        "ox-json"
+        "org-bullets"
+      ];
     };
 
     org-reveal-internal = {
@@ -516,7 +624,11 @@ let
 
     exwm = {
       packages = [ "exwm" ];
-      config = { xsession = { enable = true; }; };
+      config = {
+        xsession = {
+          enable = true;
+        };
+      };
     };
 
     wayland = { };
@@ -525,15 +637,14 @@ let
       packages = [ "code-stats" ];
       config = {
         home.file.".emacs.d/private.el".text = ''
-          (setq code-stats-token "${
-            secrets.code-stats-api-key.${config.custom.settings.code-stats-machine}
-          }")
+          (setq code-stats-token "${secrets.code-stats-api-key.${config.custom.settings.code-stats-machine}}")
         '';
       };
     };
   };
 
-in {
+in
+{
   options = {
     custom.editors.emacs = {
       packages = makeEnableOptions (attrNames allPackages);
@@ -564,14 +675,20 @@ in {
 
         completion = mkOption {
           default = "vertico";
-          type = types.enum [ "vertico" "ivy" ];
+          type = types.enum [
+            "vertico"
+            "ivy"
+          ];
         };
 
         code = {
           enable = mkOption { default = false; };
           completion = mkOption {
             default = "corfu";
-            type = types.enum [ "company" "corfu" ];
+            type = types.enum [
+              "company"
+              "corfu"
+            ];
           };
 
           auto-parens.enable = mkOption { default = false; };
@@ -581,32 +698,40 @@ in {
       langs = {
         enable = mkOption {
           default = [ "misc" ];
-          type = types.listOf (types.enum [
-            "nix"
-            "python"
-            "rust"
-            "typescript"
-            "cpp"
-            "haskell"
-            "latex"
-            "go"
-            "kotlin"
-            "java"
-            "solidity"
-            "julia"
-            "misc"
-            "lua"
-          ]);
+          type = types.listOf (
+            types.enum [
+              "nix"
+              "python"
+              "rust"
+              "typescript"
+              "cpp"
+              "haskell"
+              "latex"
+              "go"
+              "kotlin"
+              "java"
+              "solidity"
+              "julia"
+              "misc"
+              "lua"
+            ]
+          );
         };
 
         cpp.ls = mkOption {
           default = "ccls";
-          type = types.enum [ "ccls" "clangd" ];
+          type = types.enum [
+            "ccls"
+            "clangd"
+          ];
         };
 
         python.ls = mkOption {
           default = "pylsp";
-          type = types.enum [ "pylsp" "pyright" ];
+          type = types.enum [
+            "pylsp"
+            "pyright"
+          ];
         };
       };
 
@@ -625,9 +750,13 @@ in {
           ui = mkOption { default = false; };
         };
 
-        extra = { enable = mkOption { default = false; }; };
+        extra = {
+          enable = mkOption { default = false; };
+        };
 
-        reveal = { enable = mkOption { default = false; }; };
+        reveal = {
+          enable = mkOption { default = false; };
+        };
       };
 
       evil = {
@@ -638,7 +767,9 @@ in {
 
       pretty = {
         theme = mkOption { default = null; };
-        extra = { enable = mkOption { default = false; }; };
+        extra = {
+          enable = mkOption { default = false; };
+        };
         font-size = mkOption { default = 95; };
       };
 
@@ -651,45 +782,68 @@ in {
   };
 
   config = mkIf cfg.enable (mkMerge [
-    (mkMerge (map (name:
-      let bundle = { auto-enable = false; } // bundles.${name};
-      in { custom.editors.emacs.bundles.${name}.enable = bundle.auto-enable; })
-      (attrNames bundles)))
+    (mkMerge (
+      map (
+        name:
+        let
+          bundle = {
+            auto-enable = false;
+          }
+          // bundles.${name};
+        in
+        {
+          custom.editors.emacs.bundles.${name}.enable = bundle.auto-enable;
+        }
+      ) (attrNames bundles)
+    ))
 
-    (mkMerge (map (name:
-      let
-        bundleDefault = {
-          auto-enable = false;
-          packages = [ ];
-          config = { };
-        };
-        bundle = bundleDefault // bundles.${name};
-        enabled = cfg.bundles.${name}.enable;
-        val = if enabled then "t" else "nil";
-      in mkMerge [
-        ({
+    (mkMerge (
+      map (
+        name:
+        let
+          bundleDefault = {
+            auto-enable = false;
+            packages = [ ];
+            config = { };
+          };
+          bundle = bundleDefault // bundles.${name};
+          enabled = cfg.bundles.${name}.enable;
+          val = if enabled then "t" else "nil";
+        in
+        mkMerge [
+          ({
+            home.file.".emacs.d/nixcfg.el".text = ''
+              (setq nixcfg-bundle-${name} ${val})
+            '';
+          })
+          (mkIf enabled (enablePackages bundle.packages))
+          (mkIf enabled (bundle.config))
+        ]
+      ) (attrNames bundles)
+    ))
+
+    (mkMerge (
+      map (
+        pkg:
+        let
+          enabled = cfg.packages.${pkg}.enable;
+          val = if enabled then "t" else "nil";
+        in
+        {
           home.file.".emacs.d/nixcfg.el".text = ''
-            (setq nixcfg-bundle-${name} ${val})
+            (setq nixcfg-${pkg} ${val})
           '';
-        })
-        (mkIf enabled (enablePackages bundle.packages))
-        (mkIf enabled (bundle.config))
-      ]) (attrNames bundles)))
 
-    (mkMerge (map (pkg:
-      let
-        enabled = cfg.packages.${pkg}.enable;
-        val = if enabled then "t" else "nil";
-      in {
-        home.file.".emacs.d/nixcfg.el".text = ''
-          (setq nixcfg-${pkg} ${val})
-        '';
+          programs.emacs.extraPackages = if enabled then allPackages.${pkg} else _: [ ];
+        }
+      ) (attrNames allPackages)
+    ))
 
-        programs.emacs.extraPackages =
-          if enabled then allPackages.${pkg} else _: [ ];
-      }) (attrNames allPackages)))
-
-    (mkIf cfg.useAsVisual { home.sessionVariables = { VISUAL = "emacs"; }; })
+    (mkIf cfg.useAsVisual {
+      home.sessionVariables = {
+        VISUAL = "emacs";
+      };
+    })
 
     {
       home.sessionVariables = {
@@ -697,7 +851,9 @@ in {
       };
 
       xdg.mimeApps = {
-        defaultApplications = { "text/plain" = [ "emacsclient.desktop" ]; };
+        defaultApplications = {
+          "text/plain" = [ "emacsclient.desktop" ];
+        };
       };
 
       home.file.".emacs.d" = {
@@ -735,7 +891,9 @@ in {
       services.emacs = {
         enable = true;
 
-        client = { enable = true; };
+        client = {
+          enable = true;
+        };
       };
     })
 

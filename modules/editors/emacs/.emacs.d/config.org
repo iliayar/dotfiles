@@ -80,6 +80,14 @@ Profile 🤔
   (use-package esup
     :if nixcfg-esup)
 #+end_src
+
+TreeSitter
+#+begin_src emacs-lisp
+  (use-package tree-sitter-langs
+    :after tree-sitter
+    :custom (global-tree-sitter-mode t)
+    :if nixcfg-tree-sitter-langs)
+#+end_src
 ** Projects
 Projects management with ~counsel~ completion
 #+begin_src emacs-lisp
