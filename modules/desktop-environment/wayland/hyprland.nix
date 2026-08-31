@@ -1,4 +1,12 @@
-{ config, pkgs, lib, themes, anyrun, system, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  themes,
+  anyrun,
+  system,
+  ...
+}:
 
 # Example /use/share/wayland-sessions/hyprland.desktop:
 # [Desktop Entry]
@@ -52,8 +60,8 @@ let
   '';
 
   my-autolock = pkgs.writeShellScriptBin "my-autolock" ''
-    swayidle -w timeout 300 '${my-lock}/bin/lock' \
-                timeout 600 'systemctl suspend' \
+    swayidle -w timeout ${toString cfg.lock.timeout} '${my-lock}/bin/lock' \
+                timeout ${toString cfg.lock.suspendTimeout} 'systemctl suspend' \
                 before-sleep '${my-lock}/bin/lock' &
   '';
 
@@ -65,14 +73,18 @@ let
 
     echo "$SCREENSHOTS_DIR/$FILENAME"
   '';
-in {
+in
+{
   options = {
     custom.de.wayland.hyprland = {
       enable = mkOption { default = false; };
       termCmd = mkOption { default = "wezterm"; };
-      kbOptions =
-        mkOption { default = "grp:toggle,caps:escape_shifted_capslock"; };
-      lock.enable = mkOption { default = false; };
+      kbOptions = mkOption { default = "grp:toggle,caps:escape_shifted_capslock"; };
+      lock = {
+        enable = mkOption { default = false; };
+        timeout = mkOption { default = 300; };
+        suspendTimeout = mkOption { default = cfg.lock.timeout + 300; };
+      };
       startupExtra = mkOption {
         default = [ ];
         type = types.listOf types.str;
@@ -82,7 +94,7 @@ in {
       cursor.xcursor = mkOption { default = null; };
 
       flameshot = {
-        enable = mkOption { default = false; }; 
+        enable = mkOption { default = false; };
         leftmostMonitor = mkOption { default = "DP-1"; };
         width = mkOption { default = "(monitor_w*2)"; };
         height = mkOption { default = "(monitor_h)"; };
@@ -120,404 +132,427 @@ in {
       services.vicinae = {
         enable = true;
         systemd = {
-            enable = true;
-            autoStart = true;
+          enable = true;
+          autoStart = true;
         };
       };
 
       services.flameshot = {
         enable = cfg.flameshot.enable;
         settings = {
-            General = {
-                contrastOpacity = 120;
-                savePath = "Pictures/screenshots";
-                saveAfterCopy = true;
-            };
+          General = {
+            contrastOpacity = 120;
+            savePath = "Pictures/screenshots";
+            saveAfterCopy = true;
+          };
         };
       };
 
       wayland.windowManager.hyprland = {
         enable = true;
         # package = hyprland.packages.${system}.default;
-        xwayland = { enable = true; };
+        xwayland = {
+          enable = true;
+        };
         plugins = with pkgs.hyprlandPlugins; [ hy3 ];
 
-        extraConfig = let
-          startupExtra = foldr (cmd: a: ''
-            exec-once = ${cmd}
-            ${a}
-          '') "" cfg.startupExtra;
-        in ''
-          $mainMod = SUPER
+        extraConfig =
+          let
+            startupExtra = foldr (cmd: a: ''
+              exec-once = ${cmd}
+              ${a}
+            '') "" cfg.startupExtra;
+          in
+          ''
+            $mainMod = SUPER
 
-          debug {
-           disable_logs = true 
-          }
-
-          bindm = $mainMod, mouse:272, movewindow
-          bindm = $mainMod, mouse:273, resizewindow
-
-          bind = $mainMod, Return, exec, ${cfg.termCmd}
-          bind = $mainMod, D, exec, vicinae open
-          # bind = $mainMod SHIFT, D, exec, bemenu-run
-          bind = $mainMod SHIFT, Q, killactive
-          bind = $mainMod, F, fullscreen, 0
-
-          general {
-            layout = hy3
-
-            gaps_in = 0;
-            gaps_out = 0;
-            # border_size = 5;
-
-            # allow_tearing = true
-          }
-
-          plugin {
-            hy3 {
-                no_gaps_when_only = 1
-
-                tabs {
-                    height = 20
-                    padding = 0
-                    radius = 0
-                    border_width = 0
-                    text_font = "${themes.font}"
-                    text_height = 12
-
-                    col.active = rgba(${themes.hex.brightBlack}ff)
-                    col.active.text = rgba(${themes.hex.foreground}ff)
-
-                    col.focused = rgba(${themes.hex.black}ff)
-                    col.focused.text = rgba(${themes.hex.foreground}ff)
-
-                    col.inactive = rgba(${themes.hex.black}ff)
-                    col.inactive.text = rgba(${themes.hex.foreground}ff)
-
-                    blur = false
-                }
+            debug {
+             disable_logs = true 
             }
-          }
 
-          decoration {
-            shadow {
+            bindm = $mainMod, mouse:272, movewindow
+            bindm = $mainMod, mouse:273, resizewindow
+
+            bind = $mainMod, Return, exec, ${cfg.termCmd}
+            bind = $mainMod, D, exec, vicinae open
+            # bind = $mainMod SHIFT, D, exec, bemenu-run
+            bind = $mainMod SHIFT, Q, killactive
+            bind = $mainMod, F, fullscreen, 0
+
+            general {
+              layout = hy3
+
+              gaps_in = 0;
+              gaps_out = 0;
+              # border_size = 5;
+
+              # allow_tearing = true
+            }
+
+            plugin {
+              hy3 {
+                  no_gaps_when_only = 1
+
+                  tabs {
+                      height = 20
+                      padding = 0
+                      radius = 0
+                      border_width = 0
+                      text_font = "${themes.font}"
+                      text_height = 12
+
+                      col.active = rgba(${themes.hex.brightBlack}ff)
+                      col.active.text = rgba(${themes.hex.foreground}ff)
+
+                      col.focused = rgba(${themes.hex.black}ff)
+                      col.focused.text = rgba(${themes.hex.foreground}ff)
+
+                      col.inactive = rgba(${themes.hex.black}ff)
+                      col.inactive.text = rgba(${themes.hex.foreground}ff)
+
+                      blur = false
+                  }
+              }
+            }
+
+            decoration {
+              shadow {
+                enabled = false;
+              }
+              rounding = false;
+
+              blur {
+                enabled = false;
+              }
+            }
+
+            animations {
               enabled = false;
             }
-            rounding = false;
 
-            blur {
-              enabled = false;
+            cursor {
+              no_warps = true;
+              enable_hyprcursor = false;
+              no_hardware_cursors = false;
             }
-          }
 
-          animations {
-            enabled = false;
-          }
+            # env = WLR_DRM_NO_ATOMIC,1
 
-          cursor {
-            no_warps = true;
-            enable_hyprcursor = false;
-            no_hardware_cursors = false;
-          }
+            env = XCURSOR_SIZE,24
+            env = HYPRCURSOR_SIZE,24
 
-          # env = WLR_DRM_NO_ATOMIC,1
-
-          env = XCURSOR_SIZE,24
-          env = HYPRCURSOR_SIZE,24
-
-          ${if cfg.cursor.hyprcursor != null then ''
-            env = HYPRCURSOR_THEME,${cfg.cursor.hyprcursor}
-          '' else
-            ""}
-          ${if cfg.cursor.xcursor != null then ''
-            env = XCURSOR_THEME,${cfg.cursor.xcursor}
-          '' else
-            ""}
-
-          # Master
-          # bind = $mainMod, K, layoutmsg, cycleprev
-          # bind = $mainMod, J, layoutmsg, cyclenext
-
-          bind = $mainMod, H, hy3:movefocus, left, visible
-          bind = $mainMod, L, hy3:movefocus, right, visible
-          bind = $mainMod, J, hy3:movefocus, down, visible
-          bind = $mainMod, K, hy3:movefocus, up, visible
-
-          # Master
-          # bind = $mainMod SHIFT, K, layoutmsg, swapprev
-          # bind = $mainMod SHIFT, J, layoutmsg, swapnext
-
-          bind = $mainMod SHIFT, H, hy3:movewindow, left, visible
-          bind = $mainMod SHIFT, L, hy3:movewindow, right, visible
-          bind = $mainMod SHIFT, J, hy3:movewindow, down, visible
-          bind = $mainMod SHIFT, K, hy3:movewindow, up, visible
-
-          bind = $mainMod CTRL, K, hy3:changefocus, raise
-          bind = $mainMod CTRL, J, hy3:changefocus, lower
-
-          # Master
-          # bind = $mainMod SHIFT, Return, layoutmsg, swapwithmaster master
-          # bind = $mainMod CTRL, Return, layoutmsg, focusmaster
-
-          bind = $mainMod, E, hy3:changegroup, opposite
-          bind = $mainMod, W, hy3:changegroup, toggletab
-          bind = $mainMod CTRL, H, hy3:movefocus, left
-          bind = $mainMod CTRL, L, hy3:movefocus, right
-
-          bind = $mainMod, bracketleft, focusmonitor, +1
-          bind = $mainMod, bracketright, focusmonitor, -1
-
-          # Master
-          # bind = $mainMod SHIFT, bracketleft, movewindow, mon:l
-          # bind = $mainMod SHIFT, bracketright, movewindow, mon:r
-
-          bind = $mainMod, C, exec, pypr menu
-          bind = $mainMod, T, exec, pypr toggle term-quake
-
-          ${ if cfg.flameshot.enable then ''
-                bind = SHIFT, print, exec, flameshot full
-                bind = , print, exec, flameshot gui
-            ''else ''
-                bind = $mainMod SHIFT, print, exec, ${my-screenshot}/bin/my-screenshot e f
-                bind = SHIFT, print, exec, ${my-screenshot}/bin/my-screenshot n f
-                bind = $mainMod, print, exec, ${my-screenshot}/bin/my-screenshot e
-                bind = , print, exec, ${my-screenshot}/bin/my-screenshot
-            '' }
-
-          bind = $mainMod, 1, focusworkspaceoncurrentmonitor, 1
-          bind = $mainMod, 2, focusworkspaceoncurrentmonitor, 2
-          bind = $mainMod, 3, focusworkspaceoncurrentmonitor, 3
-          bind = $mainMod, 4, focusworkspaceoncurrentmonitor, 4
-          bind = $mainMod, 5, focusworkspaceoncurrentmonitor, 5
-          bind = $mainMod, 6, focusworkspaceoncurrentmonitor, 6
-          bind = $mainMod, 7, focusworkspaceoncurrentmonitor, 7
-          bind = $mainMod, 8, focusworkspaceoncurrentmonitor, 8
-          bind = $mainMod, 9, focusworkspaceoncurrentmonitor, 9
-          bind = $mainMod, 0, focusworkspaceoncurrentmonitor, 10
-
-          bind = $mainMod SHIFT, 1, hy3:movetoworkspace, 1, follow
-          bind = $mainMod SHIFT, 2, hy3:movetoworkspace, 2, follow
-          bind = $mainMod SHIFT, 3, hy3:movetoworkspace, 3, follow
-          bind = $mainMod SHIFT, 4, hy3:movetoworkspace, 4, follow
-          bind = $mainMod SHIFT, 5, hy3:movetoworkspace, 5, follow
-          bind = $mainMod SHIFT, 6, hy3:movetoworkspace, 6, follow
-          bind = $mainMod SHIFT, 7, hy3:movetoworkspace, 7, follow
-          bind = $mainMod SHIFT, 8, hy3:movetoworkspace, 8, follow
-          bind = $mainMod SHIFT, 9, hy3:movetoworkspace, 9, follow
-          bind = $mainMod SHIFT, 0, hy3:movetoworkspace, 10, follow
-
-          bind = $mainMod CTRL, 1, hy3:movetoworkspace, 1
-          bind = $mainMod CTRL, 2, hy3:movetoworkspace, 2
-          bind = $mainMod CTRL, 3, hy3:movetoworkspace, 3
-          bind = $mainMod CTRL, 4, hy3:movetoworkspace, 4
-          bind = $mainMod CTRL, 5, hy3:movetoworkspace, 5
-          bind = $mainMod CTRL, 6, hy3:movetoworkspace, 6
-          bind = $mainMod CTRL, 7, hy3:movetoworkspace, 7
-          bind = $mainMod CTRL, 8, hy3:movetoworkspace, 8
-          bind = $mainMod CTRL, 9, hy3:movetoworkspace, 9
-          bind = $mainMod CTRL, 0, hy3:movetoworkspace, 10
-
-          # Master
-          # bind = $mainMod SHIFT, 1, movetoworkspace, 1
-          # bind = $mainMod SHIFT, 2, movetoworkspace, 2
-          # bind = $mainMod SHIFT, 3, movetoworkspace, 3
-          # bind = $mainMod SHIFT, 4, movetoworkspace, 4
-          # bind = $mainMod SHIFT, 5, movetoworkspace, 5
-          # bind = $mainMod SHIFT, 6, movetoworkspace, 6
-          # bind = $mainMod SHIFT, 7, movetoworkspace, 7
-          # bind = $mainMod SHIFT, 8, movetoworkspace, 8
-          # bind = $mainMod SHIFT, 9, movetoworkspace, 9
-          # bind = $mainMod SHIFT, 0, movetoworkspace, 10
-
-          # bind = $mainMod CTRL, 1, movetoworkspacesilent, 1
-          # bind = $mainMod CTRL, 2, movetoworkspacesilent, 2
-          # bind = $mainMod CTRL, 3, movetoworkspacesilent, 3
-          # bind = $mainMod CTRL, 4, movetoworkspacesilent, 4
-          # bind = $mainMod CTRL, 5, movetoworkspacesilent, 5
-          # bind = $mainMod CTRL, 6, movetoworkspacesilent, 6
-          # bind = $mainMod CTRL, 7, movetoworkspacesilent, 7
-          # bind = $mainMod CTRL, 8, movetoworkspacesilent, 8
-          # bind = $mainMod CTRL, 9, movetoworkspacesilent, 9
-          # bind = $mainMod CTRL, 0, movetoworkspacesilent, 10
-
-          bind = $mainMod, comma, togglefloating
-
-          # Resize Submap
-          bind = $mainMod, R, submap, resize
-          submap = resize
-
-          binde=,L,resizeactive, 30 0
-          binde=,H,resizeactive, -30 0
-          binde=,J,resizeactive, 0 -30
-          binde=,K,resizeactive, 0 30
-
-          bind=,escape,submap,reset
-          submap = reset
-
-          # Power Management Submap
-          bind = $mainMod SHIFT, E, submap, power
-          submap = power
-
-          bind=,S,exec,systemctl suspend
-          bind=,S,submap,reset
-
-          bind=,R,exec,systemctl reboot
-          bind=,R,submap,reset
-
-          bind=SHIFT,S,exec,systemctl poweroff
-          bind=SHIFT,S,submap,reset
-
-          ${if cfg.lock.enable then ''
-            bind=,L,exec, ${my-lock}/bin/lock
-            bind=,L,submap,reset
-          '' else
-            ""}
-
-          bind=,E,exit
-          bind=,E,submap,reset
-
-          bind=,escape,submap,reset
-          submap = reset
-
-          # Notifications submap
-          bind = $mainMod, N, submap, notifications
-          submap = notifications
-
-          bind=,a,exec,dunstctl close-all
-          bind=,a,submap,reset
-
-          bind=,escape,submap,reset
-          submap = reset
-
-          # === Groups submap
-          # bind = $mainMod, G, submap, groups
-          # submap = groups
-
-          # bind=,t,togglegroup
-          # bind=,u,moveoutofgroup
-
-          # bind=SHIFT,j,moveintogroup,d
-          # bind=SHIFT,k,moveintogroup,u
-          # bind=SHIFT,l,moveintogroup,r
-          # bind=SHIFT,h,moveintogroup,l
-
-          # bind=,j,changegroupactive,f
-          # bind=,k,changegroupactive,b
-
-          # bind=,escape,submap,reset
-          # submap = reset
-
-          # === Layout submap
-          # bind = $mainMod, L, submap, layout
-          # submap = layout
-
-          # bind=,j, layoutmsg, orientationnext
-          # bind=,k, layoutmsg, orientationprev
-
-          # bind=,f,workspaceopt, allfloat
-
-          # bind=,escape,submap,reset
-          # submap = reset
-
-          # Scratchpads
-          bind = $mainMod, S, submap, scratchpads
-          submap = scratchpads
-
-          bind = ,T, exec, pypr toggle term-quake
-          bind = ,T, submap, reset
-          windowrule = match:class local.iliayar.term-quake, float on
-          # $term_quake = class:term-quake
-          # windowrule = workspace special silent,$term_quake
-          # windowrule = float,$term_quake
-
-          bind = ,N, exec, pypr toggle org-notes
-          bind = ,N, submap, reset
-          $org_notes = org-notes
-          windowrule = match:title $org_notes, workspace special silent
-          windowrule = match:title $org_notes, float on
-
-          bind = ,O, exec, pypr toggle obsidian
-          bind = ,O, submap, reset
-          $obsidian = obsidian
-          windowrule = match:class $obsidian, workspace special silent
-          windowrule = match:class $obsidian, float on
-
-          bind=,escape,submap,reset
-          submap = reset
-
-          bind=,XF86AudioMute, exec, wpctl set-mute '@DEFAULT_SINK@' toggle
-          bind=,XF86AudioLowerVolume, exec, wpctl set-volume '@DEFAULT_SINK@' 5%-
-          bind=,XF86AudioRaiseVolume, exec, wpctl set-volume '@DEFAULT_SINK@' 5%+
-          bind=,XF86AudioMicMute, exec, wpctl set-mute '@DEFAULT_SOURCE@' toggle
-
-          bind=,XF86MonBrightnessUp, exec, brightnessctl set +10%
-          bind=,XF86MonBrightnessDown, exec, brightnessctl set 10%-
-
-          $player = spotify        
-          bind=,XF86AudioPlay, exec, playerctl -p $player play-pause
-          bind=,XF86AudioPrev, exec, playerctl -p $player previous
-          bind=,XF86AudioNext, exec, playerctl -p $player next
-
-          monitor = ,prefrerred, auto, 1
-
-          input {
-            repeat_rate = 50
-            repeat_delay = 200
-            follow_mouse = 2
-            float_switch_override_focus = 0
-            kb_layout = us,ru
-            kb_options = ${cfg.kbOptions}
-
-            tablet {
-              transform = 0
+            ${
+              if cfg.cursor.hyprcursor != null then
+                ''
+                  env = HYPRCURSOR_THEME,${cfg.cursor.hyprcursor}
+                ''
+              else
+                ""
             }
-          }
+            ${
+              if cfg.cursor.xcursor != null then
+                ''
+                  env = XCURSOR_THEME,${cfg.cursor.xcursor}
+                ''
+              else
+                ""
+            }
 
-          misc {
-            # groupbar_gradients = false
-            mouse_move_focuses_monitor = false
-            disable_hyprland_logo = true
-            force_default_wallpaper = 0
-          }
+            # Master
+            # bind = $mainMod, K, layoutmsg, cycleprev
+            # bind = $mainMod, J, layoutmsg, cyclenext
 
-          # FIXME: Is it class?
-          windowrule = opacity 0.9 0.9, match:class Spotify
-          windowrule = opacity 0.9 0.9, match:class VSCodium
-          windowrule = opacity 0.9 0.9, match:class Code
-          # windowrule = float, class:Zoom
+            bind = $mainMod, H, hy3:movefocus, left, visible
+            bind = $mainMod, L, hy3:movefocus, right, visible
+            bind = $mainMod, J, hy3:movefocus, down, visible
+            bind = $mainMod, K, hy3:movefocus, up, visible
 
-          exec-once = swww-daemon -q
-          exec-once = waypaper --restore
-          exec-once = waybar & pypr
+            # Master
+            # bind = $mainMod SHIFT, K, layoutmsg, swapprev
+            # bind = $mainMod SHIFT, J, layoutmsg, swapnext
 
-          env = BROWSER,${config.custom.de.browsers.default}
+            bind = $mainMod SHIFT, H, hy3:movewindow, left, visible
+            bind = $mainMod SHIFT, L, hy3:movewindow, right, visible
+            bind = $mainMod SHIFT, J, hy3:movewindow, down, visible
+            bind = $mainMod SHIFT, K, hy3:movewindow, up, visible
 
-          ${ if cfg.flameshot.enable then ''
-                windowrule {
-                    name = flameshot-multi-display-fix
-                    match:title = flameshot
-                
-                    animation = fade
-                    rounding = 0
-                    border_size = 0
-                    fullscreen_state = 0 0
-                    float = on
-                    pin = on
-                    monitor = DP-2
-                    move = 0 0
-                    # FIXME: Move to config
-                    size = ${cfg.flameshot.width} ${cfg.flameshot.height}
-                }
-            '' else "" }
+            bind = $mainMod CTRL, K, hy3:changefocus, raise
+            bind = $mainMod CTRL, J, hy3:changefocus, lower
 
-          # Extra startup
-          ${startupExtra}
+            # Master
+            # bind = $mainMod SHIFT, Return, layoutmsg, swapwithmaster master
+            # bind = $mainMod CTRL, Return, layoutmsg, focusmaster
 
-          ${if cfg.lock.enable then
-            "exec-once = ${my-autolock}/bin/my-autolock"
-          else
-            ""}
-        '';
+            bind = $mainMod, E, hy3:changegroup, opposite
+            bind = $mainMod, W, hy3:changegroup, toggletab
+            bind = $mainMod CTRL, H, hy3:movefocus, left
+            bind = $mainMod CTRL, L, hy3:movefocus, right
+
+            bind = $mainMod, bracketleft, focusmonitor, +1
+            bind = $mainMod, bracketright, focusmonitor, -1
+
+            # Master
+            # bind = $mainMod SHIFT, bracketleft, movewindow, mon:l
+            # bind = $mainMod SHIFT, bracketright, movewindow, mon:r
+
+            bind = $mainMod, C, exec, pypr menu
+            bind = $mainMod, T, exec, pypr toggle term-quake
+
+            ${
+              if cfg.flameshot.enable then
+                ''
+                  bind = SHIFT, print, exec, flameshot full
+                  bind = , print, exec, flameshot gui
+                ''
+              else
+                ''
+                  bind = $mainMod SHIFT, print, exec, ${my-screenshot}/bin/my-screenshot e f
+                  bind = SHIFT, print, exec, ${my-screenshot}/bin/my-screenshot n f
+                  bind = $mainMod, print, exec, ${my-screenshot}/bin/my-screenshot e
+                  bind = , print, exec, ${my-screenshot}/bin/my-screenshot
+                ''
+            }
+
+            bind = $mainMod, 1, focusworkspaceoncurrentmonitor, 1
+            bind = $mainMod, 2, focusworkspaceoncurrentmonitor, 2
+            bind = $mainMod, 3, focusworkspaceoncurrentmonitor, 3
+            bind = $mainMod, 4, focusworkspaceoncurrentmonitor, 4
+            bind = $mainMod, 5, focusworkspaceoncurrentmonitor, 5
+            bind = $mainMod, 6, focusworkspaceoncurrentmonitor, 6
+            bind = $mainMod, 7, focusworkspaceoncurrentmonitor, 7
+            bind = $mainMod, 8, focusworkspaceoncurrentmonitor, 8
+            bind = $mainMod, 9, focusworkspaceoncurrentmonitor, 9
+            bind = $mainMod, 0, focusworkspaceoncurrentmonitor, 10
+
+            bind = $mainMod SHIFT, 1, hy3:movetoworkspace, 1, follow
+            bind = $mainMod SHIFT, 2, hy3:movetoworkspace, 2, follow
+            bind = $mainMod SHIFT, 3, hy3:movetoworkspace, 3, follow
+            bind = $mainMod SHIFT, 4, hy3:movetoworkspace, 4, follow
+            bind = $mainMod SHIFT, 5, hy3:movetoworkspace, 5, follow
+            bind = $mainMod SHIFT, 6, hy3:movetoworkspace, 6, follow
+            bind = $mainMod SHIFT, 7, hy3:movetoworkspace, 7, follow
+            bind = $mainMod SHIFT, 8, hy3:movetoworkspace, 8, follow
+            bind = $mainMod SHIFT, 9, hy3:movetoworkspace, 9, follow
+            bind = $mainMod SHIFT, 0, hy3:movetoworkspace, 10, follow
+
+            bind = $mainMod CTRL, 1, hy3:movetoworkspace, 1
+            bind = $mainMod CTRL, 2, hy3:movetoworkspace, 2
+            bind = $mainMod CTRL, 3, hy3:movetoworkspace, 3
+            bind = $mainMod CTRL, 4, hy3:movetoworkspace, 4
+            bind = $mainMod CTRL, 5, hy3:movetoworkspace, 5
+            bind = $mainMod CTRL, 6, hy3:movetoworkspace, 6
+            bind = $mainMod CTRL, 7, hy3:movetoworkspace, 7
+            bind = $mainMod CTRL, 8, hy3:movetoworkspace, 8
+            bind = $mainMod CTRL, 9, hy3:movetoworkspace, 9
+            bind = $mainMod CTRL, 0, hy3:movetoworkspace, 10
+
+            # Master
+            # bind = $mainMod SHIFT, 1, movetoworkspace, 1
+            # bind = $mainMod SHIFT, 2, movetoworkspace, 2
+            # bind = $mainMod SHIFT, 3, movetoworkspace, 3
+            # bind = $mainMod SHIFT, 4, movetoworkspace, 4
+            # bind = $mainMod SHIFT, 5, movetoworkspace, 5
+            # bind = $mainMod SHIFT, 6, movetoworkspace, 6
+            # bind = $mainMod SHIFT, 7, movetoworkspace, 7
+            # bind = $mainMod SHIFT, 8, movetoworkspace, 8
+            # bind = $mainMod SHIFT, 9, movetoworkspace, 9
+            # bind = $mainMod SHIFT, 0, movetoworkspace, 10
+
+            # bind = $mainMod CTRL, 1, movetoworkspacesilent, 1
+            # bind = $mainMod CTRL, 2, movetoworkspacesilent, 2
+            # bind = $mainMod CTRL, 3, movetoworkspacesilent, 3
+            # bind = $mainMod CTRL, 4, movetoworkspacesilent, 4
+            # bind = $mainMod CTRL, 5, movetoworkspacesilent, 5
+            # bind = $mainMod CTRL, 6, movetoworkspacesilent, 6
+            # bind = $mainMod CTRL, 7, movetoworkspacesilent, 7
+            # bind = $mainMod CTRL, 8, movetoworkspacesilent, 8
+            # bind = $mainMod CTRL, 9, movetoworkspacesilent, 9
+            # bind = $mainMod CTRL, 0, movetoworkspacesilent, 10
+
+            bind = $mainMod, comma, togglefloating
+
+            # Resize Submap
+            bind = $mainMod, R, submap, resize
+            submap = resize
+
+            binde=,L,resizeactive, 30 0
+            binde=,H,resizeactive, -30 0
+            binde=,J,resizeactive, 0 -30
+            binde=,K,resizeactive, 0 30
+
+            bind=,escape,submap,reset
+            submap = reset
+
+            # Power Management Submap
+            bind = $mainMod SHIFT, E, submap, power
+            submap = power
+
+            bind=,S,exec,systemctl suspend
+            bind=,S,submap,reset
+
+            bind=,R,exec,systemctl reboot
+            bind=,R,submap,reset
+
+            bind=SHIFT,S,exec,systemctl poweroff
+            bind=SHIFT,S,submap,reset
+
+            ${
+              if cfg.lock.enable then
+                ''
+                  bind=,L,exec, ${my-lock}/bin/lock
+                  bind=,L,submap,reset
+                ''
+              else
+                ""
+            }
+
+            bind=,E,exit
+            bind=,E,submap,reset
+
+            bind=,escape,submap,reset
+            submap = reset
+
+            # Notifications submap
+            bind = $mainMod, N, submap, notifications
+            submap = notifications
+
+            bind=,a,exec,dunstctl close-all
+            bind=,a,submap,reset
+
+            bind=,escape,submap,reset
+            submap = reset
+
+            # === Groups submap
+            # bind = $mainMod, G, submap, groups
+            # submap = groups
+
+            # bind=,t,togglegroup
+            # bind=,u,moveoutofgroup
+
+            # bind=SHIFT,j,moveintogroup,d
+            # bind=SHIFT,k,moveintogroup,u
+            # bind=SHIFT,l,moveintogroup,r
+            # bind=SHIFT,h,moveintogroup,l
+
+            # bind=,j,changegroupactive,f
+            # bind=,k,changegroupactive,b
+
+            # bind=,escape,submap,reset
+            # submap = reset
+
+            # === Layout submap
+            # bind = $mainMod, L, submap, layout
+            # submap = layout
+
+            # bind=,j, layoutmsg, orientationnext
+            # bind=,k, layoutmsg, orientationprev
+
+            # bind=,f,workspaceopt, allfloat
+
+            # bind=,escape,submap,reset
+            # submap = reset
+
+            # Scratchpads
+            bind = $mainMod, S, submap, scratchpads
+            submap = scratchpads
+
+            bind = ,T, exec, pypr toggle term-quake
+            bind = ,T, submap, reset
+            windowrule = match:class local.iliayar.term-quake, float on
+            # $term_quake = class:term-quake
+            # windowrule = workspace special silent,$term_quake
+            # windowrule = float,$term_quake
+
+            bind = ,N, exec, pypr toggle org-notes
+            bind = ,N, submap, reset
+            $org_notes = org-notes
+            windowrule = match:title $org_notes, workspace special silent
+            windowrule = match:title $org_notes, float on
+
+            bind = ,O, exec, pypr toggle obsidian
+            bind = ,O, submap, reset
+            $obsidian = obsidian
+            windowrule = match:class $obsidian, workspace special silent
+            windowrule = match:class $obsidian, float on
+
+            bind=,escape,submap,reset
+            submap = reset
+
+            bind=,XF86AudioMute, exec, wpctl set-mute '@DEFAULT_SINK@' toggle
+            bind=,XF86AudioLowerVolume, exec, wpctl set-volume '@DEFAULT_SINK@' 5%-
+            bind=,XF86AudioRaiseVolume, exec, wpctl set-volume '@DEFAULT_SINK@' 5%+
+            bind=,XF86AudioMicMute, exec, wpctl set-mute '@DEFAULT_SOURCE@' toggle
+
+            bind=,XF86MonBrightnessUp, exec, brightnessctl set +10%
+            bind=,XF86MonBrightnessDown, exec, brightnessctl set 10%-
+
+            $player = spotify        
+            bind=,XF86AudioPlay, exec, playerctl -p $player play-pause
+            bind=,XF86AudioPrev, exec, playerctl -p $player previous
+            bind=,XF86AudioNext, exec, playerctl -p $player next
+
+            monitor = ,prefrerred, auto, 1
+
+            input {
+              repeat_rate = 50
+              repeat_delay = 200
+              follow_mouse = 2
+              float_switch_override_focus = 0
+              kb_layout = us,ru
+              kb_options = ${cfg.kbOptions}
+
+              tablet {
+                transform = 0
+              }
+            }
+
+            misc {
+              # groupbar_gradients = false
+              mouse_move_focuses_monitor = false
+              disable_hyprland_logo = true
+              force_default_wallpaper = 0
+            }
+
+            # FIXME: Is it class?
+            windowrule = opacity 0.9 0.9, match:class Spotify
+            windowrule = opacity 0.9 0.9, match:class VSCodium
+            windowrule = opacity 0.9 0.9, match:class Code
+            # windowrule = float, class:Zoom
+
+            exec-once = swww-daemon -q
+            exec-once = waypaper --restore
+            exec-once = waybar & pypr
+
+            env = BROWSER,${config.custom.de.browsers.default}
+
+            ${
+              if cfg.flameshot.enable then
+                ''
+                  windowrule {
+                      name = flameshot-multi-display-fix
+                      match:title = flameshot
+
+                      animation = fade
+                      rounding = 0
+                      border_size = 0
+                      fullscreen_state = 0 0
+                      float = on
+                      pin = on
+                      monitor = DP-2
+                      move = 0 0
+                      # FIXME: Move to config
+                      size = ${cfg.flameshot.width} ${cfg.flameshot.height}
+                  }
+                ''
+              else
+                ""
+            }
+
+            # Extra startup
+            ${startupExtra}
+
+            ${if cfg.lock.enable then "exec-once = ${my-autolock}/bin/my-autolock" else ""}
+          '';
       };
 
       xdg.configFile."satty/config.toml".text = ''
@@ -577,7 +612,7 @@ in {
           ];
           configPackages = with pkgs; [
             xdg-desktop-portal-wlr
-            # xdg-desktop-portal-hyprland 
+            # xdg-desktop-portal-hyprland
           ];
           config.common.default = "*";
         };
