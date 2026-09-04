@@ -52,16 +52,12 @@ in
       home.packages = with pkgs; [
         xkb-switch
         # light
-        nitrogen
+        # FIXME: Was removed, what to use?
+        # nitrogen
         # lxqt.pcmanfm-qt
         # thunar
         # pcmanfm
-        (krusader.overrideAttrs {
-          postInstall = ''
-            mkdir -p $out/etc/xdg/menus
-            cp ${libsForQt5.kservice}/etc/xdg/menus/applications.menu $out/etc/xdg/menus/applications.menu
-          '';
-        })
+        krusader
         kdePackages.kde-cli-tools
         arandr
         # tlpui
@@ -89,16 +85,17 @@ in
 
       gtk = {
         enable = true;
-        theme = {
-          package = pkgs.vimix-gtk-themes;
-          name = "vimix-dark";
-        };
-        gtk4.theme = config.gtk.theme;
+        # FIXME: Vimix was removed, what to use?
+        # theme = {
+        #   package = pkgs.vimix-gtk-themes;
+        #   name = "vimix-dark";
+        # };
+        # gtk4.theme = config.gtk.theme;
       };
 
       qt = {
         enable = true;
-        platformTheme.name = "gtk";
+        platformTheme.name = "gtk3";
       };
 
       xdg.mimeApps = {

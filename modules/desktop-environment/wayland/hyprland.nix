@@ -129,7 +129,7 @@ in
         bibata-cursors
       ];
 
-      services.vicinae = {
+      programs.vicinae = {
         enable = true;
         systemd = {
           enable = true;
@@ -156,6 +156,7 @@ in
         };
         plugins = with pkgs.hyprlandPlugins; [ hy3 ];
 
+        configType = "hyprlang";
         extraConfig =
           let
             startupExtra = foldr (cmd: a: ''
