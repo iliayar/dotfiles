@@ -378,10 +378,21 @@ let
         autoEnable = cfg.ai.completion.enable;
         plugins = with pkgs.vimPlugins; [ minuet-ai-nvim ];
         extraParameters = {
-            apiKey = ''"${cfg.ai.completion.apikey}"'';
-            endPoint = ''"${cfg.ai.completion.endpoint}"'';
+            apiKey = ''"${cfg.ai.apikey}"'';
+            endPoint = ''"${cfg.ai.endpoint}"'';
+            name = ''"${cfg.ai.name}"'';
             model = ''"${cfg.ai.completion.model}"'';
-            name = ''"${cfg.ai.completion.name}"'';
+        };
+    };
+
+    aiChat = {
+        autoEnable = cfg.ai.chat.enable;
+        plugins = with pkgs.vimPlugins; [ avante-nvim ];
+        extraParameters = {
+            apiKey = ''"${cfg.ai.apikey}"'';
+            endPoint = ''"${cfg.ai.endpoint}"'';
+            name = ''"${cfg.ai.name}"'';
+            model = ''"${cfg.ai.completion.model}"'';
         };
     };
 
@@ -522,12 +533,18 @@ in
       };
 
       ai = {
+        apikey = mkOption { default = ""; };
+        endpoint = mkOption { default = ""; };
+        name = mkOption { default = "Custom"; };
+
         completion = {
             enable = mkOption { default = false; };
-            apikey = mkOption { default = ""; };
-            endpoint = mkOption { default = ""; };
             model = mkOption { default = ""; };
-            name = mkOption { default = "Custom"; };
+        };
+
+        chat = {
+            enable = mkOption { default = false; };
+            model = mkOption { default = ""; };
         };
       };
 

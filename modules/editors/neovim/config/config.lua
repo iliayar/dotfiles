@@ -912,3 +912,21 @@ if nixcfg.aiCompletion.enable then
     })
 end
 
+if nixcfg.aiChat.enable then
+    local params = nixcfg.aiChat
+
+    require("avante").setup({
+        input = {
+            provider = "snacks",
+        },
+        provider = params.name,
+        providers = {
+            [params.name] = {
+                __inherited_from = 'openai',
+                endpoint = params.endPoint,
+                model = params.model,
+                api_key_name = 'cmd:echo ' .. params.apiKey,
+            },
+        },
+    })
+end
