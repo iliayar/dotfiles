@@ -80,15 +80,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    wezterm-newest = {
-      url = "github:wez/wezterm?dir=nix";
-      flake = true;
-
-      # NOTE: This is vital. To match GL versions,
-      # because wezterm links to its own libGL, but
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     remote-nvim = {
       url = "github:amitds1997/remote-nvim.nvim";
       # url = "path:/home/iliayar/Repos/remote-nvim.nvim";
@@ -101,8 +92,6 @@
     };
 
     deploy-rs.url = "github:serokell/deploy-rs";
-
-    ghostty-newest = { url = "github:ghostty-org/ghostty"; };
 
     systec-can = {
       url =

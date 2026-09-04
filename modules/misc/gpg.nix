@@ -21,11 +21,11 @@ in
       '';
     })
     (mkIf (cfg.enable && cfg.gpg.enable && pkgs.stdenv.isLinux) {
-      home.packages = [ pkgs.pinentry-gtk2 pkgs.gcr ];
+      home.packages = [ pkgs.pinentry-gnome3 pkgs.gcr ];
 
       services.gpg-agent = {
         enable = true;
-        pinentry.package = pkgs.pinentry-gtk2;
+        pinentry.package = pkgs.pinentry-gnome3;
 
         defaultCacheTtl = 34560000;
         maxCacheTtl = 34560000;

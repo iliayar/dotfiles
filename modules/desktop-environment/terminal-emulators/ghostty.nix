@@ -3,7 +3,6 @@
   pkgs,
   lib,
   themes,
-  ghostty-newest,
   system,
   ...
 }:

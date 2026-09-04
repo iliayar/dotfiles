@@ -57,9 +57,9 @@
     yt-dlp
     audacity
 
-    ani-cli
     rqbit
     ffmpeg
+    jellyfin
 
     dolphin-emu
 
