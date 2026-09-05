@@ -197,7 +197,7 @@ let
     };
 
     linux = {
-      autoEnable = pkgs.stdenv.isLinux;
+      autoEnable = pkgs.stdenv.hostPlatform.isLinux;
     };
 
     codeStats = {

@@ -24,7 +24,7 @@ pkgs.stdenv.mkDerivation {
     python3Env
     gtk3
     inkscape
-    texlive.combined.scheme-full
+    texliveFull
   ];
 
   patches = [

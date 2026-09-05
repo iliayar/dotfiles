@@ -38,7 +38,7 @@ in {
             y = 3;
           };
           opacity = 0.85;
-        } // (if pkgs.stdenv.isDarwin then {
+        } // (if pkgs.stdenv.hostPlatform.isDarwin then {
           option_as_alt = "OnlyLeft";
         } else
           { });

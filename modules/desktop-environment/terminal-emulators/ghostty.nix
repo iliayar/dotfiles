@@ -68,7 +68,7 @@ in
         clearDefaultKeybinds = true;
 
         package =
-          if pkgs.stdenv.isDarwin then
+          if pkgs.stdenv.hostPlatform.isDarwin then
             pkgs.writeShellScriptBin "ghostty-fake" ''
               echo "It's fake ghostty"
             ''
@@ -84,7 +84,7 @@ in
 
         }
         // (
-          if pkgs.stdenv.isLinux then
+          if pkgs.stdenv.hostPlatform.isLinux then
             {
               window-decoration = false;
               gtk-tabs-location = "bottom";
@@ -141,7 +141,7 @@ in
             "${mod}+slash=start_search"
           ]
           ++ (
-            if pkgs.stdenv.isLinux then
+            if pkgs.stdenv.hostPlatform.isLinux then
               [
                 "ctrl+shift+v=paste_from_clipboard"
                 "ctrl+shift+c=copy_to_clipboard"

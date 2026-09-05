@@ -22,7 +22,7 @@ in
         typst-live
         tinymist
         plantuml-c4
-    ] ++ (if pkgs.stdenv.isLinux then [
+    ] ++ (if pkgs.stdenv.hostPlatform.isLinux then [
         polylux2pdfpc
         pdfpc
     ] else []);

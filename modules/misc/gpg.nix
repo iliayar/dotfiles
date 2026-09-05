@@ -15,12 +15,12 @@ in
   };
 
   config = mkMerge [
-    (mkIf (cfg.enable && cfg.gpg.enable && pkgs.stdenv.isDarwin) {
+    (mkIf (cfg.enable && cfg.gpg.enable && pkgs.stdenv.hostPlatform.isDarwin) {
       home.file.".gnupg/gpg-agent.conf".text = ''
         pinentry-program ${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac
       '';
     })
-    (mkIf (cfg.enable && cfg.gpg.enable && pkgs.stdenv.isLinux) {
+    (mkIf (cfg.enable && cfg.gpg.enable && pkgs.stdenv.hostPlatform.isLinux) {
       home.packages = [ pkgs.pinentry-gnome3 pkgs.gcr ];
 
       services.gpg-agent = {

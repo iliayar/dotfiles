@@ -98,7 +98,7 @@ in
         };
       };
     })
-    (mkIf (cfg.enable && pkgs.stdenv.isDarwin) {
+    (mkIf (cfg.enable && pkgs.stdenv.hostPlatform.isDarwin) {
       programs.zsh.envExtra = ''
         if [ -e /opt/homebrew/bin/brew ]; then
             eval "$(/opt/homebrew/bin/brew shellenv)"
