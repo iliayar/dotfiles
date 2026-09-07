@@ -92,6 +92,17 @@ let
     };
   };
 
+  aztex-nvim-pkg = pkgs.vimUtils.buildVimPlugin {
+    pname = "aztex.nvim";
+    version = "2026-09-04";
+    src = pkgs.fetchFromGitHub {
+      owner = "seokgukim";
+      repo = "aztex.nvim";
+      rev = "f1d8f43b225bfbc209785cdefb9bca35af31c635";
+      hash = "sha256-Wp/k0B6qgquBSQmYTddhP3GkZVfS6RflcokM9bCy6u0=";
+    };
+  };
+
   cfg = config.custom.editors.nvim;
 
   nvim-exp = import ./nvim-exp { inherit pkgs; };
@@ -357,6 +368,13 @@ let
     langJava = {
       autoEnable = builtins.elem "java" cfg.langs.enable;
     };
+    langMarkdown = {
+      autoEnable = builtins.elem "markdown" cfg.langs.enable;
+      plugins = with pkgs.vimPlugins; [
+        render-markdown-nvim
+        aztex-nvim-pkg
+      ];
+    };
 
     obsidian = {
       autoEnable = cfg.obsidian.enable;
@@ -474,6 +492,7 @@ in
               "fsharp"
               "cangjie"
               "java"
+              "markdown"
             ]
           );
         };

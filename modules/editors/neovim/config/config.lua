@@ -210,7 +210,7 @@ if nixcfg.misc.enable then
                 win = {
                     input = {
                         keys = {
-                            ["<C-d>"] = { "bufdelete", mode = { "n", "i" }},
+                            ["<C-d>"] = { "bufdelete", mode = { "n", "i" } },
                         }
                     }
                 }
@@ -240,7 +240,9 @@ if nixcfg.misc.enable then
         linters_by_ft["python"] = { "ruff" }
     end
 
-    linters_by_ft["markdown"] = { "markdownlint" }
+    if nixcfg.langMarkdown.enable then
+        linters_by_ft["markdown"] = { "markdownlint" }
+    end
 
     require("lint").linters_by_ft = linters_by_ft
 
@@ -277,6 +279,21 @@ end
 
 if nixcfg.langCangjie.enable then
     require("cangjie").setup()
+end
+
+if nixcfg.langMarkdown.enable then
+    require('render-markdown').setup({
+        enabled = false,
+    })
+    require("aztex").setup({
+        enabled = false,
+        inline_enable = true,
+        cmp_enabled = true,
+        custom_symbols = {
+            emdash = "—",
+        },
+    })
+    require("cmp").register_source("aztex", require("aztex.cmp").new())
 end
 
 if nixcfg.codeMisc.enable then
@@ -392,6 +409,12 @@ if nixcfg.codeMisc.enable then
         })
     end
 
+    if nixcfg.langMarkdown.enable then
+        table.insert(cmp_sources, {
+            name = "aztex",
+        })
+    end
+
     local cmpMapping = {
         ["<S-Tab>"] = cmp.mapping.confirm({ select = true })
     }
@@ -429,8 +452,8 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, {
 })
 
 if nixcfg.statusBar.enable then
-    local params = { 
-        sections = { 
+    local params = {
+        sections = {
             lualine_c = { "filename" },
             lualine_x = { "encoding", "fileformat", "filetype" },
         }
@@ -878,8 +901,8 @@ end
 
 if nixcfg.langCangjie.enable then
     require("cjexplore").setup({
-      default_stages = { "macroexp", "genericinst" },
-      default_stage = "macroexp",
+        default_stages = { "macroexp", "genericinst" },
+        default_stage = "macroexp",
     })
 end
 
@@ -894,7 +917,7 @@ if nixcfg.aiCompletion.enable then
                 api_key = function() return params.apiKey end,
                 end_point = params.endPoint .. "/chat/completions",
                 model = params.model,
-                name = params.name;
+                name = params.name,
                 optional = {
                     enable_thinking = false,
                 },
