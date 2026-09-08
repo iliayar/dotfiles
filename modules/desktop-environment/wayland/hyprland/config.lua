@@ -130,15 +130,15 @@ hl.bind(M "SHIFT + Q", hl.dsp.window.close())
 hl.bind(M "F", hl.dsp.window.fullscreen({ action = "toggle" }))
 hl.bind(M "comma", hl.dsp.window.float({ action = "toggle" }))
 
-hl.bind(M "H", hy3.move_focus("left", {"visible"}))
-hl.bind(M "L", hy3.move_focus("right", {"visible"}))
-hl.bind(M "J", hy3.move_focus("down", {"visible"}))
-hl.bind(M "K", hy3.move_focus("up", {"visible"}))
+hl.bind(M "H", hy3.move_focus("left", { visible = true }))
+hl.bind(M "L", hy3.move_focus("right", { visible = true }))
+hl.bind(M "J", hy3.move_focus("down", { visible = true }))
+hl.bind(M "K", hy3.move_focus("up", { visible = true }))
 
-hl.bind(M "SHIFT + H", hy3.move_window("left", {"visible"}))
-hl.bind(M "SHIFT + L", hy3.move_window("right", {"visible"}))
-hl.bind(M "SHIFT + J", hy3.move_window("down", {"visible"}))
-hl.bind(M "SHIFT + K", hy3.move_window("up", {"visible"}))
+hl.bind(M "SHIFT + H", hy3.move_window("left", { visible = true }))
+hl.bind(M "SHIFT + L", hy3.move_window("right", { visible = true }))
+hl.bind(M "SHIFT + J", hy3.move_window("down", { visible = true }))
+hl.bind(M "SHIFT + K", hy3.move_window("up", { visible = true }))
 
 hl.bind(M "CTRL + J", hy3.change_focus("raise"))
 hl.bind(M "CTRL + K", hy3.change_focus("lower"))
@@ -168,7 +168,7 @@ end
 for i = 1, 10 do
     local key = i % 10
     hl.bind(M(key), hl.dsp.focus({ workspace = i, on_current_monitor = true }))
-    hl.bind(M("SHIFT + " .. key), hy3.move_to_workspace(i, {"follow"}))
+    hl.bind(M("SHIFT + " .. key), hy3.move_to_workspace(i, { follow = true }))
     hl.bind(M("CTRL + " .. key), hy3.move_to_workspace(i))
 end
 
