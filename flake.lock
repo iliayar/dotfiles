@@ -86,11 +86,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1784815144,
-        "narHash": "sha256-3COVQL9+I//ayHp+pP8vsEGMQprHYavA9+7guGJakJA=",
+        "lastModified": 1789049172,
+        "narHash": "sha256-9cYkJ3YEVXChJMWV/DciVJFG9uxq4WbaiFouZGADLe0=",
         "ref": "refs/heads/master",
-        "rev": "f2c5ee7132cc232137a76ed5ebfe47e036dcf634",
-        "revCount": 5,
+        "rev": "7f3b796f6e1084d7d440309a22eb30013246422a",
+        "revCount": 6,
         "type": "git",
         "url": "https://gitcode.com/iliayar/cjexplore.nvim.git"
       },
