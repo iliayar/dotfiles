@@ -33,4 +33,6 @@ final: prev: {
 
   zen-browser = zen-browser.packages.${system}.default;
   curd = curd.packages.${system}.default;
+
+  betterbird = prev.callPackage ../pkgs/betterbird { };
 }

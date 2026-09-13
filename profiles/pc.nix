@@ -52,7 +52,8 @@
     # meli
     w3m
 
-    thunderbird
+    # thunderbird
+    betterbird
 
     yt-dlp
     audacity
