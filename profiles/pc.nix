@@ -2,6 +2,7 @@
   config,
   pkgs,
   nix-ai-tools,
+  express-messenger,
   ...
 }:
 
@@ -42,7 +43,8 @@
     # nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.copilot-cli
     nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.claude-code
     # nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.codex
-    nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.pi
+    # nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.pi
+    nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.omp
 
     # TODO: this one too
     cfcli
@@ -52,8 +54,8 @@
     # meli
     w3m
 
-    # thunderbird
-    betterbird
+    thunderbird
+    # betterbird
 
     yt-dlp
     audacity
@@ -68,6 +70,8 @@
     sidequest
 
     curd
+
+    express-messenger.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   # TODO: Move it somewhere

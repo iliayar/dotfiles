@@ -93,6 +93,11 @@ hl.config({
       tablet = {
         transform = 0,
       },
+      touchpad = {
+          clickfinger_behavior = true,
+          natural_scroll = true,
+          tap_to_click = false,
+      },
     },
     misc = {
       mouse_move_focuses_monitor = false,
@@ -123,6 +128,9 @@ end
 
 hl.bind(M "mouse:272", hl.dsp.window.drag(), { mouse = true })
 hl.bind(M "mouse:273", hl.dsp.window.resize(), { mouse = true })
+
+hl.gesture({ fingers = 2, mods = nixcfg.mainMod, direction = "pinch", action = "cursor_zoom", zoom_level = 1, mode = "live" })
+hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })
 
 hl.bind(M "Return", hl.dsp.exec_cmd(nixcfg.terminal))
 hl.bind(M "D", hl.dsp.exec_cmd("vicinae open"))

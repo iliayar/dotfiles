@@ -139,7 +139,12 @@
 
     curd = {
         # url = "github:Wraient/curd";
-        url = "git+https://git.sr.ht/~iliayar/curd";
+        url = "github:iliayar/curd";
+        inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    express-messenger = {
+        url = "github:blackfan321/express-messenger-nix";
         inputs.nixpkgs.follows = "nixpkgs";
     };
   };

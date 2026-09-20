@@ -139,17 +139,17 @@
         "systems": "systems_4"
       },
       "locked": {
-        "lastModified": 1787440161,
-        "narHash": "sha256-QtfqrahS7lDGdLaTPI/7B14tmfaeeiXHsLLZURSlzrA=",
-        "ref": "refs/heads/main",
-        "rev": "d5d0ccedac3e9338286339265e5821cbb8388f80",
-        "revCount": 583,
-        "type": "git",
-        "url": "https://git.sr.ht/~iliayar/curd"
+        "lastModified": 1790022638,
+        "narHash": "sha256-ALx8wZFEcDltOW2ZBhbuFjlqrrEUEczIS3LemPcxhqY=",
+        "owner": "iliayar",
+        "repo": "curd",
+        "rev": "f0fba556177dbb86c81eade037bd69b595a52344",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "https://git.sr.ht/~iliayar/curd"
+        "owner": "iliayar",
+        "repo": "curd",
+        "type": "github"
       }
     },
     "denv": {
@@ -327,6 +327,26 @@
       "original": {
         "owner": "nix-community",
         "repo": "emacs-overlay",
+        "type": "github"
+      }
+    },
+    "express-messenger": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1788433898,
+        "narHash": "sha256-Yd3MEoM3PFk8viGh0TjDg7OQHBRtAeEQNr1YmFcTcp0=",
+        "owner": "blackfan321",
+        "repo": "express-messenger-nix",
+        "rev": "6a652f158c22032d47829e2759eb8a4f57cf512f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "blackfan321",
+        "repo": "express-messenger-nix",
         "type": "github"
       }
     },
@@ -1423,6 +1443,7 @@
         "denv": "denv_4",
         "deploy-rs": "deploy-rs",
         "emacs-overlay": "emacs-overlay",
+        "express-messenger": "express-messenger",
         "gitcode-cli": "gitcode-cli",
         "home-manager": "home-manager",
         "libxft-bgra": "libxft-bgra",
