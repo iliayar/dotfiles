@@ -81,7 +81,10 @@ in
           background-opacity = 0.85;
           font-size = 12;
           font-family = "FiraCode Nerd Font Mono";
-
+          custom-shader = [
+            "${./ghostty-cursor-warp.glsl}"
+            "${./ghostty-ripple-cursor.glsl}"
+          ];
         }
         // (
           if pkgs.stdenv.hostPlatform.isLinux then

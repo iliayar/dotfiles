@@ -72,6 +72,9 @@
     curd
 
     express-messenger.packages.${pkgs.stdenv.hostPlatform.system}.default
+
+    # FIXME: Use home-manager option
+    distrobox
   ];
 
   # TODO: Move it somewhere

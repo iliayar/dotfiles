@@ -1,6 +1,8 @@
 local nixcfg = require("nixcfg")
 local hy3 = hl.plugin.hy3
 
+hl.permission({ binary = nixcfg.peekPath, type = "screencopy", mode = "allow" })
+
 hl.monitor({
     output = "",
     mode = "preferred",

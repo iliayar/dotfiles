@@ -124,6 +124,7 @@ in
         swayidle
         hyprshade
         last-screenshot
+        peek
 
         vimix-cursors
         bibata-cursors
@@ -200,6 +201,7 @@ in
               }
 
               M.screenshot = "${my-screenshot}/bin/my-screenshot"
+              M.peekPath = "${pkgs.peek}/bin/peek";
 
               return M
             '';
