@@ -49,8 +49,6 @@
     # TODO: this one too
     cfcli
 
-    # TODO: And this one
-    yazi
     # meli
     w3m
 

@@ -129,6 +129,10 @@ in
         }
         // cfg.jujutsu.extraSettings;
       };
+
+      home.packages = with pkgs; [
+        jjui
+      ];
     })
 
     (mkIf (cfg.enable && cfg.jujutsu.enable && cfg.gpg.enable && cfg.git.gpg-key != null) {
