@@ -569,7 +569,16 @@ if nixcfg.lsp.enable then
     vim.lsp.config("ghcide", { filetypes = {} })
 
     if nixcfg.langRust.enable then
-        vim.lsp.config("rust_analyzer", lsp_default_config)
+        local cfg = vim.deepcopy(lsp_default_config)
+        cfg.settings = {
+          ["rust-analyzer"] = {
+              check = {
+                  workspace = false,
+              }
+          }
+        }
+
+        vim.lsp.config("rust_analyzer", cfg)
         vim.lsp.enable("rust_analyzer")
     end
 
