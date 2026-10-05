@@ -3,7 +3,6 @@
   pkgs,
   lib,
   themes,
-  system,
   ...
 }:
 
@@ -19,6 +18,11 @@ in
       ghostty = {
         enable = mkOption {
           default = false;
+        };
+        shaders = {
+            enable = mkOption {
+                default = true;
+            };
         };
       };
     };
@@ -81,10 +85,10 @@ in
           background-opacity = 0.85;
           font-size = 12;
           font-family = "FiraCode Nerd Font Mono";
-          custom-shader = [
+          custom-shader = if cfg.ghostty.shaders.enable then [
             "${./ghostty-cursor-warp.glsl}"
             "${./ghostty-ripple-cursor.glsl}"
-          ];
+          ] else [];
         }
         // (
           if pkgs.stdenv.hostPlatform.isLinux then

@@ -4,6 +4,7 @@
   lib,
   themes,
   gitcode-cli,
+  system,
   ...
 }:
 
@@ -147,7 +148,7 @@ in
 
     (mkIf (cfg.enable && cfg.gitcode-cli.enable) {
         home.packages = [
-            gitcode-cli.packages.${pkgs.system}.default
+            gitcode-cli.packages.${system}.default
         ];
     })
   ];
