@@ -173,6 +173,7 @@
   programs.dconf.enable = true;
   programs.steam.enable = true;
   programs.nix-ld.enable = true;
+  services.envfs.enable = true;
 
   services.resolved.enable = true;
 
