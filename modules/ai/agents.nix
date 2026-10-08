@@ -52,10 +52,11 @@ in
       ];
     })
     (mkIf cfg.omp.enable {
-      home.packages = [
+      home.packages = with pkgs; [
         # TODO: Install plugins from here:
         #  - omp install https://github.com/umputun/revdiff
         nix-ai-tools.packages.${system}.omp
+        bun
       ];
     })
     (mkIf cfg.ollama.enable {
