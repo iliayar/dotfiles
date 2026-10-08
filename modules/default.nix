@@ -9,6 +9,7 @@
     ./desktop-environment
     ./dev
     ./study
+    ./ai
     ./settings.nix
     ./other.nix
   ];

@@ -147,6 +147,11 @@
         url = "github:blackfan321/express-messenger-nix";
         inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    revdiff = {
+        url = "github:umputun/revdiff";
+        inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

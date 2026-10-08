@@ -26,19 +26,6 @@
     # libreoffice
     # deploy-rs
 
-    # TODO: Move it in separate config or delete
-    # warp-terminal
-    # zed-editor
-    # msty
-    # open-interpreter
-    # code-cursor
-    # windsurf
-    # claude-code
-    # nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.copilot-cli
-    nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.claude-code
-    # nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.codex
-    nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.pi
-
     # TODO: this one too
     cfcli
 
@@ -56,15 +43,6 @@
     # ani-cli
     mpv
   ];
-
-  # TODO: Move it somewhere
-  # services.ollama = {
-  #   enable = true;
-  #   acceleration = "rocm";
-  #   environmentVariables = {
-  #     HSA_OVERRIDE_GFX_VERSION = "11.0.0";
-  #   };
-  # };
 
   denv = { langs.haskell.enable = true; };
 
@@ -96,40 +74,6 @@
       lean.enable = true;
       fsharp.enable = true;
     };
-    # dev = {
-    #   python.enable = true;
-    #   python.additionalPackages = pypkgs: with pypkgs; [ pygments ];
-    #   cpp.enable = true;
-    #   js.enable = true;
-    #   latex.enable = true;
-    #   rust.enable = true;
-    #   nix.enable = true;
-    #   lua.enable = true;
-    #   go.enable = true;
-    #   ocaml.enable = true;
-    #   sql.enable = true;
-    #   typst.enable = true;
-
-    #   embed.enable = true;
-
-    #   train.enable = true;
-    # };
-
-    # study.sage.enable = true;
-    # study.misc.enable = true;
-
-    # games = {
-    #   minecraft.enable = true;
-    #   wine.enable = true;
-    #   lutris.enable = true;
-
-    #   extra.enable = true;
-    # };
-    # games = {
-    #   click-the-circles.enable = true;
-    #   extra.enable = true;
-    #   wine.enable = true;
-    # };
 
     editors.emacs = {
       enable = true;
@@ -251,100 +195,9 @@
     };
     de.terms.alacritty.enable = true;
 
-    # de.zathura.enable = true;
-
-    # de = {
-    #   misc = true;
-    #   media = true;
-    #   obs.enable = true;
-    #   social.enable = true;
-
-    #   browsers = {
-    #     brave.enable = true;
-    #     zen.enable = true;
-    #     default = "zen";
-    #     # qute.enable = true;
-    #   };
-
-    #   terms = {
-    #     alacritty.enable = true;
-    #     # Moving to
-    #     wezterm = {
-    #       enable = true;
-    #       # useNvidia = false;
-    #     };
-
-    #     ghostty = {
-    #       enable = true;
-    #     };
-
-    #     # urxvt.enable = true;
-    #   };
-
-    #   # xmobar.enable = true;
-    #   # xmonad.enable = true;
-
-    #   # lock.enable = true;
-    #   # conky.enable = true;
-    #   dunst.enable = true;
-    #   # picom.enable = true;
-
-    #   # audio-utils.enable = true;
-    #   # easyeffects.enable = true;
-    #   spotify.enable = true;
-
-    #   zathura.enable = true;
-
-    #   # pointer.enable = true;
-
-    #   wayland.hyprland = {
-    #     enable = true;
-    #     portals.enable = true;
-
-    #     termCmd = "ghostty";
-
-    #     cursor.hyprcursor = "Bibata-Original-Classic";
-    #     cursor.xcursor = "Bibata-Original-Classic";
-    #   };
-
-    #   wayland.waybar = {
-    #     enable = true;
-    #     modules = {
-    #       left = ms:
-    #         with ms; [
-    #           hyprland-submap
-    #           hyprland-workspaces
-    #           wlr-taskbar
-    #           hyprland-window
-    #         ];
-    #       center = ms: with ms; [ mpris ];
-    #       right = ms:
-    #         with ms; [
-    #           # network
-    #           pulseaudio
-    #           (disk {
-    #             name = "root";
-    #             path = "/";
-    #           })
-    #           (disk {
-    #             name = "data";
-    #             path = "/home/";
-    #           })
-    #           cpu
-    #           memory
-    #           # FIXME: Which sensor?
-    #           # k10temp tctl probably
-    #           # (temperature {
-    #           #   thermal-zone = 0;
-    #           # })
-    #           battery
-    #           hyprland-language
-    #           clock
-    #           tray
-    #         ];
-    #     };
-    #   };
-    # };
+    ai = {
+        enable = true;
+    };
   };
 
   # This value determines the Home Manager release that your

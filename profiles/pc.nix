@@ -32,20 +32,6 @@
     libreoffice
     deploy-rs
 
-    # TODO: Move it in separate config or delete
-    # warp-terminal
-    # zed-editor
-    # msty
-    # open-interpreter
-    # code-cursor
-    # windsurf
-    # claude-code
-    # nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.copilot-cli
-    nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.claude-code
-    # nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.codex
-    # nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.pi
-    nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.omp
-
     # TODO: this one too
     cfcli
 
@@ -74,15 +60,6 @@
     # FIXME: Use home-manager option
     distrobox
   ];
-
-  # TODO: Move it somewhere
-  services.ollama = {
-    enable = true;
-    acceleration = "rocm";
-    environmentVariables = {
-      HSA_OVERRIDE_GFX_VERSION = "11.0.0";
-    };
-  };
 
   denv = {
     langs.haskell.enable = true;
@@ -117,37 +94,9 @@
       java.enable = true;
       fsharp.enable = true;
     };
-    # dev = {
-    #   python.enable = true;
-    #   python.additionalPackages = pypkgs: with pypkgs; [ pygments ];
-    #   cpp.enable = true;
-    #   js.enable = true;
-    #   latex.enable = true;
-    #   rust.enable = true;
-    #   nix.enable = true;
-    #   go.enable = true;
-    #   ocaml.enable = true;
-    #   sql.enable = true;
-    #   typst.enable = true;
-
-    #   embed.enable = true;
-
-    #   train.enable = true;
-
-    #   lean.enable = true;
-    # };
-
     # FIXME:
     study.sage.enable = true;
-    # study.misc.enable = true;
 
-    # games = {
-    #   minecraft.enable = true;
-    #   wine.enable = true;
-    #   lutris.enable = true;
-
-    #   extra.enable = true;
-    # };
     games = {
       click-the-circles.enable = true;
       extra.enable = true;
@@ -389,6 +338,11 @@
             ];
         };
       };
+    };
+
+    ai = {
+        enable = true;
+        ollama.enable = true;
     };
   };
 
