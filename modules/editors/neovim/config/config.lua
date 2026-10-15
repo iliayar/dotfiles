@@ -571,11 +571,11 @@ if nixcfg.lsp.enable then
     if nixcfg.langRust.enable then
         local cfg = vim.deepcopy(lsp_default_config)
         cfg.settings = {
-          ["rust-analyzer"] = {
-              check = {
-                  workspace = false,
-              }
-          }
+            ["rust-analyzer"] = {
+                check = {
+                    workspace = false,
+                }
+            }
         }
 
         vim.lsp.config("rust_analyzer", cfg)
@@ -961,6 +961,20 @@ if nixcfg.aiChat.enable then
                 api_key_name = 'cmd:echo ' .. params.apiKey,
             },
         },
+    })
+end
+
+if nixcfg.aiACP.enable then
+    require("agentic").setup({
+        provider = "omp-acp",
+        acp_providers = {
+            ["omp-acp"] = {
+                name = "Oh My Pi",
+                command = "omp",
+                args = { "acp" },
+                env = {},
+            },
+        }
     })
 end
 

@@ -103,6 +103,17 @@ let
     };
   };
 
+  agentic-nvim-pkg = pkgs.vimUtils.buildVimPlugin {
+    pname = "agentic.nvim";
+    version = "2026-10-09";
+    src = pkgs.fetchFromGitHub {
+      owner = "carlos-algms";
+      repo = "agentic.nvim";
+      rev = "e280deec82cfe642bba2c0d0157d320b706c094a";
+      hash = "sha256-/zwKCvpuY+LeKO4B2fN0FXMXqBShI33HEiqiGxd90nk=";
+    };
+  };
+
   viper-nvim-pkg = pkgs.vimUtils.buildVimPlugin {
     pname = "viper.nvim";
     version = "2026-10-13";
@@ -431,6 +442,11 @@ let
         };
     };
 
+    aiACP = {
+        autoEnable = cfg.ai.acp.enable;
+        plugins = [ agentic-nvim-pkg ];
+    };
+
     exp = {
       autoEnable = cfg.experiments.enable;
       plugins = [
@@ -582,6 +598,10 @@ in
         chat = {
             enable = mkOption { default = false; };
             model = mkOption { default = ""; };
+        };
+
+        acp = {
+            enable = mkOption { default = false; };
         };
       };
 
