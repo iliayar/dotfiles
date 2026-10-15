@@ -149,6 +149,7 @@
         "fsharp"
         "cangjie"
         "java"
+        "viper"
       ];
       langs.cpp.lsp = "clangd";
       code-assist = { enable = true; };

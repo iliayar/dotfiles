@@ -963,3 +963,7 @@ if nixcfg.aiChat.enable then
         },
     })
 end
+
+if nixcfg.langViper.enable then
+    require("viper").setup({})
+end

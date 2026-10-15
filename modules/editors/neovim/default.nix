@@ -103,6 +103,17 @@ let
     };
   };
 
+  viper-nvim-pkg = pkgs.vimUtils.buildVimPlugin {
+    pname = "viper.nvim";
+    version = "2026-10-13";
+    src = pkgs.fetchFromGitHub {
+      owner = "HSMF";
+      repo = "viper.nvim";
+      rev = "c55817430090904835a4c36aa363ac2e21f2c5d5";
+      hash = "sha256-Kgd/Bt3Dpsx+ZRQANrX66YOG6Lqzg9k8pK8A1gpZVeA=";
+    };
+  };
+
   cfg = config.custom.editors.nvim;
 
   nvim-exp = import ./nvim-exp { inherit pkgs; };
@@ -375,6 +386,12 @@ let
         aztex-nvim-pkg
       ];
     };
+    langViper = {
+      autoEnable = builtins.elem "viper" cfg.langs.enable;
+      plugins = with pkgs.vimPlugins; [
+        viper-nvim-pkg
+      ];
+    };
 
     obsidian = {
       autoEnable = cfg.obsidian.enable;
@@ -493,6 +510,7 @@ in
               "cangjie"
               "java"
               "markdown"
+              "viper"
             ]
           );
         };
