@@ -6,6 +6,7 @@
   revdiff,
   system,
   graphify,
+  codegraph,
   ...
 }:
 
@@ -62,6 +63,7 @@ in
       ] ++ [
         # TODO: graphify pi install
         graphify.packages.${system}.default
+        codegraph.packages.${system}.default
       ];
 
       custom.misc.git.ignores = [

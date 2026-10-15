@@ -157,6 +157,11 @@
         url = "github:iliayar/graphify/v8+cangjie+acp";
         inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    codegraph = {
+        url = "github:iliayar/codegraph/main+cangjie";
+        inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
