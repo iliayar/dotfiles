@@ -57,6 +57,9 @@ in
         #  - omp install https://github.com/umputun/revdiff
         nix-ai-tools.packages.${system}.omp
         bun
+
+        # TODO: graphify pi install
+        graphify
       ];
     })
     (mkIf cfg.ollama.enable {
