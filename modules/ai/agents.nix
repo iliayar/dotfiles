@@ -5,6 +5,7 @@
   nix-ai-tools,
   revdiff,
   system,
+  graphify,
   ...
 }:
 
@@ -58,8 +59,13 @@ in
         nix-ai-tools.packages.${system}.omp
         bun
 
+      ] ++ [
         # TODO: graphify pi install
-        graphify
+        graphify.packages.${system}.default
+      ];
+
+      custom.misc.git.ignores = [
+        "graphify-out"
       ];
     })
     (mkIf cfg.ollama.enable {

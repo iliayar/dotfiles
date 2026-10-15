@@ -152,6 +152,11 @@
         url = "github:umputun/revdiff";
         inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    graphify = {
+        url = "github:iliayar/graphify/v8+cangjie+acp";
+        inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
