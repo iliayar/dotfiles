@@ -121,10 +121,8 @@ in
           };
 
           ui = {
-            pager = [
-              "less"
-              "-RFX"
-            ];
+            pager = "delta";
+            diff-formatter = ":git";
             conflict-marker-style = "git";
           };
         }
