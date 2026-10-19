@@ -68,6 +68,7 @@ in
 
       custom.misc.git.ignores = [
         "graphify-out"
+        ".codegraph"
       ];
     })
     (mkIf cfg.ollama.enable {

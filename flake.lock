@@ -42,11 +42,11 @@
         "tree-sitter-cangjie-src": "tree-sitter-cangjie-src"
       },
       "locked": {
-        "lastModified": 1787309717,
-        "narHash": "sha256-gAjdzIAw3xDU+7xzSem35jnHiu6rEjrf05gSM1nOHGA=",
+        "lastModified": 1792161318,
+        "narHash": "sha256-kL1w5+W3ASWNc2IBxyWxoFVo8rd0mGKdh6MIWSPr/1o=",
         "ref": "refs/heads/master",
-        "rev": "2118e25448cf736f91400feb20ea1bda7f0b9fd5",
-        "revCount": 9,
+        "rev": "a09d2f52716e0200440e8a03afc9faeaebc51453",
+        "revCount": 10,
         "type": "git",
         "url": "https://gitcode.com/iliayar/cangjie.nvim.git"
       },
@@ -97,6 +97,28 @@
       "original": {
         "type": "git",
         "url": "https://gitcode.com/iliayar/cjexplore.nvim.git"
+      }
+    },
+    "codegraph": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "tree-sitter-cangjie-src": "tree-sitter-cangjie-src_2"
+      },
+      "locked": {
+        "lastModified": 1792078169,
+        "narHash": "sha256-sPNuKaBo92t2IGRBryTKtFo4XOtvgVPSLiFL9YLBAKI=",
+        "owner": "iliayar",
+        "repo": "codegraph",
+        "rev": "1ca7a44d477180f868350b23f4b18002935292c4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "iliayar",
+        "ref": "main+cangjie",
+        "repo": "codegraph",
+        "type": "github"
       }
     },
     "codestats-nvim": {
@@ -881,6 +903,28 @@
         "url": "https://gitcode.com/iliayar/gitcode-cli-nix.git"
       }
     },
+    "graphify": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "tree-sitter-cangjie-src": "tree-sitter-cangjie-src_3"
+      },
+      "locked": {
+        "lastModified": 1792070940,
+        "narHash": "sha256-UH6bGGbbDFJVMELWVkG4ob0Yau8vlahi164sX794SoM=",
+        "owner": "iliayar",
+        "repo": "graphify",
+        "rev": "1e686b3f4bb82c2d5e606cb76fe75e6ba3f30cc4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "iliayar",
+        "ref": "v8+cangjie+acp",
+        "repo": "graphify",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -1549,6 +1593,7 @@
         "cangjie-nvim": "cangjie-nvim",
         "cfcli": "cfcli",
         "cjexplore-nvim": "cjexplore-nvim",
+        "codegraph": "codegraph",
         "codestats-nvim": "codestats-nvim",
         "coq-lsp-nvim": "coq-lsp-nvim",
         "curd": "curd",
@@ -1557,6 +1602,7 @@
         "emacs-overlay": "emacs-overlay",
         "express-messenger": "express-messenger",
         "gitcode-cli": "gitcode-cli",
+        "graphify": "graphify",
         "home-manager": "home-manager",
         "libxft-bgra": "libxft-bgra",
         "nix-ai-tools": "nix-ai-tools",
@@ -2067,6 +2113,38 @@
       }
     },
     "tree-sitter-cangjie-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1780277500,
+        "narHash": "sha256-HxWaFU6DDlukItDoyX977EQxQm60T2KtxNhEl5HUXeA=",
+        "ref": "refs/heads/main",
+        "rev": "2fac636da4191550463a456396cb2680121acf6b",
+        "revCount": 24,
+        "type": "git",
+        "url": "https://gitcode.com/Cangjie-SIG/tree-sitter-cangjie.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://gitcode.com/Cangjie-SIG/tree-sitter-cangjie.git"
+      }
+    },
+    "tree-sitter-cangjie-src_2": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1780277500,
+        "narHash": "sha256-HxWaFU6DDlukItDoyX977EQxQm60T2KtxNhEl5HUXeA=",
+        "ref": "refs/heads/main",
+        "rev": "2fac636da4191550463a456396cb2680121acf6b",
+        "revCount": 24,
+        "type": "git",
+        "url": "https://gitcode.com/Cangjie-SIG/tree-sitter-cangjie.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://gitcode.com/Cangjie-SIG/tree-sitter-cangjie.git"
+      }
+    },
+    "tree-sitter-cangjie-src_3": {
       "flake": false,
       "locked": {
         "lastModified": 1780277500,
