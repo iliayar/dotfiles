@@ -47,6 +47,7 @@
     rqbit
     ffmpeg
     jellyfin
+    v2rayn
 
     dolphin-emu
 
@@ -195,6 +196,7 @@
         "cangjie"
         "typescript"
         "java"
+        "viper"
       ];
       langs.cpp.lsp = "ccls";
       code-assist = {
