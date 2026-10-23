@@ -115,7 +115,13 @@
 
     cangjie-nvim = {
       # url = "path:/home/iliayar/Repos/cangjie.nvim";
-      url = "git+https://gitcode.com/iliayar/cangjie.nvim.git";
+      # url = "git+https://gitcode.com/iliayar/cangjie.nvim.git";
+      url = "path:/home/iliayar/Repos/ide4cj/cangjie.nvim";
+    };
+
+    cjls = {
+      url = "github:ide4cj/cjls";
+      # url = "path:/home/iliayar/Repos/ide4cj/cjls";
     };
 
     cjexplore-nvim = {
@@ -154,11 +160,6 @@
 
     revdiff = {
         url = "github:umputun/revdiff";
-        inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    graphify = {
-        url = "github:iliayar/graphify/v8+cangjie+acp";
         inputs.nixpkgs.follows = "nixpkgs";
     };
 

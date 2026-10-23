@@ -5,7 +5,6 @@
   nix-ai-tools,
   revdiff,
   system,
-  graphify,
   codegraph,
   ...
 }:
@@ -82,13 +81,10 @@ in
         bun
 
       ] ++ [
-        # TODO: graphify pi install
-        graphify.packages.${system}.default
         codegraph.packages.${system}.default
       ];
 
       custom.misc.git.ignores = [
-        "graphify-out"
         ".codegraph"
       ];
     })

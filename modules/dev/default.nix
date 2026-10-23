@@ -24,6 +24,7 @@
     ./zig.nix
     ./java.nix
     ./fsharp.nix
+    ./cangjie.nix
     ./misc.nix
   ];
 

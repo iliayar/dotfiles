@@ -277,10 +277,6 @@ if nixcfg.exp.enable then
     require("nvim-rlalr").setup()
 end
 
-if nixcfg.langCangjie.enable then
-    require("cangjie").setup()
-end
-
 if nixcfg.langMarkdown.enable then
     require('render-markdown').setup({
         enabled = false,
@@ -673,7 +669,15 @@ if nixcfg.lsp.enable then
     end
 
     if nixcfg.langCangjie.enable then
-        vim.lsp.config("cangjie", lsp_default_config)
+        local options = {
+            settings = {
+                cjls = {},
+            },
+        }
+        if #nixcfg.langCangjie.linkedProjects ~= 0 then
+            options.settings.cjls.linkedProjects = nixcfg.langCangjie.linkedProjects
+        end
+        vim.lsp.config('cjls', options)
     end
 
     local codebook_filetypes = vim.lsp.config["codebook"].filetypes

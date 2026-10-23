@@ -391,6 +391,13 @@ let
         cangjie-nvim.packages.${system}.default
         cjexplore-nvim.packages.${system}.default
       ];
+      extraParameters = {
+        linkedProjects =
+          let
+            inner = concatMapStrings (path: ''"${path}",'') cfg.langs.cangjie.linkedProjects;
+          in
+          "{ ${inner} }";
+      };
     };
     langJava = {
       autoEnable = builtins.elem "java" cfg.langs.enable;
@@ -426,30 +433,30 @@ let
     };
 
     aiCompletion = {
-        autoEnable = cfg.ai.completion.enable;
-        plugins = with pkgs.vimPlugins; [ minuet-ai-nvim ];
-        extraParameters = {
-            apiKey = ''"${cfg.ai.apikey}"'';
-            endPoint = ''"${cfg.ai.endpoint}"'';
-            name = ''"${cfg.ai.name}"'';
-            model = ''"${cfg.ai.completion.model}"'';
-        };
+      autoEnable = cfg.ai.completion.enable;
+      plugins = with pkgs.vimPlugins; [ minuet-ai-nvim ];
+      extraParameters = {
+        apiKey = ''"${cfg.ai.apikey}"'';
+        endPoint = ''"${cfg.ai.endpoint}"'';
+        name = ''"${cfg.ai.name}"'';
+        model = ''"${cfg.ai.completion.model}"'';
+      };
     };
 
     aiChat = {
-        autoEnable = cfg.ai.chat.enable;
-        plugins = with pkgs.vimPlugins; [ avante-nvim ];
-        extraParameters = {
-            apiKey = ''"${cfg.ai.apikey}"'';
-            endPoint = ''"${cfg.ai.endpoint}"'';
-            name = ''"${cfg.ai.name}"'';
-            model = ''"${cfg.ai.completion.model}"'';
-        };
+      autoEnable = cfg.ai.chat.enable;
+      plugins = with pkgs.vimPlugins; [ avante-nvim ];
+      extraParameters = {
+        apiKey = ''"${cfg.ai.apikey}"'';
+        endPoint = ''"${cfg.ai.endpoint}"'';
+        name = ''"${cfg.ai.name}"'';
+        model = ''"${cfg.ai.completion.model}"'';
+      };
     };
 
     aiACP = {
-        autoEnable = cfg.ai.acp.enable;
-        plugins = [ agentic-nvim-pkg ];
+      autoEnable = cfg.ai.acp.enable;
+      plugins = [ agentic-nvim-pkg ];
     };
 
     herdr = {
@@ -566,6 +573,13 @@ in
             );
           };
         };
+
+        cangjie = {
+          linkedProjects = mkOption {
+            default = [ ];
+            type = types.listOf types.str;
+          };
+        };
       };
 
       code-assist = {
@@ -601,17 +615,17 @@ in
         name = mkOption { default = "Custom"; };
 
         completion = {
-            enable = mkOption { default = false; };
-            model = mkOption { default = ""; };
+          enable = mkOption { default = false; };
+          model = mkOption { default = ""; };
         };
 
         chat = {
-            enable = mkOption { default = false; };
-            model = mkOption { default = ""; };
+          enable = mkOption { default = false; };
+          model = mkOption { default = ""; };
         };
 
         acp = {
-            enable = mkOption { default = false; };
+          enable = mkOption { default = false; };
         };
       };
 
