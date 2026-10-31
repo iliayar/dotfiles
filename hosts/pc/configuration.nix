@@ -35,8 +35,6 @@
     };
 
     consoleLogLevel = 0;
-    initrd.verbose = false;
-    initrd.systemd.enable = true;
     kernelParams = [
       "quiet"
       "splash"
@@ -230,11 +228,11 @@
   services.avahi = {
     enable = true;
     nssmdns4 = true; # printing
-    publish = {
-      enable = true;
-      addresses = true;
-      workstation = true;
-      userServices = true;
+    settings = {
+        publish = {
+          publish-addresses = true;
+          publish-workstation = true;
+        };
     };
   };
 

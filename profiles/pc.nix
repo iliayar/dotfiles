@@ -345,6 +345,7 @@
     ai = {
         enable = true;
         ollama.enable = true;
+        herdr.enable = true;
     };
   };
 

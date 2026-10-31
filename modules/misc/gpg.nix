@@ -21,7 +21,7 @@ in
       '';
     })
     (mkIf (cfg.enable && cfg.gpg.enable && pkgs.stdenv.hostPlatform.isLinux) {
-      home.packages = [ pkgs.pinentry-gnome3 pkgs.gcr ];
+      home.packages = [ pkgs.pinentry-gnome3 pkgs.gcr_4 ];
 
       services.gpg-agent = {
         enable = true;

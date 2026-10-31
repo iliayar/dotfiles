@@ -1,4 +1,9 @@
-{ nixpkgs, pyprland-newest, system, ... }@inputs:
+{
+  nixpkgs,
+  pyprland-newest,
+  system,
+  ...
+}@inputs:
 final: prev: {
   pyprland = pyprland-newest.packages.${system}.pyprland;
 
@@ -27,4 +32,14 @@ final: prev: {
   #       hash = "sha256-nv8QnX4tZDJ0HfREwMew5FNpDpG7KboxCo9HMi+BjaA=";
   #   };
   # });
+
+  hyprlandPlugins.hy3 = prev.hyprlandPlugins.hy3.overrideAttrs (_: rec {
+    version = "0.57.0";
+    src = final.fetchFromGitHub {
+      owner = "outfoxxed";
+      repo = "hy3";
+      rev = "hl${version}";
+      hash = "sha256-9qAw3Xsa0xN9b5ERiWEGL1fBq37GLskcrBj/6ax8PU4=";
+    };
+  });
 }

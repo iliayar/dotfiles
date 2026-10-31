@@ -101,7 +101,6 @@
 
     cfcli = {
       url = "git+https://git.sr.ht/~iliayar/cfcli";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     zen-browser = {
@@ -188,7 +187,7 @@
           nixpkgs-config = {
             inherit system overlays;
             config.allowUnfree = true;
-            config.permittedInsecurePackages = [ "electron-25.9.0" ];
+            config.permittedInsecurePackages = [ "electron-25.9.0" "sidequest-1.4.1" ];
           };
 
           pkgs = import nixpkgs nixpkgs-config;

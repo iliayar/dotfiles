@@ -34,6 +34,12 @@ in
         };
       };
 
+      herdr = {
+        enable = mkOption {
+          default = true;
+        };
+      };
+
       ollama = {
         enable = mkOption {
           default = false;
@@ -69,6 +75,12 @@ in
       custom.misc.git.ignores = [
         "graphify-out"
         ".codegraph"
+      ];
+    })
+    (mkIf cfg.herdr.enable {
+      home.packages = with pkgs; [
+        nix-ai-tools.packages.${system}.herdr
+
       ];
     })
     (mkIf cfg.ollama.enable {
