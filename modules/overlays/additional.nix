@@ -35,4 +35,5 @@ final: prev: {
   curd = curd.packages.${system}.default;
 
   betterbird = prev.callPackage ../pkgs/betterbird { };
+  terminal-browser = prev.callPackage ../pkgs/terminal-browser { };
 }

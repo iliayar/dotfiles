@@ -40,6 +40,12 @@ in
         };
       };
 
+      terminal-browser = {
+        enable = mkOption {
+          default = true;
+        };
+      };
+
       ollama = {
         enable = mkOption {
           default = false;
@@ -82,6 +88,9 @@ in
         nix-ai-tools.packages.${system}.herdr
 
       ];
+    })
+    (mkIf cfg.terminal-browser.enable {
+      home.packages = [ pkgs.terminal-browser ];
     })
     (mkIf cfg.ollama.enable {
       services.ollama = {
