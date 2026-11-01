@@ -366,6 +366,8 @@ if nixcfg.codeMisc.enable then
             params.host = nixcfg.langTypst.host
             params.data_plane_port = nixcfg.langTypst.dataPlanePort
             params.control_plane_port = nixcfg.langTypst.controlPlanePort
+        elseif vim.env.HERDR_ENV == "1" then
+            params.open_cmd = "terminal-browser open %s --split right"
         end
         require("typst-preview").setup(params)
     end
