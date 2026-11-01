@@ -25,6 +25,11 @@
       flake = false;
     };
 
+    herdr-nvim = {
+      url = "github:ChmaraX/herdr-nvim";
+      flake = false;
+    };
+
     secrets.url = "git+ssh://git@github.com/iliayar/dotfiles-secrets.git";
     # secrets.url = "path:/home/iliayar/Repos/dotfiles-secrets";
 

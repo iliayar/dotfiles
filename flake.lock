@@ -924,6 +924,22 @@
         "type": "github"
       }
     },
+    "herdr-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1792697582,
+        "narHash": "sha256-XPa9UEd6NuSOhtPnd5jEuz6XBIEZwhE7Rkz8a1++iRE=",
+        "owner": "ChmaraX",
+        "repo": "herdr-nvim",
+        "rev": "b7c69cab2c1eb8754b505061e942fffc4a557a3e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ChmaraX",
+        "repo": "herdr-nvim",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -1634,6 +1650,7 @@
         "express-messenger": "express-messenger",
         "gitcode-cli": "gitcode-cli",
         "graphify": "graphify",
+        "herdr-nvim": "herdr-nvim",
         "home-manager": "home-manager",
         "libxft-bgra": "libxft-bgra",
         "nix-ai-tools": "nix-ai-tools",

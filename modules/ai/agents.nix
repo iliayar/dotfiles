@@ -83,12 +83,22 @@ in
         ".codegraph"
       ];
     })
-    (mkIf cfg.herdr.enable {
-      home.packages = with pkgs; [
-        nix-ai-tools.packages.${system}.herdr
+    (mkIf cfg.herdr.enable (
+      let
+        herdr = nix-ai-tools.packages.${system}.herdr;
+      in
+      {
+        home.packages = [
+          herdr
+          pkgs.herdr-nvim
+        ];
 
-      ];
-    })
+        home.activation.herdrPlugins = hm.dag.entryAfter [ "writeBoundary" ] ''
+          run ${herdr}/bin/herdr plugin unlink chmarax.herdr-nvim >/dev/null 2>&1 || true
+          run ${herdr}/bin/herdr plugin link ${pkgs.herdr-nvim}/share/herdr-nvim >/dev/null
+        '';
+      }
+    ))
     (mkIf cfg.terminal-browser.enable {
       home.packages = [ pkgs.terminal-browser ];
     })

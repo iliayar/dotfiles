@@ -980,6 +980,10 @@ if nixcfg.aiACP.enable then
     })
 end
 
+if nixcfg.herdr.enable then
+    require("herdr-nvim").setup({})
+end
+
 if nixcfg.langViper.enable then
     require("viper").setup({})
 end

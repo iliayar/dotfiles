@@ -1,4 +1,4 @@
-{ system, libxft-bgra, picom-jonaburg, tlpui-src, rust-blocks, uci, nwg-displays, cfcli, zen-browser, curd, ... }@inputs:
+{ system, libxft-bgra, picom-jonaburg, tlpui-src, rust-blocks, uci, nwg-displays, cfcli, zen-browser, curd, herdr-nvim, ... }@inputs:
 
 final: prev: {
   libxft-bgra = prev.stdenv.mkDerivation {
@@ -36,4 +36,5 @@ final: prev: {
 
   betterbird = prev.callPackage ../pkgs/betterbird { };
   terminal-browser = prev.callPackage ../pkgs/terminal-browser { };
+  herdr-nvim = prev.callPackage ../pkgs/herdr-nvim { herdr-nvim-src = herdr-nvim; };
 }

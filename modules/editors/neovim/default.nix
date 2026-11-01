@@ -125,6 +125,11 @@ let
     };
   };
 
+  herdr-nvim-pkg = pkgs.vimUtils.buildVimPlugin {
+    pname = "herdr-nvim";
+    inherit (pkgs.herdr-nvim) version src;
+  };
+
   cfg = config.custom.editors.nvim;
 
   nvim-exp = import ./nvim-exp { inherit pkgs; };
@@ -445,6 +450,11 @@ let
     aiACP = {
         autoEnable = cfg.ai.acp.enable;
         plugins = [ agentic-nvim-pkg ];
+    };
+
+    herdr = {
+      autoEnable = config.custom.ai.enable && config.custom.ai.herdr.enable;
+      plugins = [ herdr-nvim-pkg ];
     };
 
     exp = {
