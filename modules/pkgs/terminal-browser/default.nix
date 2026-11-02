@@ -42,6 +42,14 @@ let
       target = "linux-arm64";
       hash = "sha256-afJqdr3MYeR4JzOqG5/LbgZ3SsnWsN8+n7sKpKuw9rw=";
     };
+    aarch64-darwin = {
+      target = "darwin-arm64";
+      hash = "sha256-Ea+8HAzAuNErte/8LiuvCFB90yRW1uAFKCTBvDDBCPA=";
+    };
+    x86_64-darwin = {
+      target = "darwin-x64";
+      hash = "sha256-+Ru2Afk7KVm3aySm5LdlyretNaiFuXwHvqof0Hc/awU=";
+    };
   };
 
   source =
@@ -58,9 +66,9 @@ stdenv.mkDerivation {
     inherit (source) hash;
   };
 
-  nativeBuildInputs = [ autoPatchelfHook ];
+  nativeBuildInputs = lib.optionals stdenv.hostPlatform.isLinux [ autoPatchelfHook ];
 
-  buildInputs = [
+  buildInputs = lib.optionals stdenv.hostPlatform.isLinux [
     stdenv.cc.cc
     alsa-lib
     at-spi2-atk
@@ -87,11 +95,20 @@ stdenv.mkDerivation {
   ];
 
   # Chromium dlopens these at runtime, so autoPatchelf cannot see them
-  runtimeDependencies = [
+  runtimeDependencies = lib.optionals stdenv.hostPlatform.isLinux [
     libGL
     systemd
     vulkan-loader
   ];
+
+  # The macOS bundle is signed and notarized; stripping or rewriting Mach-O
+  # files in fixup would invalidate the signature.
+  dontFixup = stdenv.hostPlatform.isDarwin;
+
+  # GNU tar unpacks the macOS xattr headers as AppleDouble `._*` files
+  postUnpack = lib.optionalString stdenv.hostPlatform.isDarwin ''
+    find . -name '._*' -delete
+  '';
 
   dontConfigure = true;
   dontBuild = true;
@@ -100,11 +117,13 @@ stdenv.mkDerivation {
     runHook preInstall
 
     mkdir -p $out/share/terminal-browser $out/bin
-    cp -r . $out/share/terminal-browser
-
+    cp -a . $out/share/terminal-browser
+  ''
+  + lib.optionalString stdenv.hostPlatform.isLinux ''
     # setuid is impossible in the store; Chromium falls back to user namespaces
     rm $out/share/terminal-browser/electron/chrome-sandbox
-
+  ''
+  + ''
     # bin/terminal-browser resolves its own symlink to find the bundle root
     ln -s $out/share/terminal-browser/bin/terminal-browser $out/bin/terminal-browser
 
