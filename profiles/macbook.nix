@@ -65,7 +65,7 @@
       # rust.enable = true;
       # zig.enable = true;
 
-      # uci.enable = true;
+      uci.enable = true;
       # uci.daemon = false;
 
       latex.enable = true;
