@@ -23,6 +23,8 @@
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
+  boot.kernel.sysctl."net.ipv4.ip_unprivileged_port_start" = 80;
+
   boot = {
     plymouth = {
       enable = true;

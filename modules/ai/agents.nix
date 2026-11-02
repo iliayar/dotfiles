@@ -38,6 +38,15 @@ in
         enable = mkOption {
           default = true;
         };
+
+        wherdrProxy = {
+          enable = mkOption {
+            default = false;
+          };
+          hostName = mkOption {
+            type = types.str;
+          };
+        };
       };
 
       terminal-browser = {
@@ -97,6 +106,32 @@ in
           run ${herdr}/bin/herdr plugin unlink chmarax.herdr-nvim >/dev/null 2>&1 || true
           run ${herdr}/bin/herdr plugin link ${pkgs.herdr-nvim}/share/herdr-nvim >/dev/null
         '';
+      }
+    ))
+    (mkIf (cfg.herdr.enable && cfg.herdr.wherdrProxy.enable) (
+      let
+        proxy = cfg.herdr.wherdrProxy;
+        caddyfile = pkgs.writeText "wherdr-proxy.Caddyfile" ''
+          {
+            admin off
+            auto_https off
+          }
+          http://${proxy.hostName} {
+            log
+            reverse_proxy 127.0.0.1:7683
+          }
+        '';
+      in
+      {
+        systemd.user.services.wherdr-proxy = {
+          Unit.Description = "Relay wherdr over plain HTTP";
+          Service = {
+            ExecStart = "${pkgs.caddy}/bin/caddy run --adapter caddyfile --config ${caddyfile}";
+            Restart = "always";
+            RestartSec = 10;
+          };
+          Install.WantedBy = [ "default.target" ];
+        };
       }
     ))
     (mkIf cfg.terminal-browser.enable {

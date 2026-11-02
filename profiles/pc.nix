@@ -345,7 +345,13 @@
     ai = {
         enable = true;
         ollama.enable = true;
-        herdr.enable = true;
+        herdr = {
+          enable = true;
+          wherdrProxy = {
+            enable = true;
+            hostName = "wherdr.pc.l";
+          };
+        };
     };
   };
 
