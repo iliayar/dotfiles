@@ -108,32 +108,12 @@ in
         '';
       }
     ))
-    (mkIf (cfg.herdr.enable && cfg.herdr.wherdrProxy.enable) (
-      let
-        proxy = cfg.herdr.wherdrProxy;
-        caddyfile = pkgs.writeText "wherdr-proxy.Caddyfile" ''
-          {
-            admin off
-            auto_https off
-          }
-          http://${proxy.hostName} {
-            log
-            reverse_proxy 127.0.0.1:7683
-          }
-        '';
-      in
-      {
-        systemd.user.services.wherdr-proxy = {
-          Unit.Description = "Relay wherdr over plain HTTP";
-          Service = {
-            ExecStart = "${pkgs.caddy}/bin/caddy run --adapter caddyfile --config ${caddyfile}";
-            Restart = "always";
-            RestartSec = 10;
-          };
-          Install.WantedBy = [ "default.target" ];
-        };
-      }
-    ))
+    (mkIf (cfg.herdr.enable && cfg.herdr.wherdrProxy.enable) {
+      custom.misc.caddy = {
+        enable = true;
+        virtualHosts.${cfg.herdr.wherdrProxy.hostName}.upstream = "127.0.0.1:7683";
+      };
+    })
     (mkIf cfg.terminal-browser.enable {
       home.packages = [ pkgs.terminal-browser ];
     })

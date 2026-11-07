@@ -20,6 +20,7 @@ in
     ./mail.nix
     ./zellij
     ./net.nix
+    ./caddy.nix
   ];
 
   options = {
