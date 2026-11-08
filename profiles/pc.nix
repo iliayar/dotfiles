@@ -60,6 +60,8 @@
 
     # FIXME: Use home-manager option
     distrobox
+    sysstat
+    nvme-cli
   ];
 
   denv = {
