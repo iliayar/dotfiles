@@ -116,7 +116,9 @@
     cangjie-nvim = {
       # url = "path:/home/iliayar/Repos/cangjie.nvim";
       # url = "git+https://gitcode.com/iliayar/cangjie.nvim.git";
-      url = "path:/home/iliayar/Repos/ide4cj/cangjie.nvim";
+      # url = "path:/home/iliayar/Repos/ide4cj/cangjie.nvim";
+      # FIXME: use master after merge
+      url = "github:ide4cj/cangjie.nvim/feat/nix_init";
     };
 
     cjls = {
