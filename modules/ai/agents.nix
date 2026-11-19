@@ -110,6 +110,15 @@ in
         virtualHosts.${cfg.herdr.wherdrProxy.hostName}.upstream = "127.0.0.1:7683";
       };
     })
+    (mkIf (cfg.herdr.enable && cfg.omp.enable) {
+      # herdr masks the outer terminal, so omp disables images there unless forced;
+      # https://github.com/can1357/oh-my-pi/issues/9550
+      programs.zsh.envExtra = ''
+        if [[ $HERDR_ENV == 1 ]]; then
+          export PI_FORCE_IMAGE_PROTOCOL=kitty
+        fi
+      '';
+    })
     (mkIf cfg.terminal-browser.enable {
       home.packages = [ pkgs.terminal-browser ];
     })
