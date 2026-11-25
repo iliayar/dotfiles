@@ -119,7 +119,8 @@ in
         nwg-displays
         wlr-randr
         wdisplays
-        wlr-layout-ui
+        # wlr-layout-ui
+        hyprmoncfg
         brightnessctl
         swayidle
         hyprshade
@@ -245,8 +246,8 @@ in
         animation = ""
         lazy = false
 
-        [monitors]
-        hotplug_command = "wlrlui -m"
+        # [monitors]
+        # hotplug_command = "wlrlui -m"
         # [monitors.placement."Samsung"]
         # rightOf = "California Institute"
 

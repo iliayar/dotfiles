@@ -1,6 +1,9 @@
 local nixcfg = require("nixcfg")
 local hy3 = hl.plugin.hy3
 
+-- FIXME: get rid of absolute path
+dofile("/home/iliayar/.config/hypr/hyprmoncfg-monitors.lua")
+
 hl.permission({ binary = nixcfg.peekPath, type = "screencopy", mode = "allow" })
 
 hl.monitor({
@@ -26,6 +29,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("swww-daemon -q")
     hl.exec_cmd("waypaper --restore")
     hl.exec_cmd("waybar & pypr")
+    hl.exec_cmd("hyprmoncfgd")
 end)
 
 for i, cmd in ipairs(nixcfg.startupExtra) do
