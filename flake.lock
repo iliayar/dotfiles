@@ -60,16 +60,15 @@
         "tree-sitter-cangjie": "tree-sitter-cangjie"
       },
       "locked": {
-        "lastModified": 1795017478,
-        "narHash": "sha256-yHxwiv2J1uSL8geosB6LpHex0+lUrxt0GyluOfXCLvM=",
+        "lastModified": 1795510253,
+        "narHash": "sha256-+Sj4iJQKF6R6kKYdIn+8NmMbS0MHwJ2EYohQ3flzU80=",
         "owner": "ide4cj",
         "repo": "cangjie.nvim",
-        "rev": "9a9f7d87fdecd701b45f8605704080269a1d9f56",
+        "rev": "ac6deaee04936a79e3729e8d4feeee63f6267057",
         "type": "github"
       },
       "original": {
         "owner": "ide4cj",
-        "ref": "feat/nix_init",
         "repo": "cangjie.nvim",
         "type": "github"
       }
